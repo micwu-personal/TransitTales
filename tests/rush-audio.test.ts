@@ -8,6 +8,7 @@ const { readFileSync, statSync } = await import(fileSystemModule) as {
 };
 import { ANNOUNCEMENT_COPY, ANNOUNCEMENT_STOPS, announcementAsset, announcementCatalog, announcementText, announcementRecordingLanguage, announcementRecordingText, type Announcement } from '../src/rush/announcements';
 import { createAnnouncementPlayer, type AudioState } from '../src/rush/audio';
+import { stationNames, messages } from '../src/rush/locale';
 
 const canonicalAsset = (asset: string) => '/' + asset.slice(import.meta.env.BASE_URL.length);
 
@@ -104,6 +105,12 @@ describe('recorded announcement scripts', () => {
         expect(cyrillic).toContain('сэлгэн сууна уу.');
         expect(traditional).toContain('ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃');
       }
+    }
+    for (const language of ['mn-Cyrl-MN', 'mn-Mong-CN'] as const) {
+      for (const station of Object.keys(ANNOUNCEMENT_COPY[language].stations) as (keyof typeof ANNOUNCEMENT_COPY['mn-Cyrl-MN']['stations'])[]) {
+        expect(ANNOUNCEMENT_COPY[language].stations[station]).toContain(stationNames[language][station]);
+      }
+      for (const line of ['coral', 'blue'] as const) expect(ANNOUNCEMENT_COPY[language].lines[line]).toContain(messages[language][line]);
     }
     expect(announcementRecordingLanguage('mn-Mong-CN')).toBe('mn-Cyrl-MN');
     expect(ANNOUNCEMENT_COPY['mn-Cyrl-MN'].voice).toBe('mn-MN-YesuiNeural');
