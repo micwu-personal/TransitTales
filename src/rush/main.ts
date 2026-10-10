@@ -1,10 +1,13 @@
 import './style.css';
+import '../languages.css';
 import { createSvgCityRenderer } from './renderer';
+import { createInteriorInspector } from './inspector';
+import { interiorText } from './interior';
 import { createCitySnapshot } from './view';
 import { COASTAL_LAYOUT } from './city';
 import { NETWORK, SCENARIOS, CAPACITY, createGame, step, stats, lineFor, dispatch, canDispatch, preferredDirection, sendCrew, holdConnection, type LineId } from './model';
 
-import { createLanguageController, text, stationNames, scenarioCopy, noticeText, type MessageArgs, type StaticMessageKey, messages } from './locale';
+import { createLanguageController, languageOptions, isLanguage, text, stationNames, scenarioCopy, noticeText, type MessageArgs, type StaticMessageKey, messages } from './locale';
 let languageStorage: Storage | undefined;
 try { languageStorage = localStorage; } catch { /* Storage access itself can be blocked. */ }
 const locale = createLanguageController(languageStorage, navigator.languages?.length ? navigator.languages : [navigator.language], applyLanguage);
@@ -13,7 +16,7 @@ const name = (id: string) => stationNames[locale.language][id];
 const label = (key: StaticMessageKey) => `<span data-i18n="${key}">${text(locale.language, key)}</span>`;
 const root = document.querySelector<HTMLDivElement>('#rush-app')!;
 root.innerHTML = `
-<header class="masthead"><a class="brand" href="rush-hour.html"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M8 27V13a8 8 0 0 1 16 0v14M6 21h20M11 27l-3 6m13-6 3 6"/><rect x="11" y="10" width="10" height="8" rx="2"/></svg></span><span><span lang="en">Transit Tales</span><small>${label('gameName')} · ${label('tagline')}</small></span></a><nav><a href="transit-concepts/">${label('concepts')}</a><a href="index.html">${label('building')}</a><div class="language-control"><label for="language">${label('language')}</label><select id="language"><option value="en" lang="en">English</option><option value="zh-CN" lang="zh-CN">简体中文</option></select></div></nav></header>
+<header class="masthead"><a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M8 27V13a8 8 0 0 1 16 0v14M6 21h20M11 27l-3 6m13-6 3 6"/><rect x="11" y="10" width="10" height="8" rx="2"/></svg></span><span><span lang="en">Transit Tales</span><small>${label('gameName')} · ${label('tagline')}</small></span></a><nav><a href="index.html">${label('home')}</a><a href="transit-concepts/">${label('concepts')}</a><a href="build-world.html">${label('building')}</a><div class="language-control"><label for="language">${label('language')}</label><select id="language">${languageOptions()}</select></div></nav></header>
 <main class="layout"><section class="playfield" data-label-key="network">
 <div class="field-top"><div><h1>${label('heading')}</h1><p>${label('intro')}</p></div><span class="city-stamp">${label('city')}<br>${label('fictional')}</span></div>
 <div class="score-strip"><span><strong id="delivered">0</strong> ${label('delivered')}</span><span><strong id="waiting">0</strong> ${label('waiting')}</span><span><strong id="aboard">0</strong> ${label('aboard')}</span><span><strong id="clock">2:30</strong> ${label('remaining')}</span></div>
@@ -24,10 +27,11 @@ root.innerHTML = `
 <aside class="desk" data-label-key="controls"><div class="scenario-row"><label for="scenario">${label('scenario')}</label><select id="scenario"></select></div>
 <p id="briefing" class="briefing"></p><div class="shift-buttons"><button id="start" class="primary"></button><button id="speed">1×</button></div>
 <div id="goal" class="goal"></div>
-<section class="station-desk"><div class="station-heading"><span id="station-icon" aria-hidden="true"></span><div><h2 id="station-name"></h2><p id="station-queue"></p></div></div><div id="queue-visual" aria-hidden="true"></div><div class="depot"><span>${label('spareTrains')} <strong id="spares">● ●</strong></span><small id="refill"></small></div><div id="dispatch-actions"></div><button id="crew" class="secondary"></button><small class="action-explainer">${label('helperExplanation')}</small><div id="connection"></div></section>
+<section class="station-desk"><div class="station-heading"><span id="station-icon" aria-hidden="true"></span><div><h2 id="station-name"></h2><p id="station-queue"></p></div></div><div id="queue-visual" aria-hidden="true"></div><button id="inspect-station" class="secondary"></button><div class="depot"><span>${label('spareTrains')} <strong id="spares">● ●</strong></span><small id="refill"></small></div><div id="dispatch-actions"></div><button id="crew" class="secondary"></button><small class="action-explainer">${label('helperExplanation')}</small><div id="connection"></div></section>
 <div class="bulletin"><span aria-hidden="true">✦</span><p id="notice" role="status" aria-live="polite"></p></div>
 <details id="help"><summary>${label('helpTitle')}</summary><ol><li>${label('help1')}</li><li>${label('help2')}</li><li>${label('help3')}</li><li>${label('help4')}</li></ol><p>${label('helpKeys')}</p></details>
 </aside>
+<section id="interior" class="interior" hidden aria-labelledby="interior-title"></section>
 <section id="result" class="results" hidden aria-live="polite"></section>
 </main><footer>${label('footer')} · <span id="save-note"></span></footer>`;
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -51,16 +55,19 @@ function applyLanguage() {
 let storageAvailable = true;
 function best(id: string): number { try { return Number(localStorage.getItem(`rush-best-${id}`)) || 0; } catch { storageAvailable = false; return 0; } }
 function saveBest() { try { localStorage.setItem(`rush-best-${game.scenario.id}`, String(Math.max(best(game.scenario.id), stats(game).score))); } catch { storageAvailable = false; } }
-function reset(id: string) { game = createGame(SCENARIOS.find(s => s.id === id)!); selected = game.scenario.hot; paused = false; accumulator = 0; announced = ''; $('result').hidden = true; render(); }
-function selectStation(id: string) { selected = id; renderDesk(); renderMap(); }
+function reset(id: string) { inspector.close(); game = createGame(SCENARIOS.find(s => s.id === id)!); selected = game.scenario.hot; paused = false; accumulator = 0; announced = ''; $('result').hidden = true; render(); }
+function selectStation(id: string) { selected = id; renderDesk(); renderMap(); inspector.open({kind: 'station', id}); }
 const renderer = createSvgCityRenderer();
-renderer.mount($('city-map'), selectStation);
+const inspector = createInteriorInspector($('interior'), () => game, () => locale.language);
+const selectTrain = (id: number) => inspector.open({kind: 'train', id});
+renderer.mount($('city-map'), selectStation, selectTrain);
 function renderMap() {
   renderer.render(createCitySnapshot(game, { selected, language: locale.language, interpolationSeconds: accumulator, animate: !paused && !reducedMotion, layout: COASTAL_LAYOUT }));
 }
-window.addEventListener('pagehide', () => { cancelAnimationFrame(animationFrame); renderer.dispose(); });
-window.addEventListener('pageshow', event => { if (event.persisted) { renderer.mount($('city-map'), selectStation); previous = performance.now(); renderMap(); animationFrame = requestAnimationFrame(frame); } });
+window.addEventListener('pagehide', () => { cancelAnimationFrame(animationFrame); renderer.dispose(); inspector.stop(); });
+window.addEventListener('pageshow', event => { if (event.persisted) { renderer.mount($('city-map'), selectStation, selectTrain); previous = performance.now(); renderMap(); animationFrame = requestAnimationFrame(frame); } });
 function renderDesk() {
+  $('inspect-station').textContent = interiorText(locale.language).inspect;
   const station = NETWORK.stations.find(s => s.id === selected)!; const count = game.queues[selected].length; const st = stats(game);
   $('station-name').textContent = name(selected); $('station-icon').textContent = station.icon; $('station-queue').textContent = t(count === 1 ? 'queueOne' : 'queueMany', { count }) + t(count >= 20 ? 'queueBusy' : count ? 'queueCalm' : 'queueEmpty');
   $('queue-visual').innerHTML = Array.from({ length: Math.min(16, count) }, (_, i) => `<span style="--person:${['#b94432','#286cb1','#397455','#906237'][i%4]}">♟</span>`).join('') + (count > 16 ? `<small>+${count-16}</small>` : '');
@@ -94,20 +101,21 @@ function renderResult(persist = true) {
   $('next').onclick = () => { const next = SCENARIOS[(SCENARIOS.indexOf(game.scenario)+1)%SCENARIOS.length]; $('scenario').setAttribute('value', next.id); ($('scenario') as HTMLSelectElement).value = next.id; reset(next.id); };
   $('save-note').textContent = t(storageAvailable ? 'saved' : 'storageUnavailable');
 }
-function render() { renderDesk(); renderMap(); }
-($('language') as HTMLSelectElement).onchange = e => { const value = (e.target as HTMLSelectElement).value; if (value === 'en' || value === 'zh-CN') locale.setLanguage(value); };
+function render() { renderDesk(); renderMap(); inspector.render(); }
+($('language') as HTMLSelectElement).onchange = e => { const value = (e.target as HTMLSelectElement).value; if (isLanguage(value)) locale.setLanguage(value); };
+$('inspect-station').onclick = () => inspector.open({kind: 'station', id: selected});
 $('start').onclick = () => { if (game.phase === 'ready') game.phase = 'playing'; else if (game.phase === 'finished') reset(game.scenario.id); else paused = !paused; accumulator = 0; render(); };
 $('speed').onclick = () => { speed = speed === 1 ? 2 : speed === 2 ? 3 : 1; renderDesk(); };
 ($('scenario') as HTMLSelectElement).onchange = e => reset((e.target as HTMLSelectElement).value);
 $('dispatch-actions').onclick = e => { const btn = (e.target as Element).closest<HTMLButtonElement>('[data-line]'); if (btn && dispatch(game, selected, btn.dataset.line as LineId)) render(); };
 $('crew').onclick = () => { if (sendCrew(game, selected)) render(); };
 $('connection').onclick = e => { const btn = (e.target as Element).closest<HTMLButtonElement>('[data-hold]'); if (btn && holdConnection(game, Number(btn.dataset.hold))) render(); };
-document.addEventListener('keydown', e => { if ((e.target as Element).closest('button,select,summary,[data-station]')) return; if (e.code === 'Space') { e.preventDefault(); $('start').click(); } if (['1','2','3'].includes(e.key)) { speed = Number(e.key); renderDesk(); } });
+document.addEventListener('keydown', e => { if ((e.target as Element).closest('button,select,summary,[data-station],[data-train]')) return; if (e.code === 'Space') { e.preventDefault(); $('start').click(); } if (['1','2','3'].includes(e.key)) { speed = Number(e.key); renderDesk(); } });
 function frame(now: number) {
   const dt = Math.min((now-previous)/1000,0.25); previous = now;
   if (game.phase === 'playing' && !paused && !document.hidden) {
     accumulator += dt * speed;
-    while (accumulator >= 1 && game.phase === 'playing') { accumulator--; step(game); renderDesk(); if (game.time >= game.scenario.duration) renderResult(); }
+    while (accumulator >= 1 && game.phase === 'playing') { accumulator--; step(game); renderDesk(); inspector.render(); if (game.time >= game.scenario.duration) renderResult(); }
   }
   renderMap(); animationFrame = requestAnimationFrame(frame);
 }

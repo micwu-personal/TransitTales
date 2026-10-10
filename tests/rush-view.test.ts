@@ -81,7 +81,14 @@ describe('renderer-neutral city adapter', () => {
     const chinese = createCitySnapshot(game, { ...options, language: 'zh-CN', selected: 'airport' });
     expect(chinese.stations[0].label).toBe('港口站'); expect(chinese.accessibleName).toMatch(/小湾/);
     expect(chinese.stations.find(s => s.id === 'airport')!.selected).toBe(true);
-    expect(chinese.trains).toEqual(english.trains); expect(chinese.lines).toEqual(english.lines);
+    expect(chinese.trains.map(({accessibleName: _, ...train}) => train)).toEqual(english.trains.map(({accessibleName: _, ...train}) => train));
+    expect(chinese.trains[0].accessibleName).toContain('查看车厢'); expect(chinese.lines).toEqual(english.lines);
+    for (const language of ['ja', 'mn-Cyrl-MN', 'mn-Mong-CN'] as const) {
+      const localized = createCitySnapshot(game, { ...options, language });
+      expect(localized.trains.map(({ accessibleName: _, ...train }) => train)).toEqual(english.trains.map(({ accessibleName: _, ...train }) => train));
+      expect(localized.trains[0].accessibleName).not.toBe(english.trains[0].accessibleName);
+      expect(localized.stations[0].label).not.toBe(english.stations[0].label);
+    }
     expect(JSON.stringify(game)).toBe(before);
   });
 });

@@ -1,0 +1,3070 @@
+{
+  "version": 2,
+  "generator": "edge-tts 7.2.8",
+  "rate": "-8%",
+  "format": "MP3",
+  "notice": "Original fictional transit announcements. Speech generated online; playback uses bundled local recordings. Browser autoplay policies still apply. Caption locales may explicitly share a canonical spoken recording; text and recordingText always describe actual speech.",
+  "locales": {
+    "en": {
+      "recordingLanguage": "en",
+      "fallback": false,
+      "notice": "Native locale recording.",
+      "announcements": {
+        "next-coral-harbor": {
+          "captionText": "This is the Coral line. The next station is Harbor. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-coral-harbor.mp3"
+        },
+        "approaching-coral-harbor": {
+          "captionText": "We are now approaching Harbor on the Coral line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-coral-harbor.mp3"
+        },
+        "terminus-coral-harbor": {
+          "captionText": "This is Harbor, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-coral-harbor.mp3"
+        },
+        "arriving-coral-harbor": {
+          "captionText": "The Coral line train bound for Harbor is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-coral-harbor.mp3"
+        },
+        "next-coral-market": {
+          "captionText": "This is the Coral line. The next station is Market. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-coral-market.mp3"
+        },
+        "approaching-coral-market": {
+          "captionText": "We are now approaching Market on the Coral line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-coral-market.mp3"
+        },
+        "terminus-coral-market": {
+          "captionText": "This is Market, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-coral-market.mp3"
+        },
+        "arriving-coral-market": {
+          "captionText": "The Coral line train bound for Market is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-coral-market.mp3"
+        },
+        "next-coral-central": {
+          "captionText": "This is the Coral line. The next station is Central. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-coral-central.mp3"
+        },
+        "next-coral-central-transfer-blue": {
+          "captionText": "This is the Coral line. The next station is Central. Please mind the gap when leaving the train. Change here for the Blue line.",
+          "asset": "/audio/transit/en/next-coral-central-transfer-blue.mp3"
+        },
+        "approaching-coral-central": {
+          "captionText": "We are now approaching Central on the Coral line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-coral-central.mp3"
+        },
+        "approaching-coral-central-transfer-blue": {
+          "captionText": "We are now approaching Central on the Coral line. Please prepare to leave the train. Change here for the Blue line.",
+          "asset": "/audio/transit/en/approaching-coral-central-transfer-blue.mp3"
+        },
+        "terminus-coral-central": {
+          "captionText": "This is Central, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-coral-central.mp3"
+        },
+        "terminus-coral-central-transfer-blue": {
+          "captionText": "This is Central, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us. Change here for the Blue line.",
+          "asset": "/audio/transit/en/terminus-coral-central-transfer-blue.mp3"
+        },
+        "arriving-coral-central": {
+          "captionText": "The Coral line train bound for Central is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-coral-central.mp3"
+        },
+        "arriving-coral-central-transfer-blue": {
+          "captionText": "The Coral line train bound for Central is arriving. Please let passengers leave the train before boarding. Change here for the Blue line.",
+          "asset": "/audio/transit/en/arriving-coral-central-transfer-blue.mp3"
+        },
+        "next-coral-museum": {
+          "captionText": "This is the Coral line. The next station is Museum. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-coral-museum.mp3"
+        },
+        "approaching-coral-museum": {
+          "captionText": "We are now approaching Museum on the Coral line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-coral-museum.mp3"
+        },
+        "terminus-coral-museum": {
+          "captionText": "This is Museum, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-coral-museum.mp3"
+        },
+        "arriving-coral-museum": {
+          "captionText": "The Coral line train bound for Museum is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-coral-museum.mp3"
+        },
+        "next-coral-garden": {
+          "captionText": "This is the Coral line. The next station is Garden. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-coral-garden.mp3"
+        },
+        "approaching-coral-garden": {
+          "captionText": "We are now approaching Garden on the Coral line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-coral-garden.mp3"
+        },
+        "terminus-coral-garden": {
+          "captionText": "This is Garden, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-coral-garden.mp3"
+        },
+        "arriving-coral-garden": {
+          "captionText": "The Coral line train bound for Garden is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-coral-garden.mp3"
+        },
+        "next-blue-north": {
+          "captionText": "This is the Blue line. The next station is North Park. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-blue-north.mp3"
+        },
+        "approaching-blue-north": {
+          "captionText": "We are now approaching North Park on the Blue line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-blue-north.mp3"
+        },
+        "terminus-blue-north": {
+          "captionText": "This is North Park, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-blue-north.mp3"
+        },
+        "arriving-blue-north": {
+          "captionText": "The Blue line train bound for North Park is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-blue-north.mp3"
+        },
+        "next-blue-library": {
+          "captionText": "This is the Blue line. The next station is Library. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-blue-library.mp3"
+        },
+        "approaching-blue-library": {
+          "captionText": "We are now approaching Library on the Blue line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-blue-library.mp3"
+        },
+        "terminus-blue-library": {
+          "captionText": "This is Library, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-blue-library.mp3"
+        },
+        "arriving-blue-library": {
+          "captionText": "The Blue line train bound for Library is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-blue-library.mp3"
+        },
+        "next-blue-central": {
+          "captionText": "This is the Blue line. The next station is Central. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-blue-central.mp3"
+        },
+        "next-blue-central-transfer-coral": {
+          "captionText": "This is the Blue line. The next station is Central. Please mind the gap when leaving the train. Change here for the Coral line.",
+          "asset": "/audio/transit/en/next-blue-central-transfer-coral.mp3"
+        },
+        "approaching-blue-central": {
+          "captionText": "We are now approaching Central on the Blue line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-blue-central.mp3"
+        },
+        "approaching-blue-central-transfer-coral": {
+          "captionText": "We are now approaching Central on the Blue line. Please prepare to leave the train. Change here for the Coral line.",
+          "asset": "/audio/transit/en/approaching-blue-central-transfer-coral.mp3"
+        },
+        "terminus-blue-central": {
+          "captionText": "This is Central, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-blue-central.mp3"
+        },
+        "terminus-blue-central-transfer-coral": {
+          "captionText": "This is Central, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us. Change here for the Coral line.",
+          "asset": "/audio/transit/en/terminus-blue-central-transfer-coral.mp3"
+        },
+        "arriving-blue-central": {
+          "captionText": "The Blue line train bound for Central is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-blue-central.mp3"
+        },
+        "arriving-blue-central-transfer-coral": {
+          "captionText": "The Blue line train bound for Central is arriving. Please let passengers leave the train before boarding. Change here for the Coral line.",
+          "asset": "/audio/transit/en/arriving-blue-central-transfer-coral.mp3"
+        },
+        "next-blue-stadium": {
+          "captionText": "This is the Blue line. The next station is Stadium. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-blue-stadium.mp3"
+        },
+        "approaching-blue-stadium": {
+          "captionText": "We are now approaching Stadium on the Blue line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-blue-stadium.mp3"
+        },
+        "terminus-blue-stadium": {
+          "captionText": "This is Stadium, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-blue-stadium.mp3"
+        },
+        "arriving-blue-stadium": {
+          "captionText": "The Blue line train bound for Stadium is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-blue-stadium.mp3"
+        },
+        "next-blue-riverside": {
+          "captionText": "This is the Blue line. The next station is Riverside. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-blue-riverside.mp3"
+        },
+        "approaching-blue-riverside": {
+          "captionText": "We are now approaching Riverside on the Blue line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-blue-riverside.mp3"
+        },
+        "terminus-blue-riverside": {
+          "captionText": "This is Riverside, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-blue-riverside.mp3"
+        },
+        "arriving-blue-riverside": {
+          "captionText": "The Blue line train bound for Riverside is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-blue-riverside.mp3"
+        },
+        "next-blue-airport": {
+          "captionText": "This is the Blue line. The next station is Airport. Please mind the gap when leaving the train.",
+          "asset": "/audio/transit/en/next-blue-airport.mp3"
+        },
+        "approaching-blue-airport": {
+          "captionText": "We are now approaching Airport on the Blue line. Please prepare to leave the train.",
+          "asset": "/audio/transit/en/approaching-blue-airport.mp3"
+        },
+        "terminus-blue-airport": {
+          "captionText": "This is Airport, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+          "asset": "/audio/transit/en/terminus-blue-airport.mp3"
+        },
+        "arriving-blue-airport": {
+          "captionText": "The Blue line train bound for Airport is arriving. Please let passengers leave the train before boarding.",
+          "asset": "/audio/transit/en/arriving-blue-airport.mp3"
+        },
+        "pass-through": {
+          "captionText": "A train is passing through this station without stopping. Please stand behind the platform safety line.",
+          "asset": "/audio/transit/en/pass-through.mp3"
+        },
+        "safety": {
+          "captionText": "For your safety, please stand behind the platform safety line, keep the doors clear, and hold the handrail while the train is moving.",
+          "asset": "/audio/transit/en/safety.mp3"
+        }
+      }
+    },
+    "zh-CN": {
+      "recordingLanguage": "zh-CN",
+      "fallback": false,
+      "notice": "Native locale recording.",
+      "announcements": {
+        "next-coral-harbor": {
+          "captionText": "欢迎乘坐珊瑚线。下一站，港口站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-coral-harbor.mp3"
+        },
+        "approaching-coral-harbor": {
+          "captionText": "您乘坐的是珊瑚线。列车即将到达港口站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-coral-harbor.mp3"
+        },
+        "terminus-coral-harbor": {
+          "captionText": "港口站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-coral-harbor.mp3"
+        },
+        "arriving-coral-harbor": {
+          "captionText": "开往港口站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-coral-harbor.mp3"
+        },
+        "next-coral-market": {
+          "captionText": "欢迎乘坐珊瑚线。下一站，集市站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-coral-market.mp3"
+        },
+        "approaching-coral-market": {
+          "captionText": "您乘坐的是珊瑚线。列车即将到达集市站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-coral-market.mp3"
+        },
+        "terminus-coral-market": {
+          "captionText": "集市站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-coral-market.mp3"
+        },
+        "arriving-coral-market": {
+          "captionText": "开往集市站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-coral-market.mp3"
+        },
+        "next-coral-central": {
+          "captionText": "欢迎乘坐珊瑚线。下一站，中心站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-coral-central.mp3"
+        },
+        "next-coral-central-transfer-blue": {
+          "captionText": "欢迎乘坐珊瑚线。下一站，中心站。下车时，请注意列车与站台之间的空隙。需要换乘蓝线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/next-coral-central-transfer-blue.mp3"
+        },
+        "approaching-coral-central": {
+          "captionText": "您乘坐的是珊瑚线。列车即将到达中心站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-coral-central.mp3"
+        },
+        "approaching-coral-central-transfer-blue": {
+          "captionText": "您乘坐的是珊瑚线。列车即将到达中心站，请提前做好下车准备。需要换乘蓝线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/approaching-coral-central-transfer-blue.mp3"
+        },
+        "terminus-coral-central": {
+          "captionText": "中心站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-coral-central.mp3"
+        },
+        "terminus-coral-central-transfer-blue": {
+          "captionText": "中心站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。需要换乘蓝线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/terminus-coral-central-transfer-blue.mp3"
+        },
+        "arriving-coral-central": {
+          "captionText": "开往中心站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-coral-central.mp3"
+        },
+        "arriving-coral-central-transfer-blue": {
+          "captionText": "开往中心站方向的珊瑚线列车即将进站。请先下后上，有序乘车。需要换乘蓝线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/arriving-coral-central-transfer-blue.mp3"
+        },
+        "next-coral-museum": {
+          "captionText": "欢迎乘坐珊瑚线。下一站，博物馆站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-coral-museum.mp3"
+        },
+        "approaching-coral-museum": {
+          "captionText": "您乘坐的是珊瑚线。列车即将到达博物馆站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-coral-museum.mp3"
+        },
+        "terminus-coral-museum": {
+          "captionText": "博物馆站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-coral-museum.mp3"
+        },
+        "arriving-coral-museum": {
+          "captionText": "开往博物馆站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-coral-museum.mp3"
+        },
+        "next-coral-garden": {
+          "captionText": "欢迎乘坐珊瑚线。下一站，花园站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-coral-garden.mp3"
+        },
+        "approaching-coral-garden": {
+          "captionText": "您乘坐的是珊瑚线。列车即将到达花园站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-coral-garden.mp3"
+        },
+        "terminus-coral-garden": {
+          "captionText": "花园站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-coral-garden.mp3"
+        },
+        "arriving-coral-garden": {
+          "captionText": "开往花园站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-coral-garden.mp3"
+        },
+        "next-blue-north": {
+          "captionText": "欢迎乘坐蓝线。下一站，北公园站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-blue-north.mp3"
+        },
+        "approaching-blue-north": {
+          "captionText": "您乘坐的是蓝线。列车即将到达北公园站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-blue-north.mp3"
+        },
+        "terminus-blue-north": {
+          "captionText": "北公园站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-blue-north.mp3"
+        },
+        "arriving-blue-north": {
+          "captionText": "开往北公园站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-blue-north.mp3"
+        },
+        "next-blue-library": {
+          "captionText": "欢迎乘坐蓝线。下一站，图书馆站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-blue-library.mp3"
+        },
+        "approaching-blue-library": {
+          "captionText": "您乘坐的是蓝线。列车即将到达图书馆站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-blue-library.mp3"
+        },
+        "terminus-blue-library": {
+          "captionText": "图书馆站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-blue-library.mp3"
+        },
+        "arriving-blue-library": {
+          "captionText": "开往图书馆站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-blue-library.mp3"
+        },
+        "next-blue-central": {
+          "captionText": "欢迎乘坐蓝线。下一站，中心站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-blue-central.mp3"
+        },
+        "next-blue-central-transfer-coral": {
+          "captionText": "欢迎乘坐蓝线。下一站，中心站。下车时，请注意列车与站台之间的空隙。需要换乘珊瑚线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/next-blue-central-transfer-coral.mp3"
+        },
+        "approaching-blue-central": {
+          "captionText": "您乘坐的是蓝线。列车即将到达中心站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-blue-central.mp3"
+        },
+        "approaching-blue-central-transfer-coral": {
+          "captionText": "您乘坐的是蓝线。列车即将到达中心站，请提前做好下车准备。需要换乘珊瑚线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/approaching-blue-central-transfer-coral.mp3"
+        },
+        "terminus-blue-central": {
+          "captionText": "中心站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-blue-central.mp3"
+        },
+        "terminus-blue-central-transfer-coral": {
+          "captionText": "中心站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。需要换乘珊瑚线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/terminus-blue-central-transfer-coral.mp3"
+        },
+        "arriving-blue-central": {
+          "captionText": "开往中心站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-blue-central.mp3"
+        },
+        "arriving-blue-central-transfer-coral": {
+          "captionText": "开往中心站方向的蓝线列车即将进站。请先下后上，有序乘车。需要换乘珊瑚线的乘客，请在本站换乘。",
+          "asset": "/audio/transit/zh-CN/arriving-blue-central-transfer-coral.mp3"
+        },
+        "next-blue-stadium": {
+          "captionText": "欢迎乘坐蓝线。下一站，体育场站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-blue-stadium.mp3"
+        },
+        "approaching-blue-stadium": {
+          "captionText": "您乘坐的是蓝线。列车即将到达体育场站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-blue-stadium.mp3"
+        },
+        "terminus-blue-stadium": {
+          "captionText": "体育场站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-blue-stadium.mp3"
+        },
+        "arriving-blue-stadium": {
+          "captionText": "开往体育场站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-blue-stadium.mp3"
+        },
+        "next-blue-riverside": {
+          "captionText": "欢迎乘坐蓝线。下一站，河畔站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-blue-riverside.mp3"
+        },
+        "approaching-blue-riverside": {
+          "captionText": "您乘坐的是蓝线。列车即将到达河畔站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-blue-riverside.mp3"
+        },
+        "terminus-blue-riverside": {
+          "captionText": "河畔站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-blue-riverside.mp3"
+        },
+        "arriving-blue-riverside": {
+          "captionText": "开往河畔站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-blue-riverside.mp3"
+        },
+        "next-blue-airport": {
+          "captionText": "欢迎乘坐蓝线。下一站，机场站。下车时，请注意列车与站台之间的空隙。",
+          "asset": "/audio/transit/zh-CN/next-blue-airport.mp3"
+        },
+        "approaching-blue-airport": {
+          "captionText": "您乘坐的是蓝线。列车即将到达机场站，请提前做好下车准备。",
+          "asset": "/audio/transit/zh-CN/approaching-blue-airport.mp3"
+        },
+        "terminus-blue-airport": {
+          "captionText": "机场站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+          "asset": "/audio/transit/zh-CN/terminus-blue-airport.mp3"
+        },
+        "arriving-blue-airport": {
+          "captionText": "开往机场站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+          "asset": "/audio/transit/zh-CN/arriving-blue-airport.mp3"
+        },
+        "pass-through": {
+          "captionText": "列车即将通过本站，不停车。请站在站台安全线以内，注意安全。",
+          "asset": "/audio/transit/zh-CN/pass-through.mp3"
+        },
+        "safety": {
+          "captionText": "为了您的安全，请站在站台安全线以内，不要阻挡车门。列车运行时，请握好扶手。",
+          "asset": "/audio/transit/zh-CN/safety.mp3"
+        }
+      }
+    },
+    "ja": {
+      "recordingLanguage": "ja",
+      "fallback": false,
+      "notice": "Native locale recording.",
+      "announcements": {
+        "next-coral-harbor": {
+          "captionText": "この電車はコーラル線です。次は、港駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-coral-harbor.mp3"
+        },
+        "approaching-coral-harbor": {
+          "captionText": "この電車はコーラル線です。まもなく、港駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-coral-harbor.mp3"
+        },
+        "terminus-coral-harbor": {
+          "captionText": "港駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-coral-harbor.mp3"
+        },
+        "arriving-coral-harbor": {
+          "captionText": "まもなく、港駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-coral-harbor.mp3"
+        },
+        "next-coral-market": {
+          "captionText": "この電車はコーラル線です。次は、市場駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-coral-market.mp3"
+        },
+        "approaching-coral-market": {
+          "captionText": "この電車はコーラル線です。まもなく、市場駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-coral-market.mp3"
+        },
+        "terminus-coral-market": {
+          "captionText": "市場駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-coral-market.mp3"
+        },
+        "arriving-coral-market": {
+          "captionText": "まもなく、市場駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-coral-market.mp3"
+        },
+        "next-coral-central": {
+          "captionText": "この電車はコーラル線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-coral-central.mp3"
+        },
+        "next-coral-central-transfer-blue": {
+          "captionText": "この電車はコーラル線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。ブルー線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/next-coral-central-transfer-blue.mp3"
+        },
+        "approaching-coral-central": {
+          "captionText": "この電車はコーラル線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-coral-central.mp3"
+        },
+        "approaching-coral-central-transfer-blue": {
+          "captionText": "この電車はコーラル線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。ブルー線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/approaching-coral-central-transfer-blue.mp3"
+        },
+        "terminus-coral-central": {
+          "captionText": "中央駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-coral-central.mp3"
+        },
+        "terminus-coral-central-transfer-blue": {
+          "captionText": "中央駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。ブルー線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/terminus-coral-central-transfer-blue.mp3"
+        },
+        "arriving-coral-central": {
+          "captionText": "まもなく、中央駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-coral-central.mp3"
+        },
+        "arriving-coral-central-transfer-blue": {
+          "captionText": "まもなく、中央駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。ブルー線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/arriving-coral-central-transfer-blue.mp3"
+        },
+        "next-coral-museum": {
+          "captionText": "この電車はコーラル線です。次は、博物館駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-coral-museum.mp3"
+        },
+        "approaching-coral-museum": {
+          "captionText": "この電車はコーラル線です。まもなく、博物館駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-coral-museum.mp3"
+        },
+        "terminus-coral-museum": {
+          "captionText": "博物館駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-coral-museum.mp3"
+        },
+        "arriving-coral-museum": {
+          "captionText": "まもなく、博物館駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-coral-museum.mp3"
+        },
+        "next-coral-garden": {
+          "captionText": "この電車はコーラル線です。次は、庭園駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-coral-garden.mp3"
+        },
+        "approaching-coral-garden": {
+          "captionText": "この電車はコーラル線です。まもなく、庭園駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-coral-garden.mp3"
+        },
+        "terminus-coral-garden": {
+          "captionText": "庭園駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-coral-garden.mp3"
+        },
+        "arriving-coral-garden": {
+          "captionText": "まもなく、庭園駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-coral-garden.mp3"
+        },
+        "next-blue-north": {
+          "captionText": "この電車はブルー線です。次は、北公園駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-blue-north.mp3"
+        },
+        "approaching-blue-north": {
+          "captionText": "この電車はブルー線です。まもなく、北公園駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-blue-north.mp3"
+        },
+        "terminus-blue-north": {
+          "captionText": "北公園駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-blue-north.mp3"
+        },
+        "arriving-blue-north": {
+          "captionText": "まもなく、北公園駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-blue-north.mp3"
+        },
+        "next-blue-library": {
+          "captionText": "この電車はブルー線です。次は、図書館駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-blue-library.mp3"
+        },
+        "approaching-blue-library": {
+          "captionText": "この電車はブルー線です。まもなく、図書館駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-blue-library.mp3"
+        },
+        "terminus-blue-library": {
+          "captionText": "図書館駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-blue-library.mp3"
+        },
+        "arriving-blue-library": {
+          "captionText": "まもなく、図書館駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-blue-library.mp3"
+        },
+        "next-blue-central": {
+          "captionText": "この電車はブルー線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-blue-central.mp3"
+        },
+        "next-blue-central-transfer-coral": {
+          "captionText": "この電車はブルー線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。コーラル線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/next-blue-central-transfer-coral.mp3"
+        },
+        "approaching-blue-central": {
+          "captionText": "この電車はブルー線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-blue-central.mp3"
+        },
+        "approaching-blue-central-transfer-coral": {
+          "captionText": "この電車はブルー線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。コーラル線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/approaching-blue-central-transfer-coral.mp3"
+        },
+        "terminus-blue-central": {
+          "captionText": "中央駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-blue-central.mp3"
+        },
+        "terminus-blue-central-transfer-coral": {
+          "captionText": "中央駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。コーラル線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/terminus-blue-central-transfer-coral.mp3"
+        },
+        "arriving-blue-central": {
+          "captionText": "まもなく、中央駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-blue-central.mp3"
+        },
+        "arriving-blue-central-transfer-coral": {
+          "captionText": "まもなく、中央駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。コーラル線は、お乗り換えです。",
+          "asset": "/audio/transit/ja/arriving-blue-central-transfer-coral.mp3"
+        },
+        "next-blue-stadium": {
+          "captionText": "この電車はブルー線です。次は、スタジアム駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-blue-stadium.mp3"
+        },
+        "approaching-blue-stadium": {
+          "captionText": "この電車はブルー線です。まもなく、スタジアム駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-blue-stadium.mp3"
+        },
+        "terminus-blue-stadium": {
+          "captionText": "スタジアム駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-blue-stadium.mp3"
+        },
+        "arriving-blue-stadium": {
+          "captionText": "まもなく、スタジアム駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-blue-stadium.mp3"
+        },
+        "next-blue-riverside": {
+          "captionText": "この電車はブルー線です。次は、川辺駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-blue-riverside.mp3"
+        },
+        "approaching-blue-riverside": {
+          "captionText": "この電車はブルー線です。まもなく、川辺駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-blue-riverside.mp3"
+        },
+        "terminus-blue-riverside": {
+          "captionText": "川辺駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-blue-riverside.mp3"
+        },
+        "arriving-blue-riverside": {
+          "captionText": "まもなく、川辺駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-blue-riverside.mp3"
+        },
+        "next-blue-airport": {
+          "captionText": "この電車はブルー線です。次は、空港駅です。お降りの際は、電車とホームの間にご注意ください。",
+          "asset": "/audio/transit/ja/next-blue-airport.mp3"
+        },
+        "approaching-blue-airport": {
+          "captionText": "この電車はブルー線です。まもなく、空港駅に到着します。お降りのお客様はご準備ください。",
+          "asset": "/audio/transit/ja/approaching-blue-airport.mp3"
+        },
+        "terminus-blue-airport": {
+          "captionText": "空港駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+          "asset": "/audio/transit/ja/terminus-blue-airport.mp3"
+        },
+        "arriving-blue-airport": {
+          "captionText": "まもなく、空港駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+          "asset": "/audio/transit/ja/arriving-blue-airport.mp3"
+        },
+        "pass-through": {
+          "captionText": "まもなく、電車がこの駅を通過します。ホームの安全線の内側までお下がりください。",
+          "asset": "/audio/transit/ja/pass-through.mp3"
+        },
+        "safety": {
+          "captionText": "安全のため、ホームでは安全線の内側でお待ちください。ドアをふさがないでください。走行中は手すりにおつかまりください。",
+          "asset": "/audio/transit/ja/safety.mp3"
+        }
+      }
+    },
+    "mn-Cyrl-MN": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "fallback": false,
+      "notice": "Native locale recording.",
+      "announcements": {
+        "next-coral-harbor": {
+          "captionText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Боомт буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-harbor.mp3"
+        },
+        "approaching-coral-harbor": {
+          "captionText": "Шүрэн шугамын галт тэрэг Боомт буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-harbor.mp3"
+        },
+        "terminus-coral-harbor": {
+          "captionText": "Боомт буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-harbor.mp3"
+        },
+        "arriving-coral-harbor": {
+          "captionText": "Боомт буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-harbor.mp3"
+        },
+        "next-coral-market": {
+          "captionText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Зах буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-market.mp3"
+        },
+        "approaching-coral-market": {
+          "captionText": "Шүрэн шугамын галт тэрэг Зах буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-market.mp3"
+        },
+        "terminus-coral-market": {
+          "captionText": "Зах буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-market.mp3"
+        },
+        "arriving-coral-market": {
+          "captionText": "Зах буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-market.mp3"
+        },
+        "next-coral-central": {
+          "captionText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-central.mp3"
+        },
+        "next-coral-central-transfer-blue": {
+          "captionText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-central-transfer-blue.mp3"
+        },
+        "approaching-coral-central": {
+          "captionText": "Шүрэн шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-central.mp3"
+        },
+        "approaching-coral-central-transfer-blue": {
+          "captionText": "Шүрэн шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-central-transfer-blue.mp3"
+        },
+        "terminus-coral-central": {
+          "captionText": "Төв буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-central.mp3"
+        },
+        "terminus-coral-central-transfer-blue": {
+          "captionText": "Төв буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-central-transfer-blue.mp3"
+        },
+        "arriving-coral-central": {
+          "captionText": "Төв буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-central.mp3"
+        },
+        "arriving-coral-central-transfer-blue": {
+          "captionText": "Төв буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-central-transfer-blue.mp3"
+        },
+        "next-coral-museum": {
+          "captionText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Музей буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-museum.mp3"
+        },
+        "approaching-coral-museum": {
+          "captionText": "Шүрэн шугамын галт тэрэг Музей буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-museum.mp3"
+        },
+        "terminus-coral-museum": {
+          "captionText": "Музей буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-museum.mp3"
+        },
+        "arriving-coral-museum": {
+          "captionText": "Музей буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-museum.mp3"
+        },
+        "next-coral-garden": {
+          "captionText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Цэцэрлэг буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-garden.mp3"
+        },
+        "approaching-coral-garden": {
+          "captionText": "Шүрэн шугамын галт тэрэг Цэцэрлэг буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-garden.mp3"
+        },
+        "terminus-coral-garden": {
+          "captionText": "Цэцэрлэг буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-garden.mp3"
+        },
+        "arriving-coral-garden": {
+          "captionText": "Цэцэрлэг буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-garden.mp3"
+        },
+        "next-blue-north": {
+          "captionText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Хойд цэцэрлэгт хүрээлэн буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-north.mp3"
+        },
+        "approaching-blue-north": {
+          "captionText": "Хөх шугамын галт тэрэг Хойд цэцэрлэгт хүрээлэн буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-north.mp3"
+        },
+        "terminus-blue-north": {
+          "captionText": "Хойд цэцэрлэгт хүрээлэн буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-north.mp3"
+        },
+        "arriving-blue-north": {
+          "captionText": "Хойд цэцэрлэгт хүрээлэн буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-north.mp3"
+        },
+        "next-blue-library": {
+          "captionText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Номын сан буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-library.mp3"
+        },
+        "approaching-blue-library": {
+          "captionText": "Хөх шугамын галт тэрэг Номын сан буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-library.mp3"
+        },
+        "terminus-blue-library": {
+          "captionText": "Номын сан буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-library.mp3"
+        },
+        "arriving-blue-library": {
+          "captionText": "Номын сан буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-library.mp3"
+        },
+        "next-blue-central": {
+          "captionText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-central.mp3"
+        },
+        "next-blue-central-transfer-coral": {
+          "captionText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-central-transfer-coral.mp3"
+        },
+        "approaching-blue-central": {
+          "captionText": "Хөх шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-central.mp3"
+        },
+        "approaching-blue-central-transfer-coral": {
+          "captionText": "Хөх шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-central-transfer-coral.mp3"
+        },
+        "terminus-blue-central": {
+          "captionText": "Төв буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-central.mp3"
+        },
+        "terminus-blue-central-transfer-coral": {
+          "captionText": "Төв буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-central-transfer-coral.mp3"
+        },
+        "arriving-blue-central": {
+          "captionText": "Төв буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-central.mp3"
+        },
+        "arriving-blue-central-transfer-coral": {
+          "captionText": "Төв буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-central-transfer-coral.mp3"
+        },
+        "next-blue-stadium": {
+          "captionText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Цэнгэлдэх хүрээлэн буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-stadium.mp3"
+        },
+        "approaching-blue-stadium": {
+          "captionText": "Хөх шугамын галт тэрэг Цэнгэлдэх хүрээлэн буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-stadium.mp3"
+        },
+        "terminus-blue-stadium": {
+          "captionText": "Цэнгэлдэх хүрээлэн буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-stadium.mp3"
+        },
+        "arriving-blue-stadium": {
+          "captionText": "Цэнгэлдэх хүрээлэн буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-stadium.mp3"
+        },
+        "next-blue-riverside": {
+          "captionText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Голын эрэг буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-riverside.mp3"
+        },
+        "approaching-blue-riverside": {
+          "captionText": "Хөх шугамын галт тэрэг Голын эрэг буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-riverside.mp3"
+        },
+        "terminus-blue-riverside": {
+          "captionText": "Голын эрэг буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-riverside.mp3"
+        },
+        "arriving-blue-riverside": {
+          "captionText": "Голын эрэг буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-riverside.mp3"
+        },
+        "next-blue-airport": {
+          "captionText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Нисэх онгоцны буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-airport.mp3"
+        },
+        "approaching-blue-airport": {
+          "captionText": "Хөх шугамын галт тэрэг Нисэх онгоцны буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-airport.mp3"
+        },
+        "terminus-blue-airport": {
+          "captionText": "Нисэх онгоцны буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-airport.mp3"
+        },
+        "arriving-blue-airport": {
+          "captionText": "Нисэх онгоцны буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-airport.mp3"
+        },
+        "pass-through": {
+          "captionText": "Галт тэрэг энэ буудлаар зогсолгүй өнгөрнө. Тавцангийн аюулгүйн шугамын цаана зогсоно уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/pass-through.mp3"
+        },
+        "safety": {
+          "captionText": "Аюулгүй байдлын төлөө тавцангийн аюулгүйн шугамын цаана зогсож, хаалгыг чөлөөтэй байлгана уу. Галт тэрэг явж байх үед бариулаас барина уу.",
+          "asset": "/audio/transit/mn-Cyrl-MN/safety.mp3"
+        }
+      }
+    },
+    "mn-Mong-CN": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "fallback": true,
+      "notice": "Mongolia Mongolian recording with traditional Mongolian captions; not an Inner Mongolia regional voice.",
+      "announcements": {
+        "next-coral-harbor": {
+          "captionText": "ᠲᠠ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠪᠣᠭᠤᠮᠲᠠ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-harbor.mp3"
+        },
+        "approaching-coral-harbor": {
+          "captionText": "ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠭᠤᠮᠲᠠ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-harbor.mp3"
+        },
+        "terminus-coral-harbor": {
+          "captionText": "ᠪᠣᠭᠤᠮᠲᠠ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-harbor.mp3"
+        },
+        "arriving-coral-harbor": {
+          "captionText": "ᠪᠣᠭᠤᠮᠲᠠ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-harbor.mp3"
+        },
+        "next-coral-market": {
+          "captionText": "ᠲᠠ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠵᠠᠬ᠎ᠠ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-market.mp3"
+        },
+        "approaching-coral-market": {
+          "captionText": "ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠵᠠᠬ᠎ᠠ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-market.mp3"
+        },
+        "terminus-coral-market": {
+          "captionText": "ᠵᠠᠬ᠎ᠠ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-market.mp3"
+        },
+        "arriving-coral-market": {
+          "captionText": "ᠵᠠᠬ᠎ᠠ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-market.mp3"
+        },
+        "next-coral-central": {
+          "captionText": "ᠲᠠ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-central.mp3"
+        },
+        "next-coral-central-transfer-blue": {
+          "captionText": "ᠲᠠ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-central-transfer-blue.mp3"
+        },
+        "approaching-coral-central": {
+          "captionText": "ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-central.mp3"
+        },
+        "approaching-coral-central-transfer-blue": {
+          "captionText": "ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-central-transfer-blue.mp3"
+        },
+        "terminus-coral-central": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-central.mp3"
+        },
+        "terminus-coral-central-transfer-blue": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-central-transfer-blue.mp3"
+        },
+        "arriving-coral-central": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-central.mp3"
+        },
+        "arriving-coral-central-transfer-blue": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-central-transfer-blue.mp3"
+        },
+        "next-coral-museum": {
+          "captionText": "ᠲᠠ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠮᠦᠽᠧᠢ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-museum.mp3"
+        },
+        "approaching-coral-museum": {
+          "captionText": "ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠮᠦᠽᠧᠢ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-museum.mp3"
+        },
+        "terminus-coral-museum": {
+          "captionText": "ᠮᠦᠽᠧᠢ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-museum.mp3"
+        },
+        "arriving-coral-museum": {
+          "captionText": "ᠮᠦᠽᠧᠢ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-museum.mp3"
+        },
+        "next-coral-garden": {
+          "captionText": "ᠲᠠ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠴᠡᠴᠡᠷᠯᠢᠭ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-coral-garden.mp3"
+        },
+        "approaching-coral-garden": {
+          "captionText": "ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠴᠡᠴᠡᠷᠯᠢᠭ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-coral-garden.mp3"
+        },
+        "terminus-coral-garden": {
+          "captionText": "ᠴᠡᠴᠡᠷᠯᠢᠭ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-coral-garden.mp3"
+        },
+        "arriving-coral-garden": {
+          "captionText": "ᠴᠡᠴᠡᠷᠯᠢᠭ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-coral-garden.mp3"
+        },
+        "next-blue-north": {
+          "captionText": "ᠲᠠ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠬᠣᠢᠳᠤ ᠴᠡᠴᠡᠷᠯᠢᠭᠲᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-north.mp3"
+        },
+        "approaching-blue-north": {
+          "captionText": "ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠬᠣᠢᠳᠤ ᠴᠡᠴᠡᠷᠯᠢᠭᠲᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-north.mp3"
+        },
+        "terminus-blue-north": {
+          "captionText": "ᠬᠣᠢᠳᠤ ᠴᠡᠴᠡᠷᠯᠢᠭᠲᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-north.mp3"
+        },
+        "arriving-blue-north": {
+          "captionText": "ᠬᠣᠢᠳᠤ ᠴᠡᠴᠡᠷᠯᠢᠭᠲᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-north.mp3"
+        },
+        "next-blue-library": {
+          "captionText": "ᠲᠠ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠨᠣᠮ ᠤᠨ ᠰᠠᠩ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-library.mp3"
+        },
+        "approaching-blue-library": {
+          "captionText": "ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠨᠣᠮ ᠤᠨ ᠰᠠᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-library.mp3"
+        },
+        "terminus-blue-library": {
+          "captionText": "ᠨᠣᠮ ᠤᠨ ᠰᠠᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-library.mp3"
+        },
+        "arriving-blue-library": {
+          "captionText": "ᠨᠣᠮ ᠤᠨ ᠰᠠᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-library.mp3"
+        },
+        "next-blue-central": {
+          "captionText": "ᠲᠠ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-central.mp3"
+        },
+        "next-blue-central-transfer-coral": {
+          "captionText": "ᠲᠠ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-central-transfer-coral.mp3"
+        },
+        "approaching-blue-central": {
+          "captionText": "ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-central.mp3"
+        },
+        "approaching-blue-central-transfer-coral": {
+          "captionText": "ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-central-transfer-coral.mp3"
+        },
+        "terminus-blue-central": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-central.mp3"
+        },
+        "terminus-blue-central-transfer-coral": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-central-transfer-coral.mp3"
+        },
+        "arriving-blue-central": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-central.mp3"
+        },
+        "arriving-blue-central-transfer-coral": {
+          "captionText": "ᠲᠥᠪ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠱᠦᠷᠦᠨ ᠱᠤᠭᠤᠮ ᠳᠤ ᠰᠢᠯᠵᠢᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠰᠡᠯᠭᠡᠨ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-central-transfer-coral.mp3"
+        },
+        "next-blue-stadium": {
+          "captionText": "ᠲᠠ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠴᠡᠩᠭᠡᠯᠳᠡᠬᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-stadium.mp3"
+        },
+        "approaching-blue-stadium": {
+          "captionText": "ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠴᠡᠩᠭᠡᠯᠳᠡᠬᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-stadium.mp3"
+        },
+        "terminus-blue-stadium": {
+          "captionText": "ᠴᠡᠩᠭᠡᠯᠳᠡᠬᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-stadium.mp3"
+        },
+        "arriving-blue-stadium": {
+          "captionText": "ᠴᠡᠩᠭᠡᠯᠳᠡᠬᠦ ᠬᠦᠷᠢᠶᠡᠯᠡᠩ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-stadium.mp3"
+        },
+        "next-blue-riverside": {
+          "captionText": "ᠲᠠ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠭᠣᠣᠯ ᠤᠨ ᠡᠷᠭᠢ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-riverside.mp3"
+        },
+        "approaching-blue-riverside": {
+          "captionText": "ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠭᠣᠣᠯ ᠤᠨ ᠡᠷᠭᠢ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-riverside.mp3"
+        },
+        "terminus-blue-riverside": {
+          "captionText": "ᠭᠣᠣᠯ ᠤᠨ ᠡᠷᠭᠢ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-riverside.mp3"
+        },
+        "arriving-blue-riverside": {
+          "captionText": "ᠭᠣᠣᠯ ᠤᠨ ᠡᠷᠭᠢ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-riverside.mp3"
+        },
+        "next-blue-airport": {
+          "captionText": "ᠲᠠ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠳᠠᠷᠠᠭᠠ ᠶᠢᠨ ᠪᠤᠭᠤᠳᠠᠯ ᠪᠣᠯ ᠨᠢᠰᠬᠦ ᠣᠩᠭᠣᠴᠠᠨ ᠤ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠠᠭᠤᠬᠤ ᠳᠠᠭᠠᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠣᠯᠣᠨ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠬᠣᠭᠣᠷᠣᠨᠳᠣᠬᠢ ᠵᠠᠢ ᠶᠢ ᠠᠩᠬᠠᠷᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/next-blue-airport.mp3"
+        },
+        "approaching-blue-airport": {
+          "captionText": "ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠨᠢᠰᠬᠦ ᠣᠩᠭᠣᠴᠠᠨ ᠤ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠣᠢᠷᠠᠲᠠᠵᠤ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠪᠠᠭᠤᠬᠤ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠪᠡᠯᠡᠳᠬᠡᠨ᠎ᠡ ᠦᠦ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/approaching-blue-airport.mp3"
+        },
+        "terminus-blue-airport": {
+          "captionText": "ᠨᠢᠰᠬᠦ ᠣᠩᠭᠣᠴᠠᠨ ᠤ ᠪᠤᠭᠤᠳᠠᠯ ᠳᠤ ᠢᠷᠡᠯ᠎ᠡ᠃ ᠡᠨᠡ ᠪᠣᠯ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠡᠴᠦᠰ ᠦᠨ ᠪᠤᠭᠤᠳᠠᠯ᠃ ᠪᠦᠬᠦ ᠵᠣᠷᠴᠢᠭᠴᠢ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠴᠡ ᠪᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃ ᠮᠠᠨ ᠤ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠪᠡᠷ ᠵᠣᠷᠴᠢᠭᠰᠠᠨ ᠲᠠᠨ ᠳᠤ ᠪᠠᠶᠠᠷᠯᠠᠯ᠎ᠠ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/terminus-blue-airport.mp3"
+        },
+        "arriving-blue-airport": {
+          "captionText": "ᠨᠢᠰᠬᠦ ᠣᠩᠭᠣᠴᠠᠨ ᠤ ᠪᠤᠭᠤᠳᠠᠯ ᠷᠤᠭᠤ ᠶᠠᠪᠤᠬᠤ ᠬᠥᠬᠡ ᠱᠤᠭᠤᠮ ᠤᠨ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠢᠷᠡᠵᠦ ᠪᠠᠢᠨ᠎ᠠ᠃ ᠡᠬᠢᠯᠡᠡᠳ ᠵᠣᠷᠴᠢᠭᠴᠢᠳ ᠢ ᠪᠠᠭᠤᠯᠭᠠᠭᠠᠳ᠂ ᠳᠠᠷᠠᠭ᠎ᠠ ᠨᠢ ᠰᠠᠭᠤᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/arriving-blue-airport.mp3"
+        },
+        "pass-through": {
+          "captionText": "ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠡᠨᠡ ᠪᠤᠭᠤᠳᠠᠯ ᠢᠶᠠᠷ ᠵᠣᠭᠰᠣᠯᠭᠦᠢ ᠥᠩᠭᠡᠷᠡᠨ᠎ᠡ᠃ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠠᠶᠤᠯᠭᠦᠢ ᠶᠢᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠴᠠᠭᠠᠨ᠎ᠠ ᠵᠣᠭᠰᠣᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/pass-through.mp3"
+        },
+        "safety": {
+          "captionText": "ᠠᠶᠤᠯᠭᠦᠢ ᠪᠠᠢᠳᠠᠯ ᠤᠨ ᠲᠥᠯᠥᠭᠡ ᠲᠠᠪᠴᠠᠩ ᠤᠨ ᠠᠶᠤᠯᠭᠦᠢ ᠶᠢᠨ ᠱᠤᠭᠤᠮ ᠤᠨ ᠴᠠᠭᠠᠨ᠎ᠠ ᠵᠣᠭᠰᠣᠵᠤ᠂ ᠬᠠᠭᠠᠯᠭ᠎ᠠ ᠶᠢ ᠴᠢᠯᠥᠭᠡᠲᠡᠢ ᠪᠠᠢᠯᠭᠠᠨ᠎ᠠ ᠤᠤ᠃ ᠭᠠᠯᠲᠤ ᠲᠡᠷᠭᠡ ᠶᠠᠪᠤᠵᠤ ᠪᠠᠢᠬᠤ ᠦᠶ᠎ᠡ ᠳᠦ ᠪᠠᠷᠢᠭᠤᠯ ᠠᠴᠠ ᠪᠠᠷᠢᠨ᠎ᠠ ᠤᠤ᠃",
+          "asset": "/audio/transit/mn-Cyrl-MN/safety.mp3"
+        }
+      }
+    }
+  },
+  "recordings": {
+    "/audio/transit/en/approaching-blue-airport.mp3": {
+      "language": "en",
+      "text": "We are now approaching Airport on the Blue line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Airport on the Blue line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.832,
+      "bytes": 34992
+    },
+    "/audio/transit/en/approaching-blue-central-transfer-coral.mp3": {
+      "language": "en",
+      "text": "We are now approaching Central on the Blue line. Please prepare to leave the train. Change here for the Coral line.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Central on the Blue line. Please prepare to leave the train. Change here for the Coral line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 8.208,
+      "bytes": 49248
+    },
+    "/audio/transit/en/approaching-blue-central.mp3": {
+      "language": "en",
+      "text": "We are now approaching Central on the Blue line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Central on the Blue line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.88,
+      "bytes": 35280
+    },
+    "/audio/transit/en/approaching-blue-library.mp3": {
+      "language": "en",
+      "text": "We are now approaching Library on the Blue line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Library on the Blue line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.904,
+      "bytes": 35424
+    },
+    "/audio/transit/en/approaching-blue-north.mp3": {
+      "language": "en",
+      "text": "We are now approaching North Park on the Blue line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching North Park on the Blue line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 6.0,
+      "bytes": 36000
+    },
+    "/audio/transit/en/approaching-blue-riverside.mp3": {
+      "language": "en",
+      "text": "We are now approaching Riverside on the Blue line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Riverside on the Blue line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.952,
+      "bytes": 35712
+    },
+    "/audio/transit/en/approaching-blue-stadium.mp3": {
+      "language": "en",
+      "text": "We are now approaching Stadium on the Blue line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Stadium on the Blue line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.88,
+      "bytes": 35280
+    },
+    "/audio/transit/en/approaching-coral-central-transfer-blue.mp3": {
+      "language": "en",
+      "text": "We are now approaching Central on the Coral line. Please prepare to leave the train. Change here for the Blue line.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Central on the Coral line. Please prepare to leave the train. Change here for the Blue line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 8.136,
+      "bytes": 48816
+    },
+    "/audio/transit/en/approaching-coral-central.mp3": {
+      "language": "en",
+      "text": "We are now approaching Central on the Coral line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Central on the Coral line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.928,
+      "bytes": 35568
+    },
+    "/audio/transit/en/approaching-coral-garden.mp3": {
+      "language": "en",
+      "text": "We are now approaching Garden on the Coral line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Garden on the Coral line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.88,
+      "bytes": 35280
+    },
+    "/audio/transit/en/approaching-coral-harbor.mp3": {
+      "language": "en",
+      "text": "We are now approaching Harbor on the Coral line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Harbor on the Coral line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.88,
+      "bytes": 35280
+    },
+    "/audio/transit/en/approaching-coral-market.mp3": {
+      "language": "en",
+      "text": "We are now approaching Market on the Coral line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Market on the Coral line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.856,
+      "bytes": 35136
+    },
+    "/audio/transit/en/approaching-coral-museum.mp3": {
+      "language": "en",
+      "text": "We are now approaching Museum on the Coral line. Please prepare to leave the train.",
+      "recordingLanguage": "en",
+      "recordingText": "We are now approaching Museum on the Coral line. Please prepare to leave the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 5.928,
+      "bytes": 35568
+    },
+    "/audio/transit/en/arriving-blue-airport.mp3": {
+      "language": "en",
+      "text": "The Blue line train bound for Airport is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Blue line train bound for Airport is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.368,
+      "bytes": 44208
+    },
+    "/audio/transit/en/arriving-blue-central-transfer-coral.mp3": {
+      "language": "en",
+      "text": "The Blue line train bound for Central is arriving. Please let passengers leave the train before boarding. Change here for the Coral line.",
+      "recordingLanguage": "en",
+      "recordingText": "The Blue line train bound for Central is arriving. Please let passengers leave the train before boarding. Change here for the Coral line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.744,
+      "bytes": 58464
+    },
+    "/audio/transit/en/arriving-blue-central.mp3": {
+      "language": "en",
+      "text": "The Blue line train bound for Central is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Blue line train bound for Central is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/en/arriving-blue-library.mp3": {
+      "language": "en",
+      "text": "The Blue line train bound for Library is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Blue line train bound for Library is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.416,
+      "bytes": 44496
+    },
+    "/audio/transit/en/arriving-blue-north.mp3": {
+      "language": "en",
+      "text": "The Blue line train bound for North Park is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Blue line train bound for North Park is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.44,
+      "bytes": 44640
+    },
+    "/audio/transit/en/arriving-blue-riverside.mp3": {
+      "language": "en",
+      "text": "The Blue line train bound for Riverside is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Blue line train bound for Riverside is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.512,
+      "bytes": 45072
+    },
+    "/audio/transit/en/arriving-blue-stadium.mp3": {
+      "language": "en",
+      "text": "The Blue line train bound for Stadium is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Blue line train bound for Stadium is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.44,
+      "bytes": 44640
+    },
+    "/audio/transit/en/arriving-coral-central-transfer-blue.mp3": {
+      "language": "en",
+      "text": "The Coral line train bound for Central is arriving. Please let passengers leave the train before boarding. Change here for the Blue line.",
+      "recordingLanguage": "en",
+      "recordingText": "The Coral line train bound for Central is arriving. Please let passengers leave the train before boarding. Change here for the Blue line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.624,
+      "bytes": 57744
+    },
+    "/audio/transit/en/arriving-coral-central.mp3": {
+      "language": "en",
+      "text": "The Coral line train bound for Central is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Coral line train bound for Central is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.416,
+      "bytes": 44496
+    },
+    "/audio/transit/en/arriving-coral-garden.mp3": {
+      "language": "en",
+      "text": "The Coral line train bound for Garden is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Coral line train bound for Garden is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.344,
+      "bytes": 44064
+    },
+    "/audio/transit/en/arriving-coral-harbor.mp3": {
+      "language": "en",
+      "text": "The Coral line train bound for Harbor is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Coral line train bound for Harbor is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/en/arriving-coral-market.mp3": {
+      "language": "en",
+      "text": "The Coral line train bound for Market is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Coral line train bound for Market is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/en/arriving-coral-museum.mp3": {
+      "language": "en",
+      "text": "The Coral line train bound for Museum is arriving. Please let passengers leave the train before boarding.",
+      "recordingLanguage": "en",
+      "recordingText": "The Coral line train bound for Museum is arriving. Please let passengers leave the train before boarding.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.44,
+      "bytes": 44640
+    },
+    "/audio/transit/en/next-blue-airport.mp3": {
+      "language": "en",
+      "text": "This is the Blue line. The next station is Airport. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Blue line. The next station is Airport. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/en/next-blue-central-transfer-coral.mp3": {
+      "language": "en",
+      "text": "This is the Blue line. The next station is Central. Please mind the gap when leaving the train. Change here for the Coral line.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Blue line. The next station is Central. Please mind the gap when leaving the train. Change here for the Coral line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.672,
+      "bytes": 58032
+    },
+    "/audio/transit/en/next-blue-central.mp3": {
+      "language": "en",
+      "text": "This is the Blue line. The next station is Central. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Blue line. The next station is Central. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.296,
+      "bytes": 43776
+    },
+    "/audio/transit/en/next-blue-library.mp3": {
+      "language": "en",
+      "text": "This is the Blue line. The next station is Library. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Blue line. The next station is Library. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/en/next-blue-north.mp3": {
+      "language": "en",
+      "text": "This is the Blue line. The next station is North Park. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Blue line. The next station is North Park. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.536,
+      "bytes": 45216
+    },
+    "/audio/transit/en/next-blue-riverside.mp3": {
+      "language": "en",
+      "text": "This is the Blue line. The next station is Riverside. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Blue line. The next station is Riverside. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.44,
+      "bytes": 44640
+    },
+    "/audio/transit/en/next-blue-stadium.mp3": {
+      "language": "en",
+      "text": "This is the Blue line. The next station is Stadium. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Blue line. The next station is Stadium. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.32,
+      "bytes": 43920
+    },
+    "/audio/transit/en/next-coral-central-transfer-blue.mp3": {
+      "language": "en",
+      "text": "This is the Coral line. The next station is Central. Please mind the gap when leaving the train. Change here for the Blue line.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Coral line. The next station is Central. Please mind the gap when leaving the train. Change here for the Blue line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.6,
+      "bytes": 57600
+    },
+    "/audio/transit/en/next-coral-central.mp3": {
+      "language": "en",
+      "text": "This is the Coral line. The next station is Central. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Coral line. The next station is Central. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.416,
+      "bytes": 44496
+    },
+    "/audio/transit/en/next-coral-garden.mp3": {
+      "language": "en",
+      "text": "This is the Coral line. The next station is Garden. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Coral line. The next station is Garden. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.368,
+      "bytes": 44208
+    },
+    "/audio/transit/en/next-coral-harbor.mp3": {
+      "language": "en",
+      "text": "This is the Coral line. The next station is Harbor. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Coral line. The next station is Harbor. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.32,
+      "bytes": 43920
+    },
+    "/audio/transit/en/next-coral-market.mp3": {
+      "language": "en",
+      "text": "This is the Coral line. The next station is Market. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Coral line. The next station is Market. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.464,
+      "bytes": 44784
+    },
+    "/audio/transit/en/next-coral-museum.mp3": {
+      "language": "en",
+      "text": "This is the Coral line. The next station is Museum. Please mind the gap when leaving the train.",
+      "recordingLanguage": "en",
+      "recordingText": "This is the Coral line. The next station is Museum. Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.464,
+      "bytes": 44784
+    },
+    "/audio/transit/en/pass-through.mp3": {
+      "language": "en",
+      "text": "A train is passing through this station without stopping. Please stand behind the platform safety line.",
+      "recordingLanguage": "en",
+      "recordingText": "A train is passing through this station without stopping. Please stand behind the platform safety line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.344,
+      "bytes": 44064
+    },
+    "/audio/transit/en/safety.mp3": {
+      "language": "en",
+      "text": "For your safety, please stand behind the platform safety line, keep the doors clear, and hold the handrail while the train is moving.",
+      "recordingLanguage": "en",
+      "recordingText": "For your safety, please stand behind the platform safety line, keep the doors clear, and hold the handrail while the train is moving.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 8.496,
+      "bytes": 50976
+    },
+    "/audio/transit/en/terminus-blue-airport.mp3": {
+      "language": "en",
+      "text": "This is Airport, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Airport, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.192,
+      "bytes": 55152
+    },
+    "/audio/transit/en/terminus-blue-central-transfer-coral.mp3": {
+      "language": "en",
+      "text": "This is Central, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us. Change here for the Coral line.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Central, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us. Change here for the Coral line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 11.52,
+      "bytes": 69120
+    },
+    "/audio/transit/en/terminus-blue-central.mp3": {
+      "language": "en",
+      "text": "This is Central, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Central, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.216,
+      "bytes": 55296
+    },
+    "/audio/transit/en/terminus-blue-library.mp3": {
+      "language": "en",
+      "text": "This is Library, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Library, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.264,
+      "bytes": 55584
+    },
+    "/audio/transit/en/terminus-blue-north.mp3": {
+      "language": "en",
+      "text": "This is North Park, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is North Park, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.36,
+      "bytes": 56160
+    },
+    "/audio/transit/en/terminus-blue-riverside.mp3": {
+      "language": "en",
+      "text": "This is Riverside, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Riverside, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.336,
+      "bytes": 56016
+    },
+    "/audio/transit/en/terminus-blue-stadium.mp3": {
+      "language": "en",
+      "text": "This is Stadium, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Stadium, the last stop on the Blue line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.216,
+      "bytes": 55296
+    },
+    "/audio/transit/en/terminus-coral-central-transfer-blue.mp3": {
+      "language": "en",
+      "text": "This is Central, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us. Change here for the Blue line.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Central, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us. Change here for the Blue line.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 11.496,
+      "bytes": 68976
+    },
+    "/audio/transit/en/terminus-coral-central.mp3": {
+      "language": "en",
+      "text": "This is Central, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Central, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.288,
+      "bytes": 55728
+    },
+    "/audio/transit/en/terminus-coral-garden.mp3": {
+      "language": "en",
+      "text": "This is Garden, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Garden, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.264,
+      "bytes": 55584
+    },
+    "/audio/transit/en/terminus-coral-harbor.mp3": {
+      "language": "en",
+      "text": "This is Harbor, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Harbor, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.24,
+      "bytes": 55440
+    },
+    "/audio/transit/en/terminus-coral-market.mp3": {
+      "language": "en",
+      "text": "This is Market, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Market, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.336,
+      "bytes": 56016
+    },
+    "/audio/transit/en/terminus-coral-museum.mp3": {
+      "language": "en",
+      "text": "This is Museum, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "recordingLanguage": "en",
+      "recordingText": "This is Museum, the last stop on the Coral line. All passengers, please leave the train. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 9.384,
+      "bytes": 56304
+    },
+    "/audio/transit/ja/approaching-blue-airport.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。まもなく、空港駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。まもなく、空港駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.776,
+      "bytes": 64656
+    },
+    "/audio/transit/ja/approaching-blue-central-transfer-coral.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。コーラル線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。コーラル線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 14.112,
+      "bytes": 84672
+    },
+    "/audio/transit/ja/approaching-blue-central.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.704,
+      "bytes": 64224
+    },
+    "/audio/transit/ja/approaching-blue-library.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。まもなく、図書館駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。まもなく、図書館駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.776,
+      "bytes": 64656
+    },
+    "/audio/transit/ja/approaching-blue-north.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。まもなく、北公園駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。まもなく、北公園駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.992,
+      "bytes": 65952
+    },
+    "/audio/transit/ja/approaching-blue-riverside.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。まもなく、川辺駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。まもなく、川辺駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.728,
+      "bytes": 64368
+    },
+    "/audio/transit/ja/approaching-blue-stadium.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。まもなく、スタジアム駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。まもなく、スタジアム駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.848,
+      "bytes": 65088
+    },
+    "/audio/transit/ja/approaching-coral-central-transfer-blue.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。ブルー線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。ブルー線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 14.184,
+      "bytes": 85104
+    },
+    "/audio/transit/ja/approaching-coral-central.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。まもなく、中央駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.896,
+      "bytes": 65376
+    },
+    "/audio/transit/ja/approaching-coral-garden.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。まもなく、庭園駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。まもなく、庭園駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.92,
+      "bytes": 65520
+    },
+    "/audio/transit/ja/approaching-coral-harbor.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。まもなく、港駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。まもなく、港駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.8,
+      "bytes": 64800
+    },
+    "/audio/transit/ja/approaching-coral-market.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。まもなく、市場駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。まもなく、市場駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 10.872,
+      "bytes": 65232
+    },
+    "/audio/transit/ja/approaching-coral-museum.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。まもなく、博物館駅に到着します。お降りのお客様はご準備ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。まもなく、博物館駅に到着します。お降りのお客様はご準備ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.184,
+      "bytes": 67104
+    },
+    "/audio/transit/ja/arriving-blue-airport.mp3": {
+      "language": "ja",
+      "text": "まもなく、空港駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、空港駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.72,
+      "bytes": 58320
+    },
+    "/audio/transit/ja/arriving-blue-central-transfer-coral.mp3": {
+      "language": "ja",
+      "text": "まもなく、中央駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。コーラル線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、中央駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。コーラル線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.96,
+      "bytes": 77760
+    },
+    "/audio/transit/ja/arriving-blue-central.mp3": {
+      "language": "ja",
+      "text": "まもなく、中央駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、中央駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.552,
+      "bytes": 57312
+    },
+    "/audio/transit/ja/arriving-blue-library.mp3": {
+      "language": "ja",
+      "text": "まもなく、図書館駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、図書館駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.648,
+      "bytes": 57888
+    },
+    "/audio/transit/ja/arriving-blue-north.mp3": {
+      "language": "ja",
+      "text": "まもなく、北公園駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、北公園駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.888,
+      "bytes": 59328
+    },
+    "/audio/transit/ja/arriving-blue-riverside.mp3": {
+      "language": "ja",
+      "text": "まもなく、川辺駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、川辺駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.576,
+      "bytes": 57456
+    },
+    "/audio/transit/ja/arriving-blue-stadium.mp3": {
+      "language": "ja",
+      "text": "まもなく、スタジアム駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、スタジアム駅行きのブルー線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.672,
+      "bytes": 58032
+    },
+    "/audio/transit/ja/arriving-coral-central-transfer-blue.mp3": {
+      "language": "ja",
+      "text": "まもなく、中央駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。ブルー線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、中央駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。ブルー線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 13.008,
+      "bytes": 78048
+    },
+    "/audio/transit/ja/arriving-coral-central.mp3": {
+      "language": "ja",
+      "text": "まもなく、中央駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、中央駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.744,
+      "bytes": 58464
+    },
+    "/audio/transit/ja/arriving-coral-garden.mp3": {
+      "language": "ja",
+      "text": "まもなく、庭園駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、庭園駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.84,
+      "bytes": 59040
+    },
+    "/audio/transit/ja/arriving-coral-harbor.mp3": {
+      "language": "ja",
+      "text": "まもなく、港駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、港駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.696,
+      "bytes": 58176
+    },
+    "/audio/transit/ja/arriving-coral-market.mp3": {
+      "language": "ja",
+      "text": "まもなく、市場駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、市場駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.696,
+      "bytes": 58176
+    },
+    "/audio/transit/ja/arriving-coral-museum.mp3": {
+      "language": "ja",
+      "text": "まもなく、博物館駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、博物館駅行きのコーラル線の電車が到着します。降りるお客様を先にお通しください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.984,
+      "bytes": 59904
+    },
+    "/audio/transit/ja/next-blue-airport.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。次は、空港駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。次は、空港駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.448,
+      "bytes": 68688
+    },
+    "/audio/transit/ja/next-blue-central-transfer-coral.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。コーラル線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。コーラル線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 14.928,
+      "bytes": 89568
+    },
+    "/audio/transit/ja/next-blue-central.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.52,
+      "bytes": 69120
+    },
+    "/audio/transit/ja/next-blue-library.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。次は、図書館駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。次は、図書館駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.52,
+      "bytes": 69120
+    },
+    "/audio/transit/ja/next-blue-north.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。次は、北公園駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。次は、北公園駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.664,
+      "bytes": 69984
+    },
+    "/audio/transit/ja/next-blue-riverside.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。次は、川辺駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。次は、川辺駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.424,
+      "bytes": 68544
+    },
+    "/audio/transit/ja/next-blue-stadium.mp3": {
+      "language": "ja",
+      "text": "この電車はブルー線です。次は、スタジアム駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はブルー線です。次は、スタジアム駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.568,
+      "bytes": 69408
+    },
+    "/audio/transit/ja/next-coral-central-transfer-blue.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。ブルー線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。ブルー線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 15.0,
+      "bytes": 90000
+    },
+    "/audio/transit/ja/next-coral-central.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。次は、中央駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.712,
+      "bytes": 70272
+    },
+    "/audio/transit/ja/next-coral-garden.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。次は、庭園駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。次は、庭園駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.52,
+      "bytes": 69120
+    },
+    "/audio/transit/ja/next-coral-harbor.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。次は、港駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。次は、港駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.52,
+      "bytes": 69120
+    },
+    "/audio/transit/ja/next-coral-market.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。次は、市場駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。次は、市場駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.616,
+      "bytes": 69696
+    },
+    "/audio/transit/ja/next-coral-museum.mp3": {
+      "language": "ja",
+      "text": "この電車はコーラル線です。次は、博物館駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "recordingLanguage": "ja",
+      "recordingText": "この電車はコーラル線です。次は、博物館駅です。お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.0,
+      "bytes": 72000
+    },
+    "/audio/transit/ja/pass-through.mp3": {
+      "language": "ja",
+      "text": "まもなく、電車がこの駅を通過します。ホームの安全線の内側までお下がりください。",
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく、電車がこの駅を通過します。ホームの安全線の内側までお下がりください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 8.856,
+      "bytes": 53136
+    },
+    "/audio/transit/ja/safety.mp3": {
+      "language": "ja",
+      "text": "安全のため、ホームでは安全線の内側でお待ちください。ドアをふさがないでください。走行中は手すりにおつかまりください。",
+      "recordingLanguage": "ja",
+      "recordingText": "安全のため、ホームでは安全線の内側でお待ちください。ドアをふさがないでください。走行中は手すりにおつかまりください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.408,
+      "bytes": 74448
+    },
+    "/audio/transit/ja/terminus-blue-airport.mp3": {
+      "language": "ja",
+      "text": "空港駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "空港駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.0,
+      "bytes": 72000
+    },
+    "/audio/transit/ja/terminus-blue-central-transfer-coral.mp3": {
+      "language": "ja",
+      "text": "中央駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。コーラル線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "中央駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。コーラル線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 15.36,
+      "bytes": 92160
+    },
+    "/audio/transit/ja/terminus-blue-central.mp3": {
+      "language": "ja",
+      "text": "中央駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "中央駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.952,
+      "bytes": 71712
+    },
+    "/audio/transit/ja/terminus-blue-library.mp3": {
+      "language": "ja",
+      "text": "図書館駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "図書館駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.976,
+      "bytes": 71856
+    },
+    "/audio/transit/ja/terminus-blue-north.mp3": {
+      "language": "ja",
+      "text": "北公園駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "北公園駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.168,
+      "bytes": 73008
+    },
+    "/audio/transit/ja/terminus-blue-riverside.mp3": {
+      "language": "ja",
+      "text": "川辺駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "川辺駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.856,
+      "bytes": 71136
+    },
+    "/audio/transit/ja/terminus-blue-stadium.mp3": {
+      "language": "ja",
+      "text": "スタジアム駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "スタジアム駅です。この駅はブルー線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.12,
+      "bytes": 72720
+    },
+    "/audio/transit/ja/terminus-coral-central-transfer-blue.mp3": {
+      "language": "ja",
+      "text": "中央駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。ブルー線は、お乗り換えです。",
+      "recordingLanguage": "ja",
+      "recordingText": "中央駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。ブルー線は、お乗り換えです。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 15.312,
+      "bytes": 91872
+    },
+    "/audio/transit/ja/terminus-coral-central.mp3": {
+      "language": "ja",
+      "text": "中央駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "中央駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.048,
+      "bytes": 72288
+    },
+    "/audio/transit/ja/terminus-coral-garden.mp3": {
+      "language": "ja",
+      "text": "庭園駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "庭園駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.0,
+      "bytes": 72000
+    },
+    "/audio/transit/ja/terminus-coral-harbor.mp3": {
+      "language": "ja",
+      "text": "港駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "港駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 11.976,
+      "bytes": 71856
+    },
+    "/audio/transit/ja/terminus-coral-market.mp3": {
+      "language": "ja",
+      "text": "市場駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "市場駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.0,
+      "bytes": 72000
+    },
+    "/audio/transit/ja/terminus-coral-museum.mp3": {
+      "language": "ja",
+      "text": "博物館駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "recordingLanguage": "ja",
+      "recordingText": "博物館駅です。この駅はコーラル線の終点です。どなた様もお降りください。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 12.336,
+      "bytes": 74016
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-blue-airport.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хөх шугамын галт тэрэг Нисэх онгоцны буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хөх шугамын галт тэрэг Нисэх онгоцны буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.816,
+      "bytes": 40896
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-blue-central-transfer-coral.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хөх шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хөх шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.464,
+      "bytes": 62784
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-blue-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хөх шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хөх шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.36,
+      "bytes": 38160
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-blue-library.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хөх шугамын галт тэрэг Номын сан буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хөх шугамын галт тэрэг Номын сан буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.552,
+      "bytes": 39312
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-blue-north.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хөх шугамын галт тэрэг Хойд цэцэрлэгт хүрээлэн буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хөх шугамын галт тэрэг Хойд цэцэрлэгт хүрээлэн буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.176,
+      "bytes": 43056
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-blue-riverside.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хөх шугамын галт тэрэг Голын эрэг буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хөх шугамын галт тэрэг Голын эрэг буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.648,
+      "bytes": 39888
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-blue-stadium.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хөх шугамын галт тэрэг Цэнгэлдэх хүрээлэн буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хөх шугамын галт тэрэг Цэнгэлдэх хүрээлэн буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.912,
+      "bytes": 41472
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-coral-central-transfer-blue.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Шүрэн шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шүрэн шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.416,
+      "bytes": 62496
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-coral-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Шүрэн шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шүрэн шугамын галт тэрэг Төв буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.456,
+      "bytes": 38736
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-coral-garden.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Шүрэн шугамын галт тэрэг Цэцэрлэг буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шүрэн шугамын галт тэрэг Цэцэрлэг буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.6,
+      "bytes": 39600
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-coral-harbor.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Шүрэн шугамын галт тэрэг Боомт буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шүрэн шугамын галт тэрэг Боомт буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.48,
+      "bytes": 38880
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-coral-market.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Шүрэн шугамын галт тэрэг Зах буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шүрэн шугамын галт тэрэг Зах буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.36,
+      "bytes": 38160
+    },
+    "/audio/transit/mn-Cyrl-MN/approaching-coral-museum.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Шүрэн шугамын галт тэрэг Музей буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шүрэн шугамын галт тэрэг Музей буудалд ойртож байна. Буух зорчигчид бэлтгэнэ үү.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.528,
+      "bytes": 39168
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-blue-airport.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Нисэх онгоцны буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Нисэх онгоцны буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.992,
+      "bytes": 47952
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-blue-central-transfer-coral.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.64,
+      "bytes": 69840
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-blue-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.536,
+      "bytes": 45216
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-blue-library.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Номын сан буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Номын сан буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.752,
+      "bytes": 46512
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-blue-north.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хойд цэцэрлэгт хүрээлэн буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хойд цэцэрлэгт хүрээлэн буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 8.472,
+      "bytes": 50832
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-blue-riverside.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Голын эрэг буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Голын эрэг буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.896,
+      "bytes": 47376
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-blue-stadium.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Цэнгэлдэх хүрээлэн буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Цэнгэлдэх хүрээлэн буудал руу явах Хөх шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 8.184,
+      "bytes": 49104
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-coral-central-transfer-blue.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.52,
+      "bytes": 69120
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-coral-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.56,
+      "bytes": 45360
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-coral-garden.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Цэцэрлэг буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Цэцэрлэг буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.704,
+      "bytes": 46224
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-coral-harbor.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Боомт буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Боомт буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.584,
+      "bytes": 45504
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-coral-market.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Зах буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Зах буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.536,
+      "bytes": 45216
+    },
+    "/audio/transit/mn-Cyrl-MN/arriving-coral-museum.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Музей буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Музей буудал руу явах Шүрэн шугамын галт тэрэг ирж байна. Эхлээд зорчигчдыг буулгаад, дараа нь сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.632,
+      "bytes": 45792
+    },
+    "/audio/transit/mn-Cyrl-MN/next-blue-airport.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Нисэх онгоцны буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Нисэх онгоцны буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.04,
+      "bytes": 66240
+    },
+    "/audio/transit/mn-Cyrl-MN/next-blue-central-transfer-coral.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 14.616,
+      "bytes": 87696
+    },
+    "/audio/transit/mn-Cyrl-MN/next-blue-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.512,
+      "bytes": 63072
+    },
+    "/audio/transit/mn-Cyrl-MN/next-blue-library.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Номын сан буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Номын сан буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.776,
+      "bytes": 64656
+    },
+    "/audio/transit/mn-Cyrl-MN/next-blue-north.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Хойд цэцэрлэгт хүрээлэн буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Хойд цэцэрлэгт хүрээлэн буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.424,
+      "bytes": 68544
+    },
+    "/audio/transit/mn-Cyrl-MN/next-blue-riverside.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Голын эрэг буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Голын эрэг буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.872,
+      "bytes": 65232
+    },
+    "/audio/transit/mn-Cyrl-MN/next-blue-stadium.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Цэнгэлдэх хүрээлэн буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Хөх шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Цэнгэлдэх хүрээлэн буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.136,
+      "bytes": 66816
+    },
+    "/audio/transit/mn-Cyrl-MN/next-coral-central-transfer-blue.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 14.496,
+      "bytes": 86976
+    },
+    "/audio/transit/mn-Cyrl-MN/next-coral-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Төв буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.536,
+      "bytes": 63216
+    },
+    "/audio/transit/mn-Cyrl-MN/next-coral-garden.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Цэцэрлэг буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Цэцэрлэг буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.752,
+      "bytes": 64512
+    },
+    "/audio/transit/mn-Cyrl-MN/next-coral-harbor.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Боомт буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Боомт буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.608,
+      "bytes": 63648
+    },
+    "/audio/transit/mn-Cyrl-MN/next-coral-market.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Зах буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Зах буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.464,
+      "bytes": 62784
+    },
+    "/audio/transit/mn-Cyrl-MN/next-coral-museum.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Музей буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та Шүрэн шугамын галт тэргээр зорчиж байна. Дараагийн буудал бол Музей буудал. Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 10.632,
+      "bytes": 63792
+    },
+    "/audio/transit/mn-Cyrl-MN/pass-through.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Галт тэрэг энэ буудлаар зогсолгүй өнгөрнө. Тавцангийн аюулгүйн шугамын цаана зогсоно уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Галт тэрэг энэ буудлаар зогсолгүй өнгөрнө. Тавцангийн аюулгүйн шугамын цаана зогсоно уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 6.6,
+      "bytes": 39600
+    },
+    "/audio/transit/mn-Cyrl-MN/safety.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Аюулгүй байдлын төлөө тавцангийн аюулгүйн шугамын цаана зогсож, хаалгыг чөлөөтэй байлгана уу. Галт тэрэг явж байх үед бариулаас барина уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Аюулгүй байдлын төлөө тавцангийн аюулгүйн шугамын цаана зогсож, хаалгыг чөлөөтэй байлгана уу. Галт тэрэг явж байх үед бариулаас барина уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 9.264,
+      "bytes": 55584
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-blue-airport.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Нисэх онгоцны буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Нисэх онгоцны буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 12.048,
+      "bytes": 72288
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-blue-central-transfer-coral.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа. Шүрэн шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 15.648,
+      "bytes": 93888
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-blue-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.544,
+      "bytes": 69264
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-blue-library.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Номын сан буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Номын сан буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.832,
+      "bytes": 70992
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-blue-north.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Хойд цэцэрлэгт хүрээлэн буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Хойд цэцэрлэгт хүрээлэн буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 12.456,
+      "bytes": 74736
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-blue-riverside.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Голын эрэг буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Голын эрэг буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.904,
+      "bytes": 71424
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-blue-stadium.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Цэнгэлдэх хүрээлэн буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Цэнгэлдэх хүрээлэн буудалд ирлээ. Энэ бол Хөх шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 12.216,
+      "bytes": 73296
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-coral-central-transfer-blue.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа. Хөх шугамд шилжих зорчигчид энэ буудалд сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 15.528,
+      "bytes": 93168
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-coral-central.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Төв буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Төв буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.568,
+      "bytes": 69408
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-coral-garden.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Цэцэрлэг буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Цэцэрлэг буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.784,
+      "bytes": 70704
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-coral-harbor.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Боомт буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Боомт буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.64,
+      "bytes": 69840
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-coral-market.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Зах буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Зах буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.496,
+      "bytes": 68976
+    },
+    "/audio/transit/mn-Cyrl-MN/terminus-coral-museum.mp3": {
+      "language": "mn-Cyrl-MN",
+      "text": "Музей буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Музей буудалд ирлээ. Энэ бол Шүрэн шугамын эцсийн буудал. Бүх зорчигч галт тэрэгнээс бууна уу. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 11.712,
+      "bytes": 70272
+    },
+    "/audio/transit/zh-CN/approaching-blue-airport.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是蓝线。列车即将到达机场站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是蓝线。列车即将到达机场站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.176,
+      "bytes": 43056
+    },
+    "/audio/transit/zh-CN/approaching-blue-central-transfer-coral.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是蓝线。列车即将到达中心站，请提前做好下车准备。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是蓝线。列车即将到达中心站，请提前做好下车准备。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 11.52,
+      "bytes": 69120
+    },
+    "/audio/transit/zh-CN/approaching-blue-central.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是蓝线。列车即将到达中心站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是蓝线。列车即将到达中心站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.2,
+      "bytes": 43200
+    },
+    "/audio/transit/zh-CN/approaching-blue-library.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是蓝线。列车即将到达图书馆站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是蓝线。列车即将到达图书馆站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.416,
+      "bytes": 44496
+    },
+    "/audio/transit/zh-CN/approaching-blue-north.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是蓝线。列车即将到达北公园站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是蓝线。列车即将到达北公园站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.416,
+      "bytes": 44496
+    },
+    "/audio/transit/zh-CN/approaching-blue-riverside.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是蓝线。列车即将到达河畔站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是蓝线。列车即将到达河畔站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.2,
+      "bytes": 43200
+    },
+    "/audio/transit/zh-CN/approaching-blue-stadium.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是蓝线。列车即将到达体育场站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是蓝线。列车即将到达体育场站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/zh-CN/approaching-coral-central-transfer-blue.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是珊瑚线。列车即将到达中心站，请提前做好下车准备。需要换乘蓝线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是珊瑚线。列车即将到达中心站，请提前做好下车准备。需要换乘蓝线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 11.496,
+      "bytes": 68976
+    },
+    "/audio/transit/zh-CN/approaching-coral-central.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是珊瑚线。列车即将到达中心站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是珊瑚线。列车即将到达中心站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/zh-CN/approaching-coral-garden.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是珊瑚线。列车即将到达花园站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是珊瑚线。列车即将到达花园站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/zh-CN/approaching-coral-harbor.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是珊瑚线。列车即将到达港口站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是珊瑚线。列车即将到达港口站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.464,
+      "bytes": 44784
+    },
+    "/audio/transit/zh-CN/approaching-coral-market.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是珊瑚线。列车即将到达集市站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是珊瑚线。列车即将到达集市站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/zh-CN/approaching-coral-museum.mp3": {
+      "language": "zh-CN",
+      "text": "您乘坐的是珊瑚线。列车即将到达博物馆站，请提前做好下车准备。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您乘坐的是珊瑚线。列车即将到达博物馆站，请提前做好下车准备。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.584,
+      "bytes": 45504
+    },
+    "/audio/transit/zh-CN/arriving-blue-airport.mp3": {
+      "language": "zh-CN",
+      "text": "开往机场站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往机场站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.368,
+      "bytes": 44208
+    },
+    "/audio/transit/zh-CN/arriving-blue-central-transfer-coral.mp3": {
+      "language": "zh-CN",
+      "text": "开往中心站方向的蓝线列车即将进站。请先下后上，有序乘车。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往中心站方向的蓝线列车即将进站。请先下后上，有序乘车。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 11.784,
+      "bytes": 70704
+    },
+    "/audio/transit/zh-CN/arriving-blue-central.mp3": {
+      "language": "zh-CN",
+      "text": "开往中心站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往中心站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.44,
+      "bytes": 44640
+    },
+    "/audio/transit/zh-CN/arriving-blue-library.mp3": {
+      "language": "zh-CN",
+      "text": "开往图书馆站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往图书馆站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.584,
+      "bytes": 45504
+    },
+    "/audio/transit/zh-CN/arriving-blue-north.mp3": {
+      "language": "zh-CN",
+      "text": "开往北公园站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往北公园站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.584,
+      "bytes": 45504
+    },
+    "/audio/transit/zh-CN/arriving-blue-riverside.mp3": {
+      "language": "zh-CN",
+      "text": "开往河畔站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往河畔站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.44,
+      "bytes": 44640
+    },
+    "/audio/transit/zh-CN/arriving-blue-stadium.mp3": {
+      "language": "zh-CN",
+      "text": "开往体育场站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往体育场站方向的蓝线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.56,
+      "bytes": 45360
+    },
+    "/audio/transit/zh-CN/arriving-coral-central-transfer-blue.mp3": {
+      "language": "zh-CN",
+      "text": "开往中心站方向的珊瑚线列车即将进站。请先下后上，有序乘车。需要换乘蓝线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往中心站方向的珊瑚线列车即将进站。请先下后上，有序乘车。需要换乘蓝线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 11.784,
+      "bytes": 70704
+    },
+    "/audio/transit/zh-CN/arriving-coral-central.mp3": {
+      "language": "zh-CN",
+      "text": "开往中心站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往中心站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.68,
+      "bytes": 46080
+    },
+    "/audio/transit/zh-CN/arriving-coral-garden.mp3": {
+      "language": "zh-CN",
+      "text": "开往花园站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往花园站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.632,
+      "bytes": 45792
+    },
+    "/audio/transit/zh-CN/arriving-coral-harbor.mp3": {
+      "language": "zh-CN",
+      "text": "开往港口站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往港口站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.608,
+      "bytes": 45648
+    },
+    "/audio/transit/zh-CN/arriving-coral-market.mp3": {
+      "language": "zh-CN",
+      "text": "开往集市站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往集市站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.632,
+      "bytes": 45792
+    },
+    "/audio/transit/zh-CN/arriving-coral-museum.mp3": {
+      "language": "zh-CN",
+      "text": "开往博物馆站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "开往博物馆站方向的珊瑚线列车即将进站。请先下后上，有序乘车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.752,
+      "bytes": 46512
+    },
+    "/audio/transit/zh-CN/next-blue-airport.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐蓝线。下一站，机场站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐蓝线。下一站，机场站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.024,
+      "bytes": 54144
+    },
+    "/audio/transit/zh-CN/next-blue-central-transfer-coral.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐蓝线。下一站，中心站。下车时，请注意列车与站台之间的空隙。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐蓝线。下一站，中心站。下车时，请注意列车与站台之间的空隙。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 13.392,
+      "bytes": 80352
+    },
+    "/audio/transit/zh-CN/next-blue-central.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐蓝线。下一站，中心站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐蓝线。下一站，中心站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.072,
+      "bytes": 54432
+    },
+    "/audio/transit/zh-CN/next-blue-library.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐蓝线。下一站，图书馆站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐蓝线。下一站，图书馆站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.24,
+      "bytes": 55440
+    },
+    "/audio/transit/zh-CN/next-blue-north.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐蓝线。下一站，北公园站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐蓝线。下一站，北公园站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.24,
+      "bytes": 55440
+    },
+    "/audio/transit/zh-CN/next-blue-riverside.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐蓝线。下一站，河畔站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐蓝线。下一站，河畔站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.072,
+      "bytes": 54432
+    },
+    "/audio/transit/zh-CN/next-blue-stadium.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐蓝线。下一站，体育场站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐蓝线。下一站，体育场站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.192,
+      "bytes": 55152
+    },
+    "/audio/transit/zh-CN/next-coral-central-transfer-blue.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐珊瑚线。下一站，中心站。下车时，请注意列车与站台之间的空隙。需要换乘蓝线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐珊瑚线。下一站，中心站。下车时，请注意列车与站台之间的空隙。需要换乘蓝线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 13.344,
+      "bytes": 80064
+    },
+    "/audio/transit/zh-CN/next-coral-central.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐珊瑚线。下一站，中心站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐珊瑚线。下一站，中心站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.24,
+      "bytes": 55440
+    },
+    "/audio/transit/zh-CN/next-coral-garden.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐珊瑚线。下一站，花园站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐珊瑚线。下一站，花园站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.216,
+      "bytes": 55296
+    },
+    "/audio/transit/zh-CN/next-coral-harbor.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐珊瑚线。下一站，港口站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐珊瑚线。下一站，港口站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.168,
+      "bytes": 55008
+    },
+    "/audio/transit/zh-CN/next-coral-market.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐珊瑚线。下一站，集市站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐珊瑚线。下一站，集市站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.216,
+      "bytes": 55296
+    },
+    "/audio/transit/zh-CN/next-coral-museum.mp3": {
+      "language": "zh-CN",
+      "text": "欢迎乘坐珊瑚线。下一站，博物馆站。下车时，请注意列车与站台之间的空隙。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢迎乘坐珊瑚线。下一站，博物馆站。下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 9.36,
+      "bytes": 56160
+    },
+    "/audio/transit/zh-CN/pass-through.mp3": {
+      "language": "zh-CN",
+      "text": "列车即将通过本站，不停车。请站在站台安全线以内，注意安全。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "列车即将通过本站，不停车。请站在站台安全线以内，注意安全。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 7.392,
+      "bytes": 44352
+    },
+    "/audio/transit/zh-CN/safety.mp3": {
+      "language": "zh-CN",
+      "text": "为了您的安全，请站在站台安全线以内，不要阻挡车门。列车运行时，请握好扶手。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "为了您的安全，请站在站台安全线以内，不要阻挡车门。列车运行时，请握好扶手。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.832,
+      "bytes": 52992
+    },
+    "/audio/transit/zh-CN/terminus-blue-airport.mp3": {
+      "language": "zh-CN",
+      "text": "机场站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "机场站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.16,
+      "bytes": 48960
+    },
+    "/audio/transit/zh-CN/terminus-blue-central-transfer-coral.mp3": {
+      "language": "zh-CN",
+      "text": "中心站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "中心站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。需要换乘珊瑚线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 12.504,
+      "bytes": 75024
+    },
+    "/audio/transit/zh-CN/terminus-blue-central.mp3": {
+      "language": "zh-CN",
+      "text": "中心站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "中心站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.184,
+      "bytes": 49104
+    },
+    "/audio/transit/zh-CN/terminus-blue-library.mp3": {
+      "language": "zh-CN",
+      "text": "图书馆站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "图书馆站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.352,
+      "bytes": 50112
+    },
+    "/audio/transit/zh-CN/terminus-blue-north.mp3": {
+      "language": "zh-CN",
+      "text": "北公园站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北公园站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.352,
+      "bytes": 50112
+    },
+    "/audio/transit/zh-CN/terminus-blue-riverside.mp3": {
+      "language": "zh-CN",
+      "text": "河畔站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "河畔站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.16,
+      "bytes": 48960
+    },
+    "/audio/transit/zh-CN/terminus-blue-stadium.mp3": {
+      "language": "zh-CN",
+      "text": "体育场站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "体育场站到了。本站是蓝线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.328,
+      "bytes": 49968
+    },
+    "/audio/transit/zh-CN/terminus-coral-central-transfer-blue.mp3": {
+      "language": "zh-CN",
+      "text": "中心站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。需要换乘蓝线的乘客，请在本站换乘。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "中心站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。需要换乘蓝线的乘客，请在本站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 12.504,
+      "bytes": 75024
+    },
+    "/audio/transit/zh-CN/terminus-coral-central.mp3": {
+      "language": "zh-CN",
+      "text": "中心站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "中心站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.4,
+      "bytes": 50400
+    },
+    "/audio/transit/zh-CN/terminus-coral-garden.mp3": {
+      "language": "zh-CN",
+      "text": "花园站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "花园站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.4,
+      "bytes": 50400
+    },
+    "/audio/transit/zh-CN/terminus-coral-harbor.mp3": {
+      "language": "zh-CN",
+      "text": "港口站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "港口站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.352,
+      "bytes": 50112
+    },
+    "/audio/transit/zh-CN/terminus-coral-market.mp3": {
+      "language": "zh-CN",
+      "text": "集市站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "集市站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.376,
+      "bytes": 50256
+    },
+    "/audio/transit/zh-CN/terminus-coral-museum.mp3": {
+      "language": "zh-CN",
+      "text": "博物馆站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "recordingLanguage": "zh-CN",
+      "recordingText": "博物馆站到了。本站是珊瑚线的终点站，请所有乘客下车。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 8.496,
+      "bytes": 50976
+    }
+  }
+}

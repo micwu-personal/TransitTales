@@ -1,0 +1,63 @@
+@font-face {
+  font-family: 'Noto Sans Mongolian';
+  src: url('../public/fonts/NotoSansMongolian-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+html:lang(mn-Mong) body {
+  font-family: 'Noto Sans Mongolian', system-ui, sans-serif;
+}
+html:lang(mn-Mong) :is(h1, h2, h3, p, [data-copy], [data-i18n], .destination, .scene-caption, .play, .future a, footer, .interior-caption, .interior-status) {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  max-block-size: 100%;
+  max-inline-size: 18rem;
+  overflow-wrap: anywhere;
+  letter-spacing: normal;
+  line-height: 1.65;
+}
+html:lang(mn-Mong) :is(button, input, select) {
+  font-family: 'Noto Sans Mongolian', system-ui, sans-serif;
+  letter-spacing: normal;
+}
+html:lang(mn-Mong) button:not(:has(svg)) {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  max-height: 15rem;
+  min-width: 44px;
+}
+html:lang(mn-Mong) .station-label {
+  font-family: 'Noto Sans Mongolian', sans-serif;
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  font-size: 14px;
+  text-anchor: start;
+}
+html:lang(mn-Mong) :is(.goal-label, .entrance-label) {
+  font-family: 'Noto Sans Mongolian', sans-serif;
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  text-anchor: start;
+  font-size: 12px;
+}
+html:lang(mn-Mong) :is(.departure, .bench, .goal-section, .instructions, .interior-panel) { min-width: 0; }
+html:lang(mn-Mong) :is(.header-controls, .language-control, .language) { flex-wrap: wrap; }
+html:lang(mn-Mong) .invitation { display: flex; gap: 2rem; align-items: flex-start; }
+html:lang(mn-Mong) .departure { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+html:lang(mn-Mong) .departure :is(h2, p) { margin: 0; }
+html:lang(mn-Mong) :is(.broadcast blockquote, #broadcast-voice-note, .briefing, #puzzle-caption, #escalator-goals strong, #escalator-goals small, .tool-count) {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  max-inline-size: 16rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+html:lang(mn-Mong) .broadcast blockquote { min-height: 0; max-height: 18rem; }
+html:lang(mn-Mong) .stage-heading { align-items: flex-start; }
+html:lang(mn-Mong) .mall-wordmark { display: none; }
+@media (max-width: 700px) {
+  html:lang(mn-Mong) :is(h1, h2, h3, p, [data-copy], [data-i18n]) { max-inline-size: 14rem; }
+  html:lang(mn-Mong) .invitation { gap: 1rem; }
+}

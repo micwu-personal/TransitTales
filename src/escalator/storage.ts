@@ -1,0 +1,4 @@
+export interface Best { score:number; stars:number }
+export const SCORE_KEY='transit-tales-escalator-scores';
+export function readScores(storage:Pick<Storage,'getItem'>|undefined):Record<string,Best> {try {const data:unknown=JSON.parse(storage?.getItem(SCORE_KEY)||'{}');if(!data||typeof data!=='object'||Array.isArray(data))return {};return Object.fromEntries(Object.entries(data).filter(([,v])=>v&&typeof v==='object'&&Number.isFinite(v.score)&&v.score>=0&&Number.isInteger(v.stars)&&v.stars>=0&&v.stars<=3).map(([k,v])=>[k,{score:v.score,stars:v.stars}]));}catch{return {};}}
+export function saveScore(storage:Pick<Storage,'setItem'>|undefined,scores:Record<string,Best>,id:string,best:Best):boolean {scores[id]={score:Math.max(scores[id]?.score||0,best.score),stars:Math.max(scores[id]?.stars||0,best.stars)};try{if(!storage)return false;storage.setItem(SCORE_KEY,JSON.stringify(scores));return true;}catch{return false;}}

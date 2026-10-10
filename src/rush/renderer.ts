@@ -3,7 +3,7 @@ import { type CitySnapshot, type Point } from './view';
 
 export type StationSelection = (stationId: string) => void;
 export interface CityRenderer {
-  mount(host: HTMLElement, onSelect: StationSelection): void;
+  mount(host: HTMLElement, onSelect: StationSelection, onTrainSelect?: (trainId: number) => void): void;
   render(snapshot: CitySnapshot): void;
   dispose(): void;
 }
@@ -14,22 +14,26 @@ const project = (point: Point) => ({ x: point.x * CITY_WIDTH, y: point.y * CITY_
 export function createSvgCityRenderer(): CityRenderer {
   let svg: SVGSVGElement | undefined;
   let select: StationSelection | undefined;
+  let selectTrain: ((trainId: number) => void) | undefined;
   let signature = '';
   const stationNodes = new Map<string, SVGGElement>();
   const trainNodes = new Map<number, SVGGElement>();
   function activate(event: MouseEvent | KeyboardEvent) {
     const station = (event.target as Element).closest<SVGElement>('[data-station]');
-    if (!station) return;
+    const train = (event.target as Element).closest<SVGElement>('[data-train]');
+    if (!station && !train) return;
     if (event instanceof KeyboardEvent && event.key !== 'Enter' && event.key !== ' ') return;
-    event.preventDefault(); select?.(station.dataset.station!);
+    event.preventDefault();
+    if (train) selectTrain?.(Number(train.dataset.train));
+    else select?.(station!.dataset.station!);
   }
   function dispose() {
     svg?.removeEventListener('click', activate); svg?.removeEventListener('keydown', activate); svg?.remove();
-    svg = undefined; select = undefined; signature = ''; stationNodes.clear(); trainNodes.clear();
+    svg = undefined; select = undefined; selectTrain = undefined; signature = ''; stationNodes.clear(); trainNodes.clear();
   }
   return {
-    mount(host, onSelect) {
-      dispose(); select = onSelect;
+    mount(host, onSelect, onTrainSelect) {
+      dispose(); select = onSelect; selectTrain = onTrainSelect;
       svg = document.createElementNS(SVG_NS, 'svg'); svg.id = 'map';
       svg.setAttribute('viewBox', `0 0 ${CITY_WIDTH} ${CITY_HEIGHT}`); svg.setAttribute('role', 'group');
       svg.addEventListener('click', activate); svg.addEventListener('keydown', activate); host.append(svg);
@@ -45,7 +49,7 @@ export function createSvgCityRenderer(): CityRenderer {
           const points = line.stops.map(id => project(stations.get(id)!.position)).map(p => `${p.x},${p.y}`).join(' ');
           return `<g aria-hidden="true"><polyline points="${points}" class="rail-shadow"/><polyline points="${points}" class="rail-bed"/><polyline points="${points}" class="rail-sleepers"/><polyline points="${points}" class="rail-line" stroke="${escape(line.color)}"/><polyline points="${points}" class="rail-highlight"/></g>`;
         }).join('');
-        svg.innerHTML = `<g class="city-scenery" aria-hidden="true">${coastalScenery()}</g>${tracks}<text x="364" y="702" class="river-label" aria-hidden="true"></text><g id="train-nodes" aria-hidden="true" pointer-events="none"></g><g id="station-nodes"></g>`;
+        svg.innerHTML = `<g class="city-scenery" aria-hidden="true">${coastalScenery()}</g>${tracks}<text x="364" y="702" class="river-label" aria-hidden="true"></text><g id="station-nodes"></g><g id="train-nodes"></g>`;
         const stationLayer = svg.querySelector('#station-nodes')!;
         for (const station of snapshot.stations) {
           const node = document.createElementNS(SVG_NS, 'g'); const p = project(station.position);
@@ -60,7 +64,12 @@ export function createSvgCityRenderer(): CityRenderer {
         const node = stationNodes.get(station.id)!;
         node.setAttribute('aria-label', station.accessibleName); node.setAttribute('aria-pressed', String(station.selected));
         node.classList.toggle('selected', station.selected); node.classList.toggle('busy', station.waiting >= 20); node.classList.toggle('helped', station.helped);
-        node.querySelector('.station-label')!.textContent = station.label; node.querySelector('.crowd text')!.textContent = String(station.waiting);
+        const stationLabel = node.querySelector('.station-label')!;
+        stationLabel.textContent = station.label;
+        const vertical = /[\u1800-\u18af]/.test(station.label);
+        const side = ['north', 'library', 'stadium'].includes(station.id);
+        stationLabel.parentElement!.setAttribute('transform', vertical ? 'translate(38 -42)' : `translate(${side ? 36 : 0} ${side ? -5 : -31})`);
+        node.querySelector('.crowd text')!.textContent = String(station.waiting);
       }
       const alive = new Set(snapshot.trains.map(train => train.id));
       for (const [id, node] of trainNodes) if (!alive.has(id)) { node.remove(); trainNodes.delete(id); }
@@ -68,9 +77,11 @@ export function createSvgCityRenderer(): CityRenderer {
         let node = trainNodes.get(train.id);
         if (!node) {
           node = document.createElementNS(SVG_NS, 'g'); node.classList.add('train');
-          node.innerHTML = `<g class="carriages">${[-29, -8, 13].map(x => `<g transform="translate(${x} 0)"><rect class="train-shadow" x="-1" y="-4" width="19" height="13" rx="4"/><rect class="train-body" y="-8" width="18" height="12" rx="4"/><rect class="train-roof" x="1" y="-10" width="16" height="9" rx="3"/><path d="M4-7h3m3 0h3" class="train-window"/><path d="M3 3h12" stroke="#254f50" stroke-width="2"/></g>`).join('')}</g><g class="rider-badge"><rect x="-12" y="-32" width="24" height="17" rx="8"/><text y="-20" text-anchor="middle"></text></g>`;
+          node.dataset.train = String(train.id); node.setAttribute('role', 'button'); node.setAttribute('tabindex', '0');
+          node.innerHTML = `<rect class="train-hit" x="-35" y="-35" width="75" height="54" fill="transparent"/><g class="carriages">${[-29, -8, 13].map(x => `<g transform="translate(${x} 0)"><rect class="train-shadow" x="-1" y="-4" width="19" height="13" rx="4"/><rect class="train-body" y="-8" width="18" height="12" rx="4"/><rect class="train-roof" x="1" y="-10" width="16" height="9" rx="3"/><path d="M4-7h3m3 0h3" class="train-window"/><path d="M3 3h12" stroke="#254f50" stroke-width="2"/></g>`).join('')}</g><g class="rider-badge"><rect x="-12" y="-32" width="24" height="17" rx="8"/><text y="-20" text-anchor="middle"></text></g>`;
           svg.querySelector('#train-nodes')!.append(node); trainNodes.set(train.id, node);
         }
+        node.setAttribute('aria-label', train.accessibleName);
         const p = project(train.position);
                 const heading = Math.atan2(Math.sin(train.heading) * CITY_HEIGHT, Math.cos(train.heading) * CITY_WIDTH);
                 const angle = heading * 180 / Math.PI;
