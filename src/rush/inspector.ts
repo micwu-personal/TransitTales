@@ -26,7 +26,13 @@ export function createInteriorInspector(host: HTMLElement, getGame: () => Game, 
   }
   const player = createAnnouncementPlayer(next => { state = next; showStatus(); });
   player.setMuted(muted);
-  function play() { if (descriptor) void player.play(announcementAsset(getLanguage(), descriptor)); }
+  function play() {
+    if (!descriptor) return;
+    const playedSignature = speechSignature;
+    void player.play(announcementAsset(getLanguage(), descriptor)).then(result => {
+      if (result === 'ended' && selection && !preview && !muted && getGame().phase === 'playing' && speechSignature !== playedSignature) play();
+    });
+  }
   function render() {
     if (!selection) return;
     const language = getLanguage(), c = interiorText(language);
@@ -64,7 +70,9 @@ export function createInteriorInspector(host: HTMLElement, getGame: () => Game, 
     $('broadcast-caption').textContent = announcementText(language, descriptor);
     if (nextSpeech !== speechSignature) {
       const followJourney = Boolean(speechSignature) && !preview && getGame().phase === 'playing';
-      speechSignature = nextSpeech; player.stop(); state = muted ? 'muted' : 'idle'; showStatus();
+      speechSignature = nextSpeech;
+      if (followJourney && !muted && (player.state === 'loading' || player.state === 'playing')) return;
+      player.stop(); state = muted ? 'muted' : 'idle'; showStatus();
       if (followJourney && !muted) play();
     }
   }

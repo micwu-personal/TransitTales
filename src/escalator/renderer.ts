@@ -28,13 +28,26 @@ function pieceMarkup(p:MallSnapshot['pieces'][number],v:MallSnapshot):string {
  return `<g class="mall-piece ${chosen?'is-selected':''}" data-piece="${p.id}" role="button" tabindex="${v.building?'0':'-1'}" aria-label="${t[p.type]} ${landingName(p.a)} → ${landingName(p.b)}" aria-pressed="${chosen}"><path d="M${a.x} ${a.y+7}L${b.x} ${b.y+7}" stroke="#5c7564" stroke-width="23" opacity=".15"/><g transform="translate(${a.x} ${a.y}) rotate(${angle})">${body}${arrows}</g><path class="piece-focus" d="M${a.x} ${a.y-4}L${b.x} ${b.y-4}" stroke="${chosen?'#b14d37':'transparent'}" stroke-width="5" fill="none"/><path d="M${a.x} ${a.y-10}L${b.x} ${b.y-10}" stroke="transparent" stroke-width="44" fill="none"/></g>`;
 }
 export function createSvgRenderer():MallRenderer {
- let host:HTMLElement|null=null,svg:SVGSVGElement|null=null,last='',landingCallback:(p:Point)=>void, pieceCallback:(id:string)=>void;
- const act=(event:Event)=>{const target=(event.target as Element).closest('[data-landing],[data-piece]');if(!target)return;
+ let host:HTMLElement|null=null,svg:SVGSVGElement|null=null,last='',lastPointerActivation=-Infinity,pointerStart:{id:number;x:number;y:number;target:Element|null}|null=null,landingCallback:(p:Point)=>void, pieceCallback:(id:string)=>void;
+ const act=(event:Event)=>{
+ const pointerType='pointerType' in event?String(event.pointerType):'';
+ const target=(event.target as Element).closest('[data-landing],[data-piece]');
+ if(event.type==='pointerdown'){
+  const pointer=event as PointerEvent;
+  if(pointerType!=='mouse'&&pointer.isPrimary&&pointer.button===0)pointerStart={id:pointer.pointerId,x:pointer.clientX,y:pointer.clientY,target};
+  return;
+ }
+ if(event.type==='pointerup'){
+  const pointer=event as PointerEvent,start=pointerStart;pointerStart=null;
+  if(pointerType==='mouse'||!pointer.isPrimary||pointer.button!==0||!start||start.id!==pointer.pointerId||start.target!==target||Math.hypot(pointer.clientX-start.x,pointer.clientY-start.y)>12)return;
+  lastPointerActivation=performance.now();event.preventDefault();
+ }else if(event.type==='click'&&performance.now()-lastPointerActivation<700)return;
+ if(!target)return;
  if(event instanceof KeyboardEvent && event.key!=='Enter'&&event.key!==' ')return;
  if(event instanceof KeyboardEvent)event.preventDefault();
  if(target.hasAttribute('data-landing')){const [x,y]=target.getAttribute('data-landing')!.split(',').map(Number);landingCallback({x,y});}else pieceCallback(target.getAttribute('data-piece')!);
  };
- return {mount(h,onLanding,onPiece){host=h;landingCallback=onLanding;pieceCallback=onPiece;host.innerHTML=`<svg id="escalator-board" viewBox="0 0 1000 650" role="group">${scenery()}</svg>`;svg=host.querySelector('svg');svg!.addEventListener('click',act);svg!.addEventListener('keydown',act);},render(v){if(!svg)return;const t=copy[v.language];svg.setAttribute('aria-label',t.mall);svg.classList.toggle('is-running',v.running&&!v.reducedMotion);
+ return {mount(h,onLanding,onPiece){host=h;landingCallback=onLanding;pieceCallback=onPiece;host.innerHTML=`<svg id="escalator-board" viewBox="0 0 1000 650" role="group">${scenery()}</svg>`;svg=host.querySelector('svg');svg!.addEventListener('pointerdown',act);svg!.addEventListener('pointerup',act);svg!.addEventListener('click',act);svg!.addEventListener('keydown',act);},render(v){if(!svg)return;const t=copy[v.language];svg.setAttribute('aria-label',t.mall);svg.classList.toggle('is-running',v.running&&!v.reducedMotion);
  const signature=JSON.stringify([v.puzzle.id,v.pieces,v.language,v.first,v.selected,v.building]);
  if(signature!==last){last=signature;const focused=document.activeElement;const focusedLanding=focused?.getAttribute('data-landing'),focusedPiece=focused?.getAttribute('data-piece');
  svg.querySelector('#mall-geometry')!.innerHTML=v.puzzle.obstacles.map(z=>{const a=project({x:z.x,y:z.y+z.h});return `<g aria-hidden="true"><rect x="${a.x}" y="${a.y}" width="${z.w*108}" height="${z.h*126}" rx="14" fill="#8faa78"/><path d="M${a.x+9} ${a.y+z.h*126-9}h${z.w*108-18}" stroke="#667e56" stroke-width="8"/>${plant(a.x+z.w*54,a.y+z.h*63,.8)}</g>`;}).join('')+v.puzzle.lowCeilings.map(z=>{const a=project({x:z.x,y:z.y+z.h});return `<rect aria-hidden="true" x="${a.x}" y="${a.y}" width="${z.w*108}" height="${z.h*126}" fill="url(#mall-canopy)" opacity=".55"/>`;}).join('')+v.pieces.map(p=>pieceMarkup(p,v)).join('');
@@ -43,5 +56,5 @@ export function createSvgRenderer():MallRenderer {
   if(focusedLanding||focusedPiece){const selector=focusedLanding?`[data-landing="${focusedLanding}"]`:`[data-piece="${focusedPiece}"]`;svg.querySelector<SVGElement>(selector)?.focus();}
   }
   svg.querySelector('#mall-people')!.innerHTML=v.riders.map((r,i)=>{const a=project(r.point),offset=(i%3-1)*11;return `<g transform="translate(${a.x+offset} ${a.y-12})" class="shopper ${r.arrived?'arrived':''}"><ellipse cx="0" cy="12" rx="10" ry="3" fill="#446653" opacity=".2"/><circle cy="-20" r="5" fill="#a47350"/><path d="M-6-12q6-4 12 0v14H-6z" fill="${destinationColor[r.destination]}"/><path d="M-3 2v9m6-9v9" stroke="#36564b" stroke-width="3"/>${r.wheelchair?'<circle cx="1" cy="5" r="9" fill="none" stroke="#345f60" stroke-width="3"/><path d="M8-4h6v14" fill="none" stroke="#345f60" stroke-width="2"/>':''}${r.balloon?'<path d="M7-7l9-27" stroke="#8a7654"/><ellipse cx="17" cy="-44" rx="9" ry="12" fill="#d7a64e"/>':''}${r.arrived?`<text x="0" y="-35" text-anchor="middle" fill="${destinationColor[r.destination]}" font-size="23">♪</text>`:r.stuck?'<text x="12" y="-25" fill="#a54734" font-size="17">?</text>':''}</g>`;}).join('');
- },dispose(){svg?.removeEventListener('click',act);svg?.removeEventListener('keydown',act);if(host)host.innerHTML='';svg=null;host=null;last='';}};
+ },dispose(){svg?.removeEventListener('pointerdown',act);svg?.removeEventListener('pointerup',act);svg?.removeEventListener('click',act);svg?.removeEventListener('keydown',act);if(host)host.innerHTML='';svg=null;host=null;last='';pointerStart=null;}};
 }
