@@ -28,7 +28,7 @@ describe('renderer-neutral city adapter', () => {
   it('interpolates normalized segment positions and clamps the view without modifying train progress', () => {
     const game = createGame(); game.phase = 'playing';
     const train = game.trains[0]; train.moving = true; train.progress = 0.25;
-    const snapshot = createCitySnapshot(game, { ...options, interpolationSeconds: 2.25 });
+    const snapshot = createCitySnapshot(game, { ...options, interpolationSeconds: game.network.segmentSeconds * 0.25 });
     const view = snapshot.trains[0];
     expect(view.from).toBe('harbor'); expect(view.to).toBe('market'); expect(view.progress).toBe(0.5);
     expect(view.position.x).toBeCloseTo((COASTAL_LAYOUT.harbor.x + COASTAL_LAYOUT.market.x) / 2);

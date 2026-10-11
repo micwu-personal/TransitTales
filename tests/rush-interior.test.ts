@@ -30,7 +30,7 @@ describe('live station and carriage interiors', () => {
     }
   });
   it('distinguishes incoming service, departing trains, transfers and terminal arrival', () => {
-    const game = createGame(); game.phase = 'playing'; game.time = 10;
+    const game = createGame(); game.phase = 'playing'; game.time = game.network.segmentSeconds;
     const train = game.trains[0]; train.index = 1; train.direction = 1; train.moving = true;
     const incoming = createInteriorSnapshot(game, {kind:'station',id:'central'}, 'en')!;
     expect(interiorAnnouncement(incoming)).toEqual({kind:'arriving',station:'garden',line:'coral'});
