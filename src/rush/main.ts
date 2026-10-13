@@ -1,6 +1,7 @@
 import './style.css';
 import '../languages.css';
-import { createSvgCityRenderer } from './renderer';
+import { createSvgCityRenderer, type CityRenderer } from './renderer';
+import { metroExperienceText } from './experience-copy';
 import { createInteriorInspector } from './inspector';
 import { interiorText } from './interior';
 import { createCitySnapshot } from './view';
@@ -20,7 +21,7 @@ root.innerHTML = `
 <main class="layout"><section class="playfield" data-label-key="network">
 <div class="field-top"><div><h1>${label('heading')}</h1><p>${label('intro')}</p></div><span class="city-stamp">${label('city')}<br>${label('fictional')}</span></div>
 <div class="score-strip"><span><strong id="delivered">0</strong> ${label('delivered')}</span><span><strong id="waiting">0</strong> ${label('waiting')}</span><span><strong id="aboard">0</strong> ${label('aboard')}</span><span><strong id="clock">2:30</strong> ${label('remaining')}</span></div>
-<div class="map-wrap" id="city-map"></div>
+<div class="city-view-toolbar"><label id="city-view-label" for="city-view"></label><select id="city-view"><option value="3d"></option><option value="2d"></option></select><button id="city-reset" class="secondary" hidden></button></div><p id="city-view-status" class="city-view-status" role="status" aria-live="polite" hidden></p><div class="map-wrap" id="city-map"></div>
 <div class="map-bottom"><p class="map-pan">${label('mapPan')}</p><div class="legend"><span><i class="coral"></i>${label('coralLegend')}</span><span><i class="blue"></i>${label('blueLegend')}</span><span>${label('queueLegend')}</span></div><p id="map-hint"></p></div>
 <div class="shift-progress"><div id="progress"></div></div>
 </section>
@@ -57,15 +58,72 @@ function best(id: string): number { try { return Number(localStorage.getItem(`ru
 function saveBest() { try { localStorage.setItem(`rush-best-${game.scenario.id}`, String(Math.max(best(game.scenario.id), stats(game).score))); } catch { storageAvailable = false; } }
 function reset(id: string) { inspector.close(); game = createGame(SCENARIOS.find(s => s.id === id)!); selected = game.scenario.hot; paused = false; accumulator = 0; announced = ''; $('result').hidden = true; render(); }
 function selectStation(id: string) { selected = id; renderDesk(); renderMap(); inspector.open({kind: 'station', id}); }
-const renderer = createSvgCityRenderer();
+let renderer: CityRenderer & { resetCamera?: () => void } = createSvgCityRenderer();
+let currentView: '2d' | '3d' = '2d';
+let requestedView: '2d' | '3d' = new URLSearchParams(location.search).get('view') === '2d' ? '2d' : '3d';
+let viewRequest = 0;
+let pageInactive = false;
+let viewState: 'loading' | 'fallback' | '' = '';
 const inspector = createInteriorInspector($('interior'), () => game, () => locale.language);
 const selectTrain = (id: number) => inspector.open({kind: 'train', id});
 renderer.mount($('city-map'), selectStation, selectTrain);
+function renderViewControls() {
+  const c = metroExperienceText(locale.language);
+  const select = $('city-view') as HTMLSelectElement;
+  select.value = requestedView;
+  select.options[0].textContent = c.depth; select.options[1].textContent = c.flat;
+  $('city-view-label').textContent = c.view;
+  $('city-reset').textContent = c.reset; $('city-reset').hidden = currentView !== '3d';
+  $('city-view-status').hidden = !viewState;
+  $('city-view-status').textContent = viewState ? c[viewState] : '';
+  $('city-map').setAttribute('aria-busy', String(viewState === 'loading'));
+  const hint = root.querySelector<HTMLElement>('.map-pan')!;
+  hint.textContent = currentView === '3d' ? c.orbit : t('mapPan');
+  hint.classList.toggle('city-orbit-hint', currentView === '3d');
+}
+function mountRenderer(next: CityRenderer & { resetCamera?: () => void }, mode: '2d' | '3d') {
+  const focused = document.activeElement;
+  const stationFocus = focused instanceof Element ? focused.closest('[data-station]')?.getAttribute('data-station') : null;
+  const trainFocus = focused instanceof Element ? focused.closest('[data-train]')?.getAttribute('data-train') : null;
+  renderer.dispose(); renderer = next;
+  try { renderer.mount($('city-map'), selectStation, selectTrain); currentView = mode; renderMap(); }
+  catch (error) { renderer.dispose(); throw error; }
+  renderViewControls();
+  if (stationFocus || trainFocus) {
+    const nodes = $('city-map').querySelectorAll<HTMLElement | SVGElement>(stationFocus ? '[data-station]' : '[data-train]');
+    const target = Array.from(nodes).find(node => node.getAttribute(stationFocus ? 'data-station' : 'data-train') === (stationFocus ?? trainFocus));
+    target?.focus({ preventScroll: true });
+  }
+}
+function fallbackTo2d() {
+  if (pageInactive) return;
+  viewRequest++; requestedView = '2d'; viewState = 'fallback';
+  mountRenderer(createSvgCityRenderer(), '2d');
+}
+async function chooseView(mode: '2d' | '3d') {
+  requestedView = mode; const request = ++viewRequest;
+  if (mode === '2d') { viewState = ''; mountRenderer(createSvgCityRenderer(), '2d'); return; }
+  if (currentView === '3d') { viewState = ''; renderViewControls(); return; }
+  viewState = 'loading'; renderViewControls();
+  try {
+    const { create3dCityRenderer } = await import('./renderer3d');
+    if (pageInactive || request !== viewRequest) return;
+    const next = create3dCityRenderer(() => { if (renderer === next) fallbackTo2d(); });
+    viewState = ''; mountRenderer(next, '3d');
+  } catch { if (!pageInactive && request === viewRequest) fallbackTo2d(); }
+}
+($('city-view') as HTMLSelectElement).onchange = event => { const mode = (event.target as HTMLSelectElement).value; if (mode === '2d' || mode === '3d') void chooseView(mode); };
+$('city-reset').onclick = () => renderer.resetCamera?.();
 function renderMap() {
   renderer.render(createCitySnapshot(game, { selected, language: locale.language, interpolationSeconds: accumulator, animate: !paused && !reducedMotion, layout: COASTAL_LAYOUT }));
 }
-window.addEventListener('pagehide', () => { cancelAnimationFrame(animationFrame); renderer.dispose(); inspector.stop(); });
-window.addEventListener('pageshow', event => { if (event.persisted) { renderer.mount($('city-map'), selectStation, selectTrain); previous = performance.now(); renderMap(); animationFrame = requestAnimationFrame(frame); } });
+window.addEventListener('pagehide', () => { pageInactive = true; viewRequest++; cancelAnimationFrame(animationFrame); renderer.dispose(); inspector.stop(); });
+window.addEventListener('pageshow', event => { if (event.persisted) {
+  pageInactive = false; renderer = createSvgCityRenderer(); currentView = '2d';
+  renderer.mount($('city-map'), selectStation, selectTrain); previous = performance.now(); accumulator = 0;
+  renderMap(); void chooseView(requestedView); animationFrame = requestAnimationFrame(frame);
+} });
+document.addEventListener('visibilitychange', () => { previous = performance.now(); accumulator = 0; });
 function renderDesk() {
   $('inspect-station').textContent = interiorText(locale.language).inspect;
   const station = NETWORK.stations.find(s => s.id === selected)!; const count = game.queues[selected].length; const st = stats(game);
@@ -101,7 +159,7 @@ function renderResult(persist = true) {
   $('next').onclick = () => { const next = SCENARIOS[(SCENARIOS.indexOf(game.scenario)+1)%SCENARIOS.length]; $('scenario').setAttribute('value', next.id); ($('scenario') as HTMLSelectElement).value = next.id; reset(next.id); };
   $('save-note').textContent = t(storageAvailable ? 'saved' : 'storageUnavailable');
 }
-function render() { renderDesk(); renderMap(); inspector.render(); }
+function render() { renderDesk(); renderMap(); renderViewControls(); inspector.render(); }
 ($('language') as HTMLSelectElement).onchange = e => { const value = (e.target as HTMLSelectElement).value; if (isLanguage(value)) locale.setLanguage(value); };
 $('inspect-station').onclick = () => inspector.open({kind: 'station', id: selected});
 $('start').onclick = () => { if (game.phase === 'ready') game.phase = 'playing'; else if (game.phase === 'finished') reset(game.scenario.id); else paused = !paused; accumulator = 0; render(); };
@@ -119,4 +177,4 @@ function frame(now: number) {
   }
   renderMap(); animationFrame = requestAnimationFrame(frame);
 }
-applyLanguage(); animationFrame = requestAnimationFrame(frame);
+applyLanguage(); void chooseView(requestedView); animationFrame = requestAnimationFrame(frame);

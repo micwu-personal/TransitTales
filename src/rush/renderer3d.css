@@ -1,0 +1,150 @@
+.rush-3d {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background: #a9cfca;
+  color: #284d47;
+  isolation: isolate;
+}
+.rush-3d-stage {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  height: clamp(440px, 48vw, 680px);
+  overflow: hidden;
+  container-type: inline-size;
+}
+.rush-3d #rush-3d-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  touch-action: none;
+  outline: none;
+}
+.rush-3d-labels, .rush-3d-leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.rush-3d-labels { z-index: 2; }
+.rush-3d-leaders { z-index: 1; }
+.rush-3d-leader { stroke: #426d69; stroke-width: 1; }
+.rush-3d button {
+  box-sizing: border-box;
+  min-width: 44px;
+  min-height: 44px;
+  font-family: inherit;
+  color: #284d47;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.rush-3d button[hidden], .rush-3d-trains[hidden] { display: none; }
+.rush-3d-station {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 3px 5px;
+  pointer-events: auto;
+  border: 1px solid #799986;
+  border-radius: 7px;
+  background: #fcfaf4;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.2;
+  writing-mode: horizontal-tb;
+  box-shadow: 1px 3px 5px #284d4720;
+}
+.rush-3d-station-name {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.rush-3d-queue {
+  min-width: 24px;
+  padding: 1px 5px;
+  border-radius: 9px;
+  background: #e7ede0;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.rush-3d-station.is-busy .rush-3d-queue { background: #f2d4b3; color: #78432b; }
+.rush-3d-station.is-helped { border-color: #54795a; background: #dcecd6; }
+.rush-3d-station:hover { border-color: #284d47; background: #edf4e6; }
+.rush-3d-station[aria-pressed="true"] { border: 2px solid #a54734; background: #fff8e8; z-index: 3; }
+.rush-3d-station[aria-pressed="true"] .rush-3d-queue { color: #fff9ed; background: #a54734; }
+.rush-3d button:focus-visible {
+  outline: 3px solid #185c99;
+  outline-offset: 2px;
+  z-index: 4;
+}
+.rush-3d-station:focus-visible { background: #fffdf1; }
+.rush-3d button:active:not(:disabled) { filter: brightness(.95); }
+.rush-3d-trains {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px 12px;
+  border-top: 1px solid #91b6a9;
+  background: #e7efe2;
+}
+.rush-3d-train {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 auto;
+  gap: 7px;
+  max-width: 100%;
+  padding: 5px 9px;
+  border: 1px solid #799986;
+  border-radius: 6px;
+  background: #fcfaf4;
+  font-size: 12px;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  writing-mode: horizontal-tb;
+}
+.rush-3d-train:hover:not(:disabled) { background: #dcecd6; border-color: #284d47; }
+.rush-3d-train.is-spare { border-color: #a77935; }
+.rush-3d-train-glyph { display: flex; flex-shrink: 0; gap: 2px; }
+.rush-3d-train-glyph i {
+  display: block;
+  width: 13px;
+  height: 9px;
+  border-radius: 2px;
+  border-top: 2px solid #f5f3eb;
+  background: var(--train-color, #284d47);
+  box-shadow: 0 2px 0 #426d69;
+}
+.rush-3d-riders { padding: 2px 5px; border-radius: 9px; background: #284d47; color: #fff9ed; }
+@container (max-width: 560px) {
+  .rush-3d-station { font-size: 10px; padding-inline: 3px; }
+}
+@media (max-width: 560px) {
+  .rush-3d-stage { height: 440px; }
+  .rush-3d-trains { padding: 10px; }
+  .rush-3d-train { font-size: 11px; padding-inline: 7px; gap: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rush-3d button { transition: none; }
+}

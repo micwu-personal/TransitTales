@@ -21,9 +21,16 @@ describe('directed piece graph rules',()=>{
  it('undo restores placement and deletion precisely',()=>{const empty=createBoard(),one=placePiece(flexible,empty,piece('short',0,0,1,1)).board,two=placePiece(flexible,one,piece('short',1,1,2,2)).board;expect(undo(two).pieces).toEqual(one.pieces);const deleted=deletePiece(two,two.pieces[0].id);expect(undo(deleted).pieces).toEqual(two.pieces);expect(undo(one).pieces).toEqual([]);expect(undo(empty)).toBe(empty);});
  it('reverses and mirrors travel meaningfully, with undo and validation',()=>{const b=placePiece(flexible,createBoard(),piece('short',2,1,3,2)).board;const id=b.pieces[0].id;const reversed=transformPiece(flexible,b,id,'reverse');expect(reversed.error).toBeNull();expect(reversed.board.pieces[0].a).toEqual({x:3,y:2});expect(undo(reversed.board).pieces).toEqual(b.pieces);const mirrored=transformPiece(flexible,b,id,'mirror');expect(mirrored.error).toBeNull();expect(mirrored.board.pieces[0].b).toEqual({x:1,y:2});const edge=placePiece(flexible,createBoard(),piece('short',0,0,1,1)).board;expect(transformPiece(flexible,edge,edge.pieces[0].id,'mirror').error).toBe('landing');});
  it('detects even tiny clearance intrusions and allows boundary contact',()=>{const p=piece('long',0,0,2,1);expect(touchesZone(p,{x:.101,y:.05,w:.001,h:.01})).toBe(true);expect(touchesZone(piece('bridge',0,0,1,0),{x:0,y:0,w:1,h:1})).toBe(false);});
+ it.each(PUZZLES.map(p=>[p.id,p] as const))('%s preserves scoring at low-frame-rate quarter-second updates',(_id,p)=>{const b=verifiedSolution(p);let wave=startWave(p,b);for(let n=0;n<400;n++)wave=advanceWave(wave,.25);expect(wave).toEqual(advanceWave(startWave(p,b),100));expect(result(p,b,wave)).toMatchObject({success:true,stars:3});});
  it('produces identical deterministic waves and results for different time slices',()=>{const p=PUZZLES[7],b=verifiedSolution(p),a=startWave(p,b);expect(startWave(p,b)).toEqual(a);let sliced=a;for(let n=0;n<200;n++)sliced=advanceWave(sliced,.2);const direct=advanceWave(a,40);expect(sliced).toEqual(direct);expect(result(p,b,sliced)).toEqual(result(p,b,direct));expect(advanceWave(a,-3)).toEqual(a);});
 });
 describe('renderer snapshot boundary',()=>{
+ it('shows waiting shoppers and both access requirements before a wave without mutating simulation',()=>{
+  const p=structuredClone(PUZZLES[0]);p.requests[0].wheelchair=true;p.requests[0].balloon=true;
+  const view=snapshot(p,createBoard(),null,'en',null,null,true,false,false);
+  expect(view.riders).toHaveLength(p.requests.length);expect(view.riders[0]).toMatchObject({point:p.requests[0].start,wheelchair:true,balloon:true,stuck:false,arrived:false});
+  expect(view.riders[0].point).not.toBe(p.requests[0].start);expect(Object.isFrozen(view.riders[0])).toBe(true);
+ });
  it('detaches and deeply freezes puzzle, pieces, preview paths and selection',()=>{
   const p=structuredClone(PUZZLES[0]),board=verifiedSolution(p),first={x:0,y:0};
   const view=snapshot(p,board,startWave(p,board),'en',first,null,false,true,false);

@@ -1,4 +1,5 @@
 import type { Language } from '../rush/locale';
+import { experienceCopy } from './experience-copy';
 export type { Language } from '../rush/locale';
 export { LANGUAGE_KEY, preferredLanguage, isLanguage, languageOptions } from '../rush/locale';
 export const languageIndex = (language: Language): 0 | 1 | 2 | 3 | 4 => ({ en: 0, 'zh-CN': 1, ja: 2, 'mn-Cyrl-MN': 3, 'mn-Mong-CN': 4 } as const)[language];
@@ -257,7 +258,8 @@ const mnMong: Copy = {
   "remaining": "ᠦᠯᠡᠳᠡᠭᠰᠡᠨ",
   "beat": "♪ ᠢᠷᠡᠬᠦ ᠦᠶ᠎ᠡ ᠶᠢᠨ ᠴᠣᠬᠢᠯᠲᠠ"
 };
-export const copy={en,'zh-CN':zh,ja,'mn-Cyrl-MN':mnCyrl,'mn-Mong-CN':mnMong};
+const withExperience=(base:Copy,language:Language):Copy=>({...base,footer:experienceCopy[language].footer,allDone:experienceCopy[language].allDone});
+export const copy={en:withExperience(en,'en'),'zh-CN':withExperience(zh,'zh-CN'),ja:withExperience(ja,'ja'),'mn-Cyrl-MN':withExperience(mnCyrl,'mn-Cyrl-MN'),'mn-Mong-CN':withExperience(mnMong,'mn-Mong-CN')};
 export type Message=keyof Copy;
 export const destinationColor={cafe:'#b14d37',books:'#326fa0',garden:'#397050'};
 export const destinationIcon={cafe:'☕',books:'▤',garden:'✿'};
