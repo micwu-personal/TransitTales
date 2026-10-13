@@ -98,13 +98,13 @@ The Mongolian translations are drafts and need native-speaker linguistic review.
 
 ## Publish on GitHub Pages
 
-The site is live at **https://micwu-personal.github.io/TransitTales/**. Only `micwu-personal/TransitTales` was made public, with explicit authorization, to enable Pages. The workflow `.github/workflows/pages.yml` builds and tests the site, uploads `dist`, and deploys on **manual dispatch only**. Pushing updates alone does not republish the site.
+The site is live at **https://micwu-personal.github.io/TransitTales/**. Only `micwu-personal/TransitTales` was made public, with explicit authorization, to enable Pages. The workflow `.github/workflows/pages.yml` automatically builds, tests, and deploys every push to **`main`**, including pull-request merges. Other branches and unmerged pull requests do not trigger publication. Deployment runs only after tests and the build succeed; deployments are serialized to avoid overlapping publishes. Manual dispatch remains available for retries or republishing.
 
 1. In `micwu-personal/TransitTales`, open **Settings → Pages**. Pages is already enabled for this public repository; no further visibility change is needed.
 2. Set **Build and deployment → Source → GitHub Actions**. Review that a published project site is ordinarily publicly accessible even if its source repository is private; do not publish secrets or private material.
-3. Open **Actions → Publish Transit Tales → Run workflow**, choose `main`, and run it. Wait for both build and deployment to succeed.
+3. Merge a pull request into `main` or push an update to `main`. Open **Actions → Publish Transit Tales** and wait for both build and deployment to succeed. To deploy manually, choose **Run workflow → main**.
 4. Open **https://micwu-personal.github.io/TransitTales/**. The Actions build uses `/TransitTales/` as Vite's base so scripts, fonts, recordings and links resolve below the project URL. Normal local development retains `/`.
 
-For automatic updates, add a `push` trigger limited to `main` after opting into publishing. To host at the account root instead, use a separate repository named `micwu-personal.github.io` and adjust the build base to `/`.
+To host at the account root instead, use a separate repository named `micwu-personal.github.io` and adjust the build base to `/`.
 
 References: [Pages plan availability](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) · [custom Actions deployment](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).

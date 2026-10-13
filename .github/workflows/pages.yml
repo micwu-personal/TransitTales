@@ -1,6 +1,9 @@
 name: Publish Transit Tales
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
