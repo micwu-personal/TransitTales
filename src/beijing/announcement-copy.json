@@ -1,0 +1,74 @@
+{
+  "en": {
+    "voice": "en-GB-SoniaNeural",
+    "phrases": {
+      "ready": "Recorded voice announcements are on. Beijing station and service names are spoken in Mandarin.",
+      "ride": "Next station.",
+      "boarding": "Please board at the following station.",
+      "transfer": "Please change trains at the following station.",
+      "arrival": "We are arriving at the following station.",
+      "complete": "You have reached your destination.",
+      "walk": "Please follow the walkway to the following station.",
+      "service": "Service.",
+      "rideEnd": "Please hold the handrail while the train is moving.",
+      "transferEnd": "Follow the signs for your connecting service.",
+      "arrivalEnd": "Please mind the gap when leaving the train.",
+      "completeEnd": "Your journey is complete. Thank you for travelling with us.",
+      "walkEnd": "This walking connection is simulated for the game."
+    }
+  },
+  "zh-CN": {
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "phrases": {
+      "ready": "录音播报已开启。北京车站和线路名称使用普通话播报。",
+      "ride": "下一站。",
+      "boarding": "请在以下车站上车。",
+      "transfer": "请在以下车站换乘。",
+      "arrival": "列车即将到达。",
+      "complete": "您已到达目的地。",
+      "walk": "请沿通道步行前往以下车站。",
+      "service": "线路。",
+      "rideEnd": "列车运行时，请握好扶手。",
+      "transferEnd": "请按照指示标志前往换乘线路。",
+      "arrivalEnd": "下车时，请注意列车与站台之间的空隙。",
+      "completeEnd": "本次旅程已完成。感谢您的乘坐。",
+      "walkEnd": "此步行连接为游戏模拟。"
+    }
+  },
+  "ja": {
+    "voice": "ja-JP-NanamiNeural",
+    "phrases": {
+      "ready": "録音による音声案内を開始します。北京の駅名と路線名は中国語の普通話で読み上げます。",
+      "ride": "次の駅。",
+      "boarding": "次の駅でご乗車ください。",
+      "transfer": "次の駅でお乗り換えください。",
+      "arrival": "まもなく次の駅に到着します。",
+      "complete": "目的地に到着しました。",
+      "walk": "通路を進み、次の駅へお向かいください。",
+      "service": "路線。",
+      "rideEnd": "走行中は手すりにおつかまりください。",
+      "transferEnd": "案内表示に従って、お乗り換えの路線へお進みください。",
+      "arrivalEnd": "お降りの際は、電車とホームの間にご注意ください。",
+      "completeEnd": "旅が完了しました。ご乗車ありがとうございました。",
+      "walkEnd": "この徒歩での乗り換えは、ゲーム内の架空設定です。"
+    }
+  },
+  "mn-Cyrl-MN": {
+    "voice": "mn-MN-YesuiNeural",
+    "phrases": {
+      "ready": "Бичлэгтэй дуут зарлал асаалттай. Бээжингийн буудал болон шугамын нэрийг мандарин хятад хэлээр уншина.",
+      "ride": "Дараагийн буудал.",
+      "boarding": "Дараах буудалд галт тэргэнд сууна уу.",
+      "transfer": "Дараах буудалд галт тэргээ сэлгэн сууна уу.",
+      "arrival": "Бид дараах буудалд ирж байна.",
+      "complete": "Та зорьсон газраа хүрлээ.",
+      "walk": "Явган замаар дараах буудал руу очно уу.",
+      "service": "Шугам.",
+      "rideEnd": "Галт тэрэг явж байх үед бариулаас барина уу.",
+      "transferEnd": "Шилжин суух шугамын тэмдэглэгээг дагана уу.",
+      "arrivalEnd": "Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "completeEnd": "Таны аялал дууслаа. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "walkEnd": "Энэ явган холбоос нь тоглоомын загварчилсан зам юм."
+    }
+  }
+}

@@ -6,6 +6,7 @@ class FakeParam {
   setValueAtTime = vi.fn((value: number, _time: number) => { this.value = value; return this; });
   linearRampToValueAtTime = vi.fn((value: number, _time: number) => { this.value = value; return this; });
   exponentialRampToValueAtTime = vi.fn((value: number, _time: number) => { this.value = value; return this; });
+  setValueCurveAtTime = vi.fn((_values: Float32Array, _time: number, _duration: number) => this);
   cancelScheduledValues = vi.fn((_time: number) => this);
   cancelAndHoldAtTime = vi.fn((_time: number) => this);
 }
@@ -14,6 +15,11 @@ class FakeNode {
   disconnect = vi.fn();
 }
 class FakeGain extends FakeNode { gain = new FakeParam(); }
+class FakeFilter extends FakeNode {
+  type: BiquadFilterType = 'lowpass';
+  frequency = new FakeParam();
+  Q = new FakeParam();
+}
 class FakeOscillator extends FakeNode {
   type: OscillatorType = 'sine';
   frequency = new FakeParam();
@@ -35,9 +41,11 @@ class FakeContext {
   destination = new FakeNode();
   gains: FakeGain[] = [];
   sources: FakeOscillator[] = [];
+  filters: FakeFilter[] = [];
   resume = vi.fn(() => FakeContext.resumeImpl(this));
   close = vi.fn(async () => { this.state = 'closed'; });
   createGain = vi.fn(() => { const node = new FakeGain(); this.gains.push(node); return node; });
+  createBiquadFilter = vi.fn(() => { const node = new FakeFilter(); this.filters.push(node); return node; });
   createOscillator = vi.fn(() => { const source = new FakeOscillator(); this.sources.push(source); return source; });
   constructor() {
     if (FakeContext.failConstruction) throw new Error('Device unavailable');
@@ -84,8 +92,8 @@ afterEach(() => {
 
 describe('original relaxing composition', () => {
   it('exports frozen, deterministic 32-bar note data at 70 BPM', () => {
-      expect(RELAXING_COMPOSITION).toMatchObject({ bpm: 70, bars: 32, beatsPerBar: 4, loopBeats: 128 });
-      expect(RELAXING_COMPOSITION.events).toHaveLength(266);
+    expect(RELAXING_COMPOSITION).toMatchObject({ bpm: 70, bars: 32, beatsPerBar: 4, loopBeats: 128 });
+    expect(RELAXING_COMPOSITION.events).toHaveLength(412);
     expect(Object.isFrozen(RELAXING_COMPOSITION)).toBe(true);
     expect(Object.isFrozen(RELAXING_COMPOSITION.events)).toBe(true);
     const instruments = new Set<string>();
@@ -107,7 +115,7 @@ describe('original relaxing composition', () => {
       instruments.add(event.instrument);
       previousBeat = event.beat;
     }
-    expect([...instruments].sort()).toEqual(['air', 'bass', 'bell', 'pad']);
+    expect([...instruments].sort()).toEqual(['air', 'bass', 'bell', 'harp', 'pad', 'strings']);
   });
   it('develops an answering section, spacious borrowed-color bridge, and recognizable reprise', () => {
     const { events, sections, harmonies } = RELAXING_COMPOSITION;
@@ -119,23 +127,79 @@ describe('original relaxing composition', () => {
     expect(sections.every(Object.isFrozen)).toBe(true);
     expect(Object.isFrozen(harmonies)).toBe(true);
     expect(harmonies).toHaveLength(32);
-    expect(new Set(harmonies).size).toBeGreaterThanOrEqual(16);
-    expect(harmonies.slice(16, 24)).toContain('Cmaj9');
-    expect(harmonies.slice(16, 24)).toContain('Gm6');
+    expect(new Set(harmonies).size).toBeGreaterThanOrEqual(15);
+    expect(harmonies.slice(16, 24)).toContain('Cmaj9(#11)');
+    expect(harmonies.slice(16, 24)).toContain('Gm6/9');
     expect(harmonies.at(-1)).toBe('D6/9');
     const notes = (bar: number, instrument: string) => events.filter(e => e.instrument === instrument && Math.floor(e.beat / 4) === bar);
     const rhythm = (bar: number, instrument: string) => notes(bar, instrument).map(e => [e.beat % 4, e.durationBeats]);
     expect(new Set(Array.from({ length:32 }, (_, bar) => JSON.stringify(rhythm(bar, 'bell')))).size).toBeGreaterThan(20);
     expect(new Set(Array.from({ length:32 }, (_, bar) => JSON.stringify(rhythm(bar, 'bass')))).size).toBeGreaterThan(12);
     expect(notes(19, 'bell')).toHaveLength(0);
-    expect(notes(19, 'pad')).toHaveLength(4);
+    expect(notes(19, 'pad')).toHaveLength(5);
     expect(notes(19, 'air')).toHaveLength(1);
+    expect(notes(19, 'harp')).toHaveLength(0);
+    expect(notes(19, 'strings')).toHaveLength(1);
     expect(notes(0, 'bell').map(e => [e.beat % 4, e.midi])).toEqual(notes(24, 'bell').map(e => [e.beat % 4, e.midi]));
     const melodies = sections.map(section => events.filter(e => e.instrument === 'bell' && e.beat >= section.startBar * 4 && e.beat < (section.startBar + section.bars) * 4));
     expect(Math.max(...melodies[1].map(e => e.midi))).toBeGreaterThan(Math.max(...melodies[0].map(e => e.midi)));
     expect(melodies[2].length).toBeLessThan(melodies[0].length);
     expect(Math.max(...melodies[3].map(e => e.velocity))).toBeLessThan(Math.max(...melodies[0].map(e => e.velocity)));
     expect(events.filter(e => e.instrument === 'air')).toHaveLength(9);
+  });
+  it('sounds real extended chord tones with smooth, noncrossing five-part voice leading', () => {
+    const { events } = RELAXING_COMPOSITION;
+    const voicings = Array.from({ length:32 }, (_, bar) => events
+      .filter(event => event.instrument === 'pad' && Math.floor(event.beat / 4) === bar)
+      .map(event => event.midi));
+    const motion: number[] = [];
+    voicings.forEach((voicing, bar) => {
+      expect(voicing).toHaveLength(5);
+      expect(voicing).toEqual([...voicing].sort((a, b) => a - b));
+      expect(new Set(voicing).size).toBe(5);
+      voicing.forEach((midi, voice) => motion.push(Math.abs(midi - voicings[(bar + 31) % 32][voice])));
+    });
+    expect(Math.max(...motion)).toBeLessThanOrEqual(5);
+    expect(motion.reduce((sum, value) => sum + value, 0) / motion.length).toBeLessThan(1.5);
+    const chordTones = (bar: number) => {
+      const bass = events.find(event => event.instrument === 'bass' && Math.floor(event.beat / 4) === bar)!;
+      return [...new Set([...voicings[bar], bass.midi].map(midi => midi % 12))].sort((a, b) => a - b);
+    };
+    expect(chordTones(0)).toEqual([1, 2, 4, 6, 9]); // Dmaj9
+    expect(chordTones(2)).toEqual([1, 2, 4, 6, 9, 11]); // Bm11
+    expect(chordTones(4)).toEqual([2, 4, 6, 7, 9, 11]); // Em11
+    expect(chordTones(8)).toEqual([1, 2, 6, 7, 9, 11]); // Gmaj9(#11)
+    expect(chordTones(13)).toEqual([1, 4, 6, 7, 10]); // F#7(b9)
+    expect(chordTones(18)).toEqual([0, 2, 4, 6, 7, 11]); // Cmaj9(#11)
+    expect(chordTones(20)).toEqual([0, 2, 4, 7, 9, 11]); // Am11
+    expect(chordTones(21)).toEqual([2, 4, 7, 9, 10]); // Gm6/9
+    expect(chordTones(31)).toEqual([2, 4, 6, 9, 11]); // D6/9
+  });
+  it('orchestrates bowed phrases and harp replies rather than adding a repeated arpeggio', () => {
+    const { events, sections } = RELAXING_COMPOSITION;
+    for (const instrument of ['strings', 'harp']) {
+      const notes = events.filter(event => event.instrument === instrument);
+      expect(notes.length).toBeGreaterThan(35);
+      expect(new Set(notes.map(event => event.durationBeats)).size).toBeGreaterThan(10);
+      expect(new Set(notes.map(event => event.velocity)).size).toBeGreaterThan(20);
+      const rhythms = Array.from({ length:32 }, (_, bar) => JSON.stringify(notes
+        .filter(event => Math.floor(event.beat / 4) === bar).map(event => [event.beat % 4, event.durationBeats])));
+      expect(new Set(rhythms).size).toBeGreaterThan(24);
+      expect(Math.max(...notes.map(event => event.midi)) - Math.min(...notes.map(event => event.midi))).toBeGreaterThanOrEqual(12);
+      expect(notes.filter(event => event.beat % 4 + event.durationBeats > 4).length).toBeGreaterThan(12);
+      const average = sections.map(section => {
+        const phrase = notes.filter(event => event.beat >= section.startBar * 4 && event.beat < (section.startBar + section.bars) * 4);
+        return phrase.reduce((sum, event) => sum + event.velocity, 0) / phrase.length;
+      });
+      expect(average[1]).toBeGreaterThan(average[0]);
+      expect(average[2]).toBeLessThan(average[0]);
+      expect(average[3]).toBeLessThan(average[0]);
+    }
+    const strings = events.filter(event => event.instrument === 'strings');
+    expect(strings.filter(event => event.durationBeats >= 3).length).toBeGreaterThanOrEqual(15);
+    const finalBar = events.filter(event => event.instrument === 'bell' && event.beat >= 124);
+    expect(finalBar).toHaveLength(1);
+    expect(finalBar[0]).toMatchObject({ midi:74, durationBeats:3.35 });
   });
   it('converts MIDI tuning and clamps unsafe volume inputs', () => {
     expect(midiToFrequency(69)).toBe(440);
@@ -190,10 +254,12 @@ describe('gesture-driven music and scheduling', () => {
     expect(bass.length).toBeGreaterThanOrEqual(2);
     const opening = bass[0].start.mock.calls[0][0];
     expect(bass.some(source => Math.abs(source.start.mock.calls[0][0] - opening - loopSeconds) < 0.001)).toBe(true);
-    expect(audio.sources.filter(source => source.onended !== null).length).toBeLessThan(30);
+    expect(audio.sources.filter(source => source.onended !== null).length).toBeLessThan(40);
+    expect(audio.filters.filter(filter => filter.disconnect.mock.calls.length === 0).length).toBeLessThan(4);
+    expect(audio.filters.filter(filter => filter.disconnect.mock.calls.length > 0).every(filter => filter.disconnect.mock.calls.length === 1)).toBe(true);
     expect(audio.sources.filter(source => source.ended).every(source => source.disconnect.mock.calls.length === 1)).toBe(true);
     for (const source of audio.sources) {
-      expect(['sine', 'triangle']).toContain(source.type);
+      expect(['sine', 'triangle', 'sawtooth']).toContain(source.type);
       expect(Number.isFinite(source.start.mock.calls[0][0])).toBe(true);
       expect(Number.isFinite(source.stopTime)).toBe(true);
       expect(source.stopTime).toBeGreaterThan(source.start.mock.calls[0][0]);
@@ -206,12 +272,117 @@ describe('gesture-driven music and scheduling', () => {
         .sort((a, b) => a.order - b.order);
       let previous = -Infinity;
       for (const { args:[value, time] } of calls) {
+        expect(Number.isFinite(value)).toBe(true);
+        expect(Number.isFinite(time)).toBe(true);
         expect(value).toBeGreaterThanOrEqual(0);
-        expect(value).toBeLessThanOrEqual(0.18);
+        expect(value).toBeLessThanOrEqual(0.7);
         expect(time).toBeGreaterThanOrEqual(previous);
         previous = time;
       }
     }
+  });
+  it('gives strings a filtered bowed swell and delayed vibrato, and harp a fast, darkening pluck', async () => {
+    const music = controller();
+    await music.start();
+    const audio = latestContext();
+    await advance(audio, 4);
+    const sourcesFor = (instrument: string) => {
+      const event = RELAXING_COMPOSITION.events.find(event => event.instrument === instrument)!;
+      const time = 0.04 + event.beat * 60 / RELAXING_COMPOSITION.bpm;
+      return audio.sources.filter(source => Math.abs(source.start.mock.calls[0][0] - time) < 0.00001);
+    };
+    const strings = sourcesFor('strings');
+    const harp = sourcesFor('harp');
+    expect(strings.map(source => source.type)).toEqual(['triangle', 'sawtooth', 'sine']);
+    expect(harp.map(source => source.type)).toEqual(['triangle', 'sine', 'sine']);
+    expect(harp.map(source => source.frequency.value / harp[0].frequency.value)).toEqual([1, 2, 3]);
+    const stringGain = strings[0].connect.mock.calls[0][0] as FakeGain;
+    const filter = stringGain.connect.mock.calls[0][0] as FakeFilter;
+    expect(filter).toBeInstanceOf(FakeFilter);
+    expect(filter.type).toBe('lowpass');
+    expect(filter.frequency.value).toBeGreaterThanOrEqual(800);
+    expect(filter.frequency.value).toBeLessThanOrEqual(2400);
+    expect(filter.Q.value).toBe(0.55);
+    const bow = (filter.connect.mock.calls[0][0] as FakeGain).gain;
+    const bowTimes = bow.linearRampToValueAtTime.mock.calls;
+    expect(bowTimes).toHaveLength(4);
+    expect(bowTimes[1][0]).toBeGreaterThan(bowTimes[0][0]);
+    expect(bowTimes[2][0]).toBeLessThan(bowTimes[1][0]);
+    expect(bowTimes[0][1] - strings[0].start.mock.calls[0][0]).toBeCloseTo(0.45);
+    const harpGains = harp.map(source => source.connect.mock.calls[0][0] as FakeGain);
+    const pluck = (harpGains[0].connect.mock.calls[0][0] as FakeGain).gain;
+    expect(pluck.linearRampToValueAtTime.mock.calls[0][1] - harp[0].start.mock.calls[0][0]).toBeCloseTo(0.006);
+    expect(harpGains[1].gain.exponentialRampToValueAtTime.mock.calls[0][1])
+      .toBeLessThan(harpGains[0].gain.exponentialRampToValueAtTime.mock.calls[0][1]);
+    for (const source of audio.sources.filter(source => source.detune.setValueCurveAtTime.mock.calls.length > 0)) {
+      const [curve, time, duration] = source.detune.setValueCurveAtTime.mock.calls[0];
+      expect(curve.length).toBeGreaterThan(2);
+      expect(curve.length).toBeLessThan(150);
+      expect([...curve].every(value => Number.isFinite(value) && Math.abs(value) <= 7)).toBe(true);
+      expect(curve[0]).toBe(source.detune.setValueAtTime.mock.calls[0][0]);
+      expect(time).toBe(source.start.mock.calls[0][0]);
+      expect(duration).toBeCloseTo(source.stopTime - time);
+    }
+    music.dispose();
+    expect(audio.filters.every(node => node.disconnect.mock.calls.length === 1)).toBe(true);
+  });
+  it('bounds the whole score peak and polyphony at full volume, and cancels every new timbre on stop', async () => {
+    const music = controller();
+    music.setVolume(1);
+    await music.start();
+    const audio = latestContext();
+    let maximumLive = 0;
+    for (let step = 0; step < 2200; step++) {
+      await advance(audio, 0.05);
+      maximumLive = Math.max(maximumLive, audio.sources.filter(source => !source.ended).length);
+    }
+    expect(maximumLive).toBeLessThanOrEqual(40);
+    const envelopes = audio.gains.filter(gain => gain.connect.mock.calls.some(([target]) => target === audio.gains[1]));
+    const boundaries: { time:number; level:number }[] = [];
+    for (const envelope of envelopes) {
+      const ramps = envelope.gain.linearRampToValueAtTime.mock.calls;
+      const start = envelope.gain.setValueAtTime.mock.calls[0][1];
+      const end = ramps.at(-1)![1];
+      const peak = Math.max(...ramps.map(([value]) => value));
+      expect(peak).toBeGreaterThan(0);
+      expect(peak).toBeLessThan(0.11);
+      expect(ramps.at(-1)![0]).toBe(0);
+      boundaries.push({ time:start, level:peak }, { time:end, level:-peak });
+    }
+    let level = 0;
+    let maximumLevel = 0;
+    for (const boundary of boundaries.sort((a, b) => a.time - b.time || a.level - b.level)) {
+      level += boundary.level;
+      maximumLevel = Math.max(maximumLevel, level);
+    }
+    // Conservative sum of every overlapping envelope's peak, before the .35 default master gain.
+    expect(maximumLevel).toBeLessThan(0.45);
+    music.stop();
+    await vi.advanceTimersByTimeAsync(60);
+    expect(audio.sources.every(source => source.onended === null)).toBe(true);
+    expect(audio.filters.every(filter => filter.disconnect.mock.calls.length === 1)).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+  it('cleans a partially allocated string filter when the new timbre cannot initialize', async () => {
+    const unavailable = vi.fn();
+    const music = controller({ onUnavailable: unavailable });
+    await music.start();
+    const audio = latestContext();
+    audio.createBiquadFilter.mockImplementationOnce(() => {
+      const filter = new FakeFilter();
+      audio.filters.push(filter);
+      filter.connect.mockImplementation(() => { throw new Error('Filter connection unavailable'); });
+      return filter;
+    });
+    await advance(audio, 1.1);
+    expect(music.playing).toBe(false);
+    expect(unavailable).toHaveBeenCalledOnce();
+    expect(audio.sources.every(source => source.onended === null && source.disconnect.mock.calls.length === 1)).toBe(true);
+    expect(audio.gains.every(gain => gain.disconnect.mock.calls.length === 1)).toBe(true);
+    expect(audio.filters).toHaveLength(1);
+    expect(audio.filters[0].disconnect).toHaveBeenCalledOnce();
+    expect(audio.close).toHaveBeenCalledOnce();
+    expect(vi.getTimerCount()).toBe(0);
   });
   it('seeks past overdue notes after a stall rather than emitting a backlog', async () => {
     const music = controller();

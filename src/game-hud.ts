@@ -11,7 +11,7 @@ export const hudCopy = {
 
 export function mountGameShell(root: HTMLElement, options: {
   panel: string; scene: string; primary: string; help: string; result: string;
-  tools?: string; quick?: string; settings?: string[]; feedback?: string[]; notice?: string; beforeOpen?: () => void;
+  tools?: string; quick?: string; settings?: string[]; feedback?: string[]; notice?: string; beforeOpen?: () => void; persistentPanel?: boolean; headerTools?: string; mission?: string;
 }) {
   const find = (selector: string) => root.querySelector<HTMLElement>(selector)!;
   root.classList.add('viewport-game');
@@ -20,25 +20,40 @@ export function mountGameShell(root: HTMLElement, options: {
   const help = find(options.help);
   const extraLinks = Array.from(header.querySelectorAll<HTMLAnchorElement>('a')).filter(link => link !== brand);
   if (extraLinks.length) { const links = document.createElement('nav'); links.className = 'extra-links'; links.append(...extraLinks); help.append(links); }
-  const sound = document.createElement('details');
-  sound.innerHTML = '<summary data-hud-copy="sound"></summary>';
+  const sound = document.createElement(options.persistentPanel ? 'section' : 'details');
+  sound.className = 'game-sound-settings';
+  sound.innerHTML = options.persistentPanel ? '<h3 data-hud-copy="sound"></h3>' : '<summary data-hud-copy="sound"></summary>';
   for (const selector of options.settings ?? []) sound.append(find(selector));
   const actions = document.createElement('div'); actions.className = 'game-header-actions';
   label.classList.add('sr-only');
+  if (options.headerTools) actions.append(find(options.headerTools));
   actions.append(label, select);
   actions.insertAdjacentHTML('beforeend', '<button id="hud-help" type="button" aria-expanded="false" aria-controls="game-help-panel">?</button><button id="hud-toggle" type="button" aria-expanded="false" aria-controls="game-control-panel"></button>');
   header.replaceChildren(brand, actions); header.classList.add('game-header');
   const panel = find(options.panel), contents = document.createElement('div'); contents.className = 'game-panel-scroll';
   const dock = document.createElement('div'); dock.className = 'game-dock';
-  if (options.tools) dock.append(find(options.tools));
-  dock.append(find(options.primary)); root.append(dock);
+  const tools = options.tools ? find(options.tools) : null;
+  if (tools) dock.append(tools);
+  (options.persistentPanel && tools ? tools : dock).append(find(options.primary));
+  root.append(dock);
   for (const selector of options.feedback ?? []) panel.append(find(selector));
   if (options.notice) { const notice = find(options.notice); notice.classList.add('game-prompt'); root.append(notice); }
   contents.append(...Array.from(panel.childNodes));
-  if (options.settings?.length) contents.append(sound);
-  panel.replaceChildren(); panel.classList.add('game-panel'); panel.id = 'game-control-panel';
-  panel.innerHTML = '<div class="game-panel-head"><h2 data-hud-copy="controls"></h2><button id="hud-close" type="button">×</button></div>';
-  panel.append(contents);
+  let settingsPanel = panel;
+  if (options.persistentPanel) {
+    root.classList.add('has-persistent-workbench');
+    panel.replaceChildren(contents); panel.classList.add('game-play-panel'); panel.id = 'game-play-panel';
+    settingsPanel = document.createElement('aside'); settingsPanel.className = 'game-settings-panel';
+    root.append(settingsPanel);
+    const settingsContents = document.createElement('div'); settingsContents.className = 'game-panel-scroll';
+    settingsContents.append(sound);
+    settingsPanel.replaceChildren(settingsContents);
+  } else {
+    if (options.settings?.length) contents.append(sound);
+    panel.replaceChildren(contents);
+  }
+  settingsPanel.classList.add('game-panel'); settingsPanel.id = 'game-control-panel';
+  settingsPanel.insertAdjacentHTML('afterbegin', `<div class="game-panel-head"><h2 data-hud-copy="${options.persistentPanel ? 'settings' : 'controls'}"></h2><button id="hud-close" type="button">×</button></div>`);
   help.classList.add('game-help'); help.id = 'game-help-panel';
   if (help instanceof HTMLDetailsElement) help.open = true;
   const legend = root.querySelector<HTMLElement>('.map-bottom, .stage-bottom');
@@ -56,23 +71,30 @@ export function mountGameShell(root: HTMLElement, options: {
       const bounds = root.getBoundingClientRect();
       const dockBounds = dock.getBoundingClientRect();
       root.style.setProperty('--tools-bottom', `${Math.max(0, bounds.bottom - dockBounds.top + 8)}px`);
-      root.style.setProperty('--scene-top', `${Math.max(0, header.getBoundingClientRect().bottom - bounds.top + 8)}px`);
-      root.style.setProperty('--scene-bottom', `${Math.max(0, bounds.bottom - viewTools.getBoundingClientRect().top + 8)}px`);
+      const headerBottom = header.getBoundingClientRect().bottom;
+      root.style.setProperty('--mission-top', `${Math.max(0, headerBottom - bounds.top + 4)}px`);
+      const missionBottom = options.mission ? find(options.mission).getBoundingClientRect().bottom : headerBottom;
+      root.style.setProperty('--scene-top', `${Math.max(0, missionBottom - bounds.top + 8)}px`);
+      const toolsTop = viewTools.getBoundingClientRect().top;
+      const shoppingRow = options.persistentPanel && getComputedStyle(panel).getPropertyValue('--shopping-placement').trim() === 'row';
+      const bottom = options.persistentPanel ? Math.min(dockBounds.top, shoppingRow ? panel.getBoundingClientRect().top : dockBounds.top) : toolsTop;
+      root.style.setProperty('--scene-bottom', `${Math.max(0, bounds.bottom - bottom + 8)}px`);
+      root.style.setProperty('--workbench-bottom', `${Math.max(0, bounds.bottom - dockBounds.top + 8)}px`);
     });
   };
   const geometry = new ResizeObserver(measure);
-  for (const node of [root, dock, header, viewTools]) geometry.observe(node);
+  for (const node of [root, dock, header, viewTools, ...(options.persistentPanel ? [panel] : []), ...(options.mission ? [find(options.mission)] : [])]) geometry.observe(node);
   measure();
-  const hud = createGameHud(root, panel, help, options.beforeOpen);
+  const hud = createGameHud(root, settingsPanel, help, options.beforeOpen, options.persistentPanel);
   return { ...hud, dispose() { hud.dispose(); geometry.disconnect(); cancelAnimationFrame(frame); } };
 }
 
-export function createGameHud(root: HTMLElement, panel: HTMLElement, help: HTMLElement, beforeOpen?: () => void) {
+export function createGameHud(root: HTMLElement, panel: HTMLElement, help: HTMLElement, beforeOpen?: () => void, settingsOnly = false) {
   const toggle = root.querySelector<HTMLButtonElement>('#hud-toggle')!;
   const close = root.querySelector<HTMLButtonElement>('#hud-close')!;
   const helpToggle = root.querySelector<HTMLButtonElement>('#hud-help')!;
   const wide = matchMedia('(min-width: 1100px) and (min-height: 600px)');
-  let open = wide.matches, helpOpen = false, manuallyChosen = false;
+  let open = !settingsOnly && wide.matches, helpOpen = false, manuallyChosen = false;
   function update() {
     root.dataset.hud = open ? 'open' : 'closed';
     panel.hidden = !open;
@@ -84,7 +106,7 @@ export function createGameHud(root: HTMLElement, panel: HTMLElement, help: HTMLE
   toggle.addEventListener('click', () => { manuallyChosen = true; setOpen(!open); });
   close.addEventListener('click', () => { manuallyChosen = true; setOpen(false); toggle.focus({ preventScroll: true }); });
   helpToggle.addEventListener('click', () => { helpOpen = !helpOpen; update(); });
-  const resize = () => { if (!manuallyChosen) { open = wide.matches; update(); } };
+  const resize = () => { if (!manuallyChosen) { open = !settingsOnly && wide.matches; update(); } };
   wide.addEventListener('change', resize);
   const escape = (event: KeyboardEvent) => {
     if (event.key !== 'Escape' || event.defaultPrevented) return;
@@ -96,11 +118,17 @@ export function createGameHud(root: HTMLElement, panel: HTMLElement, help: HTMLE
   return {
     localize(language: Language) {
       const c = hudCopy[language];
-      toggle.textContent = c.controls; toggle.title = c.controls;
-      close.setAttribute('aria-label', c.close); close.title = c.close;
+      toggle.textContent = settingsOnly ? c.settings : c.controls; toggle.title = toggle.textContent;
+      if (settingsOnly) {
+        const icon = document.createElement('span'); icon.textContent = '⚙'; icon.setAttribute('aria-hidden', 'true');
+        const label = document.createElement('span'); label.className = 'hud-settings-label'; label.textContent = c.settings;
+        toggle.replaceChildren(icon, label); toggle.setAttribute('aria-label', c.settings);
+      }
+      const closeLabel = settingsOnly ? ({ en:'Close settings', 'zh-CN':'收起设置', ja:'設定を閉じる', 'mn-Cyrl-MN':'Тохиргоог хаах', 'mn-Mong-CN':'ᠲᠣᠬᠢᠷᠠᠭᠤᠯᠭ᠎ᠠ ᠶᠢ ᠬᠠᠭᠠᠬᠤ' } satisfies Record<Language,string>)[language] : c.close;
+      close.setAttribute('aria-label', closeLabel); close.title = closeLabel;
       helpToggle.setAttribute('aria-label', c.help); helpToggle.title = c.help;
       root.querySelectorAll<HTMLElement>('[data-hud-copy]').forEach(node => { node.textContent = c[node.dataset.hudCopy as keyof typeof c]; });
-      panel.setAttribute('aria-label', c.controls);
+      panel.setAttribute('aria-label', settingsOnly ? c.settings : c.controls);
     },
     open: () => setOpen(true),
     dispose() { wide.removeEventListener('change', resize); document.removeEventListener('keydown', escape); },

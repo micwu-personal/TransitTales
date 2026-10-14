@@ -22,6 +22,18 @@ const { chromium } = require('playwright');
       assert.equal(await page.locator('.map-station').count(), 426);
       assert.equal(await page.locator('#round option').count(), 7);
       assert.equal(await page.locator('#speed').inputValue(), '5');
+      assert.equal(await page.locator('.route-plan').isVisible(), false, 'empty plan does not bury the first route choice');
+      assert.equal(await page.locator('.journey-steps [aria-current="step"]').count(), 1);
+      assert.equal(await page.locator('.passenger-portrait').isVisible(), true);
+      const selectedContrast = await page.locator('#map-view').evaluate(button => {
+        const luminance = color => {
+          const rgb = color.match(/[\d.]+/g).slice(0, 3).map(v => Number(v) / 255).map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
+          return rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722;
+        };
+        const style = getComputedStyle(button), a = luminance(style.color), b = luminance(style.backgroundColor);
+        return (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+      });
+      assert.ok(selectedContrast >= 4.5, 'selected Full map text remains readable');
       for (const locale of width === 1440 || width === 390 ? ['en', 'zh-CN', 'ja', 'mn-Cyrl-MN', 'mn-Mong-CN'] : ['en']) {
         await page.locator('#language').selectOption(locale);
         await page.waitForTimeout(100);
@@ -62,6 +74,7 @@ const { chromium } = require('playwright');
       assert.match(await page.locator('#selected-station').textContent(), /天安门/);
       await page.locator('#fit').click();
       // Construct the introductory two-service trip without using a suggestion.
+      if (!await page.locator('#manual-end').isVisible()) await page.locator('.route-workshop > summary').click();
       await page.locator('#manual-end').selectOption({ label: '西单 · Xidan' });
       await page.locator('[data-action="add-leg"]').click();
       const transferLine = await page.locator('#manual-line option').evaluateAll(options => options.find(option => /4号线/.test(option.textContent)).value);

@@ -191,7 +191,7 @@ async function check(browser, base, game, viewport, touch, screenshots) {
       await page.locator('#interior-close').click();
     } else {
       if (await page.locator('#hud-toggle').getAttribute('aria-expanded') !== 'true') await page.locator('#hud-toggle').click();
-      await page.locator('.game-panel-scroll details').evaluate(node => { node.open = true; });
+      assert.equal(await page.locator('#game-control-panel details').count(), 0, 'audio settings need no nested disclosure');
       await page.locator('#escalator-sound').click();
       await page.locator('#escalator-sound[aria-pressed="true"]').waitFor();
       await page.locator('#hud-close').click(); await settle(page);

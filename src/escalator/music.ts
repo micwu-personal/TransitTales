@@ -1,4 +1,4 @@
-export type MusicInstrument = 'bell' | 'pad' | 'bass' | 'air';
+export type MusicInstrument = 'bell' | 'pad' | 'bass' | 'air' | 'strings' | 'harp';
 export interface MusicEvent {
   readonly beat: number;
   readonly durationBeats: number;
@@ -15,73 +15,141 @@ export function clampMusicVolume(value: number): number {
   return Number.isNaN(value) ? 0 : Math.min(1, Math.max(0, value));
 }
 
-type PhraseNote = readonly [beat: number, duration: number, midi: number];
+type PhraseNote = readonly [beat: number, duration: number, midi: number, expression?: number];
 interface CompositionBar {
   chord: string;
   voicing: readonly number[];
   bass: readonly PhraseNote[];
   melody: readonly PhraseNote[];
+  strings: readonly PhraseNote[];
+  harp: readonly PhraseNote[];
+  expression: number;
   padBeat?: number;
 }
 
-// Original “Sunlit landings”: a D-major theme, answering phrase, borrowed-color bridge, and quieter return.
-// Notes and rests are authored phrases, not scale samples or per-bar arpeggio templates.
+// Original “Sunlit landings”: five inner voices move by small steps, even through the borrowed bridge.
+// Bowed countermelodies cross barlines; harp dyads and answering gestures leave room for the bell theme.
 const SCORE: readonly CompositionBar[] = [
-  { chord:'Dmaj9', voicing:[54,57,61,64], bass:[[0,2.5,38],[3,0.8,37]], melody:[[0.5,0.85,74],[1.75,0.55,78],[2.75,0.9,76]] },
-  { chord:'Aadd9/C#', voicing:[52,57,59,64], bass:[[0,3.65,37]], melody:[[0.25,0.55,73],[1.25,1.25,76],[3,0.65,69]], padBeat:0.25 },
-  { chord:'Bm7', voicing:[54,57,62,66], bass:[[0,2.1,35],[2.75,0.9,42]], melody:[[0.75,0.7,74],[2,0.45,78],[2.75,0.9,81]] },
-  { chord:'Gmaj9', voicing:[54,57,59,62], bass:[[0.25,2.6,43],[3.25,0.6,42]], melody:[[0,1.15,79],[1.75,0.6,78],[3,0.7,74]] },
-  { chord:'Em9', voicing:[55,59,62,66], bass:[[0,1.8,40],[2.5,1.1,47]], melody:[[0.5,0.55,76],[1.5,0.6,78],[2.5,1.1,71]], padBeat:0.5 },
-  { chord:'A13sus', voicing:[55,59,62,66], bass:[[0,2.7,45],[3.25,0.6,44]], melody:[[0.25,0.45,73],[1,0.8,76],[2.25,0.65,74],[3.25,0.45,73]] },
-  { chord:'Dadd9/F#', voicing:[57,62,64,69], bass:[[0,3.6,42]], melody:[[0.75,1.4,74],[2.75,0.75,69]] },
-  { chord:'A9', voicing:[55,59,61,64], bass:[[0.5,2.5,45],[3.25,0.6,42]], melody:[[1,0.85,71],[2.5,0.5,73],[3.25,0.45,76]], padBeat:0.25 },
+  { chord:'Dmaj9', voicing:[54,57,61,64,66], expression:0.9,
+    bass:[[0,2.8,38],[3.25,0.6,37]], melody:[[0.5,1.05,74,0.9],[1.75,0.55,78,1.1],[2.75,1,76,0.85]],
+    strings:[[1,4.4,66,0.9]], harp:[[0.12,2.1,57,0.8],[0.24,1.8,64,0.7],[3.5,1.2,69,0.85]] },
+  { chord:'A13/C#', voicing:[55,57,59,64,66], expression:0.84, padBeat:0.25,
+    bass:[[0,3.65,37]], melody:[[0.25,0.6,73,0.8],[1.25,1.5,76,1],[3.25,0.5,71,0.7]],
+    strings:[[1.75,2.6,64]], harp:[[2.8,1.4,66,0.9],[2.92,1.2,71,0.7]] },
+  { chord:'Bm11', voicing:[54,57,61,62,64], expression:0.96,
+    bass:[[0,2.1,35],[2.75,0.9,42]], melody:[[0.75,0.7,74],[2,0.45,78,0.85],[2.75,1.15,81,1.05]],
+    strings:[[0.5,2.9,62,1.05],[3.5,1.2,64,0.85]], harp:[[0.25,2.4,61,0.75],[1.5,1.7,66,0.9]] },
+  { chord:'Gmaj13', voicing:[54,57,59,64,66], expression:1.04,
+    bass:[[0.25,2.6,43],[3.25,0.6,42]], melody:[[0,1.3,79,1.05],[1.75,0.65,78,0.85],[3,0.8,74,0.8]],
+    strings:[[0.9,3.8,66]], harp:[[2.5,1.7,59,0.8],[2.64,1.5,69,0.7],[3.5,1.1,74,0.65]] },
+  { chord:'Em11', voicing:[55,57,59,62,66], expression:0.92, padBeat:0.5,
+    bass:[[0,1.8,40],[2.5,1.1,47]], melody:[[0.5,0.55,76],[1.5,0.65,78,0.9],[2.5,1.15,71,0.8]],
+    strings:[[1,3,67,1.1]], harp:[[0.2,2.6,62,0.85],[0.32,2.2,66,0.7]] },
+  { chord:'A13sus4', voicing:[55,57,59,62,66], expression:0.86,
+    bass:[[0,2.7,45],[3.25,0.6,44]], melody:[[0.25,0.5,71,0.85],[1,0.9,76],[2.25,0.7,74,0.9],[3.25,0.45,73,0.7]],
+    strings:[[0.25,1.8,67,0.9],[2.25,2.8,66,0.85]], harp:[[1.5,2.3,59,0.9],[3,1.6,64,0.7]] },
+  { chord:'Dmaj9/F#', voicing:[54,57,61,62,64], expression:0.8,
+    bass:[[0,3.6,42]], melody:[[0.75,1.7,74],[3,0.75,69,0.65]],
+    strings:[[1.5,2.2,64,0.8]], harp:[[0.3,2.9,62,0.75],[0.42,2.6,69,0.65],[2.75,1.9,76,0.8]] },
+  { chord:'A13', voicing:[55,57,59,61,66], expression:0.78, padBeat:0.25,
+    bass:[[0.5,2.5,45],[3.25,0.6,42]], melody:[[1,0.9,71,0.8],[2.5,0.5,73],[3.25,0.45,76,0.85]],
+    strings:[[0.75,2.4,61,0.85]], harp:[[3.1,1.3,66,0.9],[3.23,1.1,71,0.7]] },
 
-  { chord:'Gmaj9', voicing:[57,59,62,66], bass:[[0,1.8,43],[2.25,1.1,47]], melody:[[0,0.75,79],[1,0.45,81],[1.75,1.1,83],[3.25,0.5,81]] },
-  { chord:'Dmaj9/F#', voicing:[57,61,64,66], bass:[[0.5,2.25,42],[3,0.8,40]], melody:[[0.5,1.2,78],[2.25,0.65,76],[3.25,0.5,74]], padBeat:0.5 },
-  { chord:'Em9', voicing:[55,59,66,69], bass:[[0,2.2,40],[2.75,0.9,42]], melody:[[0.25,0.65,76],[1.5,0.5,79],[2.5,0.95,83]] },
-  { chord:'Bm11', voicing:[57,62,64,66], bass:[[0.25,3.5,35]], melody:[[1,1.4,81],[3,0.5,78]], padBeat:0.25 },
-  { chord:'Gmaj7', voicing:[54,59,62,67], bass:[[0,2.6,43],[3.25,0.6,42]], melody:[[0.25,0.5,79],[1.25,0.5,78],[2.25,1.2,74]] },
-  { chord:'F#7', voicing:[54,58,61,64], bass:[[0,1.75,42],[2.25,1.4,37]], melody:[[0.5,0.75,73],[1.75,0.65,70],[2.75,0.8,76]], padBeat:0.5 },
-  { chord:'Bm9', voicing:[54,57,61,62], bass:[[0,2.8,35],[3.25,0.6,40]], melody:[[0,1.35,78],[2,0.5,74],[3,0.65,73]] },
-  { chord:'A13', voicing:[55,59,61,66], bass:[[0.5,3.25,45]], melody:[[0.75,0.75,71],[2,0.6,73],[3,0.65,76]], padBeat:0.25 },
+  { chord:'Gmaj9(#11)', voicing:[54,57,59,61,62], expression:0.96,
+    bass:[[0,1.8,43],[2.25,1.1,47]], melody:[[0,0.8,79],[1,0.45,81,0.85],[1.75,1.2,83,1.1],[3.25,0.6,81,0.8]],
+    strings:[[0.5,2.5,74],[3.25,1.6,73,0.85]], harp:[[0.2,2.5,62,0.8],[2.75,1.7,78,0.85]] },
+  { chord:'Dmaj9/F#', voicing:[54,57,61,64,66], expression:1.04, padBeat:0.5,
+    bass:[[0.5,2.25,42],[3,0.8,40]], melody:[[0.5,1.3,78,1.05],[2.25,0.65,76,0.8],[3.25,0.5,74,0.7]],
+    strings:[[1,3.3,69,1.1]], harp:[[1.9,1.8,62,0.9],[2.06,1.5,76,0.7]] },
+  { chord:'Em11', voicing:[55,57,59,62,66], expression:1.08,
+    bass:[[0,2.2,40],[2.75,0.9,42]], melody:[[0.25,0.65,76,0.85],[1.5,0.5,79],[2.5,1.2,83,1.05]],
+    strings:[[0.6,1.65,71],[2.5,2.4,74,1.1]], harp:[[0.15,2.8,59,0.8],[0.28,2.4,66,0.75],[3.25,1.4,78,0.8]] },
+  { chord:'Bm11', voicing:[54,57,61,62,64], expression:1.02, padBeat:0.25,
+    bass:[[0.25,3.5,35]], melody:[[1,1.7,81,0.95],[3.25,0.5,78,0.7]],
+    strings:[[1.2,3.6,73]], harp:[[0.75,2.2,62,0.85],[2.8,1.5,69,0.8]] },
+  { chord:'Gmaj13', voicing:[54,57,59,62,64], expression:0.96,
+    bass:[[0,2.6,43],[3.25,0.6,42]], melody:[[0.25,0.55,79],[1.25,0.55,78,0.9],[2.25,1.4,74,0.75]],
+    strings:[[1,2.8,71,0.95]], harp:[[1.75,2.2,64,0.8],[1.9,1.9,69,0.7],[3.5,1.2,78,0.75]] },
+  { chord:'F#7(b9)', voicing:[54,58,61,64,67], expression:0.88, padBeat:0.5,
+    bass:[[0,1.75,42],[2.25,1.4,37]], melody:[[0.5,0.8,73,0.9],[1.75,0.7,70,0.75],[2.75,1,76,0.85]],
+    strings:[[0.5,1.8,70,0.85],[2.5,2.2,67,0.75]], harp:[[1.3,2,61,0.8],[3.2,1.2,64,0.65]] },
+  { chord:'Bm9', voicing:[54,57,61,62,66], expression:0.98,
+    bass:[[0,2.8,35],[3.25,0.6,40]], melody:[[0,1.55,78,1.05],[2,0.55,74,0.85],[3,0.7,73,0.75]],
+    strings:[[0.75,3.9,66,1.05]], harp:[[0.18,2.7,62,0.85],[0.3,2.4,73,0.7],[2.75,1.5,81,0.8]] },
+  { chord:'A13', voicing:[55,57,59,61,66], expression:0.82, padBeat:0.25,
+    bass:[[0.5,3.25,45]], melody:[[0.75,0.85,71],[2,0.7,73,0.85],[3,0.7,76,0.7]],
+    strings:[[1,2.7,64,0.85]], harp:[[2.5,1.9,59,0.75],[2.65,1.6,66,0.65]] },
 
-  { chord:'Em9', voicing:[55,59,62,66], bass:[[0,3.75,40]], melody:[[1,0.8,71],[2.5,1.2,76]], padBeat:0.5 },
-  { chord:'Bm7/D', voicing:[54,57,59,66], bass:[[0.5,2.6,38],[3.25,0.6,37]], melody:[[0.5,1.5,74],[2.75,0.7,73]] },
-  { chord:'Cmaj9', voicing:[55,59,62,64], bass:[[0,3.7,36]], melody:[[0.75,0.85,72],[2.25,1.3,76]], padBeat:0.75 },
-  { chord:'Gadd9/B', voicing:[55,57,62,67], bass:[[0.25,3.4,35]], melody:[], padBeat:1 },
-  { chord:'Am9', voicing:[55,59,60,64], bass:[[0.5,2.25,33],[3,0.8,40]], melody:[[1.25,1.65,72]], padBeat:0.5 },
-  { chord:'Gm6', voicing:[55,58,62,64], bass:[[0,3.6,43]], melody:[[0.5,1.2,70],[2.5,1.1,69]], padBeat:0.25 },
-  { chord:'Dsus2/A', voicing:[57,62,64,69], bass:[[0.25,2.75,45],[3.25,0.6,40]], melody:[[1,0.8,74],[2.5,0.8,76]] },
-  { chord:'A7', voicing:[55,57,61,64], bass:[[0.5,3.25,45]], melody:[[1.5,1.3,73]], padBeat:0.5 },
+  { chord:'Em9', voicing:[55,59,62,66,67], expression:0.86, padBeat:0.5,
+    bass:[[0,3.75,40]], melody:[[1,0.95,71,0.8],[2.5,1.3,76,0.75]],
+    strings:[[0.75,4.5,67]], harp:[[0.3,2.7,59,0.8],[3.25,1.8,66,0.75]] },
+  { chord:'Bm11/D', voicing:[54,57,59,61,64], expression:0.8,
+    bass:[[0.5,2.6,38],[3.25,0.6,37]], melody:[[0.5,1.7,74,0.85],[2.75,0.85,73,0.7]],
+    strings:[[1.5,3.2,66,0.9]], harp:[[2.5,2,61,0.75],[2.68,1.7,69,0.6]] },
+  { chord:'Cmaj9(#11)', voicing:[55,59,62,64,66], expression:0.92, padBeat:0.75,
+    bass:[[0,3.7,36]], melody:[[0.75,1,72,0.75],[2.25,1.5,76,0.85]],
+    strings:[[1,1.5,64,0.85],[2.75,2.8,66]], harp:[[0.15,3,59,0.8],[0.3,2.7,74,0.7]] },
+  { chord:'Gmaj13/B', voicing:[55,57,62,64,66], expression:0.82, padBeat:1,
+    bass:[[0.25,3.4,35]], melody:[],
+    strings:[[1.75,3.8,67,0.9]], harp:[] },
+  { chord:'Am11', voicing:[55,59,60,62,64], expression:0.9, padBeat:0.5,
+    bass:[[0.5,2.25,33],[3,0.8,40]], melody:[[1.25,1.9,72,0.75]],
+    strings:[[1.75,3.5,64,0.9]], harp:[[0.25,2.8,59,0.8],[3.1,1.4,67,0.65]] },
+  { chord:'Gm6/9', voicing:[55,57,58,62,64], expression:0.98, padBeat:0.25,
+    bass:[[0,3.6,43]], melody:[[0.5,1.35,70,0.85],[2.5,1.25,69,0.7]],
+    strings:[[1.5,2.9,62]], harp:[[1,2.5,58,0.8],[1.2,2.2,64,0.7]] },
+  { chord:'Dmaj9/A', voicing:[54,57,61,62,64], expression:0.88,
+    bass:[[0.25,2.75,45],[3.25,0.6,40]], melody:[[1,1,74,0.85],[2.5,1,76,0.8]],
+    strings:[[0.75,4.1,66]], harp:[[2,2.3,61,0.8],[2.15,2,69,0.65],[3.25,1.4,78,0.7]] },
+  { chord:'A7sus4(b9)', voicing:[55,57,58,62,64], expression:0.76, padBeat:0.5,
+    bass:[[0.5,3.25,45]], melody:[[1.5,1.6,73,0.75]],
+    strings:[[1,1.1,74,0.85],[2.35,1.4,73,0.7]], harp:[[0.75,2.2,64,0.7]] },
 
-  { chord:'Dmaj9', voicing:[54,57,61,64], bass:[[0,2.75,38],[3.25,0.6,37]], melody:[[0.5,0.95,74],[1.75,0.5,78],[2.75,0.95,76]] },
-  { chord:'Aadd9/C#', voicing:[52,57,59,64], bass:[[0.25,3.4,37]], melody:[[0.5,1.2,76],[2.5,0.8,73]], padBeat:0.25 },
-  { chord:'Bm9', voicing:[54,57,61,66], bass:[[0,3.6,35]], melody:[[0.75,0.6,74],[2,0.5,78],[2.75,0.95,81]] },
-  { chord:'Gmaj9', voicing:[54,57,59,62], bass:[[0.5,2.5,43],[3.25,0.6,42]], melody:[[1,1.4,79],[3,0.7,74]], padBeat:0.5 },
-  { chord:'Em9', voicing:[55,59,62,66], bass:[[0,2.7,40],[3.25,0.6,44]], melody:[[0.5,0.6,76],[1.75,0.7,71],[3,0.6,73]] },
-  { chord:'A13', voicing:[55,59,61,66], bass:[[0.25,3.4,45]], melody:[[0.25,1.25,73],[2.25,0.85,76]], padBeat:0.25 },
-  { chord:'Gm6', voicing:[55,58,62,64], bass:[[0,2.5,43],[3,0.8,45]], melody:[[0.75,1.15,70],[2.5,0.9,69]] },
-  { chord:'D6/9', voicing:[54,57,59,64], bass:[[0,3.8,38]], melody:[[0.5,2.3,74]] },
+  { chord:'Dmaj9', voicing:[54,57,61,64,66], expression:0.9,
+    bass:[[0,2.75,38],[3.25,0.6,37]], melody:[[0.5,1.2,74,0.9],[1.75,0.6,78,1.1],[2.75,1.1,76,0.85]],
+    strings:[[0.75,4.5,66,0.9]], harp:[[0.2,2.7,62,0.8],[0.34,2.4,69,0.7],[3.3,1.5,81,0.7]] },
+  { chord:'A13/C#', voicing:[55,57,59,64,66], expression:0.82, padBeat:0.25,
+    bass:[[0.25,3.4,37]], melody:[[0.5,1.5,76],[2.75,0.9,73,0.75]],
+    strings:[[1.5,2.8,64]], harp:[[2.25,2.3,59,0.8],[2.4,2,66,0.65]] },
+  { chord:'Bm11', voicing:[54,57,61,62,64], expression:0.94,
+    bass:[[0,3.6,35]], melody:[[0.75,0.7,74,0.9],[2,0.55,78],[2.75,1.1,81,0.9]],
+    strings:[[0.5,3,62],[3.6,1.1,64,0.8]], harp:[[1.25,2.2,61,0.75],[1.38,1.9,69,0.7],[3.25,1.4,78,0.8]] },
+  { chord:'Gmaj13', voicing:[54,57,59,62,64], expression:0.96, padBeat:0.5,
+    bass:[[0.5,2.5,43],[3.25,0.6,42]], melody:[[1,1.65,79,0.95],[3,0.8,74,0.7]],
+    strings:[[0.9,3.7,66]], harp:[[0.25,2.8,59,0.8],[2.8,1.7,76,0.75]] },
+  { chord:'Em11', voicing:[55,57,59,62,66], expression:0.86,
+    bass:[[0,2.7,40],[3.25,0.6,44]], melody:[[0.5,0.7,76],[1.75,0.8,71,0.8],[3,0.7,73,0.75]],
+    strings:[[1,2.8,67,0.95]], harp:[[0.15,2.9,62,0.8],[0.28,2.6,66,0.65]] },
+  { chord:'A13', voicing:[55,57,59,61,66], expression:0.78, padBeat:0.25,
+    bass:[[0.25,3.4,45]], melody:[[0.25,1.6,73,0.85],[2.5,1.1,76,0.7]],
+    strings:[[0.25,2,66,0.9],[2.5,2.3,64,0.8]], harp:[[1.8,2.1,59,0.7],[1.95,1.8,69,0.6]] },
+  { chord:'Gm6/9', voicing:[55,57,58,62,64], expression:0.72,
+    bass:[[0,2.5,43],[3,0.8,45]], melody:[[0.75,1.4,70,0.85],[2.75,1,69,0.65]],
+    strings:[[1,3.5,62,0.85]], harp:[[0.4,2.7,58,0.75],[0.6,2.3,64,0.65],[3,1.5,76,0.65]] },
+  { chord:'D6/9', voicing:[54,57,59,62,64], expression:0.64,
+    bass:[[0,3.9,38]], melody:[[0.5,3.35,74,0.75]],
+    strings:[[0.75,1.35,66,0.8],[2.25,1.7,62,0.65]], harp:[[0.2,3.6,57,0.7],[0.35,3.4,64,0.6],[1.75,2.2,69,0.65]] },
 ];
 
 function compose(): readonly MusicEvent[] {
   const events: MusicEvent[] = [];
   const add = (instrument: MusicInstrument, bar: number, note: PhraseNote, velocity: number) => {
-    events.push({ beat:bar * 4 + note[0], durationBeats:note[1], midi:note[2], velocity, instrument });
+    events.push({ beat:bar * 4 + note[0], durationBeats:note[1], midi:note[2],
+      velocity:velocity * (note[3] ?? 1), instrument });
   };
   SCORE.forEach((bar, index) => {
     const section = Math.floor(index / 8);
-    const intensity = [0.9, 1, 0.68, 0.8][section];
-    bar.bass.forEach((note, i) => add('bass', index, note, (i === 0 ? 0.46 : 0.34) * intensity));
-    const voicing = index % 2 === 0 ? bar.voicing : [...bar.voicing].reverse();
-    voicing.forEach((midi, voice) => {
-      const offset = (bar.padBeat ?? 0) + voice * 0.07;
-      add('pad', index, [offset, 3.85 - offset, midi], (0.32 - voice * 0.025) * intensity);
+    const intensity = [0.9, 1, 0.7, 0.78][section] * bar.expression;
+    bar.bass.forEach((note, i) => add('bass', index, note, (i === 0 ? 0.46 : 0.32) * intensity));
+    bar.voicing.forEach((midi, voice) => {
+      const offset = (bar.padBeat ?? 0) + voice * 0.045;
+      add('pad', index, [offset, 3.96 - offset, midi], (0.3 - voice * 0.02) * intensity);
     });
-    bar.melody.forEach((note, i) => add('bell', index, note, (i === 0 ? 0.54 : i === 1 ? 0.43 : 0.47) * intensity));
-    // Soft, held upper chord tones frame phrase endings; the bridge leaves a whole melody bar silent.
+    bar.melody.forEach((note, i) => add('bell', index, note, (i === 0 ? 0.5 : i === 1 ? 0.44 : 0.46) * intensity));
+    bar.strings.forEach(note => add('strings', index, note, (section === 1 ? 0.53 : 0.48) * intensity));
+    bar.harp.forEach(note => add('harp', index, note, 0.48 * intensity));
     if ([3, 7, 11, 15, 18, 19, 23, 27, 31].includes(index)) {
-      add('air', index, [0.75, 3.1, Math.max(...bar.voicing) + 12], 0.23 * intensity);
+      add('air', index, [0.75, 3.1, Math.max(...bar.voicing) + 12], 0.18 * intensity);
     }
   });
   return Object.freeze(events.sort((a, b) => a.beat - b.beat).map(event => Object.freeze(event)));
@@ -150,7 +218,13 @@ const PARTIALS: Record<MusicInstrument, readonly PartialTone[]> = {
   pad: [{ type: 'sine', ratio: 1, weight: 0.76, detune: -5 }, { type: 'triangle', ratio: 1, weight: 0.24, detune: 5 }],
   bass: [{ type: 'sine', ratio: 1, weight: 1, detune: 0 }],
   air: [{ type: 'sine', ratio: 1, weight: 1, detune: -3 }],
+  strings: [{ type: 'triangle', ratio: 1, weight: 0.56, detune: -4 },
+    { type: 'sawtooth', ratio: 1, weight: 0.32, detune: 4 }, { type: 'sine', ratio: 2, weight: 0.12, detune: 0 }],
+  harp: [{ type: 'triangle', ratio: 1, weight: 0.7, detune: 0 },
+    { type: 'sine', ratio: 2, weight: 0.22, detune: 0 }, { type: 'sine', ratio: 3, weight: 0.08, detune: 0 }],
 };
+const NOTE_LEVEL: Record<MusicInstrument, number> = { bell:0.18, pad:0.055, bass:0.14, air:0.04, strings:0.105, harp:0.145 };
+const ATTACK_SECONDS: Record<MusicInstrument, number> = { bell:0.012, pad:0.5, bass:0.08, air:0.8, strings:0.45, harp:0.006 };
 
 function disconnect(node: AudioNode): void {
   try { node.disconnect(); } catch { /* Already detached, or the context was closed. */ }
@@ -270,16 +344,30 @@ export function createRelaxingMusic(options: { onUnavailable?: () => void } = {}
     const voice: Voice = { nodes: [envelope], sources: [], start: time, end, finished: false };
     session.voices.add(voice);
     envelope.connect(session.bus);
-    const peak = event.velocity * ({ bell:0.18, pad:0.08, bass:0.14, air:0.045 }[event.instrument]);
-    const attack = Math.min(duration * 0.3, { bell:0.012, pad:0.5, bass:0.08, air:0.8 }[event.instrument]);
+    const peak = event.velocity * NOTE_LEVEL[event.instrument];
+    const attack = Math.min(duration * 0.2, ATTACK_SECONDS[event.instrument]);
     envelope.gain.setValueAtTime(0, time);
-    envelope.gain.linearRampToValueAtTime(peak, time + attack);
-    if (event.instrument === 'bell') envelope.gain.exponentialRampToValueAtTime(0.0001, end - 0.02);
-    else {
+    envelope.gain.linearRampToValueAtTime(peak * (event.instrument === 'strings' ? 0.78 : 1), time + attack);
+    if (event.instrument === 'bell' || event.instrument === 'harp') {
+      envelope.gain.exponentialRampToValueAtTime(0.0001, end - 0.02);
+    } else if (event.instrument === 'strings') {
+      envelope.gain.linearRampToValueAtTime(peak, time + duration * 0.45);
+      envelope.gain.linearRampToValueAtTime(peak * 0.7, end - Math.min(duration * 0.35, 0.65));
+    } else {
       const release = Math.min(duration * 0.45, event.instrument === 'pad' || event.instrument === 'air' ? 0.8 : 0.3);
       envelope.gain.linearRampToValueAtTime(peak * 0.8, end - release);
     }
     envelope.gain.linearRampToValueAtTime(0, end);
+    let toneBus: AudioNode = envelope;
+    if (event.instrument === 'strings') {
+      const filter = audio.createBiquadFilter();
+      voice.nodes.push(filter);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(Math.min(2400, Math.max(800, midiToFrequency(event.midi) * 3.5)), time);
+      filter.Q.setValueAtTime(0.55, time);
+      filter.connect(envelope);
+      toneBus = filter;
+    }
     const partials = PARTIALS[event.instrument];
     let ended = 0;
     for (const partial of partials) {
@@ -291,9 +379,23 @@ export function createRelaxingMusic(options: { onUnavailable?: () => void } = {}
       source.type = partial.type;
       source.frequency.setValueAtTime(midiToFrequency(event.midi) * partial.ratio, time);
       source.detune.setValueAtTime(partial.detune, time);
-      gain.gain.value = partial.weight;
+      if (event.instrument === 'strings') {
+        // Delayed, gentle vibrato without extra free-running modulation nodes.
+        const vibrato = Float32Array.from({ length:Math.ceil(duration * 30) + 1 }, (_, sample) => {
+          const passed = sample * duration / Math.ceil(duration * 30);
+          return partial.detune + 3 * Math.min(1, passed / 0.7) * Math.sin(2 * Math.PI * 5.1 * passed);
+        });
+        source.detune.setValueCurveAtTime(vibrato, time, duration);
+      }
+      if (event.instrument === 'harp') {
+        // Upper harmonics die away before the plucked fundamental.
+        gain.gain.setValueAtTime(partial.weight, time);
+        gain.gain.exponentialRampToValueAtTime(partial.weight * 0.05,
+          time + Math.min(duration * 0.7, partial.ratio === 1 ? 1.7 : 0.45));
+        gain.gain.exponentialRampToValueAtTime(0.0001, end);
+      } else gain.gain.value = partial.weight;
       source.connect(gain);
-      gain.connect(envelope);
+      gain.connect(toneBus);
       source.onended = () => { if (++ended === partials.length) finishVoice(session, voice); };
       source.start(time);
       source.stop(end);

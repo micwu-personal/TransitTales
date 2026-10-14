@@ -1,0 +1,4540 @@
+{
+  "version": 1,
+  "generator": "edge-tts 7.3.1",
+  "rate": "-8%",
+  "format": "MP3",
+  "complete": true,
+  "stationCount": 426,
+  "serviceCount": 28,
+  "notice": "Original public game announcement scripts, not official operator recordings. Generated online; bundled playback needs no TTS service or speechSynthesis. Every station and service name is spoken in Mandarin in every language. Traditional Mongolian captions share Mongolia Mongolian phrase speech, not an Inner Mongolia regional voice.",
+  "locales": {
+    "en": {
+      "phraseRecordingLanguage": "en",
+      "identityRecordingLanguage": "zh-CN"
+    },
+    "zh-CN": {
+      "phraseRecordingLanguage": "zh-CN",
+      "identityRecordingLanguage": "zh-CN"
+    },
+    "ja": {
+      "phraseRecordingLanguage": "ja",
+      "identityRecordingLanguage": "zh-CN"
+    },
+    "mn-Cyrl-MN": {
+      "phraseRecordingLanguage": "mn-Cyrl-MN",
+      "identityRecordingLanguage": "zh-CN"
+    },
+    "mn-Mong-CN": {
+      "phraseRecordingLanguage": "mn-Cyrl-MN",
+      "identityRecordingLanguage": "zh-CN"
+    }
+  },
+  "stations": {
+    "pingguoyuan": "/audio/beijing/stations/pingguoyuan.mp3",
+    "gucheng": "/audio/beijing/stations/gucheng.mp3",
+    "babaoshan": "/audio/beijing/stations/babaoshan.mp3",
+    "yuquanlu": "/audio/beijing/stations/yuquanlu.mp3",
+    "wukesong": "/audio/beijing/stations/wukesong.mp3",
+    "wanshoulu": "/audio/beijing/stations/wanshoulu.mp3",
+    "gongzhufen-station": "/audio/beijing/stations/gongzhufen-station.mp3",
+    "military-museum": "/audio/beijing/stations/military-museum.mp3",
+    "muxidi": "/audio/beijing/stations/muxidi.mp3",
+    "nanlishi-lu": "/audio/beijing/stations/nanlishi-lu.mp3",
+    "fuxingmen": "/audio/beijing/stations/fuxingmen.mp3",
+    "xidan": "/audio/beijing/stations/xidan.mp3",
+    "tian-anmen-west": "/audio/beijing/stations/tian-anmen-west.mp3",
+    "tian-anmen-east": "/audio/beijing/stations/tian-anmen-east.mp3",
+    "wangfujing": "/audio/beijing/stations/wangfujing.mp3",
+    "dongdan": "/audio/beijing/stations/dongdan.mp3",
+    "jianguomen": "/audio/beijing/stations/jianguomen.mp3",
+    "yonganli": "/audio/beijing/stations/yonganli.mp3",
+    "guomao": "/audio/beijing/stations/guomao.mp3",
+    "dawanglu": "/audio/beijing/stations/dawanglu.mp3",
+    "sihui": "/audio/beijing/stations/sihui.mp3",
+    "sihui-east": "/audio/beijing/stations/sihui-east.mp3",
+    "gaobeidian": "/audio/beijing/stations/gaobeidian.mp3",
+    "communication-university-of-china": "/audio/beijing/stations/communication-university-of-china.mp3",
+    "shuangqiao": "/audio/beijing/stations/shuangqiao.mp3",
+    "guaanzhuang": "/audio/beijing/stations/guaanzhuang.mp3",
+    "baliqiao": "/audio/beijing/stations/baliqiao.mp3",
+    "tongzhou-beiyuan": "/audio/beijing/stations/tongzhou-beiyuan.mp3",
+    "guoyuan": "/audio/beijing/stations/guoyuan.mp3",
+    "jiukeshu": "/audio/beijing/stations/jiukeshu.mp3",
+    "liyuan": "/audio/beijing/stations/liyuan.mp3",
+    "linheli": "/audio/beijing/stations/linheli.mp3",
+    "tuqiao": "/audio/beijing/stations/tuqiao.mp3",
+    "huazhuang": "/audio/beijing/stations/huazhuang.mp3",
+    "universal-resort": "/audio/beijing/stations/universal-resort.mp3",
+    "xizhimen": "/audio/beijing/stations/xizhimen.mp3",
+    "chegongzhuang": "/audio/beijing/stations/chegongzhuang.mp3",
+    "fuchengmen": "/audio/beijing/stations/fuchengmen.mp3",
+    "changchunjie": "/audio/beijing/stations/changchunjie.mp3",
+    "xuanwumen": "/audio/beijing/stations/xuanwumen.mp3",
+    "hepingmen": "/audio/beijing/stations/hepingmen.mp3",
+    "qianmen": "/audio/beijing/stations/qianmen.mp3",
+    "chongwenmen": "/audio/beijing/stations/chongwenmen.mp3",
+    "beijing-railway-station": "/audio/beijing/stations/beijing-railway-station.mp3",
+    "chaoyangmen": "/audio/beijing/stations/chaoyangmen.mp3",
+    "dongsi-shitiao": "/audio/beijing/stations/dongsi-shitiao.mp3",
+    "dongzhimen": "/audio/beijing/stations/dongzhimen.mp3",
+    "yonghegong-lama-temple": "/audio/beijing/stations/yonghegong-lama-temple.mp3",
+    "andingmen": "/audio/beijing/stations/andingmen.mp3",
+    "gulou-dajie": "/audio/beijing/stations/gulou-dajie.mp3",
+    "jishuitan": "/audio/beijing/stations/jishuitan.mp3",
+    "workers-stadium": "/audio/beijing/stations/workers-stadium.mp3",
+    "tuanjiehu": "/audio/beijing/stations/tuanjiehu.mp3",
+    "chaoyang-park": "/audio/beijing/stations/chaoyang-park.mp3",
+    "station-55": "/audio/beijing/stations/station-55.mp3",
+    "station-56": "/audio/beijing/stations/station-56.mp3",
+    "yaojiayuan": "/audio/beijing/stations/yaojiayuan.mp3",
+    "dongbanan": "/audio/beijing/stations/dongbanan.mp3",
+    "dongba": "/audio/beijing/stations/dongba.mp3",
+    "dongbabei": "/audio/beijing/stations/dongbabei.mp3",
+    "anheqiaobei": "/audio/beijing/stations/anheqiaobei.mp3",
+    "beigongmen": "/audio/beijing/stations/beigongmen.mp3",
+    "xiyuan": "/audio/beijing/stations/xiyuan.mp3",
+    "yuanmingyuan-park": "/audio/beijing/stations/yuanmingyuan-park.mp3",
+    "peking-university-east-gate": "/audio/beijing/stations/peking-university-east-gate.mp3",
+    "zhongguancun": "/audio/beijing/stations/zhongguancun.mp3",
+    "haidian-huangzhuang": "/audio/beijing/stations/haidian-huangzhuang.mp3",
+    "renmin-university": "/audio/beijing/stations/renmin-university.mp3",
+    "weigongcun": "/audio/beijing/stations/weigongcun.mp3",
+    "national-library": "/audio/beijing/stations/national-library.mp3",
+    "beijing-zoo": "/audio/beijing/stations/beijing-zoo.mp3",
+    "xinjiekou": "/audio/beijing/stations/xinjiekou.mp3",
+    "ping-anli": "/audio/beijing/stations/ping-anli.mp3",
+    "xisi": "/audio/beijing/stations/xisi.mp3",
+    "lingjing-hutong": "/audio/beijing/stations/lingjing-hutong.mp3",
+    "station-76": "/audio/beijing/stations/station-76.mp3",
+    "taoranting": "/audio/beijing/stations/taoranting.mp3",
+    "beijing-south-railway-station": "/audio/beijing/stations/beijing-south-railway-station.mp3",
+    "majiapu": "/audio/beijing/stations/majiapu.mp3",
+    "jiaomen-west": "/audio/beijing/stations/jiaomen-west.mp3",
+    "gongyixiqiao": "/audio/beijing/stations/gongyixiqiao.mp3",
+    "xin-gong": "/audio/beijing/stations/xin-gong.mp3",
+    "xihongmen": "/audio/beijing/stations/xihongmen.mp3",
+    "gaomidian-north": "/audio/beijing/stations/gaomidian-north.mp3",
+    "gaomidian-south": "/audio/beijing/stations/gaomidian-south.mp3",
+    "zaoyuan": "/audio/beijing/stations/zaoyuan.mp3",
+    "qingyuanlu": "/audio/beijing/stations/qingyuanlu.mp3",
+    "huangcun-xidajie": "/audio/beijing/stations/huangcun-xidajie.mp3",
+    "huangcun-railway-station": "/audio/beijing/stations/huangcun-railway-station.mp3",
+    "yihezhuang": "/audio/beijing/stations/yihezhuang.mp3",
+    "biomedical-base": "/audio/beijing/stations/biomedical-base.mp3",
+    "tiangongyuan": "/audio/beijing/stations/tiangongyuan.mp3",
+    "tiantongyuan-north": "/audio/beijing/stations/tiantongyuan-north.mp3",
+    "tiantongyuan": "/audio/beijing/stations/tiantongyuan.mp3",
+    "tiantongyuan-south": "/audio/beijing/stations/tiantongyuan-south.mp3",
+    "lishuiqiao": "/audio/beijing/stations/lishuiqiao.mp3",
+    "lishuiqiao-south": "/audio/beijing/stations/lishuiqiao-south.mp3",
+    "beiyuanlu-north": "/audio/beijing/stations/beiyuanlu-north.mp3",
+    "datunlu-east": "/audio/beijing/stations/datunlu-east.mp3",
+    "huixinxijie-beikou": "/audio/beijing/stations/huixinxijie-beikou.mp3",
+    "huixinxijie-nankou": "/audio/beijing/stations/huixinxijie-nankou.mp3",
+    "heping-xiqiao": "/audio/beijing/stations/heping-xiqiao.mp3",
+    "hepingli-beijie": "/audio/beijing/stations/hepingli-beijie.mp3",
+    "beixinqiao": "/audio/beijing/stations/beixinqiao.mp3",
+    "zhangzizhong-lu": "/audio/beijing/stations/zhangzizhong-lu.mp3",
+    "dongsi": "/audio/beijing/stations/dongsi.mp3",
+    "dengshikou": "/audio/beijing/stations/dengshikou.mp3",
+    "ciqikou": "/audio/beijing/stations/ciqikou.mp3",
+    "east-gate-of-temple-of-heaven": "/audio/beijing/stations/east-gate-of-temple-of-heaven.mp3",
+    "puhuangyu": "/audio/beijing/stations/puhuangyu.mp3",
+    "liujiayao": "/audio/beijing/stations/liujiayao.mp3",
+    "songjiazhuang": "/audio/beijing/stations/songjiazhuang.mp3",
+    "jin-anqiao": "/audio/beijing/stations/jin-anqiao.mp3",
+    "yang-zhuang": "/audio/beijing/stations/yang-zhuang.mp3",
+    "xihuang-cun": "/audio/beijing/stations/xihuang-cun.mp3",
+    "liaogong-zhuang": "/audio/beijing/stations/liaogong-zhuang.mp3",
+    "tian-cun": "/audio/beijing/stations/tian-cun.mp3",
+    "haidian-wuluju": "/audio/beijing/stations/haidian-wuluju.mp3",
+    "cishousi": "/audio/beijing/stations/cishousi.mp3",
+    "huayuanqiao": "/audio/beijing/stations/huayuanqiao.mp3",
+    "baishiqiao-south": "/audio/beijing/stations/baishiqiao-south.mp3",
+    "erligou": "/audio/beijing/stations/erligou.mp3",
+    "chegongzhuang-west": "/audio/beijing/stations/chegongzhuang-west.mp3",
+    "beihai-north": "/audio/beijing/stations/beihai-north.mp3",
+    "nanluogu-xiang": "/audio/beijing/stations/nanluogu-xiang.mp3",
+    "dongdaqiao": "/audio/beijing/stations/dongdaqiao.mp3",
+    "hujialou": "/audio/beijing/stations/hujialou.mp3",
+    "jintailu": "/audio/beijing/stations/jintailu.mp3",
+    "shilipu": "/audio/beijing/stations/shilipu.mp3",
+    "qingnianlu": "/audio/beijing/stations/qingnianlu.mp3",
+    "dalianpo": "/audio/beijing/stations/dalianpo.mp3",
+    "huangqu": "/audio/beijing/stations/huangqu.mp3",
+    "changying": "/audio/beijing/stations/changying.mp3",
+    "caofang": "/audio/beijing/stations/caofang.mp3",
+    "wuzixueyuanlu": "/audio/beijing/stations/wuzixueyuanlu.mp3",
+    "tongzhou-beiguan": "/audio/beijing/stations/tongzhou-beiguan.mp3",
+    "tongyun-men": "/audio/beijing/stations/tongyun-men.mp3",
+    "beiyunhe-west": "/audio/beijing/stations/beiyunhe-west.mp3",
+    "beiyunhe-east": "/audio/beijing/stations/beiyunhe-east.mp3",
+    "haojiafu": "/audio/beijing/stations/haojiafu.mp3",
+    "dongxiayuan": "/audio/beijing/stations/dongxiayuan.mp3",
+    "lucheng": "/audio/beijing/stations/lucheng.mp3",
+    "luyang": "/audio/beijing/stations/luyang.mp3",
+    "beijing-west-railway-station": "/audio/beijing/stations/beijing-west-railway-station.mp3",
+    "wanzi": "/audio/beijing/stations/wanzi.mp3",
+    "daguanying": "/audio/beijing/stations/daguanying.mp3",
+    "inner-guang-anmen": "/audio/beijing/stations/inner-guang-anmen.mp3",
+    "hufangqiao": "/audio/beijing/stations/hufangqiao.mp3",
+    "station-149": "/audio/beijing/stations/station-149.mp3",
+    "qiaowan": "/audio/beijing/stations/qiaowan.mp3",
+    "guangqumen-nei": "/audio/beijing/stations/guangqumen-nei.mp3",
+    "guangqumen-wai": "/audio/beijing/stations/guangqumen-wai.mp3",
+    "shuangjing": "/audio/beijing/stations/shuangjing.mp3",
+    "jiulongshan": "/audio/beijing/stations/jiulongshan.mp3",
+    "dajiaoting": "/audio/beijing/stations/dajiaoting.mp3",
+    "baiziwan": "/audio/beijing/stations/baiziwan.mp3",
+    "huagong": "/audio/beijing/stations/huagong.mp3",
+    "nanlouzizhuang": "/audio/beijing/stations/nanlouzizhuang.mp3",
+    "beijing-happy-valley": "/audio/beijing/stations/beijing-happy-valley.mp3",
+    "fatou": "/audio/beijing/stations/fatou.mp3",
+    "shuanghe": "/audio/beijing/stations/shuanghe.mp3",
+    "jiaohuachang": "/audio/beijing/stations/jiaohuachang.mp3",
+    "huangchang": "/audio/beijing/stations/huangchang.mp3",
+    "langxinzhuang": "/audio/beijing/stations/langxinzhuang.mp3",
+    "heizhuanghu": "/audio/beijing/stations/heizhuanghu.mp3",
+    "wansheng-west": "/audio/beijing/stations/wansheng-west.mp3",
+    "wansheng-east": "/audio/beijing/stations/wansheng-east.mp3",
+    "qunfang": "/audio/beijing/stations/qunfang.mp3",
+    "gaoloujin": "/audio/beijing/stations/gaoloujin.mp3",
+    "zhuxinzhuang": "/audio/beijing/stations/zhuxinzhuang.mp3",
+    "yuzhilu": "/audio/beijing/stations/yuzhilu.mp3",
+    "pingxifu": "/audio/beijing/stations/pingxifu.mp3",
+    "huilongguan-dongdajie": "/audio/beijing/stations/huilongguan-dongdajie.mp3",
+    "huoying": "/audio/beijing/stations/huoying.mp3",
+    "yuxin": "/audio/beijing/stations/yuxin.mp3",
+    "xixiaokou": "/audio/beijing/stations/xixiaokou.mp3",
+    "yongtaizhuang": "/audio/beijing/stations/yongtaizhuang.mp3",
+    "lincuiqiao": "/audio/beijing/stations/lincuiqiao.mp3",
+    "forest-park-south-gate": "/audio/beijing/stations/forest-park-south-gate.mp3",
+    "olympic-park": "/audio/beijing/stations/olympic-park.mp3",
+    "olympic-sports-center": "/audio/beijing/stations/olympic-sports-center.mp3",
+    "beitucheng": "/audio/beijing/stations/beitucheng.mp3",
+    "anhuaqiao": "/audio/beijing/stations/anhuaqiao.mp3",
+    "andeli-beijie": "/audio/beijing/stations/andeli-beijie.mp3",
+    "shichahai": "/audio/beijing/stations/shichahai.mp3",
+    "national-art-museum": "/audio/beijing/stations/national-art-museum.mp3",
+    "jinyu-hutong": "/audio/beijing/stations/jinyu-hutong.mp3",
+    "tianqiao": "/audio/beijing/stations/tianqiao.mp3",
+    "outer-yongdingmen": "/audio/beijing/stations/outer-yongdingmen.mp3",
+    "muxi-yuan": "/audio/beijing/stations/muxi-yuan.mp3",
+    "haihu-tun": "/audio/beijing/stations/haihu-tun.mp3",
+    "dahongmen": "/audio/beijing/stations/dahongmen.mp3",
+    "dahongmen-nan-south": "/audio/beijing/stations/dahongmen-nan-south.mp3",
+    "heyi": "/audio/beijing/stations/heyi.mp3",
+    "donggao-di": "/audio/beijing/stations/donggao-di.mp3",
+    "huojian-wanyuan": "/audio/beijing/stations/huojian-wanyuan.mp3",
+    "wufu-tang": "/audio/beijing/stations/wufu-tang.mp3",
+    "demao": "/audio/beijing/stations/demao.mp3",
+    "yinghai": "/audio/beijing/stations/yinghai.mp3",
+    "baiduizi": "/audio/beijing/stations/baiduizi.mp3",
+    "liuliqiao-east": "/audio/beijing/stations/liuliqiao-east.mp3",
+    "liuliqiao": "/audio/beijing/stations/liuliqiao.mp3",
+    "station-203": "/audio/beijing/stations/station-203.mp3",
+    "fengtai-dongdajie": "/audio/beijing/stations/fengtai-dongdajie.mp3",
+    "fengtai-nanlu": "/audio/beijing/stations/fengtai-nanlu.mp3",
+    "keyilu": "/audio/beijing/stations/keyilu.mp3",
+    "fengtai-science-park": "/audio/beijing/stations/fengtai-science-park.mp3",
+    "guogongzhuang": "/audio/beijing/stations/guogongzhuang.mp3",
+    "bagou": "/audio/beijing/stations/bagou.mp3",
+    "suzhoujie": "/audio/beijing/stations/suzhoujie.mp3",
+    "zhichunli": "/audio/beijing/stations/zhichunli.mp3",
+    "zhichun-lu": "/audio/beijing/stations/zhichun-lu.mp3",
+    "xitucheng": "/audio/beijing/stations/xitucheng.mp3",
+    "mudanyuan": "/audio/beijing/stations/mudanyuan.mp3",
+    "jiandemen": "/audio/beijing/stations/jiandemen.mp3",
+    "anzhenmen": "/audio/beijing/stations/anzhenmen.mp3",
+    "shaoyaoju": "/audio/beijing/stations/shaoyaoju.mp3",
+    "taiyanggong": "/audio/beijing/stations/taiyanggong.mp3",
+    "sanyuanqiao": "/audio/beijing/stations/sanyuanqiao.mp3",
+    "liangmaqiao": "/audio/beijing/stations/liangmaqiao.mp3",
+    "agricultural-exhibition-center": "/audio/beijing/stations/agricultural-exhibition-center.mp3",
+    "jintaixizhao": "/audio/beijing/stations/jintaixizhao.mp3",
+    "jinsong": "/audio/beijing/stations/jinsong.mp3",
+    "panjiayuan": "/audio/beijing/stations/panjiayuan.mp3",
+    "shilihe": "/audio/beijing/stations/shilihe.mp3",
+    "fenzhongsi": "/audio/beijing/stations/fenzhongsi.mp3",
+    "chengshousi": "/audio/beijing/stations/chengshousi.mp3",
+    "shiliuzhuang": "/audio/beijing/stations/shiliuzhuang.mp3",
+    "jiaomen-east": "/audio/beijing/stations/jiaomen-east.mp3",
+    "caoqiao": "/audio/beijing/stations/caoqiao.mp3",
+    "jijiaomiao": "/audio/beijing/stations/jijiaomiao.mp3",
+    "capital-university-of-economics-business": "/audio/beijing/stations/capital-university-of-economics-business.mp3",
+    "fengtaizhan": "/audio/beijing/stations/fengtaizhan.mp3",
+    "niwa": "/audio/beijing/stations/niwa.mp3",
+    "xiju": "/audio/beijing/stations/xiju.mp3",
+    "lianhuaqiao": "/audio/beijing/stations/lianhuaqiao.mp3",
+    "xidiaoyutai": "/audio/beijing/stations/xidiaoyutai.mp3",
+    "chedaogou": "/audio/beijing/stations/chedaogou.mp3",
+    "changchunqiao": "/audio/beijing/stations/changchunqiao.mp3",
+    "huoqiying": "/audio/beijing/stations/huoqiying.mp3",
+    "moshikou": "/audio/beijing/stations/moshikou.mp3",
+    "beixin-an": "/audio/beijing/stations/beixin-an.mp3",
+    "shougang-park": "/audio/beijing/stations/shougang-park.mp3",
+    "sijiqing-qiao": "/audio/beijing/stations/sijiqing-qiao.mp3",
+    "station-245": "/audio/beijing/stations/station-245.mp3",
+    "suzhou-qiao": "/audio/beijing/stations/suzhou-qiao.mp3",
+    "dazhongsi": "/audio/beijing/stations/dazhongsi.mp3",
+    "station-248": "/audio/beijing/stations/station-248.mp3",
+    "beitaipingzhuang": "/audio/beijing/stations/beitaipingzhuang.mp3",
+    "station-250": "/audio/beijing/stations/station-250.mp3",
+    "station-251": "/audio/beijing/stations/station-251.mp3",
+    "guangximen": "/audio/beijing/stations/guangximen.mp3",
+    "xibahe": "/audio/beijing/stations/xibahe.mp3",
+    "jiangtaixi": "/audio/beijing/stations/jiangtaixi.mp3",
+    "gaojiayuan": "/audio/beijing/stations/gaojiayuan.mp3",
+    "tuofangying": "/audio/beijing/stations/tuofangying.mp3",
+    "dongbaxi": "/audio/beijing/stations/dongbaxi.mp3",
+    "wudaokou": "/audio/beijing/stations/wudaokou.mp3",
+    "shangdi": "/audio/beijing/stations/shangdi.mp3",
+    "qinghe-railway-station": "/audio/beijing/stations/qinghe-railway-station.mp3",
+    "xi-erqi": "/audio/beijing/stations/xi-erqi.mp3",
+    "longze": "/audio/beijing/stations/longze.mp3",
+    "huilongguan": "/audio/beijing/stations/huilongguan.mp3",
+    "beiyuan": "/audio/beijing/stations/beiyuan.mp3",
+    "wangjing-west": "/audio/beijing/stations/wangjing-west.mp3",
+    "liufang": "/audio/beijing/stations/liufang.mp3",
+    "shan-gezhuang": "/audio/beijing/stations/shan-gezhuang.mp3",
+    "laiguangying": "/audio/beijing/stations/laiguangying.mp3",
+    "donghuqu": "/audio/beijing/stations/donghuqu.mp3",
+    "wangjing": "/audio/beijing/stations/wangjing.mp3",
+    "futong": "/audio/beijing/stations/futong.mp3",
+    "wangjing-south": "/audio/beijing/stations/wangjing-south.mp3",
+    "jiangtai": "/audio/beijing/stations/jiangtai.mp3",
+    "dongfeng-beiqiao": "/audio/beijing/stations/dongfeng-beiqiao.mp3",
+    "zaoying": "/audio/beijing/stations/zaoying.mp3",
+    "pingleyuan": "/audio/beijing/stations/pingleyuan.mp3",
+    "beijing-university-of-technology-west-gate": "/audio/beijing/stations/beijing-university-of-technology-west-gate.mp3",
+    "fangzhuang": "/audio/beijing/stations/fangzhuang.mp3",
+    "jingtai": "/audio/beijing/stations/jingtai.mp3",
+    "jingfengmen": "/audio/beijing/stations/jingfengmen.mp3",
+    "xitieying": "/audio/beijing/stations/xitieying.mp3",
+    "caihuying": "/audio/beijing/stations/caihuying.mp3",
+    "lize-business-district": "/audio/beijing/stations/lize-business-district.mp3",
+    "dongguantou": "/audio/beijing/stations/dongguantou.mp3",
+    "dajing": "/audio/beijing/stations/dajing.mp3",
+    "guozhuangzi": "/audio/beijing/stations/guozhuangzi.mp3",
+    "dawayao": "/audio/beijing/stations/dawayao.mp3",
+    "garden-expo-park": "/audio/beijing/stations/garden-expo-park.mp3",
+    "zhangguozhuang": "/audio/beijing/stations/zhangguozhuang.mp3",
+    "qinghua-donglu-xikou": "/audio/beijing/stations/qinghua-donglu-xikou.mp3",
+    "liudaokou": "/audio/beijing/stations/liudaokou.mp3",
+    "beishatan": "/audio/beijing/stations/beishatan.mp3",
+    "anlilu": "/audio/beijing/stations/anlilu.mp3",
+    "guanzhuang": "/audio/beijing/stations/guanzhuang.mp3",
+    "wangjing-east": "/audio/beijing/stations/wangjing-east.mp3",
+    "cuigezhuang": "/audio/beijing/stations/cuigezhuang.mp3",
+    "maquanying": "/audio/beijing/stations/maquanying.mp3",
+    "sunhe": "/audio/beijing/stations/sunhe.mp3",
+    "china-international-exhibition-center": "/audio/beijing/stations/china-international-exhibition-center.mp3",
+    "hualikan": "/audio/beijing/stations/hualikan.mp3",
+    "houshayu": "/audio/beijing/stations/houshayu.mp3",
+    "nanfaxin": "/audio/beijing/stations/nanfaxin.mp3",
+    "shimen": "/audio/beijing/stations/shimen.mp3",
+    "shunyi": "/audio/beijing/stations/shunyi.mp3",
+    "fengbo": "/audio/beijing/stations/fengbo.mp3",
+    "beianhe": "/audio/beijing/stations/beianhe.mp3",
+    "wenyanglu": "/audio/beijing/stations/wenyanglu.mp3",
+    "daoxianghulu": "/audio/beijing/stations/daoxianghulu.mp3",
+    "tundian": "/audio/beijing/stations/tundian.mp3",
+    "yongfeng": "/audio/beijing/stations/yongfeng.mp3",
+    "yongfeng-south": "/audio/beijing/stations/yongfeng-south.mp3",
+    "xibeiwang": "/audio/beijing/stations/xibeiwang.mp3",
+    "malianwa": "/audio/beijing/stations/malianwa.mp3",
+    "nongda-nanlu": "/audio/beijing/stations/nongda-nanlu.mp3",
+    "wanquanhe-qiao": "/audio/beijing/stations/wanquanhe-qiao.mp3",
+    "wanshousi": "/audio/beijing/stations/wanshousi.mp3",
+    "ganjia-kou": "/audio/beijing/stations/ganjia-kou.mp3",
+    "yuyuantan-park-east-gate": "/audio/beijing/stations/yuyuantan-park-east-gate.mp3",
+    "muxidi-16": "/audio/beijing/stations/muxidi-16.mp3",
+    "honglian-nanlu": "/audio/beijing/stations/honglian-nanlu.mp3",
+    "dongguantou-south": "/audio/beijing/stations/dongguantou-south.mp3",
+    "fufengqiao": "/audio/beijing/stations/fufengqiao.mp3",
+    "kandan": "/audio/beijing/stations/kandan.mp3",
+    "yushuzhuang": "/audio/beijing/stations/yushuzhuang.mp3",
+    "hongtaizhuang": "/audio/beijing/stations/hongtaizhuang.mp3",
+    "wanpingcheng": "/audio/beijing/stations/wanpingcheng.mp3",
+    "station-327": "/audio/beijing/stations/station-327.mp3",
+    "ciqu": "/audio/beijing/stations/ciqu.mp3",
+    "station-329": "/audio/beijing/stations/station-329.mp3",
+    "station-330": "/audio/beijing/stations/station-330.mp3",
+    "station-331": "/audio/beijing/stations/station-331.mp3",
+    "station-332": "/audio/beijing/stations/station-332.mp3",
+    "panjiayuanxi": "/audio/beijing/stations/panjiayuanxi.mp3",
+    "zuojiazhuang": "/audio/beijing/stations/zuojiazhuang.mp3",
+    "hongjunying": "/audio/beijing/stations/hongjunying.mp3",
+    "qingheying": "/audio/beijing/stations/qingheying.mp3",
+    "tiantongyuandong": "/audio/beijing/stations/tiantongyuandong.mp3",
+    "future-science-city": "/audio/beijing/stations/future-science-city.mp3",
+    "future-science-city-north": "/audio/beijing/stations/future-science-city-north.mp3",
+    "shangdi-software-park": "/audio/beijing/stations/shangdi-software-park.mp3",
+    "dongbeiwang": "/audio/beijing/stations/dongbeiwang.mp3",
+    "longzexi": "/audio/beijing/stations/longzexi.mp3",
+    "huilongguan-xidajie": "/audio/beijing/stations/huilongguan-xidajie.mp3",
+    "wenhualu": "/audio/beijing/stations/wenhualu.mp3",
+    "huoyingdong": "/audio/beijing/stations/huoyingdong.mp3",
+    "taipingzhuang": "/audio/beijing/stations/taipingzhuang.mp3",
+    "station-347": "/audio/beijing/stations/station-347.mp3",
+    "niujie": "/audio/beijing/stations/niujie.mp3",
+    "station-349": "/audio/beijing/stations/station-349.mp3",
+    "station-350": "/audio/beijing/stations/station-350.mp3",
+    "station-351": "/audio/beijing/stations/station-351.mp3",
+    "station-352": "/audio/beijing/stations/station-352.mp3",
+    "station-353": "/audio/beijing/stations/station-353.mp3",
+    "station-354": "/audio/beijing/stations/station-354.mp3",
+    "station-355": "/audio/beijing/stations/station-355.mp3",
+    "changping-xishankou": "/audio/beijing/stations/changping-xishankou.mp3",
+    "ming-tombs": "/audio/beijing/stations/ming-tombs.mp3",
+    "changping": "/audio/beijing/stations/changping.mp3",
+    "changping-dongguan": "/audio/beijing/stations/changping-dongguan.mp3",
+    "beishaowa": "/audio/beijing/stations/beishaowa.mp3",
+    "nanshao": "/audio/beijing/stations/nanshao.mp3",
+    "shahe-university-park": "/audio/beijing/stations/shahe-university-park.mp3",
+    "shahe": "/audio/beijing/stations/shahe.mp3",
+    "gonghuacheng": "/audio/beijing/stations/gonghuacheng.mp3",
+    "life-science-park": "/audio/beijing/stations/life-science-park.mp3",
+    "station-366": "/audio/beijing/stations/station-366.mp3",
+    "qinghe-xiaoying-bridge": "/audio/beijing/stations/qinghe-xiaoying-bridge.mp3",
+    "xuezhiyuan": "/audio/beijing/stations/xuezhiyuan.mp3",
+    "xueyuanqiao": "/audio/beijing/stations/xueyuanqiao.mp3",
+    "huaxiang-dongqiao": "/audio/beijing/stations/huaxiang-dongqiao.mp3",
+    "baipenyao": "/audio/beijing/stations/baipenyao.mp3",
+    "dabaotai": "/audio/beijing/stations/dabaotai.mp3",
+    "daotian": "/audio/beijing/stations/daotian.mp3",
+    "changyang": "/audio/beijing/stations/changyang.mp3",
+    "libafang": "/audio/beijing/stations/libafang.mp3",
+    "guangyangcheng": "/audio/beijing/stations/guangyangcheng.mp3",
+    "liangxiang-university-town-north": "/audio/beijing/stations/liangxiang-university-town-north.mp3",
+    "liangxiang-university-town": "/audio/beijing/stations/liangxiang-university-town.mp3",
+    "liangxiang-university-town-west": "/audio/beijing/stations/liangxiang-university-town-west.mp3",
+    "liangxiang-nanguan": "/audio/beijing/stations/liangxiang-nanguan.mp3",
+    "suzhuang": "/audio/beijing/stations/suzhuang.mp3",
+    "yancun-east": "/audio/beijing/stations/yancun-east.mp3",
+    "yanshan": "/audio/beijing/stations/yanshan.mp3",
+    "fangshan-chengguan": "/audio/beijing/stations/fangshan-chengguan.mp3",
+    "raolefu": "/audio/beijing/stations/raolefu.mp3",
+    "magezhuang": "/audio/beijing/stations/magezhuang.mp3",
+    "dashihe-east": "/audio/beijing/stations/dashihe-east.mp3",
+    "xingcheng": "/audio/beijing/stations/xingcheng.mp3",
+    "yancun": "/audio/beijing/stations/yancun.mp3",
+    "zicaowu": "/audio/beijing/stations/zicaowu.mp3",
+    "xiaocun": "/audio/beijing/stations/xiaocun.mp3",
+    "xiaohongmen": "/audio/beijing/stations/xiaohongmen.mp3",
+    "jiugong": "/audio/beijing/stations/jiugong.mp3",
+    "yizhuangqiao": "/audio/beijing/stations/yizhuangqiao.mp3",
+    "yizhuang-culture-park": "/audio/beijing/stations/yizhuang-culture-park.mp3",
+    "wanyuanjie": "/audio/beijing/stations/wanyuanjie.mp3",
+    "rongjing-dongjie": "/audio/beijing/stations/rongjing-dongjie.mp3",
+    "rongchangdongjie": "/audio/beijing/stations/rongchangdongjie.mp3",
+    "tongjinanlu": "/audio/beijing/stations/tongjinanlu.mp3",
+    "jinghailu": "/audio/beijing/stations/jinghailu.mp3",
+    "ciqu-south": "/audio/beijing/stations/ciqu-south.mp3",
+    "yizhuang-railway-station": "/audio/beijing/stations/yizhuang-railway-station.mp3",
+    "terminal-3": "/audio/beijing/stations/terminal-3.mp3",
+    "terminal-2": "/audio/beijing/stations/terminal-2.mp3",
+    "daxing-xincheng": "/audio/beijing/stations/daxing-xincheng.mp3",
+    "daxing-airport": "/audio/beijing/stations/daxing-airport.mp3",
+    "bagou-xijiao": "/audio/beijing/stations/bagou-xijiao.mp3",
+    "station-408": "/audio/beijing/stations/station-408.mp3",
+    "station-409": "/audio/beijing/stations/station-409.mp3",
+    "station-410": "/audio/beijing/stations/station-410.mp3",
+    "station-411": "/audio/beijing/stations/station-411.mp3",
+    "station-412": "/audio/beijing/stations/station-412.mp3",
+    "qu-zhuang": "/audio/beijing/stations/qu-zhuang.mp3",
+    "rongxing-jie": "/audio/beijing/stations/rongxing-jie.mp3",
+    "ruihe-zhuang": "/audio/beijing/stations/ruihe-zhuang.mp3",
+    "taihe-qiao-bei-n": "/audio/beijing/stations/taihe-qiao-bei-n.mp3",
+    "sihai-zhuang": "/audio/beijing/stations/sihai-zhuang.mp3",
+    "jiuhao-cun": "/audio/beijing/stations/jiuhao-cun.mp3",
+    "taihe-lu": "/audio/beijing/stations/taihe-lu.mp3",
+    "lujuan-dong-e": "/audio/beijing/stations/lujuan-dong-e.mp3",
+    "yizhuang-tongren": "/audio/beijing/stations/yizhuang-tongren.mp3",
+    "rongchang-dongjie": "/audio/beijing/stations/rongchang-dongjie.mp3",
+    "beijing-etrang-intrenational-exhibition-convention-center": "/audio/beijing/stations/beijing-etrang-intrenational-exhibition-convention-center.mp3",
+    "jinghai-yilu": "/audio/beijing/stations/jinghai-yilu.mp3",
+    "dinghai-yuan-xi-w": "/audio/beijing/stations/dinghai-yuan-xi-w.mp3",
+    "dinghai-yuan": "/audio/beijing/stations/dinghai-yuan.mp3"
+  },
+  "lines": {
+    "1-batong": "/audio/beijing/lines/1-batong.mp3",
+    "2": "/audio/beijing/lines/2.mp3",
+    "3": "/audio/beijing/lines/3.mp3",
+    "4-daxing": "/audio/beijing/lines/4-daxing.mp3",
+    "5": "/audio/beijing/lines/5.mp3",
+    "6": "/audio/beijing/lines/6.mp3",
+    "7": "/audio/beijing/lines/7.mp3",
+    "8": "/audio/beijing/lines/8.mp3",
+    "9": "/audio/beijing/lines/9.mp3",
+    "10": "/audio/beijing/lines/10.mp3",
+    "11": "/audio/beijing/lines/11.mp3",
+    "12": "/audio/beijing/lines/12.mp3",
+    "13": "/audio/beijing/lines/13.mp3",
+    "14": "/audio/beijing/lines/14.mp3",
+    "15": "/audio/beijing/lines/15.mp3",
+    "16": "/audio/beijing/lines/16.mp3",
+    "17": "/audio/beijing/lines/17.mp3",
+    "18": "/audio/beijing/lines/18.mp3",
+    "19": "/audio/beijing/lines/19.mp3",
+    "s1": "/audio/beijing/lines/s1.mp3",
+    "changping": "/audio/beijing/lines/changping.mp3",
+    "fangshan": "/audio/beijing/lines/fangshan.mp3",
+    "yanfang": "/audio/beijing/lines/yanfang.mp3",
+    "yizhuang": "/audio/beijing/lines/yizhuang.mp3",
+    "capital-airport": "/audio/beijing/lines/capital-airport.mp3",
+    "daxing-airport": "/audio/beijing/lines/daxing-airport.mp3",
+    "xijiao": "/audio/beijing/lines/xijiao.mp3",
+    "yizhuang-t1": "/audio/beijing/lines/yizhuang-t1.mp3"
+  },
+  "recordings": {
+    "/audio/beijing/lines/1-batong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "1号线—八通线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.352,
+      "bytes": 14112,
+      "sha256": "b6be74a80cfe9d7b09009616ecb857f3300765eb40979b792bcadf5af2617f9d"
+    },
+    "/audio/beijing/lines/10.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "10号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5a93362498d5586c0863eb1d8055c46ed96c058141abdfc52d4abfd6f67dd971"
+    },
+    "/audio/beijing/lines/11.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "11号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9231f148a1a5ad1e35db667965f46459c1dff51814b0f6410cab8105457573c5"
+    },
+    "/audio/beijing/lines/12.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "12号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a5caa15e03bf1b065e049e98d50c7ac3c44f507b8a5eae598fdd65a77bef5dd1"
+    },
+    "/audio/beijing/lines/13.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "13号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "227aad066796c5960b9af4614c044185d5782161507059124dce273de6910c9d"
+    },
+    "/audio/beijing/lines/14.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "14号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d6f57bbb8a4fb614160661a8a7172f4406b436b42b28459356af01319a809c1f"
+    },
+    "/audio/beijing/lines/15.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "15号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dcb8773d5a41ea18ee64fa4a9fb4dfec187d0466fa6f1ee227ed3db213d675e2"
+    },
+    "/audio/beijing/lines/16.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "16号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6175b5f39ceaef72c9900cd4a23a6f3be8e3856d5a0134186621c2dba65371e1"
+    },
+    "/audio/beijing/lines/17.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "17号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c46474fc8c6606f406c43ad137840e4e1caa71332f34a179fa91ee6698d18d3e"
+    },
+    "/audio/beijing/lines/18.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "18号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "98c3c68aaa847e3253cc2cde2657c8a6dafeffa79b2c7c02e489588f9410949b"
+    },
+    "/audio/beijing/lines/19.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "19号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5957b13868d05de1493ef67d64656b32d93bac8b043829ce655c9152bff53a60"
+    },
+    "/audio/beijing/lines/2.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "2号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "cffa43e104e94d9e759c7667a3620ec9f9d2ee99b2fe98c5eff63c465737dc7e"
+    },
+    "/audio/beijing/lines/3.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "3号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7febd345e5d0d6bf4b887ac7f6fb5bcc3aed662b1c1544edd8c6ada01d419320"
+    },
+    "/audio/beijing/lines/4-daxing.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "4号线—大兴线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.496,
+      "bytes": 14976,
+      "sha256": "f07d0e005800deee79a8c8fd313a64cb5808b7c28fd2a32412a899bf25250510"
+    },
+    "/audio/beijing/lines/5.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "5号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f503e2af58fbd124f4ac58b2c04e2c71e114cf7d2df33c823d36e80d36899339"
+    },
+    "/audio/beijing/lines/6.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "6号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "796976614299d51b68d1b2ae0c34e48cc2e0987025d7f60eaf1ebc29b0890b0d"
+    },
+    "/audio/beijing/lines/7.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "7号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7e1f1801287522160b710e6c6591815e70af693021107edb845b530cefa1aedf"
+    },
+    "/audio/beijing/lines/8.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "8号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "63e837624f6ffca34fed64516ad83e66638c8fc566be004de6d71da9c6bfb3bf"
+    },
+    "/audio/beijing/lines/9.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "9号线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9c40c9f9dc0238e917a0552ff38c2ca215a2542f9860748bce9bc75e7693db55"
+    },
+    "/audio/beijing/lines/capital-airport.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "首都机场线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.064,
+      "bytes": 12384,
+      "sha256": "310653d44d2df9c36671c2db193fd6e474d833d21538137aada4038afa3e4399"
+    },
+    "/audio/beijing/lines/changping.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "昌平线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f9252ef2ead24563d6ad1bb38be31dfd4b41c9dc2dbe135644c944284010a4e7"
+    },
+    "/audio/beijing/lines/daxing-airport.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大兴机场线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.04,
+      "bytes": 12240,
+      "sha256": "c430c5489916b9259d6f3bb3728ed7fe9b2cf5d3322499907683d9467abf7574"
+    },
+    "/audio/beijing/lines/fangshan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "房山线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ec7ccb9d43a8e58d9d7f9f9350daa5f0880d2fef1ee1f4d5e5651cbdcb0a3e29"
+    },
+    "/audio/beijing/lines/s1.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "S1线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5c5e521c58240b912d267e41702b381c7bc128521aa8f1bbc4dc13f0eab23abc"
+    },
+    "/audio/beijing/lines/xijiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西郊线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a9efce675a365106b6d476dc0c05af127748640d1432462feab2125441a00b25"
+    },
+    "/audio/beijing/lines/yanfang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "燕房线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "82d4db0dceca7ba7c290bb30f8fd4d3eb5c101642c2c728da4cf3cfb977ac3e7"
+    },
+    "/audio/beijing/lines/yizhuang-t1.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亦庄T1线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.92,
+      "bytes": 11520,
+      "sha256": "13fe04b608c160b3fd0af6aac9aed84290496ff5cfc77d438fa37533e52b4741"
+    },
+    "/audio/beijing/lines/yizhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亦庄线。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3fd0daf7612501e9f46a4cac159cd54e03bdbee087324b5c6018bd59f0898859"
+    },
+    "/audio/beijing/phrases/en/arrival.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "We are arriving at the following station.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 3.096,
+      "bytes": 18576,
+      "sha256": "e25c89f0232e2f387a73a6f2258b443a29980bcc86931e834712850d18975fdb"
+    },
+    "/audio/beijing/phrases/en/arrivalEnd.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Please mind the gap when leaving the train.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 3.024,
+      "bytes": 18144,
+      "sha256": "3567eb8bd61babc7d0a8c42cca0b2747629fdd0adb6ad19db2dd099bfbad1b9c"
+    },
+    "/audio/beijing/phrases/en/boarding.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Please board at the following station.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 2.808,
+      "bytes": 16848,
+      "sha256": "77add7c2b937e69b41e14656d582234ca26c61bdf99d95a0be9f06aabb2481ad"
+    },
+    "/audio/beijing/phrases/en/complete.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "You have reached your destination.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 2.52,
+      "bytes": 15120,
+      "sha256": "2d6ad74d63601a93eaf274136810edb76a0a283fcec9d3e032bf1d07dade75e9"
+    },
+    "/audio/beijing/phrases/en/completeEnd.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Your journey is complete. Thank you for travelling with us.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 4.632,
+      "bytes": 27792,
+      "sha256": "e3a0a4ddb5ae4ea385e0421cd8cd5e36a75d510c3de082d564d05572944956c4"
+    },
+    "/audio/beijing/phrases/en/ready.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Recorded voice announcements are on. Beijing station and service names are spoken in Mandarin.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 7.152,
+      "bytes": 42912,
+      "sha256": "f1a278c16868ff3757f9edc6322dc40074c96ccb5046638fb0fcadfff0f1becd"
+    },
+    "/audio/beijing/phrases/en/ride.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Next station.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "11322c39e9d202aaf4ae41766ec220beea5a03bda3c7be50e41e2f58e1028b90"
+    },
+    "/audio/beijing/phrases/en/rideEnd.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Please hold the handrail while the train is moving.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 3.48,
+      "bytes": 20880,
+      "sha256": "9e5b9191cc3fcfacb7f375f6f234683acd8966ba176b1ed0a39d679539469b18"
+    },
+    "/audio/beijing/phrases/en/service.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Service.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fd4c097f938afd2224cfe74eda7e66115cb24477948c1ff5a052c08a0a0563f1"
+    },
+    "/audio/beijing/phrases/en/transfer.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Please change trains at the following station.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 3.456,
+      "bytes": 20736,
+      "sha256": "3c5fa29146b27fceb79b7e155229eb678fcc67aa8809258332eecd0038535260"
+    },
+    "/audio/beijing/phrases/en/transferEnd.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Follow the signs for your connecting service.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 3.36,
+      "bytes": 20160,
+      "sha256": "420a0f14835a0f25d265d814b689e358f0b9ff65aebe89b64a50b5d21e642bc2"
+    },
+    "/audio/beijing/phrases/en/walk.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "Please follow the walkway to the following station.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 3.528,
+      "bytes": 21168,
+      "sha256": "edbd810d1fde6267ff180d4b169d0e333abb98ea5a07b5f4168cf8323c2b72bb"
+    },
+    "/audio/beijing/phrases/en/walkEnd.mp3": {
+      "recordingLanguage": "en",
+      "recordingText": "This walking connection is simulated for the game.",
+      "voice": "en-GB-SoniaNeural",
+      "durationSeconds": 3.696,
+      "bytes": 22176,
+      "sha256": "343eaf417d4334bb049589be8d1bb673d94589b36f8ad2d9ffc5f90deb933be9"
+    },
+    "/audio/beijing/phrases/ja/arrival.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "まもなく次の駅に到着します。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 3.696,
+      "bytes": 22176,
+      "sha256": "691f07e9605746808e5012043c28b389180a300f48bba120f1af348c137564e9"
+    },
+    "/audio/beijing/phrases/ja/arrivalEnd.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "お降りの際は、電車とホームの間にご注意ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 5.4,
+      "bytes": 32400,
+      "sha256": "0fe81e403352cf84a66a6849d8f6ce53c4f3342ce2b9f4e003ad8315227a9e78"
+    },
+    "/audio/beijing/phrases/ja/boarding.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "次の駅でご乗車ください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 3.144,
+      "bytes": 18864,
+      "sha256": "55ff303d9ea5a92fc99adff57a9a654f7aa0f3b8440b54342107f3f45d90617b"
+    },
+    "/audio/beijing/phrases/ja/complete.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "目的地に到着しました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 3.096,
+      "bytes": 18576,
+      "sha256": "3a8bd638f554c2f467a00efa3b84a3c477a5cd6c3dabc110f45885b52a62ba8b"
+    },
+    "/audio/beijing/phrases/ja/completeEnd.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "旅が完了しました。ご乗車ありがとうございました。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 5.832,
+      "bytes": 34992,
+      "sha256": "7f8a5f783ee396066af6aa9e83040983f9ca7c2ea014dc3351f6205c550d8c0d"
+    },
+    "/audio/beijing/phrases/ja/ready.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "録音による音声案内を開始します。北京の駅名と路線名は中国語の普通話で読み上げます。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 9.912,
+      "bytes": 59472,
+      "sha256": "78bb3ab0bea4a56485f8ebff415631b10120e3f12c318f1dad08d64892e94bc2"
+    },
+    "/audio/beijing/phrases/ja/ride.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "次の駅。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "192c79644fc1129ccae39e3015269df6dae6a4d555b31e167078a5e0ef7a039a"
+    },
+    "/audio/beijing/phrases/ja/rideEnd.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "走行中は手すりにおつかまりください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 3.984,
+      "bytes": 23904,
+      "sha256": "429a4cc68654ed298d87b2263cc7693c5ae92c9a0037337ab23818675db2679c"
+    },
+    "/audio/beijing/phrases/ja/service.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "路線。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "25e0c67c3d551aad221c5ad5767cff81c9c395a1e50b0a798671775c3339f6c3"
+    },
+    "/audio/beijing/phrases/ja/transfer.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "次の駅でお乗り換えください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 3.216,
+      "bytes": 19296,
+      "sha256": "07aea49eb25478f3395d904884eb349972c85b07670803df448fb7481c8bd309"
+    },
+    "/audio/beijing/phrases/ja/transferEnd.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "案内表示に従って、お乗り換えの路線へお進みください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 5.64,
+      "bytes": 33840,
+      "sha256": "69a57c3d6f65d27c6900e7285361770c83b5fda00585ba55d05ed58335c4c595"
+    },
+    "/audio/beijing/phrases/ja/walk.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "通路を進み、次の駅へお向かいください。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 4.608,
+      "bytes": 27648,
+      "sha256": "2a83fae0c12d5f5b9481814ad9f118550f787c175cfab7b05b7ee4436d686404"
+    },
+    "/audio/beijing/phrases/ja/walkEnd.mp3": {
+      "recordingLanguage": "ja",
+      "recordingText": "この徒歩での乗り換えは、ゲーム内の架空設定です。",
+      "voice": "ja-JP-NanamiNeural",
+      "durationSeconds": 5.112,
+      "bytes": 30672,
+      "sha256": "b16667ad1025305fa42a0dc7e006416d463544dbc332a9e03e38c786e7179888"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/arrival.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Бид дараах буудалд ирж байна.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 2.688,
+      "bytes": 16128,
+      "sha256": "f78d0508d0b87c828695869e2aa7c441ade4e0cbefce28432ab6d34fb93dbc20"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/arrivalEnd.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Буухдаа галт тэрэг болон тавцангийн хоорондох зайг анхаарна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 4.416,
+      "bytes": 26496,
+      "sha256": "191d25150bc8e2718a32c58f01252aaa4cd98091004b534c792c3c4b018c70ca"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/boarding.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Дараах буудалд галт тэргэнд сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 3.048,
+      "bytes": 18288,
+      "sha256": "b09f8fd048292ac2e14e9e6d6f322c99435a84ff8135e91ffde8ac571b11d63a"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/complete.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Та зорьсон газраа хүрлээ.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 2.592,
+      "bytes": 15552,
+      "sha256": "5bb87d76d37142efa60c1c2b92848ad50fa3b938e45f2785e4c2cbaa4fcc65b7"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/completeEnd.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Таны аялал дууслаа. Манай галт тэргээр зорчсон танд баярлалаа.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 5.688,
+      "bytes": 34128,
+      "sha256": "f2a3769394c4581ba03f852c2667116128c539510dde7dd61c8fa4953637f6c6"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/ready.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Бичлэгтэй дуут зарлал асаалттай. Бээжингийн буудал болон шугамын нэрийг мандарин хятад хэлээр уншина.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 7.584,
+      "bytes": 45504,
+      "sha256": "403935bc07b88040faf9cf2b754496432bb035abf28df915ac7bccda6269e5f9"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/ride.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Дараагийн буудал.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "918dae448e170ae4cb4aac7cf30c1c90ad57aaeb37709870ec94c0826405dd1a"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/rideEnd.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Галт тэрэг явж байх үед бариулаас барина уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 3.408,
+      "bytes": 20448,
+      "sha256": "4829bd1eb8c3225aa7702a64df5106b4ce733e6ed82566c056becb9657d008a5"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/service.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шугам.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "de3193b5a49c72bb9d5f78eee193c254836b59b99c316cdcc73688bf3d883c2d"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/transfer.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Дараах буудалд галт тэргээ сэлгэн сууна уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 3.36,
+      "bytes": 20160,
+      "sha256": "f5261367ec7baec5eebd59a988e356ea6264b183b90a7eb636d7a2a8af93c936"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/transferEnd.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Шилжин суух шугамын тэмдэглэгээг дагана уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 3.408,
+      "bytes": 20448,
+      "sha256": "f219a6fc21da53ef65000d197ad83f4384f0b5ebe1de88014c25e41fcd93a118"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/walk.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Явган замаар дараах буудал руу очно уу.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 3.192,
+      "bytes": 19152,
+      "sha256": "0377137c39576865e8b75f056f7308051ae4a6044b889a38a173e6f18927316a"
+    },
+    "/audio/beijing/phrases/mn-Cyrl-MN/walkEnd.mp3": {
+      "recordingLanguage": "mn-Cyrl-MN",
+      "recordingText": "Энэ явган холбоос нь тоглоомын загварчилсан зам юм.",
+      "voice": "mn-MN-YesuiNeural",
+      "durationSeconds": 3.936,
+      "bytes": 23616,
+      "sha256": "505044c60bd5557189eb42c3b328c1a2a3e46cf016b223c2b55254f4ef7d5dc7"
+    },
+    "/audio/beijing/phrases/zh-CN/arrival.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "列车即将到达。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.184,
+      "bytes": 13104,
+      "sha256": "56359f8b5240fe7375fc8a260a933c04f4aa8d6fe5b5474857a8c069e6b543a9"
+    },
+    "/audio/beijing/phrases/zh-CN/arrivalEnd.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "下车时，请注意列车与站台之间的空隙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 4.608,
+      "bytes": 27648,
+      "sha256": "9c1c0018655810467907605ff6e9296693d6cfda41242401990f339b1c3896ce"
+    },
+    "/audio/beijing/phrases/zh-CN/boarding.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "请在以下车站上车。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.544,
+      "bytes": 15264,
+      "sha256": "050177645b333fe85b06f1c5139b84e4f117125ec7eb2f837118fe879203547d"
+    },
+    "/audio/beijing/phrases/zh-CN/complete.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "您已到达目的地。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.136,
+      "bytes": 12816,
+      "sha256": "c8c61338923204bb275a90d1521a59f1005ad06f0861949b1fac8c16afc9f1a5"
+    },
+    "/audio/beijing/phrases/zh-CN/completeEnd.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "本次旅程已完成。感谢您的乘坐。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 4.248,
+      "bytes": 25488,
+      "sha256": "0f141a2b57cedf11969e8860d9dcbdfc48fe556f4a058088f51084431de14969"
+    },
+    "/audio/beijing/phrases/zh-CN/ready.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "录音播报已开启。北京车站和线路名称使用普通话播报。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 6.6,
+      "bytes": 39600,
+      "sha256": "d420f9bbed64b10a4755a1bb1cd41dadb200bb86f0f8e7dff49b8bd968c1ca61"
+    },
+    "/audio/beijing/phrases/zh-CN/ride.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "下一站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5f944bfc2252b590925afd4768b5c9c47707fe1408d87f42866d6a38009c96f4"
+    },
+    "/audio/beijing/phrases/zh-CN/rideEnd.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "列车运行时，请握好扶手。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 3.264,
+      "bytes": 19584,
+      "sha256": "dce88f0254446b9d3e8d662eb9c933b9cfa2f696369d9ef6b71ea070d4a1a723"
+    },
+    "/audio/beijing/phrases/zh-CN/service.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "线路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "86c6f9bdd6b3b98096b0993dac8f19027de8e3d7a4962d4efbdf911ba9ac19c1"
+    },
+    "/audio/beijing/phrases/zh-CN/transfer.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "请在以下车站换乘。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.52,
+      "bytes": 15120,
+      "sha256": "e7e7a6a6634a3069707060967e657d2c1854d2e3c503ccce7c83141cf21a9f37"
+    },
+    "/audio/beijing/phrases/zh-CN/transferEnd.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "请按照指示标志前往换乘线路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 3.744,
+      "bytes": 22464,
+      "sha256": "23a0450acc902e12564543bb427ea47ba649a801494b56593edb6ea58284246c"
+    },
+    "/audio/beijing/phrases/zh-CN/walk.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "请沿通道步行前往以下车站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 3.456,
+      "bytes": 20736,
+      "sha256": "7f8c554bda0f595ce422b22151b38dfc32e99d2cfcc19904c1a5512b6f27bd27"
+    },
+    "/audio/beijing/phrases/zh-CN/walkEnd.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "此步行连接为游戏模拟。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 3.072,
+      "bytes": 18432,
+      "sha256": "36749a5e9ca14e7ff2fc89b18e2db4b61c5205d2cfbc65ffb71c653ce1359a5c"
+    },
+    "/audio/beijing/stations/agricultural-exhibition-center.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "农业展览馆。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.04,
+      "bytes": 12240,
+      "sha256": "d55b40d07ca5454164a92932a9f6456da19f6277edfbf6ec09a5b6cefe496cba"
+    },
+    "/audio/beijing/stations/andeli-beijie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "安德里北街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.968,
+      "bytes": 11808,
+      "sha256": "50419930d6f81da776f21de30cf233d1a19be1c8c186ab89418de1d1223f1e65"
+    },
+    "/audio/beijing/stations/andingmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "安定门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8a6b852d99246cda2f38627b7993e2419205a78874d9fdf8544e22aab5210edb"
+    },
+    "/audio/beijing/stations/anheqiaobei.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "安河桥北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "19854f33804f4ed84e3ed7e3abe2a1446ae7dcf89057f3928daaf3bc231ad826"
+    },
+    "/audio/beijing/stations/anhuaqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "安华桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d8cd9a19da8d0c4f7cb9f206630b91339d342971c5b4f4a04bf8e1a83d472a02"
+    },
+    "/audio/beijing/stations/anlilu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "安立路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "65deb250b99a16294930cc6786e81f1ad36097bfe2e1cf52d4ca9ab82e4f7e08"
+    },
+    "/audio/beijing/stations/anzhenmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "安贞门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8af0effe6002a3d930e162723c2a5921a15d1a6a930a22198deb4b9af6cfb193"
+    },
+    "/audio/beijing/stations/babaoshan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "八宝山。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5b86910478c11d232d79896d75ec66aeacbeef33bbf08e04f15d35c3d108dcaf"
+    },
+    "/audio/beijing/stations/bagou-xijiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "巴沟。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f0469e3f44a0d3fb9343b81f2cf5b22e9496fb481cccbf5715258dab23012691"
+    },
+    "/audio/beijing/stations/bagou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "巴沟。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e3eb58db810976f127088a07ddd1c569a44a7200c7568ddc53ea406adef2b78b"
+    },
+    "/audio/beijing/stations/baiduizi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "白堆子。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5dc12eca4aa1d866df69c0b48793d065e907a460a2c6c9b416ce51b15b5f036e"
+    },
+    "/audio/beijing/stations/baipenyao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "白盆窑。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "29d41b724dcbe95a9a0b45aa606ee2a6c14b4acd1ce28727eb20325ff006b701"
+    },
+    "/audio/beijing/stations/baishiqiao-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "白石桥南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fec9f3f63eed52b1c1542ce26073c262ab08da05367ab7a9df437eb5c09fc649"
+    },
+    "/audio/beijing/stations/baiziwan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "百子湾。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e24d90ac83c0900a1a583c9be181d3f8133a4dd792813109230550e311a50901"
+    },
+    "/audio/beijing/stations/baliqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "八里桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "63668b5da019da99208bfe166e38ee9b2c826fd373f611db67e5a7906a0154db"
+    },
+    "/audio/beijing/stations/beianhe.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北安河。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c21a7a9341feea508b324490209794596efb668c3b5da5ffebee11e69103c3cd"
+    },
+    "/audio/beijing/stations/beigongmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北宫门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9808da51967cc1d5670c5702b0e7194a85074e9770d9bdf7e32ff9764bd087d4"
+    },
+    "/audio/beijing/stations/beihai-north.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北海北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "31c2c120013dfc37fe2cb29635900ea9da8c71ccb8a28a824ec3ba2a10390b8f"
+    },
+    "/audio/beijing/stations/beijing-etrang-intrenational-exhibition-convention-center.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亦创会展中心。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.232,
+      "bytes": 13392,
+      "sha256": "b2990d67cd61e1b05131bcd479602fc4adf0696797dc186d3077b6fb28dfec7d"
+    },
+    "/audio/beijing/stations/beijing-happy-valley.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "欢乐谷景区。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.04,
+      "bytes": 12240,
+      "sha256": "4ca7775da44f3bf99bea2bc347086a052d0353b11d378e9933643a8571134af3"
+    },
+    "/audio/beijing/stations/beijing-railway-station.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北京站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4474b895d364b05b83c2aa6aed1246947372b328db72853ea648335723917469"
+    },
+    "/audio/beijing/stations/beijing-south-railway-station.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北京南站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4a7a442f2847df7d5bbe2d404e050744d0962241b3c2e20c57aca9e2303d5a6a"
+    },
+    "/audio/beijing/stations/beijing-university-of-technology-west-gate.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北工大西门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "ab6b069c84ec069db2e647f9a9fa962350c6dc1d1fc8ef01fe573cefaae9f9ec"
+    },
+    "/audio/beijing/stations/beijing-west-railway-station.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北京西站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "24de9d03dca13dc57e93efdb043c33b1060c5a8dab317683f5a57b5d5321dfa8"
+    },
+    "/audio/beijing/stations/beijing-zoo.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "动物园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "73017626e72ffb44f2ba187dd9432d2b411d104ae53d53d27a30321cd4027984"
+    },
+    "/audio/beijing/stations/beishaowa.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北邵洼。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5e80451357e1efe587d2470ef0e887c3fbaff12df422b2aeaec0a67d3d15f54e"
+    },
+    "/audio/beijing/stations/beishatan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北沙滩。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3a8fcd395ef329bf1829d4961de7086ce0cbe3dba964c0d76a4455f689911c0d"
+    },
+    "/audio/beijing/stations/beitaipingzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北太平庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "238b3020ba0155c720289e6063e702d61f9948678c728f6cf184bc32bceae7cf"
+    },
+    "/audio/beijing/stations/beitucheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北土城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "487c98c54bd720f3515c81dd7c27f56b83e50430d91bdde957b25e0cd352b339"
+    },
+    "/audio/beijing/stations/beixin-an.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北辛安。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "0acb5c04971b36845d959ef47657c85bf6f8ba42dcfa77315c5e2e9061403a72"
+    },
+    "/audio/beijing/stations/beixinqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北新桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dc82fe8b9eb1dda22555ded202a362f46b781550c80e0a77784eb69ba8b52533"
+    },
+    "/audio/beijing/stations/beiyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北苑。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "65599278440bef9e2c4540e7b08411797c4b3365850999d8f0d0de5a79f4b964"
+    },
+    "/audio/beijing/stations/beiyuanlu-north.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北苑路北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "0cb4fa071d878e9b213a2c1ea33f176e39c063a79fb45b30208484b46f1a07aa"
+    },
+    "/audio/beijing/stations/beiyunhe-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北运河东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d935839e046b6ef6c5f6a239d4753db63f0fccd3cbd2dd88e384b064b06e139e"
+    },
+    "/audio/beijing/stations/beiyunhe-west.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北运河西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "008bb67150d9c54dad389e020b7da9f8854178e99df73ae24b5339e62c4905d0"
+    },
+    "/audio/beijing/stations/biomedical-base.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "生物医药基地。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.16,
+      "bytes": 12960,
+      "sha256": "f0091f022e6c6545708bf586ff91ab76f788adef481593241297bf87dc816224"
+    },
+    "/audio/beijing/stations/caihuying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "菜户营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "568e3bf2f580434931f1fc901a6dd36ce99af2b584292521d7b6b95dcc23fadb"
+    },
+    "/audio/beijing/stations/caofang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "草房。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ef2d0e7d7763ac45cf0b981ebf311a44fd2bdf9019511b331dda2ab8edcd5b78"
+    },
+    "/audio/beijing/stations/caoqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "草桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "880b833fefca2cfc5f5142c8fcd4d0b214c7ae5a16625894325cccb0204bfafa"
+    },
+    "/audio/beijing/stations/capital-university-of-economics-business.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "首经贸。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8019eb68f7799410bbb8a180e120c0b5323307c46b628e3e2b70accfe2a6dfa9"
+    },
+    "/audio/beijing/stations/changchunjie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "长椿街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "462c3772e0870fabf51ee84794b0f5a174d69c81c24ff9d511cf6e0e9aa6e1a6"
+    },
+    "/audio/beijing/stations/changchunqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "长春桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a837f310bb0dc146893c207e086b49f99afca4558dbdc719ece59f0d537fb343"
+    },
+    "/audio/beijing/stations/changping-dongguan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "昌平东关。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4ba091ded30607f35b75af8de056f36a8d1df4c431cf6e48d9b6d0350b1d20a4"
+    },
+    "/audio/beijing/stations/changping-xishankou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "昌平西山口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.064,
+      "bytes": 12384,
+      "sha256": "994004c9e6a8db1d71fe0ca08db6ebec573edcf25c8da01bbd6270fe0a14f455"
+    },
+    "/audio/beijing/stations/changping.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "昌平。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8d3f9c64637694257465499075147fab5bb7d7c94bb1c11b706d5f7bc9730312"
+    },
+    "/audio/beijing/stations/changyang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "长阳。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a938e3c880cb642fa89b887d8c0b199e4784212d3101367313f1f09dc1d375f4"
+    },
+    "/audio/beijing/stations/changying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "常营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e5520fa881b85514af9646c0554593b1dd7481675a0842777af2daf6ca1a5f0a"
+    },
+    "/audio/beijing/stations/chaoyang-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "朝阳公园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c5632f45321f32e164e2b4e3e699171bf9881184bd9c6dda228e196c31779598"
+    },
+    "/audio/beijing/stations/chaoyangmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "朝阳门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "93dee93d8ff2e0c244d12f2505c0ee977148b076178eb94404e05cf921071205"
+    },
+    "/audio/beijing/stations/chedaogou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "车道沟。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d899e9e339fc9c8e51ea04da1da60474560213961c2dea5a59db8be2289829da"
+    },
+    "/audio/beijing/stations/chegongzhuang-west.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "车公庄西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f22555fcaf84140af0ce536c5db0290c394b2dc72349fb509f30b0e1a93b0877"
+    },
+    "/audio/beijing/stations/chegongzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "车公庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "01e5b484d4449f44ddf9e36c2bdae0a8119341fec6c82f323be68166f33b6664"
+    },
+    "/audio/beijing/stations/chengshousi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "成寿寺。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "56cece8fb4ea8dd203aca0f4020311c666ae326ff9880c56d7fb641bdc5d34fe"
+    },
+    "/audio/beijing/stations/china-international-exhibition-center.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "国展。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "114e09df723b5dd321d25469ae89a4958400766bec7503f823575fbe841f8b9d"
+    },
+    "/audio/beijing/stations/chongwenmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "崇文门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "2a308d88c9cbb428d743c8bb09cee986e20f198fad74acf7467bba89684b7239"
+    },
+    "/audio/beijing/stations/ciqikou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "磁器口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "42575833ca77e6bbaeab0198ffdd86c8df04063c6279112fb2abbfacdf634a23"
+    },
+    "/audio/beijing/stations/ciqu-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "次渠南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b5873bcbfc1cb467e2110f0069878de777f564483c29aa6bc7c1e6bca75bd0ab"
+    },
+    "/audio/beijing/stations/ciqu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "次渠。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6360433cf207a1e4b1970180613e9713f33c4692dabdedca9ea485f7eaca1a80"
+    },
+    "/audio/beijing/stations/cishousi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "慈寿寺。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f4c2275b2a829e56cc4fc5f82098a1608541b6f9d7af0ddfec026dd4760f4321"
+    },
+    "/audio/beijing/stations/communication-university-of-china.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "传媒大学。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "53fde1885efd50b6da46e577ba240585e15e7125cb73c7e9b66c75fbdbc11b41"
+    },
+    "/audio/beijing/stations/cuigezhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "崔各庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fbd13918acd27b0ee17ab826bb0a8a929d27348996198e2d09ed4d6ab62cdaaf"
+    },
+    "/audio/beijing/stations/dabaotai.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大葆台。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "17aa4b8a8a976fe03147e89f4615e2a79204fcf00150e730dabb5a98fbcbcd89"
+    },
+    "/audio/beijing/stations/daguanying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "达官营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1ab8e6eb9c71222b97d867a54a48af293fe5d6ea755ea8759a8bdb90e5404795"
+    },
+    "/audio/beijing/stations/dahongmen-nan-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大红门南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "28ae53f106025b8a8f69789d74516a22014dfb2c870708e7096771bdfdc42029"
+    },
+    "/audio/beijing/stations/dahongmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大红门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ce7cf322dd9f74c9629e1c5bb6ebadb8a0bcaa21eba8c9ebce2f0332fb07bf55"
+    },
+    "/audio/beijing/stations/dajiaoting.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大郊亭。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fe182c096e06806a0a218b512a4b9366efa3ca630f01f07f4ad5ff1c65d0f3fa"
+    },
+    "/audio/beijing/stations/dajing.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大井。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "51e9b2c66ca481cff198b6928c071ba687e1452f025efd9bc8dd8ad82ed87ca9"
+    },
+    "/audio/beijing/stations/dalianpo.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "褡裢坡。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1de48c5fedf5c0a1c318a17ed6cee78a7d5c70e3ffbcdfa0d6a1e40f56e3dedc"
+    },
+    "/audio/beijing/stations/daotian.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "稻田。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "466f030b576e3cd69e2b22a3a0f33041762d75aa5388ac9c79f62dcc425bf995"
+    },
+    "/audio/beijing/stations/daoxianghulu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "稻香湖路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1a47fe7cafda6a2c61323d189263e2fe01187122610cec5d0f79adb64abd952d"
+    },
+    "/audio/beijing/stations/dashihe-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大石河东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "87f9367394175520f43312fe5fcd1bc6aa86b8373e9cbeb4b75a64f95b8045e3"
+    },
+    "/audio/beijing/stations/datunlu-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大屯路东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "439fa77f73b34661015e4732ddde242d32fda4e3f720af27594e537b96004ed3"
+    },
+    "/audio/beijing/stations/dawanglu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大望路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5cef4bee209497847db61cc4fee971aecdee0be0424a9f321c49e28d787dc54f"
+    },
+    "/audio/beijing/stations/dawayao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大瓦窑。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9e70920ca61fd98afdbf0fa76cbf168ed2eb2774f7da7aaa53200dd81c7b5fad"
+    },
+    "/audio/beijing/stations/daxing-airport.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大兴机场。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8b111183abca7a775d6f63f8cde8396b197e834684a037f697e9772d6d2ea5d9"
+    },
+    "/audio/beijing/stations/daxing-xincheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大兴新城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "982be53cb2f388c6a93b99ecf09bfcf3a397561b007699a44459db00213d6b59"
+    },
+    "/audio/beijing/stations/dazhongsi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "大钟寺。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "40e7f41b018a3533605f492138b000cb0445740aa0d7fa85b101d50c814a9eaf"
+    },
+    "/audio/beijing/stations/demao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "德茂。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "688e7da1520fbbfb29da39927ef4babe191cac9d87dbb00308c24c798f203cdf"
+    },
+    "/audio/beijing/stations/dengshikou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "灯市口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fab6def466f8990030a94beae69b3167f3031e3053b191dd0850b986bb1d5636"
+    },
+    "/audio/beijing/stations/dinghai-yuan-xi-w.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "定海园西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "171d8b534e6e77fb1f841bd02b8bc26e762e91384c6e6eab227a2fbbe32b8b50"
+    },
+    "/audio/beijing/stations/dinghai-yuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "定海园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "78055ad14971daca265ce0b339a4d4d7784a587719a1d191817cf87f1f41cdff"
+    },
+    "/audio/beijing/stations/dongba.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东坝。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1e5732a29e88b3ea4fe9b52dd80cd21d1c93bf11436a68335c56d6ad2479afd8"
+    },
+    "/audio/beijing/stations/dongbabei.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东坝北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7911b43880bd9e0a9d60d8b740f796661059bceb4213e8b829e1dd688a3b4915"
+    },
+    "/audio/beijing/stations/dongbanan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东坝南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8e383f181d3103775a43b7a57cb462c827c7bfeb61655230817dab51334ce3ff"
+    },
+    "/audio/beijing/stations/dongbaxi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东坝西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "11e56feb36cc806075eb8caab16378aff44fa992ff33620b3a5cdeae70d7d7ac"
+    },
+    "/audio/beijing/stations/dongbeiwang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东北旺。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f7fbab36eef958e92c3850da54c71f93f5095a5debb920c31d352ea5f36449d6"
+    },
+    "/audio/beijing/stations/dongdan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东单。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9592dc672976be5a1420e512b4afab71cc78cd5f49c36a39ec9464349510b4f0"
+    },
+    "/audio/beijing/stations/dongdaqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东大桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "16d7457064c0ba73e11160122723946b6ec90101e11ab915d3383a9d7adf9de8"
+    },
+    "/audio/beijing/stations/dongfeng-beiqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东风北桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8308d12f337a4ca0e0560bf8da85c582ca4325bd86b2ca69b5f93322334a585e"
+    },
+    "/audio/beijing/stations/donggao-di.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东高地。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b47b7bf59eb5353dea8626e72c9c9ba75f7dceafaeb8fd488930869378c2ce28"
+    },
+    "/audio/beijing/stations/dongguantou-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东管头南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "bb76468c32e69dd55d98be9dcaf21daf5c362526f9b4d6b35c3eb21e4981148d"
+    },
+    "/audio/beijing/stations/dongguantou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东管头。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "000afa638302bf863c2462eadfa0d47208048582c31dd1b7f4d4e65c7376dca5"
+    },
+    "/audio/beijing/stations/donghuqu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东湖渠。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c35edd4f9f5f35845d0c09456ec72ef97d4b8706206b73291460d5c3741bdcbc"
+    },
+    "/audio/beijing/stations/dongsi-shitiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东四十条。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ebdb8d3a183f595df56479c81e74f8be0dfb0f0196869d9cf5d97036c6a730e9"
+    },
+    "/audio/beijing/stations/dongsi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东四。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "624b8676541567419c37662c0a6132d10e9ea6faa0621731caf5896188430227"
+    },
+    "/audio/beijing/stations/dongxiayuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东夏园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "16d91b90e956dfba1d156425a6f57d33512c2a26330729023b44244ad810917a"
+    },
+    "/audio/beijing/stations/dongzhimen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "东直门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "baaa6d073a141c17dcb26b82e195e3de71e78f12786f8270b5a8b1e021715aac"
+    },
+    "/audio/beijing/stations/east-gate-of-temple-of-heaven.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天坛东门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6ae0af2ba9e8dbe8a80ec4834fddc8d7c76b909fe212ee9d0a4e9f8c0da598d1"
+    },
+    "/audio/beijing/stations/erligou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "二里沟。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7dc56953b07363a3ae9dbd9303a495afee63dafb9ad178ecb5444e253a1bf681"
+    },
+    "/audio/beijing/stations/fangshan-chengguan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "房山城关。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "54640feaf92f3fca4310d0d5684f1aa9a622fa04e66cb9650c93241745b64b53"
+    },
+    "/audio/beijing/stations/fangzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "方庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8b5e8f89b7417ff76694ca178dcdd404cc8f100cad67c8291156d85822540b25"
+    },
+    "/audio/beijing/stations/fatou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "垡头。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "87d48b8bab47527cf855d6e9ed5cc5cf43a76ea1c01b8fa4ed6b0172a858d202"
+    },
+    "/audio/beijing/stations/fengbo.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "俸伯。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3d0bcf30567ff3434de6095d13174d4d3bd378ab9a546c03b15884fe89f5c02e"
+    },
+    "/audio/beijing/stations/fengtai-dongdajie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "丰台东大街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.064,
+      "bytes": 12384,
+      "sha256": "cc28aad0770177c74e2276d3b47005cfd2ee653d693e0ff61ea5bd19a406f314"
+    },
+    "/audio/beijing/stations/fengtai-nanlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "丰台南路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "879b9befe2b2bf1a942f850e311e1311d929d376bd8e7575f238ee7e33f9f58c"
+    },
+    "/audio/beijing/stations/fengtai-science-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "丰台科技园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.04,
+      "bytes": 12240,
+      "sha256": "dbe5eb2c8a574d3d92170f2a9a32a02f0fcd0700ed0eb6cb5a2ac2a80f5d30ee"
+    },
+    "/audio/beijing/stations/fengtaizhan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "丰台站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7db9391f391085c62f26aa83ef8b66aef4df80c52057d824c7f6867d6cc007c8"
+    },
+    "/audio/beijing/stations/fenzhongsi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "分钟寺。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "75999686b8312e64fcfca03ca4afe4584e0a770c95161ecd9138730a97296344"
+    },
+    "/audio/beijing/stations/forest-park-south-gate.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "森林公园南门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.28,
+      "bytes": 13680,
+      "sha256": "fc33e0959f4b0248fe723e34a906f8cd2145006a00436f586ffbf30d3a0c0ed3"
+    },
+    "/audio/beijing/stations/fuchengmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "阜成门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9ec9429ad5fb00d047caaf62bbc04048d1dfce991947ee6553b75ef8f0ef752f"
+    },
+    "/audio/beijing/stations/fufengqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "富丰桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5c58655c5ffc661c91b1c2767cb6b236ddce7a92a2aa2c8927366cbe2d7bb889"
+    },
+    "/audio/beijing/stations/futong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "阜通。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fed26110cd7cf140732aaaf09419ea9d360adab771d1041d568d9b5be357d5da"
+    },
+    "/audio/beijing/stations/future-science-city-north.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "未来科学城北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.184,
+      "bytes": 13104,
+      "sha256": "2c9b7fb8e51fe66969eec79a573862a8b39ff8176a96bb5e3c4756c47a70fa49"
+    },
+    "/audio/beijing/stations/future-science-city.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "未来科学城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.04,
+      "bytes": 12240,
+      "sha256": "4263ca4bab62153e75e48b0471af70873fd52fd45e70264e6fde07d94bc35137"
+    },
+    "/audio/beijing/stations/fuxingmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "复兴门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9bf1203ecf0365f74775be203aeb2b5d9a9dce9971ff3a6fac212d60662553ed"
+    },
+    "/audio/beijing/stations/ganjia-kou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "甘家口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "779bda8f2a77927de09d992d0a11fcfa3f755bfd264f8766fa10bf9bdb0cd109"
+    },
+    "/audio/beijing/stations/gaobeidian.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "高碑店。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ec7181c59a25c6615af37fd8d39ae9a3ac94a6d32f83e6dcd159143910a51dba"
+    },
+    "/audio/beijing/stations/gaojiayuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "高家园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8742f2ed0f28116d44922472306ea6738d050e7f5cdc94a287d10e22b4fa3491"
+    },
+    "/audio/beijing/stations/gaoloujin.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "高楼金。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b5185baa09d34e29cfc262f2e41953b758880f7f836531560fd684d07dea9c8a"
+    },
+    "/audio/beijing/stations/gaomidian-north.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "高米店北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e7c8378d2f12f3777038df42ffb76a5d72376e776be84cd77a977370d947d47d"
+    },
+    "/audio/beijing/stations/gaomidian-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "高米店南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "522cee97551c899f7f3aac7038d09b72bdd5f6b8b53fda923ddb0e1691840ca2"
+    },
+    "/audio/beijing/stations/garden-expo-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "园博园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ff4004c83b9bcbc4068a24ccac6815dc42d88f3ac6fd63630ecdd58f0c65a768"
+    },
+    "/audio/beijing/stations/gonghuacheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "巩华城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b630602bdfb4ec8a03bae2481d21f4d65913307e18179da31e64d6d3a67d3075"
+    },
+    "/audio/beijing/stations/gongyixiqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "公益西桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "0b2abcfde2c8f6b56a3570ac0b9263e94d4b2d9f980ec8f743f79c057bfb5d61"
+    },
+    "/audio/beijing/stations/gongzhufen-station.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "公主坟。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "bf0be3aee404a53c34291c9df7500f1f38a86a5fdef7983605725104246e87c2"
+    },
+    "/audio/beijing/stations/guaanzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "管庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "66a3f25e7d7329d3796dc9a3dfacfa409e3b20f604e0a21b76a317204b3ac96c"
+    },
+    "/audio/beijing/stations/guangqumen-nei.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "广渠门内。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "cf1ba2b97176f72a7b3e7b61dbb5f7b29e260b1234501bfdee9c8e4ad8786f6b"
+    },
+    "/audio/beijing/stations/guangqumen-wai.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "广渠门外。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "cb3ebc92b9a0474a0a150e32f51ef63c5e4195ce0cbb4addf72c62e41328292c"
+    },
+    "/audio/beijing/stations/guangximen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "光熙门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e198ca33a9d36b5814db828cae6539cb7f737afb11a3cb70ade7da25db59af26"
+    },
+    "/audio/beijing/stations/guangyangcheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "广阳城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c4c9a8f0a72d246ecb58803272b1f2f5f8b10c9c129c416da44cb6b4b82d2256"
+    },
+    "/audio/beijing/stations/guanzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "关庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c3bf04ed5df31e683d54c1958a587b6ed2c0ca970605308bf3853ff3d5cf977c"
+    },
+    "/audio/beijing/stations/gucheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "古城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e85a053003d7fde7081119ad4794744d7ad0184b3275bcedde9fd9205266904b"
+    },
+    "/audio/beijing/stations/gulou-dajie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "鼓楼大街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8bce6b6cd5cefdc415a55d8d352affafce568697aa413f4ef2ac1ba1dbe2c58d"
+    },
+    "/audio/beijing/stations/guogongzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "郭公庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ff3516ee4e0a70562534aec2b4a4b61aca8d0ae23c1bf73dfd5b63f19c15c0e1"
+    },
+    "/audio/beijing/stations/guomao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "国贸。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dca005319c941d59138ea7427f532c20cd1edc7df8d0cca4833b3fbd6c3cc978"
+    },
+    "/audio/beijing/stations/guoyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "果园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ceb3c5387c766b0518df1acb80cc8d9688d002335b777ba53ecfc3d2be044ae9"
+    },
+    "/audio/beijing/stations/guozhuangzi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "郭庄子。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5e22992bae04bd7f82f99734ee6788acc61e1b9cb9d1acba58d6af372770cb7e"
+    },
+    "/audio/beijing/stations/haidian-huangzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "海淀黄庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "24fea08f727a6253fc691eb9f92e99cd89b3277ff39c58e88eb84cef16ce294d"
+    },
+    "/audio/beijing/stations/haidian-wuluju.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "海淀五路居。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.944,
+      "bytes": 11664,
+      "sha256": "4e4beaec0bfac8b132862fcfc08013e52c2abb8c147e6b1dd0d339f0a71b6381"
+    },
+    "/audio/beijing/stations/haihu-tun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "海户屯。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9ce3b7179702e73e7f1f51a793cfaf714f63dd8c4d1d19a121317b83d789a4a4"
+    },
+    "/audio/beijing/stations/haojiafu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "郝家府。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8d3a063e435be1a7901783bb00062aff5f0ab946de059dd664b3466af60c4fc3"
+    },
+    "/audio/beijing/stations/heizhuanghu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "黑庄户。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "22f68660ae56fd1e524a002391aed8c9fbfb4be18bc9f4d776fa1581662b2a81"
+    },
+    "/audio/beijing/stations/heping-xiqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "和平西桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9c31a4767b2f1eda81e978f92a28bc93b0a7b324f3c897f34a4eb1e9fd8fd804"
+    },
+    "/audio/beijing/stations/hepingli-beijie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "和平里北街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.04,
+      "bytes": 12240,
+      "sha256": "7d3f06c1f3c36c3877034cbef21e47617b04d86369588b70650ccb68291e5a63"
+    },
+    "/audio/beijing/stations/hepingmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "和平门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4207ad2b1b37680969f20a62515ca2ca3d142e9e83b772f06c3c871b04b958ff"
+    },
+    "/audio/beijing/stations/heyi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "和义。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1d0e8940f18492b5fa97d8b96d86aa5204445af199a213df006335c97a5613d3"
+    },
+    "/audio/beijing/stations/hongjunying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "红军营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "864441e08e24d140e04e405854f736ec9cd97622debe8c64999a782fc3d944fc"
+    },
+    "/audio/beijing/stations/honglian-nanlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "红莲南路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9566da21c220cde73e3969b9cd0f88fd0bb44c8f25bb938c97cf6a256a30e0e3"
+    },
+    "/audio/beijing/stations/hongtaizhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "洪泰庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "48713b41633b718f24b24dad8453af0da6e78708332365894fc1fa814d8f7595"
+    },
+    "/audio/beijing/stations/houshayu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "后沙峪。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c37587f0819f1a52f017f5131a772c97402b4eb047697ed6a073b04a6c25ff58"
+    },
+    "/audio/beijing/stations/huagong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "化工。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c004c56a221913c0be13b0eedcabedbdf418a8de65bb21b1e0a21796785e3904"
+    },
+    "/audio/beijing/stations/hualikan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "花梨坎。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "70d5ede20ffb11b0842a1b7566931bfeb7a076d9facc79c8b963c0b3d302f5f3"
+    },
+    "/audio/beijing/stations/huangchang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "黄厂。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fb5036ac8ab538276028ae6dc7af9a612557b0ee4322244b7ff16dd83fa75b3d"
+    },
+    "/audio/beijing/stations/huangcun-railway-station.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "黄村火车站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "fb578848de98aebbff2d6f31f6d826d180c05b8bc1fde32cafc7c7e108705b87"
+    },
+    "/audio/beijing/stations/huangcun-xidajie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "黄村西大街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "0289da6c25c03d4a1b85136f39508fd99564d322e2f849c2468b83adaec5f3e3"
+    },
+    "/audio/beijing/stations/huangqu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "黄渠。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "00c81805e977cdd752faf194d20c714ffbeca277f6a36988be0c6c11a854f2d4"
+    },
+    "/audio/beijing/stations/huaxiang-dongqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "花乡东桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e8612561bcf45739be72f113fc2b6fd64904c9f46202e0f5d702eae8441cd600"
+    },
+    "/audio/beijing/stations/huayuanqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "花园桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "2266486c5725238fb7c42ed0855e84196bc712be0d05a060829ad2b27489f847"
+    },
+    "/audio/beijing/stations/huazhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "花庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b6754c4731da5fe9f282e4ebfcb70c599b56ac436d447647499e953e6ef939f5"
+    },
+    "/audio/beijing/stations/hufangqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "虎坊桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a4f882335455a84a2f4359dfafc8f1af8b645a3cb09d1a09fd05bdc00f86d391"
+    },
+    "/audio/beijing/stations/huilongguan-dongdajie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "回龙观东大街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.184,
+      "bytes": 13104,
+      "sha256": "db3a243000644bac8e9037d9847e45aaa1bcf59e7c7a2b5e3c1340b1b88b7809"
+    },
+    "/audio/beijing/stations/huilongguan-xidajie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "回龙观西大街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.232,
+      "bytes": 13392,
+      "sha256": "fe5d481ea51aef20ba19a6bcd89ad051c068efa8a9a97320985ba8a7e7c7d0dc"
+    },
+    "/audio/beijing/stations/huilongguan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "回龙观。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b7d3032083d797f099987d979547dcdb3e4e2fad474650abfac48d6788a09798"
+    },
+    "/audio/beijing/stations/huixinxijie-beikou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "惠新西街北口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.184,
+      "bytes": 13104,
+      "sha256": "46d8fd98bfc94de9f5d5526e7738f3604874d9cdababcc9641eaf38e47d8d725"
+    },
+    "/audio/beijing/stations/huixinxijie-nankou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "惠新西街南口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.232,
+      "bytes": 13392,
+      "sha256": "e140683fbfe26536350e6ab27036957bbcdd9ad870009b2a232b2658dad154be"
+    },
+    "/audio/beijing/stations/hujialou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "呼家楼。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3932e90aecf706e2d084496f5eb180bd2561cbc60ea42d230847cc08ea93d7f9"
+    },
+    "/audio/beijing/stations/huojian-wanyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "火箭万源。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f4b658bb8486cc22678fb23ecba19d2da530b6d5979ed16fe2c0e28f6253b9b0"
+    },
+    "/audio/beijing/stations/huoqiying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "火器营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ef4f8edc4ae303999a5a0bebfe9d1dae07aeab1fe9df6b20480fead7354d1a10"
+    },
+    "/audio/beijing/stations/huoying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "霍营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "167e9f3201ba0ebabb9463b916ca60bda84415b2e42e78fac760d28cee66cab2"
+    },
+    "/audio/beijing/stations/huoyingdong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "霍营东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b10fab8c739b7943227804e811e98d64518dd58d1b98d2607b483a9e9a87f663"
+    },
+    "/audio/beijing/stations/inner-guang-anmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "广安门内。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "abb5ab4742ac45399e9875e34bd13ea628e1dd06a795004183f6fdbce876ac11"
+    },
+    "/audio/beijing/stations/jiandemen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "健德门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e9b83310bbf1553c450e2a70e2c74064359dfc215fc8214b0af13e8aa7daef89"
+    },
+    "/audio/beijing/stations/jiangtai.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "将台。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c70d0b213e4a8f82ad85ff52d397b88ff6aea7331fdaec9562942594d2e541b5"
+    },
+    "/audio/beijing/stations/jiangtaixi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "将台西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "70cdf7c5e2d96a43020d60fcfc7b7f107f3764ce49d40007e9a463ca98da9f65"
+    },
+    "/audio/beijing/stations/jianguomen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "建国门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "82af2ae09c8e04dd6283c32f6d7e7acc42f8399853509cf33add8ddfbd48d0df"
+    },
+    "/audio/beijing/stations/jiaohuachang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "焦化厂。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "bf83f36421ea1fdbfcaf6ee5e51fdf4de1d5653797ee0c7b603e06527ce96142"
+    },
+    "/audio/beijing/stations/jiaomen-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "角门东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b26cc9c040cd3fadd5787d43276269180ab9adb956b94b0c901d772c8c21d4c9"
+    },
+    "/audio/beijing/stations/jiaomen-west.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "角门西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "99dfef93e9611726ff19174c2196a238b2ba2ed205db451fa5fe1bcad24a29cc"
+    },
+    "/audio/beijing/stations/jijiaomiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "纪家庙。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1966cd1d5cf8f52542a90d1470afe7cb0a9771f0732e56a58ec58678f132d368"
+    },
+    "/audio/beijing/stations/jin-anqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "金安桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "945fbfa1113938fef7fe904296e8b1e78289451005f421a5322b63c38068113a"
+    },
+    "/audio/beijing/stations/jingfengmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "景风门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "2d507ec9f856f0c57825fbfe60e916b9910531d4c1ffa926f9379cb6b028d084"
+    },
+    "/audio/beijing/stations/jinghai-yilu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "经海一路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f7bf85e067069465098b828d56e0a1ba77b97b913ddcfc1ad20cdbb060b12a77"
+    },
+    "/audio/beijing/stations/jinghailu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "经海路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6963fd1247540233f619d57abc5988ad98b2c410fa4bdb42ffff24d1320064cb"
+    },
+    "/audio/beijing/stations/jingtai.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "景泰。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f1464e096d0fc6b7cacc0b297a843a0ce00ca101a64a5b2efda225786d44d159"
+    },
+    "/audio/beijing/stations/jinsong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "劲松。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3ce7ccecc7a75eff5e9252ed60a9b308ec41420f9f0603d7d97c12b0d96bd992"
+    },
+    "/audio/beijing/stations/jintailu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "金台路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "90058ca42a09714d579775a6cc1c306a8e7c57ef048e6f268e1b1518957d1591"
+    },
+    "/audio/beijing/stations/jintaixizhao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "金台夕照。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3e4a89a2265269fae98da3091d0ba1e18b537da9496b83271d27babb54649494"
+    },
+    "/audio/beijing/stations/jinyu-hutong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "金鱼胡同。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "eb0267be731155bfe48591f17dc4b56d2ff0f59a219e5385afacc763c6fc37cd"
+    },
+    "/audio/beijing/stations/jishuitan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "积水潭。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "85379a2289ce983877f35a5fd82cc2d1992ad10db8dccefede2236aa31e040e9"
+    },
+    "/audio/beijing/stations/jiugong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "旧宫。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "db656803a97efd44719c818c4e965c2fa29fb0af6e7c724b62a58acccd46b8a6"
+    },
+    "/audio/beijing/stations/jiuhao-cun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "九号村。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a65be44baa3400428805b1a02d239c640063d9401c2d437e3262edb32c355fd0"
+    },
+    "/audio/beijing/stations/jiukeshu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "九棵树。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "50408a825ae1a269d401f2edd636aeb4153e6577a32bfd1d9b3f442f1683d9cf"
+    },
+    "/audio/beijing/stations/jiulongshan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "九龙山。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "85c6bca2f8e9f003931d3d36f557940a5ce0f4b6fad98410445ac0013efb1dba"
+    },
+    "/audio/beijing/stations/kandan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "看丹。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9d715a9c822913f204d1604c7cdb02367a183cc90ff5028e6174ee9d501bfa3e"
+    },
+    "/audio/beijing/stations/keyilu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "科怡路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5a568ab70ee9f59741c927f337edf4271e9631c9ecb20cc159ffacc8e0135d8d"
+    },
+    "/audio/beijing/stations/laiguangying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "来广营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b207103a2f2d7eec03c7a09a1915bfecc0db07b656fc7c2a4ea332c31ee4ac60"
+    },
+    "/audio/beijing/stations/langxinzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "郎辛庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a5f25f0aff4978ffbf661c681357c0ce8724e410c12c2035b2b96ada772fc766"
+    },
+    "/audio/beijing/stations/liangmaqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亮马桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "674321368d1303533ab2a5a1160efbb38fb06c689fa87c4573c856a752d2afe8"
+    },
+    "/audio/beijing/stations/liangxiang-nanguan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "良乡南关。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4ed28066204390452653f9ca29eec503badd188227a25c24af4fd7fecb8e689b"
+    },
+    "/audio/beijing/stations/liangxiang-university-town-north.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "良乡大学城北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.208,
+      "bytes": 13248,
+      "sha256": "3674bb1495aa0cd51b72a509abbd71d586f679d60bddade327346ef12242fd5e"
+    },
+    "/audio/beijing/stations/liangxiang-university-town-west.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "良乡大学城西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.28,
+      "bytes": 13680,
+      "sha256": "fc2422f9aabd112100ec173c066161abac6ed03ff0c03fbfe8a20c52a0911542"
+    },
+    "/audio/beijing/stations/liangxiang-university-town.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "良乡大学城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.064,
+      "bytes": 12384,
+      "sha256": "c9df8081b1c8881f7aef3b495b00dacbf4bde56e54930743d6503b02ddc68c1a"
+    },
+    "/audio/beijing/stations/lianhuaqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "莲花桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b19f602408b19c268346bbb87cc2eebc6d0698f54c81973359b3578d2972212e"
+    },
+    "/audio/beijing/stations/liaogong-zhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "廖公庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8f9959c9c2c0c304864034c560b47105b571132390965147220036c643e984be"
+    },
+    "/audio/beijing/stations/libafang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "篱笆房。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ffe6e76fc0ef27c65b3375aff3f61d2310895f2dc85c9bba8f89c63cf58cac19"
+    },
+    "/audio/beijing/stations/life-science-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "生命科学园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.088,
+      "bytes": 12528,
+      "sha256": "1f9202293a230cb37de044104de63afe130ebac831606216ebdec7a753f9108b"
+    },
+    "/audio/beijing/stations/lincuiqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "林萃桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "df2ac7a25edc7f56b58b3eb233bb5d6b39576dbf50b8f9a029f8776e2a0029e7"
+    },
+    "/audio/beijing/stations/lingjing-hutong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "灵境胡同。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ce6fa39fb87735170e89042e81e9cbbd1b6a5f869a342014be9871177590d41a"
+    },
+    "/audio/beijing/stations/linheli.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "临河里。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6dc29a5be482b6b8ced15cfeda27ce98bd3886dc4e8b3f23a3798b9b49ca95ee"
+    },
+    "/audio/beijing/stations/lishuiqiao-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "立水桥南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "82c7a1c17ec879bdb200ca33b65b624c31d6cc22c67405491b78aed6c81114ad"
+    },
+    "/audio/beijing/stations/lishuiqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "立水桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "731d961b744527075a4f7ae4ac46ba0b313805d11dea3e6328a5545b4b3284ab"
+    },
+    "/audio/beijing/stations/liudaokou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "六道口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "345af97ba851b52a45257a93fad6a9bc914a8be51eb71f1b55bb0df9afd68f59"
+    },
+    "/audio/beijing/stations/liufang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "柳芳。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e82f16d78d14c9ebc1a72007ed32de202a27faff6faeac8d301a786329798f92"
+    },
+    "/audio/beijing/stations/liujiayao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "刘家窑。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3ba047b45f00d609bdfb0ca03de0994a52733bef1c56cdba241edba888c7f1af"
+    },
+    "/audio/beijing/stations/liuliqiao-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "六里桥东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ab962f233dadfa1a2aff4f9c5ba2d83fb29c4bca98ab5a800a883942c187660c"
+    },
+    "/audio/beijing/stations/liuliqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "六里桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d78b8d2c8e7dcad32d0c49b720f73c19be09b31a3c5ec4b9850e27a11a7333f1"
+    },
+    "/audio/beijing/stations/liyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "梨园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f88d9353e1bab023e3162086fc9c9e26b3bffcb8b0f3d745eb88cf98d9c116dc"
+    },
+    "/audio/beijing/stations/lize-business-district.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "丽泽商务区。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.944,
+      "bytes": 11664,
+      "sha256": "d3ce5c1df641ccb5690dda62150878ec20edac6164e80f42627302718345af8b"
+    },
+    "/audio/beijing/stations/longze.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "龙泽。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "65123bdfbf8aca8624188257abb725e65c6e87d56fd8ee36532b892b0d4c5c3a"
+    },
+    "/audio/beijing/stations/longzexi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "龙泽西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1e5528cd007266b15a2776a37caa6546260d88d55967d3d19afd6fec8d3f89c5"
+    },
+    "/audio/beijing/stations/lucheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "潞城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dec7b1e65a1416766670d7aff709819d69e9d18cdf16275a5054f8b29ba16c4f"
+    },
+    "/audio/beijing/stations/lujuan-dong-e.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "鹿圈东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "52257026b3a0324f312b7cda6883d19696eef98df672d5c3de20a0a7a26d1330"
+    },
+    "/audio/beijing/stations/luyang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "潞阳。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e2425a6c89b97f8191960a6ae55aa99e64d056f466e71c7c29027645b3562fe0"
+    },
+    "/audio/beijing/stations/magezhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "马各庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6ac52ef73e5c31d3ece8d773ad2e979159dd3631af43225ddd60ef313cabbbab"
+    },
+    "/audio/beijing/stations/majiapu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "马家堡。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ab93f6e4a2887471cde193721685ea6f1caec8967f1257f6bc90ed5b0a5cd546"
+    },
+    "/audio/beijing/stations/malianwa.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "马连洼。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ecdac5265d414d8a7037ac5ef30d0a1da7943311e29cf7b599954917310002ce"
+    },
+    "/audio/beijing/stations/maquanying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "马泉营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d94bffd36436783dd8ba3e8bd290fc52f91982b9b92228487fb2387d8f9d59bd"
+    },
+    "/audio/beijing/stations/military-museum.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "军事博物馆。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.896,
+      "bytes": 11376,
+      "sha256": "8af3ca3e9718bed790a82bce98f148176947104d8d5a942873e103f8bb70c768"
+    },
+    "/audio/beijing/stations/ming-tombs.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "十三陵景区。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.064,
+      "bytes": 12384,
+      "sha256": "7f45544c0bfc5523692f6a67ffe712073918617cfe5ec85ce7be91fd236894af"
+    },
+    "/audio/beijing/stations/moshikou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "模式口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e8edf131e9492f5ff80ad80bcc011395e66b7d5a82369c38a81a7f152ce79f8c"
+    },
+    "/audio/beijing/stations/mudanyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "牡丹园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "74a38a3bdab626efa38bf37188047acc2c22be864b20a54bbb6785485260ff26"
+    },
+    "/audio/beijing/stations/muxi-yuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "木樨园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fe1caf3bcb33eda643f1843203a4d32e75d7e9074f34e47ab4f49a4213bf96df"
+    },
+    "/audio/beijing/stations/muxidi-16.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "木樨地。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "aacd5707a1de2c406783ae221805031b3b6940a80f4545c1cc23b2db6102cb2e"
+    },
+    "/audio/beijing/stations/muxidi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "木樨地。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "0d31984032166b0670a96c03ab091351d723a6feddee54112b583d9741c5476f"
+    },
+    "/audio/beijing/stations/nanfaxin.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "南法信。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "25fb4754dd39425ab752edb4073639c66c3b099794f4bad89f96298d5e46ddd2"
+    },
+    "/audio/beijing/stations/nanlishi-lu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "南礼士路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "157e36035a908d10262060749ed0dfe20f4abaf0a87d15b28a9ba4d71958266f"
+    },
+    "/audio/beijing/stations/nanlouzizhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "南楼梓庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7e68d3582313d6b8fda2f1b8f09bd23913ca18fc1b47960f14c57851d6914d9f"
+    },
+    "/audio/beijing/stations/nanluogu-xiang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "南锣鼓巷。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c713741b7971f5af73d27aaf10c295df34ac24646309656dc8454f663fc37605"
+    },
+    "/audio/beijing/stations/nanshao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "南邵。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "cfc2360cd55313e7a3f509c6f408747e65be5bbe682cc3782fffb941f32a28d2"
+    },
+    "/audio/beijing/stations/national-art-museum.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "中国美术馆。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.016,
+      "bytes": 12096,
+      "sha256": "502b38ea33c7b87164c44e97fcd25122a3a0dae941845a361b4a96270423b881"
+    },
+    "/audio/beijing/stations/national-library.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "国家图书馆。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.944,
+      "bytes": 11664,
+      "sha256": "6772a8b85b9804c8d176cf4751aaa1c8df42f38c8e8418d2d55e703550456803"
+    },
+    "/audio/beijing/stations/niujie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "牛街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "38c031872c498bd98cc6d80fb310fb9177cb91686020ce884b34ee7779e852e9"
+    },
+    "/audio/beijing/stations/niwa.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "泥洼。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4c8a355696340de9b9f5b1e46b7f1901dfeb91819c2138fdb4bf9c4c3661d1a7"
+    },
+    "/audio/beijing/stations/nongda-nanlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "农大南路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4484d5a03b5fd7b659f051af50fc45bb893163140443ee466fb69e76db382f0d"
+    },
+    "/audio/beijing/stations/olympic-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "奥林匹克公园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.184,
+      "bytes": 13104,
+      "sha256": "a7c1f8ed37e3cd6150de76df61640156e9d9905d91d9b73788fe4c1f15cbd141"
+    },
+    "/audio/beijing/stations/olympic-sports-center.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "奥体中心。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c457de4888e21e2a8635cc406be12e065034633b0e4096fc0ba9dac1501e1165"
+    },
+    "/audio/beijing/stations/outer-yongdingmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "永定门外。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "721e47733386d34f53c130b9fbd91b4c2c7e1a5c14fac76ec6039fc44b7059a8"
+    },
+    "/audio/beijing/stations/panjiayuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "潘家园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "354cbfd85374256b8da35b88e243910ef335f0901bbd7e04fe803f81b8621ee9"
+    },
+    "/audio/beijing/stations/panjiayuanxi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "潘家园西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ff65c11074c4417c3c20c3bf2ec6014137a40ecd4af7a02b5112f1aafbd0cbbd"
+    },
+    "/audio/beijing/stations/peking-university-east-gate.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北京大学东门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.16,
+      "bytes": 12960,
+      "sha256": "ce1f75ab7ed09da34eb24be31a92383e8ec4af72cca9ba7949c5e2e296ceec8d"
+    },
+    "/audio/beijing/stations/ping-anli.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "平安里。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "0867551dee7cbe6f125c7f90e91d244b091ae21623930528d5ecb13b55084408"
+    },
+    "/audio/beijing/stations/pingguoyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "苹果园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1e33f8d520f6cd46213c8544dcca6415f91704dc85bb2d99306d91aee372ace9"
+    },
+    "/audio/beijing/stations/pingleyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "平乐园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fede64bd037152784bf557c1ee1ec3ccce9f22abddd7d2a57848dc6c8e54c8a6"
+    },
+    "/audio/beijing/stations/pingxifu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "平西府。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6406620354049e48ddb4794bb3d1d951b77f29cbc52eb024fbb17d61619f57c6"
+    },
+    "/audio/beijing/stations/puhuangyu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "蒲黄榆。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "20c59270b2016cf210f9089dbc1e9df4c690385bf341c058b3ae83964311a144"
+    },
+    "/audio/beijing/stations/qianmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "前门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "79f432db0744806f26766eb610d434b5d7ec7d64c28732fbf9cd5006ff7c1af7"
+    },
+    "/audio/beijing/stations/qiaowan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "桥湾。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "13ee511348d37b245422a0c1edabaa50911ebacf1d9c7fcd3274ff667c8b5389"
+    },
+    "/audio/beijing/stations/qinghe-railway-station.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "清河站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d5cf29c85ab5c48bd6e84867d680f8f8f30564703e33862395b009cd8fcde915"
+    },
+    "/audio/beijing/stations/qinghe-xiaoying-bridge.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "清河小营桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.088,
+      "bytes": 12528,
+      "sha256": "7f85798d70a4f0523f2a8bd3ba5118ca633158341574f33a6bef6988aded19bc"
+    },
+    "/audio/beijing/stations/qingheying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "清河营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "109e47d21838d76942d652ba9f57229f3ca63366bb51e6650128829add2c9d65"
+    },
+    "/audio/beijing/stations/qinghua-donglu-xikou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "清华东路西口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.256,
+      "bytes": 13536,
+      "sha256": "1f96c4a6f9903f6efb7c3e9befd268c67df7a11feb8bff5ea4a4287bb12a6cf8"
+    },
+    "/audio/beijing/stations/qingnianlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "青年路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "27ad329a0d4c58c8aa3a9714822ce9a443fd7f1d7f7580b5c3bdcce0e2eb0020"
+    },
+    "/audio/beijing/stations/qingyuanlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "清源路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f36159c1757079ed485077a47b740edd5a7207b687083d4422fb1798b6af4202"
+    },
+    "/audio/beijing/stations/qu-zhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "屈庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ed6c1441fdca534825f5d49b43c6cb855e21c0f4d645ae9def4ebea4287ea6f9"
+    },
+    "/audio/beijing/stations/qunfang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "群芳。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4a76bcdd0b1c21d8bfe1a0c2ce62eed5eebf9b37533c2916338b9aa1a79c154a"
+    },
+    "/audio/beijing/stations/raolefu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "饶乐府。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4d96dc13e78c58fcb5fe3c6c5bc4c57aef30beecc850629e12ea6f68fc4c5745"
+    },
+    "/audio/beijing/stations/renmin-university.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "人民大学。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fd66c977b5400bdb806e3a8d970c6ec6ca210eddc508f4c8b3ee408f57bc144f"
+    },
+    "/audio/beijing/stations/rongchang-dongjie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "荣昌东街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5b916352ab89e90cdc2d879cb5695e2e03b1cfba19c63e4c9560cfe9647d5c9e"
+    },
+    "/audio/beijing/stations/rongchangdongjie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "荣昌东街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5ae0541e751e7f2449158b2c7caa0913d58eec56232d39cd6db25e4a65a0cf41"
+    },
+    "/audio/beijing/stations/rongjing-dongjie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "荣京东街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5ca5914918233b67f9a6ac6ae06918bf8d84c5ce305f525be3d3f5fe93f91f6c"
+    },
+    "/audio/beijing/stations/rongxing-jie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "融兴街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fafc9480b818bde176e973435822edf6948b23eed49575c01b78661be00c3ea2"
+    },
+    "/audio/beijing/stations/ruihe-zhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "瑞合庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e685e701aca692827199365697a01cce20995ce63520705b689cbd5bddf7a21b"
+    },
+    "/audio/beijing/stations/sanyuanqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "三元桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "89f06ce6310b12d0862d60a87c4d01eac79ba1de467749283d6e7a6f945ccafc"
+    },
+    "/audio/beijing/stations/shahe-university-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "沙河高教园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.136,
+      "bytes": 12816,
+      "sha256": "919d3cd9b2b115ab8a4cff2622d3432af31dfc97e1d7285f4188e66d3ffe5d2e"
+    },
+    "/audio/beijing/stations/shahe.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "沙河。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3365945fdcc9df26129f5dc4f0a0cdc3fde91cd6bd8684ae07f538f030545112"
+    },
+    "/audio/beijing/stations/shan-gezhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "善各庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "2fab312eb1935558cbcaf71c2c33b3f650101e1804e1dda5e16f551bbb76f3ed"
+    },
+    "/audio/beijing/stations/shangdi-software-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "上地软件园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.088,
+      "bytes": 12528,
+      "sha256": "85a330a59ed6261f5a60aedaf52a9fbb0d4d7613be1943d410ce521a4543cfdb"
+    },
+    "/audio/beijing/stations/shangdi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "上地。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e92521087929a26a69798aa7c4e9700d830acdfb520720dfa9754356f51261e9"
+    },
+    "/audio/beijing/stations/shaoyaoju.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "芍药居。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4d1254bd96041450cb7abb5e75a537a347bba50281b8b03c557fcfbf5821cf33"
+    },
+    "/audio/beijing/stations/shichahai.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "什刹海。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c17ed18df42a2259419f595506333d69a871fe26b109c563c1bf115e0341f59b"
+    },
+    "/audio/beijing/stations/shilihe.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "十里河。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "93f25a93a1fb4cecb6e975b4a67208c553efc8ca3102fd64f111f339e94a25d0"
+    },
+    "/audio/beijing/stations/shilipu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "十里堡。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "389c32706fc6d876cd28459f50a4f38ad44e2ef005573bea520e582e6801dd41"
+    },
+    "/audio/beijing/stations/shiliuzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "石榴庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "76f591553f3e40e254961bc6d8917f55457d008c9af0abf5f5005a10b794fec1"
+    },
+    "/audio/beijing/stations/shimen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "石门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8dc02d58015247db6e4c5a2f402aac5d2e78ec548c178bfd87401bb3a06db14b"
+    },
+    "/audio/beijing/stations/shougang-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "新首钢。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c5998586b38a4947785a7d11a7366f2cfcd32a7f234f6225d608c3681abf7250"
+    },
+    "/audio/beijing/stations/shuanghe.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "双合。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c42678137e4534aad5ab59307ebcff281974da6e88706b38ad845dc20b6ecd04"
+    },
+    "/audio/beijing/stations/shuangjing.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "双井。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e8a51e95965653e131f37a290b190d2a152cf2da0c0f67b46851a34eb8922467"
+    },
+    "/audio/beijing/stations/shuangqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "双桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6bcc29bbcd54b419f8040b733b673be9ae5d10cfbd431b046c472b7a2f467a0b"
+    },
+    "/audio/beijing/stations/shunyi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "顺义。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "62f4b8157a5021853a8402daefc5e65ea30526a906a675f578a1745df614e367"
+    },
+    "/audio/beijing/stations/sihai-zhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "四海庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6badb4626873c5c283a9800b6037fec01dddb1c19fb649cb1b3b012b4907a82c"
+    },
+    "/audio/beijing/stations/sihui-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "四惠东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "98d0472e653d2bb02043676609ed4efcce9f15604f5206defbf5a133696c76e5"
+    },
+    "/audio/beijing/stations/sihui.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "四惠。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8c5b4d71c9854f9afa1e39014df748521123996353713ed241975da2e6bac810"
+    },
+    "/audio/beijing/stations/sijiqing-qiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "四季青桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.896,
+      "bytes": 11376,
+      "sha256": "b8cf4cbade75055be4f4196f1f11b9c53401823113c2fcda4dbff5d43cdb1c6a"
+    },
+    "/audio/beijing/stations/songjiazhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "宋家庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7ab48d7900511eda9f0320cff093766ce8b09ef674df3d279b4ad33b5dd80d44"
+    },
+    "/audio/beijing/stations/station-149.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "珠市口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7519d09e0d9cce44da25c5298e1b37cd214ae1e0860dff1f7c6ae28f43ed780d"
+    },
+    "/audio/beijing/stations/station-203.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "七里庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "990ca50879ce6c132886f0deff1e5560928783c051b75c414f413eb3e2e76d09"
+    },
+    "/audio/beijing/stations/station-245.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "蓝靛厂。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dd13aa7d6299ba3b7d933fa9fa5b6da95c232f6716640d13ca03b53260dabe86"
+    },
+    "/audio/beijing/stations/station-248.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "蓟门桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4e8d4ff9e2489540a2e57c33296373dd7925f4540ad6d62e093f92ed4dd4daaf"
+    },
+    "/audio/beijing/stations/station-250.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "马甸桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f3c9f2939f7526d5720abda4be64134fb8b2863fa1a310ec7cd1d5fc60237680"
+    },
+    "/audio/beijing/stations/station-251.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "安贞桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fb87e4614b5243f4eb239804708d3a35db66de339505dd529ae6e07d559fc3b3"
+    },
+    "/audio/beijing/stations/station-327.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "嘉会湖。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6d340ff61b0ef520ef7d433ebd5468252009fce4e24dd7af3a14084a5ea2af3b"
+    },
+    "/audio/beijing/stations/station-329.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "次渠北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8bbf1bb398685f5cb2e0b2842186b43fc9b61d3e61c60d2029c7e862f1bc86b4"
+    },
+    "/audio/beijing/stations/station-330.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "北神树。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "0dc0a428b82a491961c516b57828e61a7d5b9465f042679a5a409b609a442fad"
+    },
+    "/audio/beijing/stations/station-331.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "十八里店。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "833d4e9f3a97b2f936d630577d2f253282657f4710e8a03f6ba77b0c666fe664"
+    },
+    "/audio/beijing/stations/station-332.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "周家庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "211084e8ac39441fe4ad6195d522f8e090833853d2fc355e380659b8ca1d1e56"
+    },
+    "/audio/beijing/stations/station-347.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "太平桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1570afa3412c30f6cdf997e26f5ca8cb5218f096d19649bc7a503287718dc774"
+    },
+    "/audio/beijing/stations/station-349.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "新发地。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "815aacfecffe6b400e5d7e44d89a642ef435b14d84f2b08613f95823775e8917"
+    },
+    "/audio/beijing/stations/station-350.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "石厂。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "56e3ef78a6dcdcd52e9e43eec5622c88b32c7615b2a94fee5701f717f45afbf2"
+    },
+    "/audio/beijing/stations/station-351.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "小园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "879f0b682dcf0e43d2edb537fd269a5ba5376feba8903593bdee5135c26f895d"
+    },
+    "/audio/beijing/stations/station-352.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "栗园庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "524067f99a05ad6b82cb06572917f2602ed108553c73b5ce0fe64ba3bfdafe48"
+    },
+    "/audio/beijing/stations/station-353.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "上岸。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e31216fb9ebcc3ec08e3012874e6848015512279ec871efa1f6c757af6e60a9b"
+    },
+    "/audio/beijing/stations/station-354.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "桥户营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b2f8f60e865acd6c7acbe4fc3f0b451413425f8bed061044368c92b12be6be50"
+    },
+    "/audio/beijing/stations/station-355.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "四道桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f0ee6d6d8a7501f6a8329aa3c36722046f911409165f9db02bdefcf4b0c90d53"
+    },
+    "/audio/beijing/stations/station-366.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "朱房北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "929d41a5138859fbc8188891ec8fd5fddb04be5fa56d0abdf623bb6b79be6d25"
+    },
+    "/audio/beijing/stations/station-408.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "颐和园西门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "953e55b6ef145a7fd0663c12c0c3b95cfd345454c8e34fd79ecb32cdef46dcd1"
+    },
+    "/audio/beijing/stations/station-409.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "茶棚。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a173079eba726a4c4ba44fa353844fc0aaff3090c6dc4d60179de2707c8f9c06"
+    },
+    "/audio/beijing/stations/station-410.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "万安。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "534b90fe11583ca18279ea3d3a56712c17e829681726abb00bb4b4463a61fd92"
+    },
+    "/audio/beijing/stations/station-411.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "国家植物园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.944,
+      "bytes": 11664,
+      "sha256": "a6045488cf116091ff86f91f63f5a77d5c7696c9d5b7fb88b034529491294241"
+    },
+    "/audio/beijing/stations/station-412.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "香山。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dc3b5f17f3cad7a4c7970ac5430b3947be60870f457825ea90e859c54d7af72d"
+    },
+    "/audio/beijing/stations/station-55.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "石佛营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ddfbd0db296daf1590679ea9ecdfea1a2903fe02e5b5d8125c50a647077ccaca"
+    },
+    "/audio/beijing/stations/station-56.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "朝阳站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1ee06f2b6a056cc79c05980a105fa36a4ed374e91e2aaaf67c35e7f263ab2d31"
+    },
+    "/audio/beijing/stations/station-76.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "菜市口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8db3a180230fff4adf02d86a54c5ec0cd90a2002567304954eac735438cc4a30"
+    },
+    "/audio/beijing/stations/sunhe.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "孙河。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "adf813467df98d79be378b08db24678930816f1004a6ffee2de5d9fd8e4d3ea5"
+    },
+    "/audio/beijing/stations/suzhou-qiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "苏州桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "bbd78eeaa85be393677e657728513320620fd1f1e48414a19bbd6a0a37ca8b06"
+    },
+    "/audio/beijing/stations/suzhoujie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "苏州街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "090d87ff7256c0890ec6c465b14bf4e8acccbebcebdddfbbf2581789cf7648f0"
+    },
+    "/audio/beijing/stations/suzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "苏庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b8c70cae4395688cddd500618be99703ef0d9c7d476a6b64782ff36f00000020"
+    },
+    "/audio/beijing/stations/taihe-lu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "泰河路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "924dddd18dc4299e5a17161069d881a65b0818cbba1c217b8e5114ddb6103391"
+    },
+    "/audio/beijing/stations/taihe-qiao-bei-n.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "太和桥北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1c1986422c91aca9f4f16e12a8da105de0dd9ff52c99dd142f8f7a1fa7fbb5f4"
+    },
+    "/audio/beijing/stations/taipingzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "太平庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1a429a8efac53cb07e419d9540d268d1ec768e560679476e14502bf81ba5b0e2"
+    },
+    "/audio/beijing/stations/taiyanggong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "太阳宫。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "48fb54985ff63a06f282f39bc159f183b2e2a9b60d6f76f7016e67f34f5d12bc"
+    },
+    "/audio/beijing/stations/taoranting.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "陶然亭。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "15e48b308e2c2b120e48d542434e75a323d64b37bbf94f8cd9cc698097ec5212"
+    },
+    "/audio/beijing/stations/terminal-2.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "2号航站楼。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "e19d6e90c08a203de985a2c2250823ff10bd10e88c07f19f11d933fd0ee4d551"
+    },
+    "/audio/beijing/stations/terminal-3.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "3号航站楼。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 2.016,
+      "bytes": 12096,
+      "sha256": "8b956a17351050f08283f5e42052d3bc1da3ae8c23dd55a56c6d8197d3469a88"
+    },
+    "/audio/beijing/stations/tian-anmen-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天安门东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f8e2057ab202650d962b0f93e4575fec07f3722382920a520f73ec080af08dda"
+    },
+    "/audio/beijing/stations/tian-anmen-west.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天安门西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "55249ecdf10bfa805a5a4e09562ce333631857a1b732c09d88e1bcd6807b9da3"
+    },
+    "/audio/beijing/stations/tian-cun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "田村。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d8dfb2c82261a8354257cac661646998078e32cfcda8b51f3fa4a79d30656827"
+    },
+    "/audio/beijing/stations/tiangongyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天宫院。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "265c57bea5fafc4f5757e659b4391380af3fb207e941a27877a8964617aecd57"
+    },
+    "/audio/beijing/stations/tianqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "36542f361cb487edb9fc0c74f0c409d55bb0ab34644fb6d6c5f1abfa34a0b535"
+    },
+    "/audio/beijing/stations/tiantongyuan-north.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天通苑北。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5fb5e530ef5614a9d4cbfffb5277b752177af924113da01a760a04f096abbd72"
+    },
+    "/audio/beijing/stations/tiantongyuan-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天通苑南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9ca6cf32f7f01bcbf33cf7f3228cb8d472d311f9435730e2174643489d56d4c7"
+    },
+    "/audio/beijing/stations/tiantongyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天通苑。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "23c71f13dd722f05f0d7ce1abab301c60e9c7dac0155e6fa042e765d8785a9fd"
+    },
+    "/audio/beijing/stations/tiantongyuandong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "天通苑东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "97c4756a57b18f9da0eabaf8a444415e3edf15837617214e1ad39b7ab95e14aa"
+    },
+    "/audio/beijing/stations/tongjinanlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "同济南路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "2ef0c77111310d8d0e93b14505d950206e38c53a51dc79f4f3b1217355a5d8e7"
+    },
+    "/audio/beijing/stations/tongyun-men.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "通运门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f4a653054b05ae35138a9402b1babb65ae471a2f306a11d872825b00981e2dc9"
+    },
+    "/audio/beijing/stations/tongzhou-beiguan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "通州北关。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6338a976cb6cdcf88998f8f29ca545b3879d16501355d404fc8e35ad55b75aed"
+    },
+    "/audio/beijing/stations/tongzhou-beiyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "通州北苑。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f752c45f6bb55b51f710b5695f05c5aea0fddb15ce51c76733ba51dc7c9b0a2c"
+    },
+    "/audio/beijing/stations/tuanjiehu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "团结湖。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "aea673b4a736921b9ee3559cf3f04d62443f68d4e43a9fb938470a9861f64f20"
+    },
+    "/audio/beijing/stations/tundian.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "屯佃。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4d939a94b089ed5c306a0ab5904d19392e897ddba531e5cf00b3a80f9fd31206"
+    },
+    "/audio/beijing/stations/tuofangying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "驼房营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9cd126499bac9f7cab9ebf8af4b76aea1b592b3519ed577ace77054d095a3482"
+    },
+    "/audio/beijing/stations/tuqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "土桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4dd5da6dd2c1fb34308ff1fe876b0475190624451d3b7ffa4d09edf3836e77ac"
+    },
+    "/audio/beijing/stations/universal-resort.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "环球度假区。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.992,
+      "bytes": 11952,
+      "sha256": "a7e96a32e8c7c826f83f9918f44a952e2a9496523d6100f27a20f12a691ee64d"
+    },
+    "/audio/beijing/stations/wangfujing.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "王府井。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3a73431082140c84e037f0f6d81e399e38528ab0afbd7a0d4c625c3109d8c327"
+    },
+    "/audio/beijing/stations/wangjing-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "望京东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "79f8cd4efef4be6b0606d5c271bc1a7f39e5eb63b10493465e98d3397d7b5d3c"
+    },
+    "/audio/beijing/stations/wangjing-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "望京南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b8ba302b0c6cc4e1f80b2b06b1e4fc6e592f6e0791a8530829c9e734fb2439ca"
+    },
+    "/audio/beijing/stations/wangjing-west.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "望京西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7d8579e706230446cb4d3f933698e84c82168190ea4d75013918ad67aff690cf"
+    },
+    "/audio/beijing/stations/wangjing.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "望京。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dedef6c8bbad9dd38f10feef63c79ff44c54f8e9ae87a2ec3ea6cc0b38f44f1a"
+    },
+    "/audio/beijing/stations/wanpingcheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "宛平城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "933dc28bd9ebde2a94952ccb8f8ab43178ca4ba6ccf0a4acf5c2d476d3b1b002"
+    },
+    "/audio/beijing/stations/wanquanhe-qiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "万泉河桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.896,
+      "bytes": 11376,
+      "sha256": "bb8d5e0dea42144d99ebf8cf28c6ad389be9b5fc5883c68ecfb2e1c5325d761a"
+    },
+    "/audio/beijing/stations/wansheng-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "万盛东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fa0f8eebbca9f7df30c3e963205de44c6df5a0662c73022b882920d932355377"
+    },
+    "/audio/beijing/stations/wansheng-west.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "万盛西。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8c26d03d4c643c42ad229efb1819459989aa618dbbbd0b6d9bb0301fe780af69"
+    },
+    "/audio/beijing/stations/wanshoulu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "万寿路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "75f51dacb69e502f973df182bc6dd5464a111e4908a3f3f002e29bd968a894fd"
+    },
+    "/audio/beijing/stations/wanshousi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "万寿寺。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "0094d09f64de9f27ca15355f7f2a2c26341b9f2878de416c5d10b1bb0ab0708c"
+    },
+    "/audio/beijing/stations/wanyuanjie.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "万源街。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f841d5a5f1eb19632bb027626875458eb16a9b6af3643b56de2b6bde0cf138ef"
+    },
+    "/audio/beijing/stations/wanzi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "湾子。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6148815e74dd2ce904f0ba3d250cbe15ac9e6e7170c92fbb22224174c94c20d2"
+    },
+    "/audio/beijing/stations/weigongcun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "魏公村。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5b3df6872ae872cedb9bd50f65d79a241c37ca952b700642e9873229d80f2b79"
+    },
+    "/audio/beijing/stations/wenhualu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "文华路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fd5e3c2c9267efb71a3c6034efa89ad71b2fba191b47f45ad2e6ea42b22b36f2"
+    },
+    "/audio/beijing/stations/wenyanglu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "温阳路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "858650f38bd86f4c8d76bb10ef0df08be1a35283a69d1cd383dc4b6cbd1428cc"
+    },
+    "/audio/beijing/stations/workers-stadium.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "工人体育场。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.896,
+      "bytes": 11376,
+      "sha256": "8d33ff6f0417818ae6f0d565fba80d5714616780a1890a8f485297ab8eb1e756"
+    },
+    "/audio/beijing/stations/wudaokou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "五道口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "e9a4717deeeb6c6fcfa477e4939856ad603d336b55dece287d0d7a9ab40dbf1d"
+    },
+    "/audio/beijing/stations/wufu-tang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "五福堂。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "887532ba0a689241ffe8b78f4670cbe0162b8f007b3f7f88a7b5beae5798efc5"
+    },
+    "/audio/beijing/stations/wukesong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "五棵松。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b90b1eabbdf39176ea7f00ffd525a28cc3ffb758551e5a2c08fd15a8f26560e2"
+    },
+    "/audio/beijing/stations/wuzixueyuanlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "物资学院路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.968,
+      "bytes": 11808,
+      "sha256": "87f1931feb9127085fe4df655535b34e67d3cd46b35ddec7ebed3e0ed1be288f"
+    },
+    "/audio/beijing/stations/xi-erqi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西二旗。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "049df1e7760d4f216701a0832f107134e5645675195333516847aa2fc3f6a56c"
+    },
+    "/audio/beijing/stations/xiaocun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "肖村。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c7f83bf2d89bd4be9c170d39000fa8c88f66cd6b19595abd69bc2d708d848ab4"
+    },
+    "/audio/beijing/stations/xiaohongmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "小红门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9f790013cc127e26e99121608fe73203775d70033ea3bc2fa9bd2726dd7fd0a9"
+    },
+    "/audio/beijing/stations/xibahe.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西坝河。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "d6b5266e9f64208de099e3cef50f06f368985a27ab6a355d2e64fd1d40a5824c"
+    },
+    "/audio/beijing/stations/xibeiwang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西北旺。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c74222feb493f342c2ba88bb584608a3e058e3f62d36b6a3724bf01e856a4930"
+    },
+    "/audio/beijing/stations/xidan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西单。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ad97b55182712d352f6d961ce6ee0e9bad11253b36c77e8f3bbfa4b484f8332a"
+    },
+    "/audio/beijing/stations/xidiaoyutai.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西钓鱼台。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "13e597bf3b38b59b1cf2f12969222e75d9bd260f8d5ed41b3f7af37dd17f698d"
+    },
+    "/audio/beijing/stations/xihongmen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西红门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "b6d2b407454c93e0a35b0a3e90fae92aff6093bbac067c5baaddf513a5c3e35a"
+    },
+    "/audio/beijing/stations/xihuang-cun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西黄村。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ee5df55851dea85740be963c8d8fc57a6f872940390f7e822c8d6765f553fa1b"
+    },
+    "/audio/beijing/stations/xiju.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西局。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7686bb5913a4457a31f13cf3c652cf2bd04668eb945fceb23cdb712ef17373db"
+    },
+    "/audio/beijing/stations/xin-gong.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "新宫。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "c3b918d4fbe059c512daecff176ff2393b3a10f2098295709368f420a566dcff"
+    },
+    "/audio/beijing/stations/xingcheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "星城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "3bf30f0e515203fc10eee8f8d17ca2e71b3abd3123a1d8aaeaadac910fe48bae"
+    },
+    "/audio/beijing/stations/xinjiekou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "新街口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "58868a1bdbd324546e78986bc04fd10e85eaeab6e4cbc1dc3ed7865403ecc7e4"
+    },
+    "/audio/beijing/stations/xisi.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西四。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "cb5c21263f150f67432152403a29b969ae68c1c29460140c246b65eeb0214442"
+    },
+    "/audio/beijing/stations/xitieying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西铁营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "97039f7d39424f738ddd62a51ceb9e70cc415ab7e3da8c00fa6594eb7ac7e7ca"
+    },
+    "/audio/beijing/stations/xitucheng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西土城。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "2ecf99f2f40b945e71fd5b6faa51fa7d0fdb772d031bfb23fd445b7ec85abc1f"
+    },
+    "/audio/beijing/stations/xixiaokou.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西小口。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "70c72097828d9048c3d51de395e09eff2adb31e62c3ca7874026212ca676dcda"
+    },
+    "/audio/beijing/stations/xiyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西苑。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fb7f95a04813994c878b5ce836ff2dea71057fe8586a8a5c94d3bfcf8dbbbf62"
+    },
+    "/audio/beijing/stations/xizhimen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "西直门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "efa4fb79c7ee7a120463a344fc7b47339b0fae8ae6b6eb6931b24d14e3d87cc3"
+    },
+    "/audio/beijing/stations/xuanwumen.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "宣武门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f90d110bdbf69f871e7b0e419a73141ace6356eb377c30f136c53d0031867492"
+    },
+    "/audio/beijing/stations/xueyuanqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "学院桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "f1fcaef52262b876dc5c5b50fd4fd08c696047e28bc73bb01b85953d72e4b08d"
+    },
+    "/audio/beijing/stations/xuezhiyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "学知园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "594898f8f890a63e971fea4138c7afad5c7e357f627b2507420b403998f2a1f7"
+    },
+    "/audio/beijing/stations/yancun-east.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "阎村东。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "24448aa136789df2a750733a008493ec41d527d0506261275d2bff4a36de0344"
+    },
+    "/audio/beijing/stations/yancun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "阎村。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "057dd0c39e7dcf8a70eea3ed4eb56d9a1f5e3ab767275a1cee1ed1a1c00657bd"
+    },
+    "/audio/beijing/stations/yang-zhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "杨庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "127846a566db0bb87f0865ba47d398178ee633d4a275344df40bc4768627684a"
+    },
+    "/audio/beijing/stations/yanshan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "燕山。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "87da5586837740e02ec2a14d1d079d74afb2d6322574ae8548dfb957c43c7ec2"
+    },
+    "/audio/beijing/stations/yaojiayuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "姚家园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "900df8a9c0a2e5a2b59c8cc59ef12c105d2a2b399e4319595b2baabac9c9462a"
+    },
+    "/audio/beijing/stations/yihezhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "义和庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a2829a10e212b4ae9ff6ff459606db07451104c9d087f15b0b69be907bf80fe7"
+    },
+    "/audio/beijing/stations/yinghai.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "瀛海。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "43942e69d4466d4476405d33f13a495dd9dc538d5df59f1d4a3344760c000a4d"
+    },
+    "/audio/beijing/stations/yizhuang-culture-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亦庄文化园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.968,
+      "bytes": 11808,
+      "sha256": "815e288cd552df290801731e5156724ff84f464cdd469f871a02d057617c9379"
+    },
+    "/audio/beijing/stations/yizhuang-railway-station.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亦庄火车站。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.944,
+      "bytes": 11664,
+      "sha256": "4718a326ca91e73a21ee1421a488a94aef4a1a96b38a5535a3697bd18a794086"
+    },
+    "/audio/beijing/stations/yizhuang-tongren.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亦庄同仁。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "9c085b929a970fc20804cecbca32e9ef9cfcc3c78a7852491feaf4d4e4dc949f"
+    },
+    "/audio/beijing/stations/yizhuangqiao.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "亦庄桥。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "8f7e3c336a22380b08bf2580cfd8ad88627e77292ae71dd8264b3b119da36380"
+    },
+    "/audio/beijing/stations/yonganli.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "永安里。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "fcacfe6e2ab17b94c5ca381364fa2c993473201a0bee20038e2ba93abe1126f4"
+    },
+    "/audio/beijing/stations/yongfeng-south.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "永丰南。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "cf2db80b3bdf6a11826be15b67a2b1f88198f1b2e9424e7296ffd28d88f94a41"
+    },
+    "/audio/beijing/stations/yongfeng.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "永丰。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "5d4583ff58a07b849c9d2514b8c0c2cdd5acb13998b6ddac02a405dbf08548f6"
+    },
+    "/audio/beijing/stations/yonghegong-lama-temple.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "雍和宫。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "246afa6eaedfb963aa20866b7971d3516b99d2ab34d3a0dee1410f4f928d049e"
+    },
+    "/audio/beijing/stations/yongtaizhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "永泰庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "7c3cfec2be3fe9bc644afcac50a58a456c25c6684561ac6db4745217dd37ae1a"
+    },
+    "/audio/beijing/stations/yuanmingyuan-park.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "圆明园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "2080c5d4836d639aad3587bf44f0aff73b53865e3fb101bf44f24fe95c0798a0"
+    },
+    "/audio/beijing/stations/yuquanlu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "玉泉路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "376ed494134c8b7791a477c781fe69d79ec380063c0bba6ea6214f1aeb79d999"
+    },
+    "/audio/beijing/stations/yushuzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "榆树庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "18b5c543a4803bd7c233bde3043589ac2cb17cc9ec81d8c633ac9f1f8dfe0fd5"
+    },
+    "/audio/beijing/stations/yuxin.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "育新。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "4cba77e6ef12f8469cf059fa521c41566b01d898df25b71a3e76ce29cccf28e1"
+    },
+    "/audio/beijing/stations/yuyuantan-park-east-gate.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "玉渊潭东门。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.944,
+      "bytes": 11664,
+      "sha256": "466e9bd62d5ec54db296f09c468ae74d618def3cdf0fe92350e14fe4b12ac578"
+    },
+    "/audio/beijing/stations/yuzhilu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "育知路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "195fe264b0b6f82138087bdeb0a93fe6eef8edde84921dfb8dd9fa9438e3fc25"
+    },
+    "/audio/beijing/stations/zaoying.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "枣营。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "89123d6b4b41da9593bd149ad4392540386d098a123a5c2adb89e915e4178b79"
+    },
+    "/audio/beijing/stations/zaoyuan.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "枣园。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "6e393b546197717562bbe15aa35826bc94511e7dfb6c92ed757b3c57fc90627a"
+    },
+    "/audio/beijing/stations/zhangguozhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "张郭庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a33df3a45eea99f4fdf418f4a817774f174d6671001b0fd0e9f80e1187f24e6a"
+    },
+    "/audio/beijing/stations/zhangzizhong-lu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "张自忠路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "a3b391021bfcd8b9d4adb1dd49bacafcd8875902ae1d36c364e63ff47b94098f"
+    },
+    "/audio/beijing/stations/zhichun-lu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "知春路。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "05a74467d36b0331523bd74fdaa81fce64e6a6fc5789d1576f7e5b2b7b865fb9"
+    },
+    "/audio/beijing/stations/zhichunli.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "知春里。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "dfa477ac404c9e33268677af6229a03f3a6102f2566e97b2d2bf0c9098dd1517"
+    },
+    "/audio/beijing/stations/zhongguancun.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "中关村。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "51b5d7534af9a08c6ab38396aec3fd8d7260d5754b3b6ed1ee9f33965396d683"
+    },
+    "/audio/beijing/stations/zhuxinzhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "朱辛庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "86c768159da97b6683beff023065a3db721a5d040b4232640b37bd5080a979e4"
+    },
+    "/audio/beijing/stations/zicaowu.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "紫草坞。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "ab827923f04f6485d4abeace427fa01ff2a740327d8c806f49f39617e52cf329"
+    },
+    "/audio/beijing/stations/zuojiazhuang.mp3": {
+      "recordingLanguage": "zh-CN",
+      "recordingText": "左家庄。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "durationSeconds": 1.872,
+      "bytes": 11232,
+      "sha256": "1d0525f24d85dcdc6e86fdcbc8f7ce0bb700eb19c00aef5fcd337b44227ff2ad"
+    }
+  }
+}

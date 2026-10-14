@@ -9,4 +9,51 @@ html:lang(mn-Mong) .masthead h1{writing-mode:horizontal-tb;font-size:20px}html:l
 .map-attribution{position:absolute;left:18px;bottom:max(64px,env(safe-area-inset-bottom));min-height:44px;display:flex;align-items:center;padding:4px 9px;background:#edf2e9;color:#284d47;font-size:10px;z-index:1}.line-directory{margin-top:20px;border-top:1px solid var(--hairline)}.line-directory summary{min-height:44px;padding:12px 0;cursor:pointer;font-weight:650}.line-directory button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;margin-bottom:6px;font-size:12px}.line-swatch{width:18px;height:5px;flex-shrink:0;background:var(--line-color)}
 @media(max-width:760px){.map-attribution{left:auto;right:10px;bottom:45px;font-size:9px;min-height:44px}.planner-open .map-attribution{bottom:calc(49% + 58px)}}
 .external-walk{width:100%;margin-top:8px;border-style:dashed;text-align:left;color:#665035}html:lang(mn-Mong) .line-directory button{writing-mode:horizontal-tb;font-family:'Segoe UI',system-ui,sans-serif}
+.scene-toolbar button[aria-pressed=true]{background:#315d50;color:#fcfaf4;border-color:#315d50}
+.scene-toolbar button[aria-pressed=true]:hover{background:#244c40;color:#fcfaf4}
+.passenger-mission{padding:0!important;border:0!important;margin:0!important}
+.passenger-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.passenger-heading h3{font-size:21px;margin:0;flex:1}
+.passenger-portrait{width:48px;height:48px;flex:none;border-radius:50%}
+.passenger-mission .endpoints{grid-template-columns:1fr 1fr;gap:9px 12px}
+.passenger-mission .via-stop{grid-column:1/-1}
+.passenger-needs:empty{display:none}
+.passenger-needs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.passenger-needs span{font-size:11px;padding:4px 7px;background:#e4eddd;border-radius:4px}
+.journey-steps{display:flex;list-style:none;padding:0;margin:16px 0 8px;gap:9px}
+.journey-steps li{flex:1;font-size:10px;line-height:1.4;color:#536a60}
+.journey-steps li>span{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;margin-bottom:4px;margin-right:5px;border:1px solid #a3b7a0;border-radius:50%}
+.journey-steps li[aria-current]{color:#284d47;font-weight:700}
+.journey-steps li[aria-current]>span,.journey-steps li.done>span{background:#315d50;border-color:#315d50;color:#fcfaf4}
+.passenger-story,.route-workshop,.route-comparison{border-top:1px solid var(--hairline);margin-top:16px}
+.passenger-story summary,.route-workshop>summary,.route-comparison>summary{cursor:pointer;min-height:44px;padding:12px 0;font-weight:650;font-size:12px}
+.passenger-story .briefing{margin-top:0}
+.planner-scroll .alternatives{margin-top:10px;padding-top:0;border-top:0}
+.alternatives>h3{margin-top:10px}
+.route-choice{background:#e2eddd;border-color:#93aa8b;font-weight:650}
+.route-choice:hover:not(:disabled){background:#d1e1ca}
+.route-workshop .manual-route h3{margin-top:7px}
+.planner-scroll .route-plan{border-top:0;margin-top:4px}
+.route-plan h3{margin-top:10px}
+.route-plan .board-button{margin:0 0 8px}
+.route-plan .route-validation{font-size:11px}
+.planner-scroll #results.journey-postcard{margin:0 0 20px;padding:10px 0 20px;border:0;border-bottom:1px solid #b9caba}
+.postcard-mark{width:48px;height:48px;border:2px solid #71947b;color:#315d50;border-radius:50%;display:grid;place-items:center;font-size:26px;transform:rotate(-12deg);margin-bottom:12px}
+.postcard-message{font-size:11px;color:#536a60;margin:0}
+.journey-postcard h3{font-size:23px;margin:5px 0 12px}
+.journey-postcard .score-value{font-size:25px}
+.travel-milestones{display:flex;gap:12px;list-style:none;margin:0 0 10px;padding:0 0 6px;overflow:auto;scrollbar-width:thin;max-width:100%;overscroll-behavior:contain}
+.travel-milestones li{display:flex;gap:5px;align-items:center;flex:none;max-width:200px;font-size:10px;line-height:1.4;color:#536a60}
+.travel-milestones li.visited{color:#315d50}
+.travel-milestones li[aria-current]{color:#284d47;font-weight:700}
+.travel-audio{display:flex;gap:6px}
+.travel-audio button{font-size:11px;min-height:44px}
+.travel-controls #travel-voice{min-width:44px;max-width:130px;font-size:10px;padding:6px}
+.travel-controls #travel-replay{min-width:44px;font-size:20px;padding:6px;width:44px}
+html:lang(mn-Mong) .passenger-heading h3{max-height:90px;max-inline-size:90px;font-size:20px}
+html:lang(mn-Mong) .passenger-portrait{width:42px;height:42px}
+html:lang(mn-Mong) .passenger-needs span,html:lang(mn-Mong) .journey-steps li{writing-mode:vertical-lr;max-inline-size:95px}
+html:lang(mn-Mong) .travel-milestones{font-family:'Segoe UI',system-ui,sans-serif;writing-mode:horizontal-tb}
+@media(max-width:760px){.passenger-heading{gap:10px;margin-bottom:8px}.passenger-heading h3{font-size:19px}.passenger-portrait{width:40px;height:40px}.journey-steps{margin:12px 0 5px;gap:8px}.journey-steps li{font-size:10px}.journey-steps li>span{width:20px;height:20px;margin-right:3px}.candidate{padding:7px 0 10px}.candidate p{margin:4px 0}.candidate>button{margin-top:3px}.travel-controls{flex-wrap:wrap;justify-content:flex-start}.travel-controls>label{flex-direction:row;align-items:center}.travel-milestones{margin-bottom:5px}.travel-controls #travel-voice{flex:1;max-width:130px}}
+@media(max-height:540px){.travel-milestones{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
