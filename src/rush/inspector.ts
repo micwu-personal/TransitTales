@@ -84,13 +84,13 @@ export function createInteriorInspector(host: HTMLElement, getGame: () => Game, 
   }
   function close() {
     selection = null; host.hidden = true; player.stop();
-    if (returnFocus instanceof HTMLElement || returnFocus instanceof SVGElement) returnFocus.focus();
+    if (returnFocus instanceof HTMLElement || returnFocus instanceof SVGElement) returnFocus.focus({ preventScroll: true });
   }
   function open(next: InteriorSelection) {
     returnFocus = document.activeElement; selection = next; platformLine = undefined; preview = ''; signature = ''; speechSignature = ''; host.hidden = false;
     render(false); play();
     $('interior-close').focus({ preventScroll: true });
-    host.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
+    if (!host.closest('.viewport-game')) host.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
   }
   $('interior-close').onclick = close;
   $('broadcast-play').onclick = play;

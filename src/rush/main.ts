@@ -1,7 +1,10 @@
 import './style.css';
 import '../languages.css';
+import { mountGameShell } from '../game-hud';
 import { createSvgCityRenderer, type CityRenderer } from './renderer';
 import { metroExperienceText } from './experience-copy';
+import { cameraCopy } from '../camera-copy';
+import type { CameraControls } from '../camera-controls';
 import { createInteriorInspector } from './inspector';
 import { interiorText } from './interior';
 import { createCitySnapshot } from './view';
@@ -21,7 +24,7 @@ root.innerHTML = `
 <main class="layout"><section class="playfield" data-label-key="network">
 <div class="field-top"><div><h1>${label('heading')}</h1><p>${label('intro')}</p></div><span class="city-stamp">${label('city')}<br>${label('fictional')}</span></div>
 <div class="score-strip"><span><strong id="delivered">0</strong> ${label('delivered')}</span><span><strong id="waiting">0</strong> ${label('waiting')}</span><span><strong id="aboard">0</strong> ${label('aboard')}</span><span><strong id="clock">2:30</strong> ${label('remaining')}</span></div>
-<div class="city-view-toolbar"><label id="city-view-label" for="city-view"></label><select id="city-view"><option value="3d"></option><option value="2d"></option></select><button id="city-reset" class="secondary" hidden></button></div><p id="city-view-status" class="city-view-status" role="status" aria-live="polite" hidden></p><div class="map-wrap" id="city-map"></div>
+<div class="city-view-toolbar"><div role="group" id="city-view-controls"><button id="city-view-3d" type="button" aria-pressed="false"></button><button id="city-view-2d" type="button" aria-pressed="true"></button></div><div id="city-camera-controls" class="camera-controls" role="group" hidden><button id="city-zoom-out" type="button"><span aria-hidden="true">−</span></button><button id="city-zoom-in" type="button"><span aria-hidden="true">+</span></button><button id="city-reset" type="button" class="secondary"></button></div></div><p id="city-view-status" class="city-view-status" role="status" aria-live="polite" hidden></p><div class="map-wrap" id="city-map"></div>
 <div class="map-bottom"><p class="map-pan">${label('mapPan')}</p><div class="legend"><span><i class="coral"></i>${label('coralLegend')}</span><span><i class="blue"></i>${label('blueLegend')}</span><span>${label('queueLegend')}</span></div><p id="map-hint"></p></div>
 <div class="shift-progress"><div id="progress"></div></div>
 </section>
@@ -35,11 +38,13 @@ root.innerHTML = `
 <section id="interior" class="interior" hidden aria-labelledby="interior-title"></section>
 <section id="result" class="results" hidden aria-live="polite"></section>
 </main><footer>${label('footer')} · <span id="save-note"></span></footer>`;
+const hud = mountGameShell(root, { panel: '.desk', scene: '#city-map', primary: '.shift-buttons', help: '#help', result: '#result', beforeOpen: () => inspector.close() });
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 let game = createGame(); let selected = game.scenario.hot; let paused = false; let speed = 1; let accumulator = 0; let previous = performance.now(); let animationFrame = 0;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let announced = '';
 function applyLanguage() {
+  hud.localize(locale.language);
   document.documentElement.lang = locale.language; document.title = t('title');
   ($('language') as HTMLSelectElement).value = locale.language;
   root.querySelectorAll<HTMLElement>('[data-i18n]').forEach(node => { node.textContent = text(locale.language, node.dataset.i18n as StaticMessageKey); });
@@ -58,30 +63,39 @@ function best(id: string): number { try { return Number(localStorage.getItem(`ru
 function saveBest() { try { localStorage.setItem(`rush-best-${game.scenario.id}`, String(Math.max(best(game.scenario.id), stats(game).score))); } catch { storageAvailable = false; } }
 function reset(id: string) { inspector.close(); game = createGame(SCENARIOS.find(s => s.id === id)!); selected = game.scenario.hot; paused = false; accumulator = 0; announced = ''; $('result').hidden = true; render(); }
 function selectStation(id: string) { selected = id; renderDesk(); renderMap(); inspector.open({kind: 'station', id}); }
-let renderer: CityRenderer & { resetCamera?: () => void } = createSvgCityRenderer();
+let renderer: CityRenderer & Partial<CameraControls> = createSvgCityRenderer();
 let currentView: '2d' | '3d' = '2d';
 let requestedView: '2d' | '3d' = new URLSearchParams(location.search).get('view') === '2d' ? '2d' : '3d';
 let viewRequest = 0;
 let pageInactive = false;
 let viewState: 'loading' | 'fallback' | '' = '';
 const inspector = createInteriorInspector($('interior'), () => game, () => locale.language);
+const interiorObserver = new MutationObserver(() => root.classList.toggle('has-interior', !$('interior').hidden));
+interiorObserver.observe($('interior'), { attributes: true, attributeFilter: ['hidden'] });
 const selectTrain = (id: number) => inspector.open({kind: 'train', id});
 renderer.mount($('city-map'), selectStation, selectTrain);
 function renderViewControls() {
   const c = metroExperienceText(locale.language);
-  const select = $('city-view') as HTMLSelectElement;
-  select.value = requestedView;
-  select.options[0].textContent = c.depth; select.options[1].textContent = c.flat;
-  $('city-view-label').textContent = c.view;
-  $('city-reset').textContent = c.reset; $('city-reset').hidden = currentView !== '3d';
+  $('city-view-controls').setAttribute('aria-label', c.view);
+  $('city-view-3d').textContent = c.depth; $('city-view-2d').textContent = c.flat;
+  $('city-view-3d').setAttribute('aria-pressed', String(currentView === '3d'));
+  $('city-view-2d').setAttribute('aria-pressed', String(currentView === '2d'));
+  $('city-reset').textContent = c.reset;
+  const camera = cameraCopy[locale.language];
+  $('city-camera-controls').hidden = currentView !== '3d';
+  $('city-camera-controls').setAttribute('aria-label', camera.controls);
+  for (const direction of ['in', 'out'] as const) {
+    const button = $(`city-zoom-${direction}`), label = direction === 'in' ? camera.zoomIn : camera.zoomOut;
+    button.setAttribute('aria-label', label); button.title = label;
+  }
   $('city-view-status').hidden = !viewState;
   $('city-view-status').textContent = viewState ? c[viewState] : '';
   $('city-map').setAttribute('aria-busy', String(viewState === 'loading'));
   const hint = root.querySelector<HTMLElement>('.map-pan')!;
-  hint.textContent = currentView === '3d' ? c.orbit : t('mapPan');
+  hint.textContent = currentView === '3d' ? `${c.orbit} ${camera.hint}` : t('mapPan');
   hint.classList.toggle('city-orbit-hint', currentView === '3d');
 }
-function mountRenderer(next: CityRenderer & { resetCamera?: () => void }, mode: '2d' | '3d') {
+function mountRenderer(next: CityRenderer & Partial<CameraControls>, mode: '2d' | '3d') {
   const focused = document.activeElement;
   const stationFocus = focused instanceof Element ? focused.closest('[data-station]')?.getAttribute('data-station') : null;
   const trainFocus = focused instanceof Element ? focused.closest('[data-train]')?.getAttribute('data-train') : null;
@@ -112,12 +126,15 @@ async function chooseView(mode: '2d' | '3d') {
     viewState = ''; mountRenderer(next, '3d');
   } catch { if (!pageInactive && request === viewRequest) fallbackTo2d(); }
 }
-($('city-view') as HTMLSelectElement).onchange = event => { const mode = (event.target as HTMLSelectElement).value; if (mode === '2d' || mode === '3d') void chooseView(mode); };
+$('city-view-3d').onclick = () => void chooseView('3d');
+$('city-view-2d').onclick = () => void chooseView('2d');
 $('city-reset').onclick = () => renderer.resetCamera?.();
+$('city-zoom-in').onclick = () => renderer.zoomCamera?.('in');
+$('city-zoom-out').onclick = () => renderer.zoomCamera?.('out');
 function renderMap() {
   renderer.render(createCitySnapshot(game, { selected, language: locale.language, interpolationSeconds: accumulator, animate: !paused && !reducedMotion, layout: COASTAL_LAYOUT }));
 }
-window.addEventListener('pagehide', () => { pageInactive = true; viewRequest++; cancelAnimationFrame(animationFrame); renderer.dispose(); inspector.stop(); });
+window.addEventListener('pagehide', event => { pageInactive = true; viewRequest++; cancelAnimationFrame(animationFrame); renderer.dispose(); inspector.stop(); if (!event.persisted) { hud.dispose(); interiorObserver.disconnect(); } });
 window.addEventListener('pageshow', event => { if (event.persisted) {
   pageInactive = false; renderer = createSvgCityRenderer(); currentView = '2d';
   renderer.mount($('city-map'), selectStation, selectTrain); previous = performance.now(); accumulator = 0;

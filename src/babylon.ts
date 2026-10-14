@@ -2,6 +2,7 @@ import '@babylonjs/core/Culling/ray';
 export { Engine } from '@babylonjs/core/Engines/engine';
 export { Scene } from '@babylonjs/core/scene';
 export { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
+export { FreeCamera } from '@babylonjs/core/Cameras/freeCamera';
 export { Vector3 } from '@babylonjs/core/Maths/math.vector';
 export { Color3, Color4 } from '@babylonjs/core/Maths/math.color';
 export { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';

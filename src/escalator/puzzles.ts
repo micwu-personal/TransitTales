@@ -125,12 +125,12 @@ const mongolianPuzzles: Record<string, { name: [string, string]; hint: [string, 
 };
 const p=(type:PieceType,x:number,y:number,bx:number,by:number):Omit<Piece,'id'>=>({type,a:{x,y},b:{x:bx,y:by}});
 const r=(id:string,x:number,y:number,bx:number,by:number,destination:Request['destination'],extras:Partial<Request>={}):Request=>({id,start:{x,y},goal:{x:bx,y:by},destination,...extras});
-function puzzle(id:string,name:[string,string,string],hint:[string,string,string],solution:Puzzle['solution'],requests:Request[],extras:Partial<Puzzle>={}):Puzzle {
+function puzzle(id:string,name:[string,string,string] | Puzzle['name'],hint:[string,string,string] | Puzzle['hint'],solution:Puzzle['solution'],requests:Request[],extras:Partial<Puzzle>={}):Puzzle {
   const inventory:Record<PieceType,number>={short:0,long:0,bridge:0,elevator:0};for(const q of solution)inventory[q.type]++;
   const landings:Point[]=[];for(let y=0;y<=3;y++)for(let x=0;x<=6;x++)landings.push({x,y});
   const localized = mongolianPuzzles[id];
-  if (!localized) throw new Error(`Missing Mongolian puzzle translations: ${id}`);
-  return {id,name: [...name, ...localized.name],hint: [...hint, ...localized.hint],solution,requests,inventory,landings,obstacles:[],lowCeilings:[],...extras};
+  if ((name.length === 3 || hint.length === 3) && !localized) throw new Error(`Missing Mongolian puzzle translations: ${id}`);
+  return {id,name: name.length === 5 ? name : [...name, ...localized.name],hint: hint.length === 5 ? hint : [...hint, ...localized.hint],solution,requests,inventory,landings,obstacles:[],lowCeilings:[],...extras};
 }
 export const PUZZLES: Puzzle[]=[
   puzzle('first-notes',['First notes','第一串音符',"はじめの音符"],['Choose a short escalator. Tap A1, then B2. Add B2 → C3. The arrow points toward the café.','选短扶梯，点 A1 再点 B2，然后接上 B2 → C3。箭头要朝向咖啡馆。',"短いエスカレーターを選び、A1、B2の順に押そう。B2 → C3もつなごう。矢印はカフェへ向けます。"],[p('short',0,0,1,1),p('short',1,1,2,2)],[r('cafe',0,0,2,2,'cafe')]),
@@ -214,4 +214,93 @@ export const PUZZLES: Puzzle[]=[
         r('parade-reader',0,0,4,2,'books',{wheelchair:true}), r('parade-cafe',0,0,5,2,'cafe')],
       {obstacles:[{x:0.35,y:0.3,w:1.2,h:1.5},{x:5.3,y:0.25,w:1.1,h:1.35}],
         lowCeilings:[{x:2.6,y:1.15,w:0.8,h:0.65}], inventory:{short:1,long:1,bridge:7,elevator:3}}),
+    puzzle('one-way-gallery',
+      ['The one-way gallery', '单向画廊的回环', '一方通行のギャラリー', 'Нэг чигийн галерей', 'ᠨᠢᠭᠡ ᠴᠢᠭ ᠦᠨ ᠭᠠᠯᠧᠷᠧᠢ'],
+      [
+        'Make a clockwise loop: A2 → A3 → B3 → C3 → C2 → B2 → A2. Bridges and lifts are one-way too. Six pieces let both ends exchange visitors without overlapping a return lane.',
+        '搭一个顺时针回环：A2 → A3 → B3 → C3 → C2 → B2 → A2。连桥和电梯也是单向的。用六个零件，让两端的访客互相到达，不重叠铺回程。',
+        'A2 → A3 → B3 → C3 → C2 → B2 → A2 と時計回りにつなごう。橋とエレベーターも一方通行。6つのパーツで、重なる帰り道なしに両端を行き来できます。',
+        'A2 → A3 → B3 → C3 → C2 → B2 → A2 тойрог барь. Гүүр, цахилгаан шат ч нэг чигтэй. Зургаан хэсгээр хоёр талын зочдыг хүргэ.',
+        'A2 → A3 → B3 → C3 → C2 → B2 → A2 ᠲᠣᠭᠣᠷᠢᠭ ᠪᠠᠷᠢ᠃ ᠭᠦᠭᠦᠷᠭᠡ᠂ ᠴᠠᠬᠢᠯᠭᠠᠨ ᠰᠢᠲᠤ ᠴᠦ ᠨᠢᠭᠡ ᠴᠢᠭᠲᠡᠢ᠃ ᠵᠢᠷᠭᠤᠭᠠᠨ ᠬᠡᠰᠡᠭ ᠢᠶᠡᠷ ᠵᠣᠴᠢᠳ ᠢ ᠬᠦᠷᠭᠡ᠃'
+      ],
+      [p('elevator',0,1,0,2), p('bridge',0,2,1,2), p('bridge',1,2,2,2),
+        p('elevator',2,2,2,1), p('bridge',2,1,1,1), p('bridge',1,1,0,1)],
+      [r('gallery-out',0,1,2,2,'books',{wheelchair:true}), r('gallery-back',2,2,0,1,'cafe',{wheelchair:true}),
+        r('gallery-middle',1,2,1,1,'garden',{balloon:true})],
+      {landings:[{x:0,y:1},{x:0,y:2},{x:1,y:2},{x:2,y:2},{x:2,y:1},{x:1,y:1}]}),
+    puzzle('borrowed-floor',
+      ['Up to come down', '先上楼，再回到原层', '上ってから、もとの階へ', 'Өгсөөд буцах зам', 'ᠥᠭᠰᠥᠭᠡᠳ ᠪᠤᠴᠠᠬᠤ ᠵᠠᠮ'],
+      [
+        'Both stops are on floor 1, but the garden blocks the middle. Lift A1 → A2, climb to B3, bridge to E3, then take the long descent to G2 and the lift to G1. Keep both lifts for the ends.',
+        '两站都在一层，但中央被庭院挡住了。先乘 A1 → A2 的电梯，再升到 B3，搭桥到 E3，然后用长扶梯下到 G2，乘电梯回 G1。两部电梯要留给两端。',
+        '出発も到着も1階。でも中央には庭園が。A1 → A2 をエレベーターで上り、B3 へ。橋で E3 へ渡り、長い下りで G2、エレベーターで G1 へ。両端にエレベーターを残そう。',
+        'Хоёр зогсоол нэг давхарт ч цэцэрлэг зам хаана. A1 → A2 өгсөөд B3-т хүр. E3 хүртэл гүүр тавиад урт шатаар G2, цахилгаан шатаар G1-т буу.',
+        'ᠴᠡᠴᠡᠷᠯᠢᠭ ᠵᠠᠮ ᠢ ᠬᠠᠭᠠᠨ᠎ᠠ᠃ A1 → A2 ᠥᠭᠰᠥᠭᠡᠳ B3 ᠲᠦ ᠬᠦᠷ᠃ E3 ᠬᠦᠷᠲᠡᠯ᠎ᠡ ᠭᠦᠭᠦᠷᠭᠡ ᠲᠠᠪᠢᠭᠠᠳ G2᠂ G1 ᠳᠦ ᠪᠠᠭᠤ᠃'
+      ],
+      [p('elevator',0,0,0,1), p('short',0,1,1,2), p('bridge',1,2,2,2), p('bridge',2,2,3,2),
+        p('bridge',3,2,4,2), p('long',4,2,6,1), p('elevator',6,1,6,0)],
+      [r('ground-floor-reader',0,0,6,0,'books',{balloon:true})],
+      {landings:[{x:0,y:0},{x:0,y:1},{x:1,y:2},{x:2,y:2},{x:3,y:2},{x:4,y:2},{x:6,y:1},{x:6,y:0},
+          {x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:0},{x:5,y:0}],
+        obstacles:[{x:2.3,y:-0.1,w:1.4,h:1.65}]}),
+    puzzle('ten-piece-town',
+      ['The ten-piece town', '十件零件的小天地', '10パーツの小さな町', 'Арван хэсгийн хотхон', 'ᠠᠷᠪᠠᠨ ᠬᠡᠰᠡᠭ ᠦᠨ ᠬᠣᠲᠠᠬᠠᠨ'],
+      [
+        'Bring A1 to D1 with three bridges, and G1 to E2 with the long escalator. Meet at D2, share D2 → D3, then branch to C3, E3 and D4. All ten pieces have a job; the west entrance must stay step-free.',
+        '从 A1 用三段连桥到 D1，从 G1 用长扶梯到 E2。在 D2 汇合，共用 D2 → D3，再分流到 C3、E3、D4。十件零件各有用处，西侧入口必须全程无障碍。',
+        'A1 から橋3つで D1、G1 から長いエスカレーターで E2 へ。D2 で合流して D2 → D3 を共有し、C3、E3、D4 へ分かれよう。10パーツ全部が大切。西の入口は段差なしに。',
+        'A1-ээс гурван гүүрээр D1-т, G1-ээс урт шатаар E2-т хүр. D2 дээр нийлж D3 хүртэл хамт яв. C3, E3, D4 рүү салга. Баруун талын үүд шатгүй байна.',
+        'A1 ᠡᠴᠡ ᠭᠤᠷᠪᠠᠨ ᠭᠦᠭᠦᠷᠭᠡ ᠪᠡᠷ D1 ᠳᠦ᠂ G1 ᠡᠴᠡ E2 ᠲᠦ ᠬᠦᠷ᠃ D2 ᠳᠡᠭᠡᠷ᠎ᠡ ᠨᠢᠭᠡᠳᠴᠦ D3 ᠬᠦᠷᠲᠡᠯ᠎ᠡ ᠬᠠᠮᠲᠤ ᠶᠠᠪᠤ᠃ C3᠂ E3᠂ D4 ᠵᠦᠭ ᠰᠠᠯᠭᠠ᠃'
+      ],
+      [p('bridge',0,0,1,0), p('bridge',1,0,2,0), p('bridge',2,0,3,0), p('elevator',3,0,3,1),
+        p('long',6,0,4,1), p('bridge',4,1,3,1), p('elevator',3,1,3,2),
+        p('bridge',3,2,2,2), p('bridge',3,2,4,2), p('elevator',3,2,3,3)],
+      [r('town-west-garden',0,0,3,3,'garden',{wheelchair:true}), r('town-west-cafe',0,0,2,2,'cafe',{wheelchair:true}),
+        r('town-east-books',6,0,4,2,'books'), r('town-east-cafe',6,0,2,2,'cafe'),
+        r('town-center-garden',3,0,3,3,'garden',{balloon:true}), r('town-center-books',3,0,4,2,'books',{balloon:true})]),
+    puzzle('three-kinds-of-sky',
+      ['Three kinds of sky', '三条通往天空的路', '空への3つの道', 'Тэнгэрт хүрэх гурван зам', 'ᠲᠡᠩᠭᠡᠷᠢ ᠳᠦ ᠬᠦᠷᠬᠦ ᠭᠤᠷᠪᠠᠨ ᠵᠠᠮ'],
+      [
+        'Split at D1. The walker takes D2 → E3 → D4 under the low roof. Send the balloon right via F2 and F3 to E4. The wheelchair with a balloon bridges left to C1, then uses three open lifts to C4.',
+        '在 D1 分路。普通乘客经过低顶棚，沿 D2 → E3 → D4 前进。气球乘客向右，经 F2、F3 到 E4。带气球的轮椅乘客先向左搭桥到 C1，再坐三段开阔电梯到 C4。',
+        'D1 で分かれよう。歩く人は低い屋根の下から D2 → E3 → D4。風船は右へ F2、F3、E4。風船を持つ車いすの人は左の C1 へ橋を渡り、屋根のないエレベーター3つで C4 へ。',
+        'D1 дээр замыг салга. Явган хүн D2 → E3 → D4 замаар явна. Бөмбөлөг F2, F3-аар E4-т хүрнэ. Тэргэнцэртэй, бөмбөлөгтэй хүн C1-ээс гурван цахилгаан шатаар C4-т хүрнэ.',
+        'D1 ᠳᠡᠭᠡᠷ᠎ᠡ ᠵᠠᠮ ᠢ ᠰᠠᠯᠭᠠ᠃ ᠶᠠᠪᠤᠭᠠᠨ ᠬᠦᠮᠦᠨ D2 → E3 → D4 ᠵᠠᠮ ᠢᠶᠠᠷ ᠶᠠᠪᠤᠨ᠎ᠠ᠃ ᠪᠥᠮᠪᠥᠯᠥᠭ F2᠂ F3 ᠪᠡᠷ E4 ᠲᠦ ᠬᠦᠷᠨ᠎ᠡ᠃ ᠲᠡᠷᠭᠡᠨᠴᠡᠷ C1 ᠡᠴᠡ C4 ᠲᠦ ᠬᠦᠷᠨ᠎ᠡ᠃'
+      ],
+      [p('elevator',3,0,3,1), p('short',3,1,4,2), p('short',4,2,3,3),
+        p('bridge',3,0,2,0), p('elevator',2,0,2,1), p('elevator',2,1,2,2), p('elevator',2,2,2,3),
+        p('long',3,0,5,1), p('elevator',5,1,5,2), p('short',5,2,4,3)],
+      [r('sky-reader',3,0,3,3,'books'), r('sky-balloon-cafe',3,0,4,3,'cafe',{balloon:true}),
+        r('sky-chair-garden',3,0,2,3,'garden',{wheelchair:true,balloon:true})],
+      {lowCeilings:[{x:2.85,y:0.15,w:0.3,h:0.65}]}),
+    puzzle('roof-reunion',
+      ['The rooftop reunion', '屋顶散场的汇合', '屋上からの待ち合わせ', 'Дээврийн уулзалт', 'ᠳᠡᠭᠡᠪᠦᠷᠢ ᠶᠢᠨ ᠠᠭᠤᠯᠵᠠᠯᠲᠠ'],
+      [
+        'Bring the west roof down to A3 and bridge to D3; bring the east roof down through E3. D4 also joins D3. Share the downward lift D3 → D2, then fan out to C1, D1 and E1. Keep the C1 and D1 exits step-free.',
+        '西侧屋顶先下降到 A3，再搭桥到 D3；东侧屋顶经 E3 下来。D4 也汇入 D3。共用向下的 D3 → D2 电梯，再分流到 C1、D1、E1。C1、D1 的出口要保持无障碍。',
+        '西の屋上から A3 へ下り、橋で D3 へ。東の屋上は E3 経由。D4 も D3 に合流します。下向きの D3 → D2 を共有し、C1、D1、E1 へ分かれよう。C1 と D1 は段差のない出口に。',
+        'Баруун дээврээс A3-аар D3-т, зүүнээс E3-аар D3-т хүр. D4 ч D3-т нийлнэ. D3 → D2 цахилгаан шатаар хамт буугаад C1, D1, E1 рүү салга.',
+        'ᠪᠠᠷᠠᠭᠤᠨ ᠳᠡᠭᠡᠪᠦᠷᠢ ᠡᠴᠡ A3 ᠪᠡᠷ D3 ᠲᠦ᠂ ᠵᠡᠭᠦᠨ ᠡᠴᠡ E3 ᠪᠡᠷ D3 ᠲᠦ ᠬᠦᠷ᠃ D4 ᠴᠦ D3 ᠲᠦ ᠨᠢᠭᠡᠳᠦᠨ᠎ᠡ᠃ D3 → D2 ᠬᠠᠮᠲᠤ ᠪᠠᠭᠤᠭᠠᠳ C1᠂ D1᠂ E1 ᠵᠦᠭ ᠰᠠᠯᠭᠠ᠃'
+      ],
+      [p('elevator',0,3,0,2), p('bridge',0,2,1,2), p('bridge',1,2,2,2), p('bridge',2,2,3,2),
+        p('long',6,3,4,2), p('bridge',4,2,3,2), p('elevator',3,3,3,2), p('elevator',3,2,3,1),
+        p('bridge',3,1,2,1), p('elevator',2,1,2,0), p('elevator',3,1,3,0), p('short',3,1,4,0)],
+      [r('reunion-west-books',0,3,2,0,'books',{wheelchair:true}), r('reunion-west-garden',0,3,3,0,'garden',{wheelchair:true}),
+        r('reunion-east-cafe',6,3,4,0,'cafe',{balloon:true}), r('reunion-east-books',6,3,2,0,'books'),
+        r('reunion-center',3,3,3,0,'garden',{wheelchair:true,balloon:true})]),
+    puzzle('low-roof-lullaby',
+      ['The low-roof lullaby', '低顶棚下的摇篮曲', '低い屋根の子守歌', 'Намхан дээврийн бүүвэйн дуу', 'ᠨᠠᠮᠬᠠᠨ ᠳᠡᠭᠡᠪᠦᠷᠢ ᠶᠢᠨ ᠪᠦᠪᠡᠢᠨ ᠳᠠᠭᠤᠤ'],
+      [
+        'Lift A1 → A2 above the first garden, then bridge to C2. The walker can take C2 → E3 under the canopy. The wheelchair balloon must dip C2 → C1, bridge to E1, and climb to E3. Rejoin there; finish via G3 and G4.',
+        '乘 A1 → A2 的电梯绕过第一片庭院，搭桥到 C2。普通乘客能沿 C2 → E3 穿过顶棚。带气球的轮椅乘客要下降 C2 → C1，搭桥到 E1，再升到 E3。这里汇合，最后经 G3 到 G4。',
+        'A1 → A2 を上って最初の庭園を越え、橋で C2 へ。歩く人は屋根の下の C2 → E3 を使えます。風船の車いすは C2 → C1 へ下り、橋で E1、エレベーターで E3。そこで合流し、G3、G4 へ。',
+        'A1 → A2 өгсөөд C2 хүртэл гүүр тавь. Явган хүн C2 → E3 замаар явна. Бөмбөлөгтэй тэргэнцэр C2 → C1 бууж E1-ээр E3-т өгсөнө. G3, G4-өөр аяллыг дуусга.',
+        'A1 → A2 ᠥᠭᠰᠥᠭᠡᠳ C2 ᠬᠦᠷᠲᠡᠯ᠎ᠡ ᠭᠦᠭᠦᠷᠭᠡ ᠲᠠᠪᠢ᠃ ᠶᠠᠪᠤᠭᠠᠨ ᠬᠦᠮᠦᠨ C2 → E3 ᠵᠠᠮ ᠢᠶᠠᠷ ᠶᠠᠪᠤᠨ᠎ᠠ᠃ ᠲᠡᠷᠭᠡᠨᠴᠡᠷ C2 → C1 ᠪᠠᠭᠤᠵᠤ E1 ᠪᠡᠷ E3 ᠲᠦ ᠥᠭᠰᠥᠨ᠎ᠡ᠃ G3᠂ G4 ᠪᠡᠷ ᠳᠠᠭᠤᠰᠬᠠ᠃'
+      ],
+      [p('elevator',0,0,0,1), p('bridge',0,1,1,1), p('bridge',1,1,2,1), p('elevator',2,1,2,0),
+        p('bridge',2,0,3,0), p('bridge',3,0,4,0), p('elevator',4,0,4,1), p('elevator',4,1,4,2),
+        p('bridge',4,2,5,2), p('bridge',5,2,6,2), p('elevator',6,2,6,3), p('long',2,1,4,2)],
+      [r('lullaby-accessible',0,0,6,3,'garden',{wheelchair:true,balloon:true}), r('lullaby-walker',0,0,6,2,'cafe')],
+      {obstacles:[{x:0.4,y:-0.1,w:1.2,h:0.9},{x:4.4,y:-0.1,w:1.2,h:1.8}],
+        lowCeilings:[{x:2.35,y:0.7,w:1.3,h:1.6}]}),
   ];

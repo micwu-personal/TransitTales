@@ -1,0 +1,3900 @@
+{
+  "stations": [
+    {
+      "id": "pingguoyuan",
+      "name": "苹果园",
+      "english": "Pingguoyuan",
+      "x": 280.1,
+      "y": 440.9
+    },
+    {
+      "id": "gucheng",
+      "name": "古城",
+      "english": "Gucheng",
+      "x": 294.6,
+      "y": 464.5
+    },
+    {
+      "id": "babaoshan",
+      "name": "八宝山",
+      "english": "Babaoshan",
+      "x": 347.9,
+      "y": 464.5
+    },
+    {
+      "id": "yuquanlu",
+      "name": "玉泉路",
+      "english": "Yuquanlu",
+      "x": 368.1,
+      "y": 464.4
+    },
+    {
+      "id": "wukesong",
+      "name": "五棵松",
+      "english": "Wukesong",
+      "x": 393,
+      "y": 464.4
+    },
+    {
+      "id": "wanshoulu",
+      "name": "万寿路",
+      "english": "Wanshoulu",
+      "x": 417.3,
+      "y": 464.4
+    },
+    {
+      "id": "gongzhufen-station",
+      "name": "公主坟",
+      "english": "Gongzhufen station",
+      "x": 435.3,
+      "y": 464.5
+    },
+    {
+      "id": "military-museum",
+      "name": "军事博物馆",
+      "english": "Military Museum",
+      "x": 451.4,
+      "y": 464.5
+    },
+    {
+      "id": "muxidi",
+      "name": "木樨地",
+      "english": "Muxidi",
+      "x": 467.5,
+      "y": 464.6
+    },
+    {
+      "id": "nanlishi-lu",
+      "name": "南礼士路",
+      "english": "Nanlishi Lu",
+      "x": 485.2,
+      "y": 464.9
+    },
+    {
+      "id": "fuxingmen",
+      "name": "复兴门",
+      "english": "Fuxingmen",
+      "x": 490.8,
+      "y": 464.9
+    },
+    {
+      "id": "xidan",
+      "name": "西单",
+      "english": "Xidan",
+      "x": 510,
+      "y": 465
+    },
+    {
+      "id": "tian-anmen-west",
+      "name": "天安门西",
+      "english": "Tian'anmen West",
+      "x": 530.5,
+      "y": 464.7
+    },
+    {
+      "id": "tian-anmen-east",
+      "name": "天安门东",
+      "english": "Tian'anmen East",
+      "x": 542,
+      "y": 464.3
+    },
+    {
+      "id": "wangfujing",
+      "name": "王府井",
+      "english": "Wangfujing",
+      "x": 554,
+      "y": 463.9
+    },
+    {
+      "id": "dongdan",
+      "name": "东单",
+      "english": "Dongdan",
+      "x": 564.3,
+      "y": 463.6
+    },
+    {
+      "id": "jianguomen",
+      "name": "建国门",
+      "english": "Jianguomen",
+      "x": 581.7,
+      "y": 463.3
+    },
+    {
+      "id": "yonganli",
+      "name": "永安里",
+      "english": "Yonganli",
+      "x": 599.8,
+      "y": 463.3
+    },
+    {
+      "id": "guomao",
+      "name": "国贸",
+      "english": "Guomao",
+      "x": 610.5,
+      "y": 463.4
+    },
+    {
+      "id": "dawanglu",
+      "name": "大望路",
+      "english": "Dawanglu",
+      "x": 629.6,
+      "y": 463.5
+    },
+    {
+      "id": "sihui",
+      "name": "四惠",
+      "english": "Sihui",
+      "x": 652.9,
+      "y": 462.6
+    },
+    {
+      "id": "sihui-east",
+      "name": "四惠东",
+      "english": "Sihui East",
+      "x": 676.5,
+      "y": 463.1
+    },
+    {
+      "id": "gaobeidian",
+      "name": "高碑店",
+      "english": "Gaobeidian",
+      "x": 695.4,
+      "y": 461.8
+    },
+    {
+      "id": "communication-university-of-china",
+      "name": "传媒大学",
+      "english": "Communication University of China",
+      "x": 722.8,
+      "y": 462.1
+    },
+    {
+      "id": "shuangqiao",
+      "name": "双桥",
+      "english": "Shuangqiao",
+      "x": 748.8,
+      "y": 460.8
+    },
+    {
+      "id": "guaanzhuang",
+      "name": "管庄",
+      "english": "Guaanzhuang",
+      "x": 774.8,
+      "y": 462.1
+    },
+    {
+      "id": "baliqiao",
+      "name": "八里桥",
+      "english": "Baliqiao",
+      "x": 797.8,
+      "y": 465.8
+    },
+    {
+      "id": "tongzhou-beiyuan",
+      "name": "通州北苑",
+      "english": "Tongzhou Beiyuan",
+      "x": 819.7,
+      "y": 468.8
+    },
+    {
+      "id": "guoyuan",
+      "name": "果园",
+      "english": "Guoyuan",
+      "x": 830.7,
+      "y": 481.9
+    },
+    {
+      "id": "jiukeshu",
+      "name": "九棵树",
+      "english": "Jiukeshu",
+      "x": 843.4,
+      "y": 485.9
+    },
+    {
+      "id": "liyuan",
+      "name": "梨园",
+      "english": "Liyuan",
+      "x": 856.5,
+      "y": 494.2
+    },
+    {
+      "id": "linheli",
+      "name": "临河里",
+      "english": "Linheli",
+      "x": 868.4,
+      "y": 504.6
+    },
+    {
+      "id": "tuqiao",
+      "name": "土桥",
+      "english": "Tuqiao",
+      "x": 877.1,
+      "y": 509.1
+    },
+    {
+      "id": "huazhuang",
+      "name": "花庄",
+      "english": "Huazhuang",
+      "x": 887.2,
+      "y": 528.3
+    },
+    {
+      "id": "universal-resort",
+      "name": "环球度假区",
+      "english": "Universal Resort",
+      "x": 869.2,
+      "y": 537.8
+    },
+    {
+      "id": "xizhimen",
+      "name": "西直门",
+      "english": "Xizhimen",
+      "x": 488.3,
+      "y": 422.9
+    },
+    {
+      "id": "chegongzhuang",
+      "name": "车公庄",
+      "english": "Chegongzhuang",
+      "x": 488.7,
+      "y": 433.2
+    },
+    {
+      "id": "fuchengmen",
+      "name": "阜成门",
+      "english": "Fuchengmen",
+      "x": 489.2,
+      "y": 444.1
+    },
+    {
+      "id": "changchunjie",
+      "name": "长椿街",
+      "english": "Changchunjie",
+      "x": 497.7,
+      "y": 474.7
+    },
+    {
+      "id": "xuanwumen",
+      "name": "宣武门",
+      "english": "Xuanwumen",
+      "x": 510.3,
+      "y": 474.2
+    },
+    {
+      "id": "hepingmen",
+      "name": "和平门",
+      "english": "Hepingmen",
+      "x": 522.1,
+      "y": 473.9
+    },
+    {
+      "id": "qianmen",
+      "name": "前门",
+      "english": "Qianmen",
+      "x": 539.1,
+      "y": 473.9
+    },
+    {
+      "id": "chongwenmen",
+      "name": "崇文门",
+      "english": "Chongwenmen",
+      "x": 560.5,
+      "y": 472.7
+    },
+    {
+      "id": "beijing-railway-station",
+      "name": "北京站",
+      "english": "Beijing Railway Station",
+      "x": 572.5,
+      "y": 467.8
+    },
+    {
+      "id": "chaoyangmen",
+      "name": "朝阳门",
+      "english": "Chaoyangmen",
+      "x": 581.4,
+      "y": 443.2
+    },
+    {
+      "id": "dongsi-shitiao",
+      "name": "东四十条",
+      "english": "Dongsi Shitiao",
+      "x": 580.9,
+      "y": 431.6
+    },
+    {
+      "id": "dongzhimen",
+      "name": "东直门",
+      "english": "Dongzhimen",
+      "x": 581.5,
+      "y": 419.8
+    },
+    {
+      "id": "yonghegong-lama-temple",
+      "name": "雍和宫",
+      "english": "Yonghegong Lama Temple",
+      "x": 561.5,
+      "y": 411.8
+    },
+    {
+      "id": "andingmen",
+      "name": "安定门",
+      "english": "Andingmen",
+      "x": 550.4,
+      "y": 412.1
+    },
+    {
+      "id": "gulou-dajie",
+      "name": "鼓楼大街",
+      "english": "Gulou Dajie",
+      "x": 533.7,
+      "y": 412.3
+    },
+    {
+      "id": "jishuitan",
+      "name": "积水潭",
+      "english": "Jishuitan",
+      "x": 509.2,
+      "y": 412.6
+    },
+    {
+      "id": "workers-stadium",
+      "name": "工人体育场",
+      "english": "Workers' Stadium",
+      "x": 599.8,
+      "y": 431.5
+    },
+    {
+      "id": "tuanjiehu",
+      "name": "团结湖",
+      "english": "Tuanjiehu",
+      "x": 612.9,
+      "y": 431.6
+    },
+    {
+      "id": "chaoyang-park",
+      "name": "朝阳公园",
+      "english": "Chaoyang Park",
+      "x": 633,
+      "y": 432
+    },
+    {
+      "id": "station-55",
+      "name": "石佛营",
+      "english": "石佛营",
+      "x": 657.7,
+      "y": 429.2
+    },
+    {
+      "id": "station-56",
+      "name": "朝阳站",
+      "english": "朝阳站",
+      "x": 665.3,
+      "y": 418.1
+    },
+    {
+      "id": "yaojiayuan",
+      "name": "姚家园",
+      "english": "Yaojiayuan",
+      "x": 690.4,
+      "y": 413.5
+    },
+    {
+      "id": "dongbanan",
+      "name": "东坝南",
+      "english": "Dongbanan",
+      "x": 713.8,
+      "y": 408.3
+    },
+    {
+      "id": "dongba",
+      "name": "东坝",
+      "english": "Dongba",
+      "x": 714,
+      "y": 390.8
+    },
+    {
+      "id": "dongbabei",
+      "name": "东坝北",
+      "english": "Dongbabei",
+      "x": 726.4,
+      "y": 378.5
+    },
+    {
+      "id": "anheqiaobei",
+      "name": "安河桥北",
+      "english": "Anheqiaobei",
+      "x": 388.2,
+      "y": 332.4
+    },
+    {
+      "id": "beigongmen",
+      "name": "北宫门",
+      "english": "Beigongmen",
+      "x": 396.8,
+      "y": 344.9
+    },
+    {
+      "id": "xiyuan",
+      "name": "西苑",
+      "english": "Xiyuan",
+      "x": 413.5,
+      "y": 350.5
+    },
+    {
+      "id": "yuanmingyuan-park",
+      "name": "圆明园",
+      "english": "Yuanmingyuan Park",
+      "x": 434.8,
+      "y": 348.5
+    },
+    {
+      "id": "peking-university-east-gate",
+      "name": "北京大学东门",
+      "english": "Peking University East Gate",
+      "x": 441.8,
+      "y": 357.9
+    },
+    {
+      "id": "zhongguancun",
+      "name": "中关村",
+      "english": "Zhongguancun",
+      "x": 442.5,
+      "y": 368.1
+    },
+    {
+      "id": "haidian-huangzhuang",
+      "name": "海淀黄庄",
+      "english": "Haidian Huangzhuang",
+      "x": 444,
+      "y": 378.2
+    },
+    {
+      "id": "renmin-university",
+      "name": "人民大学",
+      "english": "Renmin University",
+      "x": 448.8,
+      "y": 389.4
+    },
+    {
+      "id": "weigongcun",
+      "name": "魏公村",
+      "english": "Weigongcun",
+      "x": 450.5,
+      "y": 401.3
+    },
+    {
+      "id": "national-library",
+      "name": "国家图书馆",
+      "english": "National Library",
+      "x": 452.6,
+      "y": 419.6
+    },
+    {
+      "id": "beijing-zoo",
+      "name": "动物园",
+      "english": "Beijing Zoo",
+      "x": 468.9,
+      "y": 425.8
+    },
+    {
+      "id": "xinjiekou",
+      "name": "新街口",
+      "english": "Xinjiekou",
+      "x": 502.5,
+      "y": 422.6
+    },
+    {
+      "id": "ping-anli",
+      "name": "平安里",
+      "english": "Ping'anli",
+      "x": 508.5,
+      "y": 431.5
+    },
+    {
+      "id": "xisi",
+      "name": "西四",
+      "english": "Xisi",
+      "x": 508.8,
+      "y": 443.8
+    },
+    {
+      "id": "lingjing-hutong",
+      "name": "灵境胡同",
+      "english": "Lingjing Hutong",
+      "x": 509.4,
+      "y": 453.4
+    },
+    {
+      "id": "station-76",
+      "name": "菜市口",
+      "english": "菜市口",
+      "x": 510.5,
+      "y": 487.4
+    },
+    {
+      "id": "taoranting",
+      "name": "陶然亭",
+      "english": "Taoranting",
+      "x": 510.7,
+      "y": 500.6
+    },
+    {
+      "id": "beijing-south-railway-station",
+      "name": "北京南站",
+      "english": "Beijing South Railway Station",
+      "x": 515.8,
+      "y": 518.2
+    },
+    {
+      "id": "majiapu",
+      "name": "马家堡",
+      "english": "Majiapu",
+      "x": 506.9,
+      "y": 533.1
+    },
+    {
+      "id": "jiaomen-west",
+      "name": "角门西",
+      "english": "Jiaomen West",
+      "x": 506.7,
+      "y": 542.2
+    },
+    {
+      "id": "gongyixiqiao",
+      "name": "公益西桥",
+      "english": "Gongyixiqiao",
+      "x": 506.4,
+      "y": 553.7
+    },
+    {
+      "id": "xin-gong",
+      "name": "新宫",
+      "english": "Xin'Gong",
+      "x": 500.1,
+      "y": 584
+    },
+    {
+      "id": "xihongmen",
+      "name": "西红门",
+      "english": "Xihongmen",
+      "x": 457.1,
+      "y": 612.7
+    },
+    {
+      "id": "gaomidian-north",
+      "name": "高米店北",
+      "english": "Gaomidian North",
+      "x": 459.1,
+      "y": 632
+    },
+    {
+      "id": "gaomidian-south",
+      "name": "高米店南",
+      "english": "Gaomidian South",
+      "x": 460.5,
+      "y": 645.6
+    },
+    {
+      "id": "zaoyuan",
+      "name": "枣园",
+      "english": "Zaoyuan",
+      "x": 460.9,
+      "y": 658.8
+    },
+    {
+      "id": "qingyuanlu",
+      "name": "清源路",
+      "english": "Qingyuanlu",
+      "x": 461.3,
+      "y": 671.4
+    },
+    {
+      "id": "huangcun-xidajie",
+      "name": "黄村西大街",
+      "english": "Huangcun Xidajie",
+      "x": 461.6,
+      "y": 685.7
+    },
+    {
+      "id": "huangcun-railway-station",
+      "name": "黄村火车站",
+      "english": "Huangcun Railway Station",
+      "x": 461.7,
+      "y": 696.9
+    },
+    {
+      "id": "yihezhuang",
+      "name": "义和庄",
+      "english": "Yihezhuang",
+      "x": 445.7,
+      "y": 710
+    },
+    {
+      "id": "biomedical-base",
+      "name": "生物医药基地",
+      "english": "Biomedical Base",
+      "x": 448.8,
+      "y": 742.7
+    },
+    {
+      "id": "tiangongyuan",
+      "name": "天宫院",
+      "english": "Tiangongyuan",
+      "x": 446.8,
+      "y": 763
+    },
+    {
+      "id": "tiantongyuan-north",
+      "name": "天通苑北",
+      "english": "Tiantongyuan North",
+      "x": 555.9,
+      "y": 243
+    },
+    {
+      "id": "tiantongyuan",
+      "name": "天通苑",
+      "english": "Tiantongyuan",
+      "x": 555.8,
+      "y": 253.5
+    },
+    {
+      "id": "tiantongyuan-south",
+      "name": "天通苑南",
+      "english": "Tiantongyuan South",
+      "x": 555.6,
+      "y": 264.3
+    },
+    {
+      "id": "lishuiqiao",
+      "name": "立水桥",
+      "english": "Lishuiqiao",
+      "x": 553.8,
+      "y": 281.6
+    },
+    {
+      "id": "lishuiqiao-south",
+      "name": "立水桥南",
+      "english": "Lishuiqiao South",
+      "x": 557.7,
+      "y": 295.3
+    },
+    {
+      "id": "beiyuanlu-north",
+      "name": "北苑路北",
+      "english": "Beiyuanlu North",
+      "x": 561.9,
+      "y": 309.8
+    },
+    {
+      "id": "datunlu-east",
+      "name": "大屯路东",
+      "english": "Datunlu East",
+      "x": 560.9,
+      "y": 343.1
+    },
+    {
+      "id": "huixinxijie-beikou",
+      "name": "惠新西街北口",
+      "english": "Huixinxijie Beikou",
+      "x": 560.8,
+      "y": 363.7
+    },
+    {
+      "id": "huixinxijie-nankou",
+      "name": "惠新西街南口",
+      "english": "Huixinxijie Nankou",
+      "x": 561.4,
+      "y": 376.6
+    },
+    {
+      "id": "heping-xiqiao",
+      "name": "和平西桥",
+      "english": "Heping Xiqiao",
+      "x": 561.9,
+      "y": 388.3
+    },
+    {
+      "id": "hepingli-beijie",
+      "name": "和平里北街",
+      "english": "Hepingli Beijie",
+      "x": 562.4,
+      "y": 400
+    },
+    {
+      "id": "beixinqiao",
+      "name": "北新桥",
+      "english": "Beixinqiao",
+      "x": 560.8,
+      "y": 422.6
+    },
+    {
+      "id": "zhangzizhong-lu",
+      "name": "张自忠路",
+      "english": "Zhangzizhong Lu",
+      "x": 561.3,
+      "y": 431.6
+    },
+    {
+      "id": "dongsi",
+      "name": "东四",
+      "english": "Dongsi",
+      "x": 561.7,
+      "y": 443.2
+    },
+    {
+      "id": "dengshikou",
+      "name": "灯市口",
+      "english": "Dengshikou",
+      "x": 561.9,
+      "y": 452.8
+    },
+    {
+      "id": "ciqikou",
+      "name": "磁器口",
+      "english": "Ciqikou",
+      "x": 562.9,
+      "y": 482.7
+    },
+    {
+      "id": "east-gate-of-temple-of-heaven",
+      "name": "天坛东门",
+      "english": "East Gate of Temple of Heaven",
+      "x": 565.1,
+      "y": 494.5
+    },
+    {
+      "id": "puhuangyu",
+      "name": "蒲黄榆",
+      "english": "Puhuangyu",
+      "x": 566.2,
+      "y": 517.4
+    },
+    {
+      "id": "liujiayao",
+      "name": "刘家窑",
+      "english": "Liujiayao",
+      "x": 566.4,
+      "y": 527.7
+    },
+    {
+      "id": "songjiazhuang",
+      "name": "宋家庄",
+      "english": "Songjiazhuang",
+      "x": 573.8,
+      "y": 542.2
+    },
+    {
+      "id": "jin-anqiao",
+      "name": "金安桥",
+      "english": "Jin'anqiao",
+      "x": 262.1,
+      "y": 444.6
+    },
+    {
+      "id": "yang-zhuang",
+      "name": "杨庄",
+      "english": "Yang Zhuang",
+      "x": 289,
+      "y": 438.8
+    },
+    {
+      "id": "xihuang-cun",
+      "name": "西黄村",
+      "english": "Xihuang Cun",
+      "x": 313.8,
+      "y": 431.2
+    },
+    {
+      "id": "liaogong-zhuang",
+      "name": "廖公庄",
+      "english": "Liaogong Zhuang",
+      "x": 337.6,
+      "y": 432.6
+    },
+    {
+      "id": "tian-cun",
+      "name": "田村",
+      "english": "Tian Cun",
+      "x": 368.1,
+      "y": 436.4
+    },
+    {
+      "id": "haidian-wuluju",
+      "name": "海淀五路居",
+      "english": "Haidian Wuluju",
+      "x": 396.3,
+      "y": 432.8
+    },
+    {
+      "id": "cishousi",
+      "name": "慈寿寺",
+      "english": "Cishousi",
+      "x": 418.2,
+      "y": 431.8
+    },
+    {
+      "id": "huayuanqiao",
+      "name": "花园桥",
+      "english": "Huayuanqiao",
+      "x": 435.3,
+      "y": 433.1
+    },
+    {
+      "id": "baishiqiao-south",
+      "name": "白石桥南",
+      "english": "Baishiqiao South",
+      "x": 453.3,
+      "y": 431.4
+    },
+    {
+      "id": "erligou",
+      "name": "二里沟",
+      "english": "Erligou",
+      "x": 462.6,
+      "y": 433.1
+    },
+    {
+      "id": "chegongzhuang-west",
+      "name": "车公庄西",
+      "english": "Chegongzhuang West",
+      "x": 475.1,
+      "y": 433.1
+    },
+    {
+      "id": "beihai-north",
+      "name": "北海北",
+      "english": "Beihai North",
+      "x": 524.7,
+      "y": 432.2
+    },
+    {
+      "id": "nanluogu-xiang",
+      "name": "南锣鼓巷",
+      "english": "Nanluogu Xiang",
+      "x": 545.2,
+      "y": 431.6
+    },
+    {
+      "id": "dongdaqiao",
+      "name": "东大桥",
+      "english": "Dongdaqiao",
+      "x": 601.4,
+      "y": 445.1
+    },
+    {
+      "id": "hujialou",
+      "name": "呼家楼",
+      "english": "Hujialou",
+      "x": 612.7,
+      "y": 444.5
+    },
+    {
+      "id": "jintailu",
+      "name": "金台路",
+      "english": "Jintailu",
+      "x": 633.1,
+      "y": 445.1
+    },
+    {
+      "id": "shilipu",
+      "name": "十里堡",
+      "english": "Shilipu",
+      "x": 660.2,
+      "y": 445.1
+    },
+    {
+      "id": "qingnianlu",
+      "name": "青年路",
+      "english": "Qingnianlu",
+      "x": 678.5,
+      "y": 445
+    },
+    {
+      "id": "dalianpo",
+      "name": "褡裢坡",
+      "english": "Dalianpo",
+      "x": 733.9,
+      "y": 443.7
+    },
+    {
+      "id": "huangqu",
+      "name": "黄渠",
+      "english": "Huangqu",
+      "x": 751.2,
+      "y": 443.5
+    },
+    {
+      "id": "changying",
+      "name": "常营",
+      "english": "Changying",
+      "x": 775.4,
+      "y": 441.7
+    },
+    {
+      "id": "caofang",
+      "name": "草房",
+      "english": "Caofang",
+      "x": 795,
+      "y": 442.7
+    },
+    {
+      "id": "wuzixueyuanlu",
+      "name": "物资学院路",
+      "english": "Wuzixueyuanlu",
+      "x": 822.2,
+      "y": 439.6
+    },
+    {
+      "id": "tongzhou-beiguan",
+      "name": "通州北关",
+      "english": "Tongzhou Beiguan",
+      "x": 848,
+      "y": 450.2
+    },
+    {
+      "id": "tongyun-men",
+      "name": "通运门",
+      "english": "Tongyun Men",
+      "x": 861.4,
+      "y": 459.7
+    },
+    {
+      "id": "beiyunhe-west",
+      "name": "北运河西",
+      "english": "Beiyunhe West",
+      "x": 879.3,
+      "y": 470
+    },
+    {
+      "id": "beiyunhe-east",
+      "name": "北运河东",
+      "english": "Beiyunhe East",
+      "x": 902.4,
+      "y": 469.4
+    },
+    {
+      "id": "haojiafu",
+      "name": "郝家府",
+      "english": "Haojiafu",
+      "x": 913.6,
+      "y": 469.6
+    },
+    {
+      "id": "dongxiayuan",
+      "name": "东夏园",
+      "english": "Dongxiayuan",
+      "x": 932.5,
+      "y": 469.5
+    },
+    {
+      "id": "lucheng",
+      "name": "潞城",
+      "english": "Lucheng",
+      "x": 949.5,
+      "y": 470.3
+    },
+    {
+      "id": "luyang",
+      "name": "潞阳",
+      "english": "Luyang",
+      "x": 960,
+      "y": 486.2
+    },
+    {
+      "id": "beijing-west-railway-station",
+      "name": "北京西站",
+      "english": "Beijing West Railway Station",
+      "x": 448.4,
+      "y": 480.3
+    },
+    {
+      "id": "wanzi",
+      "name": "湾子",
+      "english": "Wanzi",
+      "x": 455.6,
+      "y": 486.2
+    },
+    {
+      "id": "daguanying",
+      "name": "达官营",
+      "english": "Daguanying",
+      "x": 467.7,
+      "y": 487.1
+    },
+    {
+      "id": "inner-guang-anmen",
+      "name": "广安门内",
+      "english": "Inner Guang'anmen",
+      "x": 491.2,
+      "y": 486.7
+    },
+    {
+      "id": "hufangqiao",
+      "name": "虎坊桥",
+      "english": "Hufangqiao",
+      "x": 521.4,
+      "y": 486.7
+    },
+    {
+      "id": "station-149",
+      "name": "珠市口",
+      "english": "珠市口",
+      "x": 538.6,
+      "y": 484.3
+    },
+    {
+      "id": "qiaowan",
+      "name": "桥湾",
+      "english": "Qiaowan",
+      "x": 551.7,
+      "y": 483.2
+    },
+    {
+      "id": "guangqumen-nei",
+      "name": "广渠门内",
+      "english": "Guangqumen Nei",
+      "x": 580.5,
+      "y": 482
+    },
+    {
+      "id": "guangqumen-wai",
+      "name": "广渠门外",
+      "english": "Guangqumen Wai",
+      "x": 598.5,
+      "y": 481.8
+    },
+    {
+      "id": "shuangjing",
+      "name": "双井",
+      "english": "Shuangjing",
+      "x": 612.7,
+      "y": 482.1
+    },
+    {
+      "id": "jiulongshan",
+      "name": "九龙山",
+      "english": "Jiulongshan",
+      "x": 632.2,
+      "y": 481.6
+    },
+    {
+      "id": "dajiaoting",
+      "name": "大郊亭",
+      "english": "Dajiaoting",
+      "x": 643.5,
+      "y": 482
+    },
+    {
+      "id": "baiziwan",
+      "name": "百子湾",
+      "english": "Baiziwan",
+      "x": 653.7,
+      "y": 483.1
+    },
+    {
+      "id": "huagong",
+      "name": "化工",
+      "english": "Huagong",
+      "x": 662.4,
+      "y": 492.3
+    },
+    {
+      "id": "nanlouzizhuang",
+      "name": "南楼梓庄",
+      "english": "Nanlouzizhuang",
+      "x": 660.2,
+      "y": 505.8
+    },
+    {
+      "id": "beijing-happy-valley",
+      "name": "欢乐谷景区",
+      "english": "Beijing Happy Valley",
+      "x": 657.4,
+      "y": 515.4
+    },
+    {
+      "id": "fatou",
+      "name": "垡头",
+      "english": "Fatou",
+      "x": 672.1,
+      "y": 523.1
+    },
+    {
+      "id": "shuanghe",
+      "name": "双合",
+      "english": "Shuanghe",
+      "x": 691.6,
+      "y": 525
+    },
+    {
+      "id": "jiaohuachang",
+      "name": "焦化厂",
+      "english": "Jiaohuachang",
+      "x": 702.5,
+      "y": 529.8
+    },
+    {
+      "id": "huangchang",
+      "name": "黄厂",
+      "english": "Huangchang",
+      "x": 721.2,
+      "y": 537.8
+    },
+    {
+      "id": "langxinzhuang",
+      "name": "郎辛庄",
+      "english": "Langxinzhuang",
+      "x": 740.7,
+      "y": 528.2
+    },
+    {
+      "id": "heizhuanghu",
+      "name": "黑庄户",
+      "english": "Heizhuanghu",
+      "x": 774.3,
+      "y": 525.4
+    },
+    {
+      "id": "wansheng-west",
+      "name": "万盛西",
+      "english": "Wansheng West",
+      "x": 814.2,
+      "y": 519.5
+    },
+    {
+      "id": "wansheng-east",
+      "name": "万盛东",
+      "english": "Wansheng East",
+      "x": 842.6,
+      "y": 519.7
+    },
+    {
+      "id": "qunfang",
+      "name": "群芳",
+      "english": "Qunfang",
+      "x": 858.8,
+      "y": 519.7
+    },
+    {
+      "id": "gaoloujin",
+      "name": "高楼金",
+      "english": "Gaoloujin",
+      "x": 876.2,
+      "y": 520.8
+    },
+    {
+      "id": "zhuxinzhuang",
+      "name": "朱辛庄",
+      "english": "Zhuxinzhuang",
+      "x": 439.2,
+      "y": 216.7
+    },
+    {
+      "id": "yuzhilu",
+      "name": "育知路",
+      "english": "Yuzhilu",
+      "x": 454.5,
+      "y": 237.4
+    },
+    {
+      "id": "pingxifu",
+      "name": "平西府",
+      "english": "Pingxifu",
+      "x": 482.5,
+      "y": 234.7
+    },
+    {
+      "id": "huilongguan-dongdajie",
+      "name": "回龙观东大街",
+      "english": "Huilongguan Dongdajie",
+      "x": 497.6,
+      "y": 246
+    },
+    {
+      "id": "huoying",
+      "name": "霍营",
+      "english": "Huoying",
+      "x": 494.6,
+      "y": 259.3
+    },
+    {
+      "id": "yuxin",
+      "name": "育新",
+      "english": "Yuxin",
+      "x": 478.8,
+      "y": 272.9
+    },
+    {
+      "id": "xixiaokou",
+      "name": "西小口",
+      "english": "Xixiaokou",
+      "x": 483.5,
+      "y": 288.3
+    },
+    {
+      "id": "yongtaizhuang",
+      "name": "永泰庄",
+      "english": "Yongtaizhuang",
+      "x": 487.2,
+      "y": 300.2
+    },
+    {
+      "id": "lincuiqiao",
+      "name": "林萃桥",
+      "english": "Lincuiqiao",
+      "x": 508.9,
+      "y": 320.5
+    },
+    {
+      "id": "forest-park-south-gate",
+      "name": "森林公园南门",
+      "english": "Forest Park South Gate",
+      "x": 531.8,
+      "y": 334.7
+    },
+    {
+      "id": "olympic-park",
+      "name": "奥林匹克公园",
+      "english": "Olympic Park",
+      "x": 532.4,
+      "y": 347.2
+    },
+    {
+      "id": "olympic-sports-center",
+      "name": "奥体中心",
+      "english": "Olympic Sports Center",
+      "x": 533.2,
+      "y": 366.3
+    },
+    {
+      "id": "beitucheng",
+      "name": "北土城",
+      "english": "Beitucheng",
+      "x": 533.6,
+      "y": 376
+    },
+    {
+      "id": "anhuaqiao",
+      "name": "安华桥",
+      "english": "Anhuaqiao",
+      "x": 534.2,
+      "y": 387.7
+    },
+    {
+      "id": "andeli-beijie",
+      "name": "安德里北街",
+      "english": "Andeli Beijie",
+      "x": 534.6,
+      "y": 402.3
+    },
+    {
+      "id": "shichahai",
+      "name": "什刹海",
+      "english": "Shichahai",
+      "x": 536.2,
+      "y": 426.9
+    },
+    {
+      "id": "national-art-museum",
+      "name": "中国美术馆",
+      "english": "National Art Museum",
+      "x": 553.2,
+      "y": 443
+    },
+    {
+      "id": "jinyu-hutong",
+      "name": "金鱼胡同",
+      "english": "Jinyu Hutong",
+      "x": 553.6,
+      "y": 454.4
+    },
+    {
+      "id": "tianqiao",
+      "name": "天桥",
+      "english": "Tianqiao",
+      "x": 539,
+      "y": 497.2
+    },
+    {
+      "id": "outer-yongdingmen",
+      "name": "永定门外",
+      "english": "Outer Yongdingmen",
+      "x": 539.8,
+      "y": 515.1
+    },
+    {
+      "id": "muxi-yuan",
+      "name": "木樨园",
+      "english": "Muxi Yuan",
+      "x": 539.8,
+      "y": 525.5
+    },
+    {
+      "id": "haihu-tun",
+      "name": "海户屯",
+      "english": "Haihu Tun",
+      "x": 540.9,
+      "y": 535
+    },
+    {
+      "id": "dahongmen",
+      "name": "大红门",
+      "english": "Dahongmen",
+      "x": 540.3,
+      "y": 542.8
+    },
+    {
+      "id": "dahongmen-nan-south",
+      "name": "大红门南",
+      "english": "Dahongmen Nan (South)",
+      "x": 541.8,
+      "y": 554
+    },
+    {
+      "id": "heyi",
+      "name": "和义",
+      "english": "Heyi",
+      "x": 543.1,
+      "y": 580.3
+    },
+    {
+      "id": "donggao-di",
+      "name": "东高地",
+      "english": "Donggao Di",
+      "x": 550.7,
+      "y": 593.3
+    },
+    {
+      "id": "huojian-wanyuan",
+      "name": "火箭万源",
+      "english": "Huojian Wanyuan",
+      "x": 562.6,
+      "y": 601.3
+    },
+    {
+      "id": "wufu-tang",
+      "name": "五福堂",
+      "english": "Wufu Tang",
+      "x": 567.8,
+      "y": 618
+    },
+    {
+      "id": "demao",
+      "name": "德茂",
+      "english": "Demao",
+      "x": 589.2,
+      "y": 633.7
+    },
+    {
+      "id": "yinghai",
+      "name": "瀛海",
+      "english": "Yinghai",
+      "x": 598.4,
+      "y": 649.9
+    },
+    {
+      "id": "baiduizi",
+      "name": "白堆子",
+      "english": "Baiduizi",
+      "x": 453.6,
+      "y": 443.8
+    },
+    {
+      "id": "liuliqiao-east",
+      "name": "六里桥东",
+      "english": "Liuliqiao East",
+      "x": 440.9,
+      "y": 490.2
+    },
+    {
+      "id": "liuliqiao",
+      "name": "六里桥",
+      "english": "Liuliqiao",
+      "x": 428.3,
+      "y": 498.3
+    },
+    {
+      "id": "station-203",
+      "name": "七里庄",
+      "english": "七里庄",
+      "x": 416.7,
+      "y": 515
+    },
+    {
+      "id": "fengtai-dongdajie",
+      "name": "丰台东大街",
+      "english": "Fengtai Dongdajie",
+      "x": 416.2,
+      "y": 529.9
+    },
+    {
+      "id": "fengtai-nanlu",
+      "name": "丰台南路",
+      "english": "Fengtai Nanlu",
+      "x": 419.3,
+      "y": 548.3
+    },
+    {
+      "id": "keyilu",
+      "name": "科怡路",
+      "english": "Keyilu",
+      "x": 420.5,
+      "y": 559.2
+    },
+    {
+      "id": "fengtai-science-park",
+      "name": "丰台科技园",
+      "english": "Fengtai Science Park",
+      "x": 420.2,
+      "y": 567.9
+    },
+    {
+      "id": "guogongzhuang",
+      "name": "郭公庄",
+      "english": "Guogongzhuang",
+      "x": 425.6,
+      "y": 581.2
+    },
+    {
+      "id": "bagou",
+      "name": "巴沟",
+      "english": "Bagou",
+      "x": 415.8,
+      "y": 379.9
+    },
+    {
+      "id": "suzhoujie",
+      "name": "苏州街",
+      "english": "Suzhoujie",
+      "x": 430.7,
+      "y": 378.6
+    },
+    {
+      "id": "zhichunli",
+      "name": "知春里",
+      "english": "Zhichunli",
+      "x": 457.4,
+      "y": 377.9
+    },
+    {
+      "id": "zhichun-lu",
+      "name": "知春路",
+      "english": "Zhichun Lu",
+      "x": 470.3,
+      "y": 377.6
+    },
+    {
+      "id": "xitucheng",
+      "name": "西土城",
+      "english": "Xitucheng",
+      "x": 486.6,
+      "y": 378
+    },
+    {
+      "id": "mudanyuan",
+      "name": "牡丹园",
+      "english": "Mudanyuan",
+      "x": 504.6,
+      "y": 378
+    },
+    {
+      "id": "jiandemen",
+      "name": "健德门",
+      "english": "Jiandemen",
+      "x": 518.5,
+      "y": 377.8
+    },
+    {
+      "id": "anzhenmen",
+      "name": "安贞门",
+      "english": "Anzhenmen",
+      "x": 547,
+      "y": 376.8
+    },
+    {
+      "id": "shaoyaoju",
+      "name": "芍药居",
+      "english": "Shaoyaoju",
+      "x": 582.8,
+      "y": 376.2
+    },
+    {
+      "id": "taiyanggong",
+      "name": "太阳宫",
+      "english": "Taiyanggong",
+      "x": 596.3,
+      "y": 382.5
+    },
+    {
+      "id": "sanyuanqiao",
+      "name": "三元桥",
+      "english": "Sanyuanqiao",
+      "x": 608.2,
+      "y": 396.9
+    },
+    {
+      "id": "liangmaqiao",
+      "name": "亮马桥",
+      "english": "Liangmaqiao",
+      "x": 613.9,
+      "y": 411.6
+    },
+    {
+      "id": "agricultural-exhibition-center",
+      "name": "农业展览馆",
+      "english": "Agricultural Exhibition Center",
+      "x": 613.9,
+      "y": 421.5
+    },
+    {
+      "id": "jintaixizhao",
+      "name": "金台夕照",
+      "english": "Jintaixizhao",
+      "x": 612.8,
+      "y": 452.1
+    },
+    {
+      "id": "jinsong",
+      "name": "劲松",
+      "english": "Jinsong",
+      "x": 612.5,
+      "y": 493.5
+    },
+    {
+      "id": "panjiayuan",
+      "name": "潘家园",
+      "english": "Panjiayuan",
+      "x": 612.6,
+      "y": 503.8
+    },
+    {
+      "id": "shilihe",
+      "name": "十里河",
+      "english": "Shilihe",
+      "x": 610.1,
+      "y": 517
+    },
+    {
+      "id": "fenzhongsi",
+      "name": "分钟寺",
+      "english": "Fenzhongsi",
+      "x": 603.9,
+      "y": 534.3
+    },
+    {
+      "id": "chengshousi",
+      "name": "成寿寺",
+      "english": "Chengshousi",
+      "x": 597.4,
+      "y": 542
+    },
+    {
+      "id": "shiliuzhuang",
+      "name": "石榴庄",
+      "english": "Shiliuzhuang",
+      "x": 556.7,
+      "y": 542.1
+    },
+    {
+      "id": "jiaomen-east",
+      "name": "角门东",
+      "english": "Jiaomen East",
+      "x": 523.2,
+      "y": 542.9
+    },
+    {
+      "id": "caoqiao",
+      "name": "草桥",
+      "english": "Caoqiao",
+      "x": 483.8,
+      "y": 542
+    },
+    {
+      "id": "jijiaomiao",
+      "name": "纪家庙",
+      "english": "Jijiaomiao",
+      "x": 462.6,
+      "y": 543.8
+    },
+    {
+      "id": "capital-university-of-economics-business",
+      "name": "首经贸",
+      "english": "Capital University of Economics & Business",
+      "x": 447.1,
+      "y": 543.8
+    },
+    {
+      "id": "fengtaizhan",
+      "name": "丰台站",
+      "english": "Fengtaizhan",
+      "x": 428.5,
+      "y": 536.4
+    },
+    {
+      "id": "niwa",
+      "name": "泥洼",
+      "english": "Niwa",
+      "x": 428.3,
+      "y": 526.1
+    },
+    {
+      "id": "xiju",
+      "name": "西局",
+      "english": "Xiju",
+      "x": 427.9,
+      "y": 517.2
+    },
+    {
+      "id": "lianhuaqiao",
+      "name": "莲花桥",
+      "english": "Lianhuaqiao",
+      "x": 435.4,
+      "y": 477
+    },
+    {
+      "id": "xidiaoyutai",
+      "name": "西钓鱼台",
+      "english": "Xidiaoyutai",
+      "x": 420.7,
+      "y": 444.8
+    },
+    {
+      "id": "chedaogou",
+      "name": "车道沟",
+      "english": "Chedaogou",
+      "x": 416.2,
+      "y": 415.4
+    },
+    {
+      "id": "changchunqiao",
+      "name": "长春桥",
+      "english": "Changchunqiao",
+      "x": 416.4,
+      "y": 400
+    },
+    {
+      "id": "huoqiying",
+      "name": "火器营",
+      "english": "Huoqiying",
+      "x": 411,
+      "y": 391.4
+    },
+    {
+      "id": "moshikou",
+      "name": "模式口",
+      "english": "Moshikou",
+      "x": 254.1,
+      "y": 431.5
+    },
+    {
+      "id": "beixin-an",
+      "name": "北辛安",
+      "english": "Beixin'an",
+      "x": 264.5,
+      "y": 454.7
+    },
+    {
+      "id": "shougang-park",
+      "name": "新首钢",
+      "english": "Shougang Park",
+      "x": 264.4,
+      "y": 462.6
+    },
+    {
+      "id": "sijiqing-qiao",
+      "name": "四季青桥",
+      "english": "Sijiqing Qiao",
+      "x": 393.3,
+      "y": 418.7
+    },
+    {
+      "id": "station-245",
+      "name": "蓝靛厂",
+      "english": "蓝靛厂",
+      "x": 403.1,
+      "y": 401.8
+    },
+    {
+      "id": "suzhou-qiao",
+      "name": "苏州桥",
+      "english": "Suzhou Qiao",
+      "x": 432.1,
+      "y": 394.2
+    },
+    {
+      "id": "dazhongsi",
+      "name": "大钟寺",
+      "english": "Dazhongsi",
+      "x": 476.3,
+      "y": 390
+    },
+    {
+      "id": "station-248",
+      "name": "蓟门桥",
+      "english": "蓟门桥",
+      "x": 488.8,
+      "y": 388.7
+    },
+    {
+      "id": "beitaipingzhuang",
+      "name": "北太平庄",
+      "english": "Beitaipingzhuang",
+      "x": 505.5,
+      "y": 388
+    },
+    {
+      "id": "station-250",
+      "name": "马甸桥",
+      "english": "马甸桥",
+      "x": 519.6,
+      "y": 388
+    },
+    {
+      "id": "station-251",
+      "name": "安贞桥",
+      "english": "安贞桥",
+      "x": 549.1,
+      "y": 387.2
+    },
+    {
+      "id": "guangximen",
+      "name": "光熙门",
+      "english": "Guangximen",
+      "x": 578,
+      "y": 387.9
+    },
+    {
+      "id": "xibahe",
+      "name": "西坝河",
+      "english": "Xibahe",
+      "x": 586.9,
+      "y": 392
+    },
+    {
+      "id": "jiangtaixi",
+      "name": "将台西",
+      "english": "Jiangtaixi",
+      "x": 634.8,
+      "y": 382.4
+    },
+    {
+      "id": "gaojiayuan",
+      "name": "高家园",
+      "english": "Gaojiayuan",
+      "x": 647.8,
+      "y": 372.5
+    },
+    {
+      "id": "tuofangying",
+      "name": "驼房营",
+      "english": "Tuofangying",
+      "x": 664.8,
+      "y": 372.4
+    },
+    {
+      "id": "dongbaxi",
+      "name": "东坝西",
+      "english": "Dongbaxi",
+      "x": 698.7,
+      "y": 379.8
+    },
+    {
+      "id": "wudaokou",
+      "name": "五道口",
+      "english": "Wudaokou",
+      "x": 467.8,
+      "y": 356.9
+    },
+    {
+      "id": "shangdi",
+      "name": "上地",
+      "english": "Shangdi",
+      "x": 447.1,
+      "y": 306.3
+    },
+    {
+      "id": "qinghe-railway-station",
+      "name": "清河站",
+      "english": "Qinghe Railway Station",
+      "x": 440.6,
+      "y": 296.3
+    },
+    {
+      "id": "xi-erqi",
+      "name": "西二旗",
+      "english": "Xi'erqi",
+      "x": 430.8,
+      "y": 281.2
+    },
+    {
+      "id": "longze",
+      "name": "龙泽",
+      "english": "Longze",
+      "x": 446,
+      "y": 258.8
+    },
+    {
+      "id": "huilongguan",
+      "name": "回龙观",
+      "english": "Huilongguan",
+      "x": 465.6,
+      "y": 258.8
+    },
+    {
+      "id": "beiyuan",
+      "name": "北苑",
+      "english": "Beiyuan",
+      "x": 581.2,
+      "y": 294
+    },
+    {
+      "id": "wangjing-west",
+      "name": "望京西",
+      "english": "Wangjing West",
+      "x": 596.2,
+      "y": 354.4
+    },
+    {
+      "id": "liufang",
+      "name": "柳芳",
+      "english": "Liufang",
+      "x": 579.2,
+      "y": 400.7
+    },
+    {
+      "id": "shan-gezhuang",
+      "name": "善各庄",
+      "english": "Shan'gezhuang",
+      "x": 633.5,
+      "y": 313.1
+    },
+    {
+      "id": "laiguangying",
+      "name": "来广营",
+      "english": "Laiguangying",
+      "x": 619.4,
+      "y": 322.1
+    },
+    {
+      "id": "donghuqu",
+      "name": "东湖渠",
+      "english": "Donghuqu",
+      "x": 619.7,
+      "y": 334.8
+    },
+    {
+      "id": "wangjing",
+      "name": "望京",
+      "english": "Wangjing",
+      "x": 622.4,
+      "y": 350.5
+    },
+    {
+      "id": "futong",
+      "name": "阜通",
+      "english": "Futong",
+      "x": 624.9,
+      "y": 358.6
+    },
+    {
+      "id": "wangjing-south",
+      "name": "望京南",
+      "english": "Wangjing South",
+      "x": 636,
+      "y": 366.9
+    },
+    {
+      "id": "jiangtai",
+      "name": "将台",
+      "english": "Jiangtai",
+      "x": 646.7,
+      "y": 384.7
+    },
+    {
+      "id": "dongfeng-beiqiao",
+      "name": "东风北桥",
+      "english": "Dongfeng Beiqiao",
+      "x": 640.6,
+      "y": 398.8
+    },
+    {
+      "id": "zaoying",
+      "name": "枣营",
+      "english": "Zaoying",
+      "x": 628.9,
+      "y": 418.2
+    },
+    {
+      "id": "pingleyuan",
+      "name": "平乐园",
+      "english": "Pingleyuan",
+      "x": 631.8,
+      "y": 492.5
+    },
+    {
+      "id": "beijing-university-of-technology-west-gate",
+      "name": "北工大西门",
+      "english": "Beijing University of Technology West Gate",
+      "x": 631.8,
+      "y": 505.4
+    },
+    {
+      "id": "fangzhuang",
+      "name": "方庄",
+      "english": "Fangzhuang",
+      "x": 587.8,
+      "y": 516.8
+    },
+    {
+      "id": "jingtai",
+      "name": "景泰",
+      "english": "Jingtai",
+      "x": 553.8,
+      "y": 518
+    },
+    {
+      "id": "jingfengmen",
+      "name": "景风门",
+      "english": "Jingfengmen",
+      "x": 501.1,
+      "y": 520.8
+    },
+    {
+      "id": "xitieying",
+      "name": "西铁营",
+      "english": "Xitieying",
+      "x": 488.9,
+      "y": 522.7
+    },
+    {
+      "id": "caihuying",
+      "name": "菜户营",
+      "english": "Caihuying",
+      "x": 473.6,
+      "y": 514.8
+    },
+    {
+      "id": "lize-business-district",
+      "name": "丽泽商务区",
+      "english": "Lize Business District",
+      "x": 459.7,
+      "y": 514.7
+    },
+    {
+      "id": "dongguantou",
+      "name": "东管头",
+      "english": "Dongguantou",
+      "x": 447.5,
+      "y": 514.9
+    },
+    {
+      "id": "dajing",
+      "name": "大井",
+      "english": "Dajing",
+      "x": 394,
+      "y": 517.6
+    },
+    {
+      "id": "guozhuangzi",
+      "name": "郭庄子",
+      "english": "Guozhuangzi",
+      "x": 369.9,
+      "y": 517.5
+    },
+    {
+      "id": "dawayao",
+      "name": "大瓦窑",
+      "english": "Dawayao",
+      "x": 353.6,
+      "y": 524.8
+    },
+    {
+      "id": "garden-expo-park",
+      "name": "园博园",
+      "english": "Garden Expo Park",
+      "x": 308.1,
+      "y": 522.5
+    },
+    {
+      "id": "zhangguozhuang",
+      "name": "张郭庄",
+      "english": "Zhangguozhuang",
+      "x": 290.6,
+      "y": 526.6
+    },
+    {
+      "id": "qinghua-donglu-xikou",
+      "name": "清华东路西口",
+      "english": "Qinghua Donglu Xikou",
+      "x": 470,
+      "y": 347.2
+    },
+    {
+      "id": "liudaokou",
+      "name": "六道口",
+      "english": "Liudaokou",
+      "x": 485.3,
+      "y": 346.6
+    },
+    {
+      "id": "beishatan",
+      "name": "北沙滩",
+      "english": "Beishatan",
+      "x": 503.4,
+      "y": 346.3
+    },
+    {
+      "id": "anlilu",
+      "name": "安立路",
+      "english": "Anlilu",
+      "x": 549.8,
+      "y": 344.9
+    },
+    {
+      "id": "guanzhuang",
+      "name": "关庄",
+      "english": "Guanzhuang",
+      "x": 577.4,
+      "y": 346.7
+    },
+    {
+      "id": "wangjing-east",
+      "name": "望京东",
+      "english": "Wangjing East",
+      "x": 642.9,
+      "y": 343.9
+    },
+    {
+      "id": "cuigezhuang",
+      "name": "崔各庄",
+      "english": "Cuigezhuang",
+      "x": 649.9,
+      "y": 320.4
+    },
+    {
+      "id": "maquanying",
+      "name": "马泉营",
+      "english": "Maquanying",
+      "x": 663.3,
+      "y": 305.5
+    },
+    {
+      "id": "sunhe",
+      "name": "孙河",
+      "english": "Sunhe",
+      "x": 699.3,
+      "y": 291.1
+    },
+    {
+      "id": "china-international-exhibition-center",
+      "name": "国展",
+      "english": "China International Exhibition Center",
+      "x": 723.5,
+      "y": 259.6
+    },
+    {
+      "id": "hualikan",
+      "name": "花梨坎",
+      "english": "Hualikan",
+      "x": 726.4,
+      "y": 241.4
+    },
+    {
+      "id": "houshayu",
+      "name": "后沙峪",
+      "english": "Houshayu",
+      "x": 734.1,
+      "y": 204.1
+    },
+    {
+      "id": "nanfaxin",
+      "name": "南法信",
+      "english": "Nanfaxin",
+      "x": 787,
+      "y": 185.9
+    },
+    {
+      "id": "shimen",
+      "name": "石门",
+      "english": "Shimen",
+      "x": 824.2,
+      "y": 184.3
+    },
+    {
+      "id": "shunyi",
+      "name": "顺义",
+      "english": "Shunyi",
+      "x": 842.9,
+      "y": 184
+    },
+    {
+      "id": "fengbo",
+      "name": "俸伯",
+      "english": "Fengbo",
+      "x": 875.5,
+      "y": 180.9
+    },
+    {
+      "id": "beianhe",
+      "name": "北安河",
+      "english": "Beianhe",
+      "x": 224.3,
+      "y": 262.1
+    },
+    {
+      "id": "wenyanglu",
+      "name": "温阳路",
+      "english": "Wenyanglu",
+      "x": 260.9,
+      "y": 261.4
+    },
+    {
+      "id": "daoxianghulu",
+      "name": "稻香湖路",
+      "english": "Daoxianghulu",
+      "x": 292.2,
+      "y": 261.4
+    },
+    {
+      "id": "tundian",
+      "name": "屯佃",
+      "english": "Tundian",
+      "x": 324,
+      "y": 261.7
+    },
+    {
+      "id": "yongfeng",
+      "name": "永丰",
+      "english": "Yongfeng",
+      "x": 351.1,
+      "y": 257.3
+    },
+    {
+      "id": "yongfeng-south",
+      "name": "永丰南",
+      "english": "Yongfeng South",
+      "x": 364.3,
+      "y": 267
+    },
+    {
+      "id": "xibeiwang",
+      "name": "西北旺",
+      "english": "Xibeiwang",
+      "x": 374.1,
+      "y": 286
+    },
+    {
+      "id": "malianwa",
+      "name": "马连洼",
+      "english": "Malianwa",
+      "x": 390.4,
+      "y": 306.6
+    },
+    {
+      "id": "nongda-nanlu",
+      "name": "农大南路",
+      "english": "Nongda Nanlu",
+      "x": 403.4,
+      "y": 323.2
+    },
+    {
+      "id": "wanquanhe-qiao",
+      "name": "万泉河桥",
+      "english": "Wanquanhe Qiao",
+      "x": 423.7,
+      "y": 366.4
+    },
+    {
+      "id": "wanshousi",
+      "name": "万寿寺",
+      "english": "Wanshousi",
+      "x": 434.3,
+      "y": 412.9
+    },
+    {
+      "id": "ganjia-kou",
+      "name": "甘家口",
+      "english": "Ganjia Kou",
+      "x": 463.9,
+      "y": 443.9
+    },
+    {
+      "id": "yuyuantan-park-east-gate",
+      "name": "玉渊潭东门",
+      "english": "Yuyuantan Park East Gate",
+      "x": 464.6,
+      "y": 454.7
+    },
+    {
+      "id": "muxidi-16",
+      "name": "木樨地",
+      "english": "Muxidi",
+      "x": 463,
+      "y": 462.5
+    },
+    {
+      "id": "honglian-nanlu",
+      "name": "红莲南路",
+      "english": "Honglian Nanlu",
+      "x": 466.7,
+      "y": 502.2
+    },
+    {
+      "id": "dongguantou-south",
+      "name": "东管头南",
+      "english": "Dongguantou South",
+      "x": 450.5,
+      "y": 529.6
+    },
+    {
+      "id": "fufengqiao",
+      "name": "富丰桥",
+      "english": "Fufengqiao",
+      "x": 408.3,
+      "y": 554
+    },
+    {
+      "id": "kandan",
+      "name": "看丹",
+      "english": "Kandan",
+      "x": 391.2,
+      "y": 555.7
+    },
+    {
+      "id": "yushuzhuang",
+      "name": "榆树庄",
+      "english": "Yushuzhuang",
+      "x": 375.2,
+      "y": 550.8
+    },
+    {
+      "id": "hongtaizhuang",
+      "name": "洪泰庄",
+      "english": "Hongtaizhuang",
+      "x": 363.4,
+      "y": 538.6
+    },
+    {
+      "id": "wanpingcheng",
+      "name": "宛平城",
+      "english": "Wanpingcheng",
+      "x": 340.6,
+      "y": 538.1
+    },
+    {
+      "id": "station-327",
+      "name": "嘉会湖",
+      "english": "嘉会湖",
+      "x": 789,
+      "y": 608.2
+    },
+    {
+      "id": "ciqu",
+      "name": "次渠",
+      "english": "Ciqu",
+      "x": 766,
+      "y": 594.9
+    },
+    {
+      "id": "station-329",
+      "name": "次渠北",
+      "english": "次渠北",
+      "x": 748.3,
+      "y": 587.3
+    },
+    {
+      "id": "station-330",
+      "name": "北神树",
+      "english": "北神树",
+      "x": 720.8,
+      "y": 576.1
+    },
+    {
+      "id": "station-331",
+      "name": "十八里店",
+      "english": "十八里店",
+      "x": 653.4,
+      "y": 544
+    },
+    {
+      "id": "station-332",
+      "name": "周家庄",
+      "english": "周家庄",
+      "x": 630.8,
+      "y": 528.6
+    },
+    {
+      "id": "panjiayuanxi",
+      "name": "潘家园西",
+      "english": "Panjiayuanxi",
+      "x": 600.4,
+      "y": 505.2
+    },
+    {
+      "id": "zuojiazhuang",
+      "name": "左家庄",
+      "english": "Zuojiazhuang",
+      "x": 590.7,
+      "y": 411
+    },
+    {
+      "id": "hongjunying",
+      "name": "红军营",
+      "english": "Hongjunying",
+      "x": 589.5,
+      "y": 304.7
+    },
+    {
+      "id": "qingheying",
+      "name": "清河营",
+      "english": "Qingheying",
+      "x": 590.1,
+      "y": 283.8
+    },
+    {
+      "id": "tiantongyuandong",
+      "name": "天通苑东",
+      "english": "Tiantongyuandong",
+      "x": 590,
+      "y": 261.8
+    },
+    {
+      "id": "future-science-city",
+      "name": "未来科学城",
+      "english": "Future Science City",
+      "x": 618.9,
+      "y": 202.6
+    },
+    {
+      "id": "future-science-city-north",
+      "name": "未来科学城北",
+      "english": "Future Science City North",
+      "x": 622,
+      "y": 183.2
+    },
+    {
+      "id": "shangdi-software-park",
+      "name": "上地软件园",
+      "english": "Shangdi Software Park",
+      "x": 407.7,
+      "y": 291.5
+    },
+    {
+      "id": "dongbeiwang",
+      "name": "东北旺",
+      "english": "Dongbeiwang",
+      "x": 417.2,
+      "y": 281.1
+    },
+    {
+      "id": "longzexi",
+      "name": "龙泽西",
+      "english": "Longzexi",
+      "x": 435.2,
+      "y": 256.3
+    },
+    {
+      "id": "huilongguan-xidajie",
+      "name": "回龙观西大街",
+      "english": "Huilongguan Xidajie",
+      "x": 459.4,
+      "y": 249
+    },
+    {
+      "id": "wenhualu",
+      "name": "文华路",
+      "english": "Wenhualu",
+      "x": 472.4,
+      "y": 247.1
+    },
+    {
+      "id": "huoyingdong",
+      "name": "霍营东",
+      "english": "Huoyingdong",
+      "x": 512.5,
+      "y": 245
+    },
+    {
+      "id": "taipingzhuang",
+      "name": "太平庄",
+      "english": "Taipingzhuang",
+      "x": 571.8,
+      "y": 254.7
+    },
+    {
+      "id": "station-347",
+      "name": "太平桥",
+      "english": "太平桥",
+      "x": 497.5,
+      "y": 461.2
+    },
+    {
+      "id": "niujie",
+      "name": "牛街",
+      "english": "Niujie",
+      "x": 497.9,
+      "y": 485.3
+    },
+    {
+      "id": "station-349",
+      "name": "新发地",
+      "english": "新发地",
+      "x": 477.9,
+      "y": 569.7
+    },
+    {
+      "id": "station-350",
+      "name": "石厂",
+      "english": "石厂",
+      "x": 156.4,
+      "y": 459.8
+    },
+    {
+      "id": "station-351",
+      "name": "小园",
+      "english": "小园",
+      "x": 174,
+      "y": 457.2
+    },
+    {
+      "id": "station-352",
+      "name": "栗园庄",
+      "english": "栗园庄",
+      "x": 191.7,
+      "y": 454.7
+    },
+    {
+      "id": "station-353",
+      "name": "上岸",
+      "english": "上岸",
+      "x": 209.3,
+      "y": 452.2
+    },
+    {
+      "id": "station-354",
+      "name": "桥户营",
+      "english": "桥户营",
+      "x": 226.9,
+      "y": 449.7
+    },
+    {
+      "id": "station-355",
+      "name": "四道桥",
+      "english": "四道桥",
+      "x": 244.5,
+      "y": 447.2
+    },
+    {
+      "id": "changping-xishankou",
+      "name": "昌平西山口",
+      "english": "Changping Xishankou",
+      "x": 300.8,
+      "y": 40
+    },
+    {
+      "id": "ming-tombs",
+      "name": "十三陵景区",
+      "english": "Ming Tombs",
+      "x": 315.1,
+      "y": 45.9
+    },
+    {
+      "id": "changping",
+      "name": "昌平",
+      "english": "Changping",
+      "x": 345.3,
+      "y": 70.3
+    },
+    {
+      "id": "changping-dongguan",
+      "name": "昌平东关",
+      "english": "Changping Dongguan",
+      "x": 379.7,
+      "y": 68.7
+    },
+    {
+      "id": "beishaowa",
+      "name": "北邵洼",
+      "english": "Beishaowa",
+      "x": 401.7,
+      "y": 68.6
+    },
+    {
+      "id": "nanshao",
+      "name": "南邵",
+      "english": "Nanshao",
+      "x": 409.2,
+      "y": 86.2
+    },
+    {
+      "id": "shahe-university-park",
+      "name": "沙河高教园",
+      "english": "Shahe University Park",
+      "x": 400.3,
+      "y": 140.7
+    },
+    {
+      "id": "shahe",
+      "name": "沙河",
+      "english": "Shahe",
+      "x": 410.2,
+      "y": 161.3
+    },
+    {
+      "id": "gonghuacheng",
+      "name": "巩华城",
+      "english": "Gonghuacheng",
+      "x": 416.3,
+      "y": 183.1
+    },
+    {
+      "id": "life-science-park",
+      "name": "生命科学园",
+      "english": "Life Science Park",
+      "x": 416.6,
+      "y": 228.6
+    },
+    {
+      "id": "station-366",
+      "name": "朱房北",
+      "english": "朱房北",
+      "x": 457.2,
+      "y": 300
+    },
+    {
+      "id": "qinghe-xiaoying-bridge",
+      "name": "清河小营桥",
+      "english": "Qinghe Xiaoying Bridge",
+      "x": 473.8,
+      "y": 303.7
+    },
+    {
+      "id": "xuezhiyuan",
+      "name": "学知园",
+      "english": "Xuezhiyuan",
+      "x": 484.2,
+      "y": 329.2
+    },
+    {
+      "id": "xueyuanqiao",
+      "name": "学院桥",
+      "english": "Xueyuanqiao",
+      "x": 485.9,
+      "y": 362.9
+    },
+    {
+      "id": "huaxiang-dongqiao",
+      "name": "花乡东桥",
+      "english": "Huaxiang Dongqiao",
+      "x": 447,
+      "y": 563
+    },
+    {
+      "id": "baipenyao",
+      "name": "白盆窑",
+      "english": "Baipenyao",
+      "x": 438.5,
+      "y": 575
+    },
+    {
+      "id": "dabaotai",
+      "name": "大葆台",
+      "english": "Dabaotai",
+      "x": 413.4,
+      "y": 589.9
+    },
+    {
+      "id": "daotian",
+      "name": "稻田",
+      "english": "Daotian",
+      "x": 328.1,
+      "y": 606.2
+    },
+    {
+      "id": "changyang",
+      "name": "长阳",
+      "english": "Changyang",
+      "x": 320.7,
+      "y": 645.2
+    },
+    {
+      "id": "libafang",
+      "name": "篱笆房",
+      "english": "Libafang",
+      "x": 293.4,
+      "y": 649.2
+    },
+    {
+      "id": "guangyangcheng",
+      "name": "广阳城",
+      "english": "Guangyangcheng",
+      "x": 288.1,
+      "y": 665.3
+    },
+    {
+      "id": "liangxiang-university-town-north",
+      "name": "良乡大学城北",
+      "english": "Liangxiang University Town North",
+      "x": 286.3,
+      "y": 688.1
+    },
+    {
+      "id": "liangxiang-university-town",
+      "name": "良乡大学城",
+      "english": "Liangxiang University Town",
+      "x": 278.2,
+      "y": 696.3
+    },
+    {
+      "id": "liangxiang-university-town-west",
+      "name": "良乡大学城西",
+      "english": "Liangxiang University Town West",
+      "x": 254.3,
+      "y": 696.4
+    },
+    {
+      "id": "liangxiang-nanguan",
+      "name": "良乡南关",
+      "english": "Liangxiang Nanguan",
+      "x": 236.1,
+      "y": 696.4
+    },
+    {
+      "id": "suzhuang",
+      "name": "苏庄",
+      "english": "Suzhuang",
+      "x": 217.9,
+      "y": 696.4
+    },
+    {
+      "id": "yancun-east",
+      "name": "阎村东",
+      "english": "Yancun East",
+      "x": 189.2,
+      "y": 689.3
+    },
+    {
+      "id": "yanshan",
+      "name": "燕山",
+      "english": "Yanshan",
+      "x": 40,
+      "y": 700.7
+    },
+    {
+      "id": "fangshan-chengguan",
+      "name": "房山城关",
+      "english": "Fangshan Chengguan",
+      "x": 58.9,
+      "y": 718.1
+    },
+    {
+      "id": "raolefu",
+      "name": "饶乐府",
+      "english": "Raolefu",
+      "x": 78.2,
+      "y": 723.6
+    },
+    {
+      "id": "magezhuang",
+      "name": "马各庄",
+      "english": "Magezhuang",
+      "x": 90.5,
+      "y": 719.2
+    },
+    {
+      "id": "dashihe-east",
+      "name": "大石河东",
+      "english": "Dashihe East",
+      "x": 118.1,
+      "y": 713.1
+    },
+    {
+      "id": "xingcheng",
+      "name": "星城",
+      "english": "Xingcheng",
+      "x": 142.9,
+      "y": 708.4
+    },
+    {
+      "id": "yancun",
+      "name": "阎村",
+      "english": "Yancun",
+      "x": 165,
+      "y": 704.7
+    },
+    {
+      "id": "zicaowu",
+      "name": "紫草坞",
+      "english": "Zicaowu",
+      "x": 172.6,
+      "y": 695
+    },
+    {
+      "id": "xiaocun",
+      "name": "肖村",
+      "english": "Xiaocun",
+      "x": 598.1,
+      "y": 556.9
+    },
+    {
+      "id": "xiaohongmen",
+      "name": "小红门",
+      "english": "Xiaohongmen",
+      "x": 610.3,
+      "y": 564.4
+    },
+    {
+      "id": "jiugong",
+      "name": "旧宫",
+      "english": "Jiugong",
+      "x": 612.2,
+      "y": 591
+    },
+    {
+      "id": "yizhuangqiao",
+      "name": "亦庄桥",
+      "english": "Yizhuangqiao",
+      "x": 635.2,
+      "y": 595.9
+    },
+    {
+      "id": "yizhuang-culture-park",
+      "name": "亦庄文化园",
+      "english": "Yizhuang Culture Park",
+      "x": 647.4,
+      "y": 591
+    },
+    {
+      "id": "wanyuanjie",
+      "name": "万源街",
+      "english": "Wanyuanjie",
+      "x": 664.8,
+      "y": 595.9
+    },
+    {
+      "id": "rongjing-dongjie",
+      "name": "荣京东街",
+      "english": "Rongjing Dongjie",
+      "x": 674.1,
+      "y": 608.1
+    },
+    {
+      "id": "rongchangdongjie",
+      "name": "荣昌东街",
+      "english": "Rongchangdongjie",
+      "x": 684,
+      "y": 621.1
+    },
+    {
+      "id": "tongjinanlu",
+      "name": "同济南路",
+      "english": "Tongjinanlu",
+      "x": 705.4,
+      "y": 633.6
+    },
+    {
+      "id": "jinghailu",
+      "name": "经海路",
+      "english": "Jinghailu",
+      "x": 731.8,
+      "y": 620
+    },
+    {
+      "id": "ciqu-south",
+      "name": "次渠南",
+      "english": "Ciqu South",
+      "x": 753.9,
+      "y": 606
+    },
+    {
+      "id": "yizhuang-railway-station",
+      "name": "亦庄火车站",
+      "english": "Yizhuang Railway Station",
+      "x": 778.3,
+      "y": 583.6
+    },
+    {
+      "id": "terminal-3",
+      "name": "3号航站楼",
+      "english": "Capital Airport Terminal 3",
+      "x": 794.2,
+      "y": 281.2
+    },
+    {
+      "id": "terminal-2",
+      "name": "2号航站楼",
+      "english": "Capital Airport Terminal 2",
+      "x": 767.7,
+      "y": 248.1
+    },
+    {
+      "id": "daxing-xincheng",
+      "name": "大兴新城",
+      "english": "Daxing Xincheng",
+      "x": 500.2,
+      "y": 681
+    },
+    {
+      "id": "daxing-airport",
+      "name": "大兴机场",
+      "english": "Daxing Airport",
+      "x": 560.4,
+      "y": 960
+    },
+    {
+      "id": "bagou-xijiao",
+      "name": "巴沟",
+      "english": "Bagou",
+      "x": 415.8,
+      "y": 379.9
+    },
+    {
+      "id": "station-408",
+      "name": "颐和园西门",
+      "english": "颐和园西门",
+      "x": 400.6,
+      "y": 374.9
+    },
+    {
+      "id": "station-409",
+      "name": "茶棚",
+      "english": "茶棚",
+      "x": 385.3,
+      "y": 369.9
+    },
+    {
+      "id": "station-410",
+      "name": "万安",
+      "english": "万安",
+      "x": 370,
+      "y": 364.8
+    },
+    {
+      "id": "station-411",
+      "name": "国家植物园",
+      "english": "国家植物园",
+      "x": 354.8,
+      "y": 359.8
+    },
+    {
+      "id": "station-412",
+      "name": "香山",
+      "english": "香山",
+      "x": 339.5,
+      "y": 354.8
+    },
+    {
+      "id": "qu-zhuang",
+      "name": "屈庄",
+      "english": "Qu Zhuang",
+      "x": 666.4,
+      "y": 704.9
+    },
+    {
+      "id": "rongxing-jie",
+      "name": "融兴街",
+      "english": "Rongxing Jie",
+      "x": 664.4,
+      "y": 696.1
+    },
+    {
+      "id": "ruihe-zhuang",
+      "name": "瑞合庄",
+      "english": "Ruihe Zhuang",
+      "x": 662.3,
+      "y": 687.3
+    },
+    {
+      "id": "taihe-qiao-bei-n",
+      "name": "太和桥北",
+      "english": "Taihe Qiao Bei (N)",
+      "x": 660.6,
+      "y": 673.8
+    },
+    {
+      "id": "sihai-zhuang",
+      "name": "四海庄",
+      "english": "Sihai Zhuang",
+      "x": 663.9,
+      "y": 666.7
+    },
+    {
+      "id": "jiuhao-cun",
+      "name": "九号村",
+      "english": "Jiuhao Cun",
+      "x": 668.7,
+      "y": 656.3
+    },
+    {
+      "id": "taihe-lu",
+      "name": "泰河路",
+      "english": "Taihe Lu",
+      "x": 671.8,
+      "y": 649.8
+    },
+    {
+      "id": "lujuan-dong-e",
+      "name": "鹿圈东",
+      "english": "Lujuan Dong (E)",
+      "x": 674.9,
+      "y": 641.9
+    },
+    {
+      "id": "yizhuang-tongren",
+      "name": "亦庄同仁",
+      "english": "Yizhuang Tongren",
+      "x": 680,
+      "y": 628.6
+    },
+    {
+      "id": "rongchang-dongjie",
+      "name": "荣昌东街",
+      "english": "Rongchang Dongjie",
+      "x": 683.7,
+      "y": 622.8
+    },
+    {
+      "id": "beijing-etrang-intrenational-exhibition-convention-center",
+      "name": "亦创会展中心",
+      "english": "Beijing Etrang Intrenational Exhibition & Convention Center",
+      "x": 690.6,
+      "y": 619.2
+    },
+    {
+      "id": "jinghai-yilu",
+      "name": "经海一路",
+      "english": "Jinghai Yilu",
+      "x": 706.5,
+      "y": 611
+    },
+    {
+      "id": "dinghai-yuan-xi-w",
+      "name": "定海园西",
+      "english": "Dinghai Yuan Xi (W)",
+      "x": 721.1,
+      "y": 603.5
+    },
+    {
+      "id": "dinghai-yuan",
+      "name": "定海园",
+      "english": "Dinghai Yuan",
+      "x": 731.6,
+      "y": 598
+    }
+  ],
+  "lines": [
+    {
+      "id": "1-batong",
+      "name": "1号线—八通线",
+      "english": "Line 1–Batong",
+      "color": "#ba3539",
+      "stops": [
+        "pingguoyuan",
+        "gucheng",
+        "babaoshan",
+        "yuquanlu",
+        "wukesong",
+        "wanshoulu",
+        "gongzhufen-station",
+        "military-museum",
+        "muxidi",
+        "nanlishi-lu",
+        "fuxingmen",
+        "xidan",
+        "tian-anmen-west",
+        "tian-anmen-east",
+        "wangfujing",
+        "dongdan",
+        "jianguomen",
+        "yonganli",
+        "guomao",
+        "dawanglu",
+        "sihui",
+        "sihui-east",
+        "gaobeidian",
+        "communication-university-of-china",
+        "shuangqiao",
+        "guaanzhuang",
+        "baliqiao",
+        "tongzhou-beiyuan",
+        "guoyuan",
+        "jiukeshu",
+        "liyuan",
+        "linheli",
+        "tuqiao",
+        "huazhuang",
+        "universal-resort"
+      ],
+      "loop": false,
+      "serviceGroup": "1-batong"
+    },
+    {
+      "id": "2",
+      "name": "2号线",
+      "english": "Line 2",
+      "color": "#32669c",
+      "stops": [
+        "xizhimen",
+        "chegongzhuang",
+        "fuchengmen",
+        "fuxingmen",
+        "changchunjie",
+        "xuanwumen",
+        "hepingmen",
+        "qianmen",
+        "chongwenmen",
+        "beijing-railway-station",
+        "jianguomen",
+        "chaoyangmen",
+        "dongsi-shitiao",
+        "dongzhimen",
+        "yonghegong-lama-temple",
+        "andingmen",
+        "gulou-dajie",
+        "jishuitan"
+      ],
+      "loop": true,
+      "serviceGroup": "2"
+    },
+    {
+      "id": "3",
+      "name": "3号线",
+      "english": "Line 3",
+      "color": "#cf4856",
+      "stops": [
+        "dongsi-shitiao",
+        "workers-stadium",
+        "tuanjiehu",
+        "chaoyang-park",
+        "station-55",
+        "station-56",
+        "yaojiayuan",
+        "dongbanan",
+        "dongba",
+        "dongbabei"
+      ],
+      "loop": false,
+      "serviceGroup": "3"
+    },
+    {
+      "id": "4-daxing",
+      "name": "4号线—大兴线",
+      "english": "Line 4–Daxing",
+      "color": "#25848a",
+      "stops": [
+        "anheqiaobei",
+        "beigongmen",
+        "xiyuan",
+        "yuanmingyuan-park",
+        "peking-university-east-gate",
+        "zhongguancun",
+        "haidian-huangzhuang",
+        "renmin-university",
+        "weigongcun",
+        "national-library",
+        "beijing-zoo",
+        "xizhimen",
+        "xinjiekou",
+        "ping-anli",
+        "xisi",
+        "lingjing-hutong",
+        "xidan",
+        "xuanwumen",
+        "station-76",
+        "taoranting",
+        "beijing-south-railway-station",
+        "majiapu",
+        "jiaomen-west",
+        "gongyixiqiao",
+        "xin-gong",
+        "xihongmen",
+        "gaomidian-north",
+        "gaomidian-south",
+        "zaoyuan",
+        "qingyuanlu",
+        "huangcun-xidajie",
+        "huangcun-railway-station",
+        "yihezhuang",
+        "biomedical-base",
+        "tiangongyuan"
+      ],
+      "loop": false,
+      "serviceGroup": "4-daxing"
+    },
+    {
+      "id": "5",
+      "name": "5号线",
+      "english": "Line 5",
+      "color": "#975283",
+      "stops": [
+        "tiantongyuan-north",
+        "tiantongyuan",
+        "tiantongyuan-south",
+        "lishuiqiao",
+        "lishuiqiao-south",
+        "beiyuanlu-north",
+        "datunlu-east",
+        "huixinxijie-beikou",
+        "huixinxijie-nankou",
+        "heping-xiqiao",
+        "hepingli-beijie",
+        "yonghegong-lama-temple",
+        "beixinqiao",
+        "zhangzizhong-lu",
+        "dongsi",
+        "dengshikou",
+        "dongdan",
+        "chongwenmen",
+        "ciqikou",
+        "east-gate-of-temple-of-heaven",
+        "puhuangyu",
+        "liujiayao",
+        "songjiazhuang"
+      ],
+      "loop": false,
+      "serviceGroup": "5"
+    },
+    {
+      "id": "6",
+      "name": "6号线",
+      "english": "Line 6",
+      "color": "#b58635",
+      "stops": [
+        "jin-anqiao",
+        "pingguoyuan",
+        "yang-zhuang",
+        "xihuang-cun",
+        "liaogong-zhuang",
+        "tian-cun",
+        "haidian-wuluju",
+        "cishousi",
+        "huayuanqiao",
+        "baishiqiao-south",
+        "erligou",
+        "chegongzhuang-west",
+        "chegongzhuang",
+        "ping-anli",
+        "beihai-north",
+        "nanluogu-xiang",
+        "dongsi",
+        "chaoyangmen",
+        "dongdaqiao",
+        "hujialou",
+        "jintailu",
+        "shilipu",
+        "qingnianlu",
+        "dalianpo",
+        "huangqu",
+        "changying",
+        "caofang",
+        "wuzixueyuanlu",
+        "tongzhou-beiguan",
+        "tongyun-men",
+        "beiyunhe-west",
+        "beiyunhe-east",
+        "haojiafu",
+        "dongxiayuan",
+        "lucheng",
+        "luyang"
+      ],
+      "loop": false,
+      "serviceGroup": "6"
+    },
+    {
+      "id": "7",
+      "name": "7号线",
+      "english": "Line 7",
+      "color": "#dca34e",
+      "stops": [
+        "beijing-west-railway-station",
+        "wanzi",
+        "daguanying",
+        "inner-guang-anmen",
+        "station-76",
+        "hufangqiao",
+        "station-149",
+        "qiaowan",
+        "ciqikou",
+        "guangqumen-nei",
+        "guangqumen-wai",
+        "shuangjing",
+        "jiulongshan",
+        "dajiaoting",
+        "baiziwan",
+        "huagong",
+        "nanlouzizhuang",
+        "beijing-happy-valley",
+        "fatou",
+        "shuanghe",
+        "jiaohuachang",
+        "huangchang",
+        "langxinzhuang",
+        "heizhuanghu",
+        "wansheng-west",
+        "wansheng-east",
+        "qunfang",
+        "gaoloujin",
+        "huazhuang",
+        "universal-resort"
+      ],
+      "loop": false,
+      "serviceGroup": "7"
+    },
+    {
+      "id": "8",
+      "name": "8号线",
+      "english": "Line 8",
+      "color": "#37835c",
+      "stops": [
+        "zhuxinzhuang",
+        "yuzhilu",
+        "pingxifu",
+        "huilongguan-dongdajie",
+        "huoying",
+        "yuxin",
+        "xixiaokou",
+        "yongtaizhuang",
+        "lincuiqiao",
+        "forest-park-south-gate",
+        "olympic-park",
+        "olympic-sports-center",
+        "beitucheng",
+        "anhuaqiao",
+        "andeli-beijie",
+        "gulou-dajie",
+        "shichahai",
+        "nanluogu-xiang",
+        "national-art-museum",
+        "jinyu-hutong",
+        "wangfujing",
+        "qianmen",
+        "station-149",
+        "tianqiao",
+        "outer-yongdingmen",
+        "muxi-yuan",
+        "haihu-tun",
+        "dahongmen",
+        "dahongmen-nan-south",
+        "heyi",
+        "donggao-di",
+        "huojian-wanyuan",
+        "wufu-tang",
+        "demao",
+        "yinghai"
+      ],
+      "loop": false,
+      "serviceGroup": "8"
+    },
+    {
+      "id": "9",
+      "name": "9号线",
+      "english": "Line 9",
+      "color": "#819744",
+      "stops": [
+        "national-library",
+        "baishiqiao-south",
+        "baiduizi",
+        "military-museum",
+        "beijing-west-railway-station",
+        "liuliqiao-east",
+        "liuliqiao",
+        "station-203",
+        "fengtai-dongdajie",
+        "fengtai-nanlu",
+        "keyilu",
+        "fengtai-science-park",
+        "guogongzhuang"
+      ],
+      "loop": false,
+      "serviceGroup": "9"
+    },
+    {
+      "id": "10",
+      "name": "10号线",
+      "english": "Line 10",
+      "color": "#378ca6",
+      "stops": [
+        "bagou",
+        "suzhoujie",
+        "haidian-huangzhuang",
+        "zhichunli",
+        "zhichun-lu",
+        "xitucheng",
+        "mudanyuan",
+        "jiandemen",
+        "beitucheng",
+        "anzhenmen",
+        "huixinxijie-nankou",
+        "shaoyaoju",
+        "taiyanggong",
+        "sanyuanqiao",
+        "liangmaqiao",
+        "agricultural-exhibition-center",
+        "tuanjiehu",
+        "hujialou",
+        "jintaixizhao",
+        "guomao",
+        "shuangjing",
+        "jinsong",
+        "panjiayuan",
+        "shilihe",
+        "fenzhongsi",
+        "chengshousi",
+        "songjiazhuang",
+        "shiliuzhuang",
+        "dahongmen",
+        "jiaomen-east",
+        "jiaomen-west",
+        "caoqiao",
+        "jijiaomiao",
+        "capital-university-of-economics-business",
+        "fengtaizhan",
+        "niwa",
+        "xiju",
+        "liuliqiao",
+        "lianhuaqiao",
+        "gongzhufen-station",
+        "xidiaoyutai",
+        "cishousi",
+        "chedaogou",
+        "changchunqiao",
+        "huoqiying"
+      ],
+      "loop": true,
+      "serviceGroup": "10"
+    },
+    {
+      "id": "11",
+      "name": "11号线",
+      "english": "Line 11",
+      "color": "#d06468",
+      "stops": [
+        "moshikou",
+        "jin-anqiao",
+        "beixin-an",
+        "shougang-park"
+      ],
+      "loop": false,
+      "serviceGroup": "11"
+    },
+    {
+      "id": "12",
+      "name": "12号线",
+      "english": "Line 12",
+      "color": "#99633f",
+      "stops": [
+        "sijiqing-qiao",
+        "station-245",
+        "changchunqiao",
+        "suzhou-qiao",
+        "renmin-university",
+        "dazhongsi",
+        "station-248",
+        "beitaipingzhuang",
+        "station-250",
+        "anhuaqiao",
+        "station-251",
+        "heping-xiqiao",
+        "guangximen",
+        "xibahe",
+        "sanyuanqiao",
+        "jiangtaixi",
+        "gaojiayuan",
+        "tuofangying",
+        "dongbaxi",
+        "dongbabei"
+      ],
+      "loop": false,
+      "serviceGroup": "12"
+    },
+    {
+      "id": "13",
+      "name": "13号线",
+      "english": "Line 13",
+      "color": "#c7a53e",
+      "stops": [
+        "xizhimen",
+        "dazhongsi",
+        "zhichun-lu",
+        "wudaokou",
+        "shangdi",
+        "qinghe-railway-station",
+        "xi-erqi",
+        "longze",
+        "huilongguan",
+        "huoying",
+        "lishuiqiao",
+        "beiyuan",
+        "wangjing-west",
+        "shaoyaoju",
+        "guangximen",
+        "liufang",
+        "dongzhimen"
+      ],
+      "loop": false,
+      "serviceGroup": "13"
+    },
+    {
+      "id": "14",
+      "name": "14号线",
+      "english": "Line 14",
+      "color": "#c38f88",
+      "stops": [
+        "shan-gezhuang",
+        "laiguangying",
+        "donghuqu",
+        "wangjing",
+        "futong",
+        "wangjing-south",
+        "jiangtai",
+        "dongfeng-beiqiao",
+        "zaoying",
+        "chaoyang-park",
+        "jintailu",
+        "dawanglu",
+        "jiulongshan",
+        "pingleyuan",
+        "beijing-university-of-technology-west-gate",
+        "shilihe",
+        "fangzhuang",
+        "puhuangyu",
+        "jingtai",
+        "outer-yongdingmen",
+        "beijing-south-railway-station",
+        "jingfengmen",
+        "xitieying",
+        "caihuying",
+        "lize-business-district",
+        "dongguantou",
+        "xiju",
+        "station-203",
+        "dajing",
+        "guozhuangzi",
+        "dawayao",
+        "garden-expo-park",
+        "zhangguozhuang"
+      ],
+      "loop": false,
+      "serviceGroup": "14"
+    },
+    {
+      "id": "15",
+      "name": "15号线",
+      "english": "Line 15",
+      "color": "#80618c",
+      "stops": [
+        "qinghua-donglu-xikou",
+        "liudaokou",
+        "beishatan",
+        "olympic-park",
+        "anlilu",
+        "datunlu-east",
+        "guanzhuang",
+        "wangjing-west",
+        "wangjing",
+        "wangjing-east",
+        "cuigezhuang",
+        "maquanying",
+        "sunhe",
+        "china-international-exhibition-center",
+        "hualikan",
+        "houshayu",
+        "nanfaxin",
+        "shimen",
+        "shunyi",
+        "fengbo"
+      ],
+      "loop": false,
+      "serviceGroup": "15"
+    },
+    {
+      "id": "16",
+      "name": "16号线",
+      "english": "Line 16",
+      "color": "#7da875",
+      "stops": [
+        "beianhe",
+        "wenyanglu",
+        "daoxianghulu",
+        "tundian",
+        "yongfeng",
+        "yongfeng-south",
+        "xibeiwang",
+        "malianwa",
+        "nongda-nanlu",
+        "xiyuan",
+        "wanquanhe-qiao",
+        "suzhoujie",
+        "suzhou-qiao",
+        "wanshousi",
+        "national-library",
+        "erligou",
+        "ganjia-kou",
+        "yuyuantan-park-east-gate",
+        "muxidi-16",
+        "daguanying",
+        "honglian-nanlu",
+        "lize-business-district",
+        "dongguantou-south",
+        "fengtaizhan",
+        "fengtai-nanlu",
+        "fufengqiao",
+        "kandan",
+        "yushuzhuang",
+        "hongtaizhuang",
+        "wanpingcheng"
+      ],
+      "loop": false,
+      "serviceGroup": "16"
+    },
+    {
+      "id": "17",
+      "name": "17号线",
+      "english": "Line 17",
+      "color": "#328e81",
+      "stops": [
+        "station-327",
+        "ciqu",
+        "station-329",
+        "station-330",
+        "station-331",
+        "station-332",
+        "shilihe",
+        "panjiayuanxi",
+        "yonganli",
+        "dongdaqiao",
+        "workers-stadium",
+        "zuojiazhuang",
+        "xibahe",
+        "taiyanggong",
+        "wangjing-west",
+        "hongjunying",
+        "qingheying",
+        "tiantongyuandong",
+        "future-science-city",
+        "future-science-city-north"
+      ],
+      "loop": false,
+      "serviceGroup": "17"
+    },
+    {
+      "id": "18",
+      "name": "18号线",
+      "english": "Line 18",
+      "color": "#8277a2",
+      "stops": [
+        "malianwa",
+        "shangdi-software-park",
+        "dongbeiwang",
+        "longzexi",
+        "huilongguan-xidajie",
+        "wenhualu",
+        "huilongguan-dongdajie",
+        "huoyingdong",
+        "tiantongyuan",
+        "taipingzhuang",
+        "tiantongyuandong"
+      ],
+      "loop": false,
+      "serviceGroup": "18"
+    },
+    {
+      "id": "19",
+      "name": "19号线",
+      "english": "Line 19",
+      "color": "#ac83a1",
+      "stops": [
+        "mudanyuan",
+        "beitaipingzhuang",
+        "jishuitan",
+        "ping-anli",
+        "station-347",
+        "niujie",
+        "jingfengmen",
+        "caoqiao",
+        "station-349",
+        "xin-gong"
+      ],
+      "loop": false,
+      "serviceGroup": "19"
+    },
+    {
+      "id": "s1",
+      "name": "S1线",
+      "english": "S1 Maglev",
+      "color": "#976841",
+      "stops": [
+        "station-350",
+        "station-351",
+        "station-352",
+        "station-353",
+        "station-354",
+        "station-355",
+        "jin-anqiao",
+        "pingguoyuan"
+      ],
+      "loop": false,
+      "serviceGroup": "s1"
+    },
+    {
+      "id": "changping",
+      "name": "昌平线",
+      "english": "Changping Line",
+      "color": "#c98faa",
+      "stops": [
+        "changping-xishankou",
+        "ming-tombs",
+        "changping",
+        "changping-dongguan",
+        "beishaowa",
+        "nanshao",
+        "shahe-university-park",
+        "shahe",
+        "gonghuacheng",
+        "zhuxinzhuang",
+        "life-science-park",
+        "xi-erqi",
+        "qinghe-railway-station",
+        "station-366",
+        "qinghe-xiaoying-bridge",
+        "xuezhiyuan",
+        "liudaokou",
+        "xueyuanqiao",
+        "xitucheng",
+        "station-248"
+      ],
+      "loop": false,
+      "serviceGroup": "changping"
+    },
+    {
+      "id": "fangshan",
+      "name": "房山线",
+      "english": "Fangshan Line",
+      "color": "#ce8645",
+      "stops": [
+        "dongguantou-south",
+        "capital-university-of-economics-business",
+        "huaxiang-dongqiao",
+        "baipenyao",
+        "guogongzhuang",
+        "dabaotai",
+        "daotian",
+        "changyang",
+        "libafang",
+        "guangyangcheng",
+        "liangxiang-university-town-north",
+        "liangxiang-university-town",
+        "liangxiang-university-town-west",
+        "liangxiang-nanguan",
+        "suzhuang",
+        "yancun-east"
+      ],
+      "loop": false,
+      "serviceGroup": "fangshan"
+    },
+    {
+      "id": "yanfang",
+      "name": "燕房线",
+      "english": "Yanfang Line",
+      "color": "#b56e3d",
+      "stops": [
+        "yanshan",
+        "fangshan-chengguan",
+        "raolefu",
+        "magezhuang",
+        "dashihe-east",
+        "xingcheng",
+        "yancun",
+        "zicaowu",
+        "yancun-east"
+      ],
+      "loop": false,
+      "serviceGroup": "yanfang"
+    },
+    {
+      "id": "yizhuang",
+      "name": "亦庄线",
+      "english": "Yizhuang Line",
+      "color": "#b7668d",
+      "stops": [
+        "songjiazhuang",
+        "xiaocun",
+        "xiaohongmen",
+        "jiugong",
+        "yizhuangqiao",
+        "yizhuang-culture-park",
+        "wanyuanjie",
+        "rongjing-dongjie",
+        "rongchangdongjie",
+        "tongjinanlu",
+        "jinghailu",
+        "ciqu-south",
+        "ciqu",
+        "yizhuang-railway-station"
+      ],
+      "loop": false,
+      "serviceGroup": "yizhuang"
+    },
+    {
+      "id": "capital-airport",
+      "name": "首都机场线",
+      "english": "Capital Airport Express",
+      "color": "#958aa4",
+      "stops": [
+        "beixinqiao",
+        "dongzhimen",
+        "sanyuanqiao",
+        "terminal-3",
+        "terminal-2"
+      ],
+      "loop": false,
+      "serviceGroup": "capital-airport",
+      "connections": [
+        {
+          "from": "beixinqiao",
+          "to": "dongzhimen",
+          "bidirectional": false
+        },
+        {
+          "from": "dongzhimen",
+          "to": "beixinqiao",
+          "bidirectional": false
+        },
+        {
+          "from": "dongzhimen",
+          "to": "sanyuanqiao",
+          "bidirectional": false
+        },
+        {
+          "from": "sanyuanqiao",
+          "to": "dongzhimen",
+          "bidirectional": false
+        },
+        {
+          "from": "sanyuanqiao",
+          "to": "terminal-3",
+          "bidirectional": false
+        },
+        {
+          "from": "terminal-3",
+          "to": "terminal-2",
+          "bidirectional": false
+        },
+        {
+          "from": "terminal-2",
+          "to": "sanyuanqiao",
+          "bidirectional": false
+        }
+      ]
+    },
+    {
+      "id": "daxing-airport",
+      "name": "大兴机场线",
+      "english": "Daxing Airport Express",
+      "color": "#456788",
+      "stops": [
+        "caoqiao",
+        "daxing-xincheng",
+        "daxing-airport"
+      ],
+      "loop": false,
+      "serviceGroup": "daxing-airport"
+    },
+    {
+      "id": "xijiao",
+      "name": "西郊线",
+      "english": "Xijiao Tram",
+      "color": "#c96562",
+      "stops": [
+        "bagou-xijiao",
+        "station-408",
+        "station-409",
+        "station-410",
+        "station-411",
+        "station-412"
+      ],
+      "loop": false,
+      "serviceGroup": "xijiao"
+    },
+    {
+      "id": "yizhuang-t1",
+      "name": "亦庄T1线",
+      "english": "Yizhuang T1 Tram",
+      "color": "#668d83",
+      "stops": [
+        "qu-zhuang",
+        "rongxing-jie",
+        "ruihe-zhuang",
+        "taihe-qiao-bei-n",
+        "sihai-zhuang",
+        "jiuhao-cun",
+        "taihe-lu",
+        "lujuan-dong-e",
+        "yizhuang-tongren",
+        "rongchang-dongjie",
+        "beijing-etrang-intrenational-exhibition-convention-center",
+        "jinghai-yilu",
+        "dinghai-yuan-xi-w",
+        "dinghai-yuan"
+      ],
+      "loop": false,
+      "serviceGroup": "yizhuang-t1"
+    }
+  ],
+  "externalTransfers": [
+    {
+      "from": "muxidi",
+      "to": "muxidi-16",
+      "minutes": 8,
+      "meters": 450
+    },
+    {
+      "from": "bagou",
+      "to": "bagou-xijiao",
+      "minutes": 6,
+      "meters": 250
+    },
+    {
+      "from": "rongchangdongjie",
+      "to": "rongchang-dongjie",
+      "minutes": 6,
+      "meters": 300
+    }
+  ],
+  "provenance": {
+    "snapshotDate": "2026-06-30",
+    "scope": "Beijing urban rail: 28 through-services / 30 named lines, including metro, airport rail and trams; excludes suburban railway",
+    "sources": [
+      {
+        "name": "© OpenStreetMap contributors — ODbL 1.0 coordinate database",
+        "url": "https://www.openstreetmap.org/copyright"
+      },
+      {
+        "name": "BJMTR operating line rosters and distance tables",
+        "url": "https://www.mtr.bj.cn/service/line/"
+      },
+      {
+        "name": "Beijing government: Line 1 reopening / Bajiao non-stopping",
+        "url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202605/t20260516_4653696.html"
+      },
+      {
+        "name": "Beijing government: June 2026 suburban railway scope",
+        "url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202606/t20260615_4700120.html"
+      },
+      {
+        "name": "Machine-readable adapted map database and attribution",
+        "url": "https://github.com/micwu-personal/TransitTales/blob/main/src/beijing/network-data.json"
+      }
+    ],
+    "notes": [
+      "Operating-facts snapshot researched 2026-10-14; latest verified opening included: Tongyunmen, 2026-06-30. Not a live service feed.",
+      "Coordinates derived from OpenStreetMap (WGS84); the schematic is original. Data database © OpenStreetMap contributors, available under ODbL 1.0; application code and artwork are separately licensed.",
+      "Line 1–Batong and Line 4–Daxing run through without a forced interchange. Capital Airport Express uses the directed terminal circuit.",
+      "Bajiao Amusement Park is non-stopping and omitted; deferred Hongmiao / Gaojiayuan on Line 14 and Guangqumenwai on Line 17 are not invented.",
+      "Muxidi Line 1/16 and the tram links at Bagou / Rongchang Dongjie remain separate nodes. Explicit external walking links require exiting/re-entering; their times/distances are illustrative game estimates, not verified accessibility or paid-area transfers.",
+      "Map-only positions interpolated for 12 unmatched stations: 石厂 (s1), 小园 (s1), 栗园庄 (s1), 上岸 (s1), 桥户营 (s1), 四道桥 (s1), 朱房北 (changping), 颐和园西门 (xijiao), 茶棚 (xijiao), 万安 (xijiao), 国家植物园 (xijiao), 香山 (xijiao). Positions are illustrative, not precise geographic navigation.",
+      "Line colors are original approximate identity colors. Times, crowding, walking, wheelchair suitability, toilets and incidents are game simulations, not verified facilities or real travel advice."
+    ]
+  }
+}

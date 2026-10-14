@@ -8,7 +8,7 @@ import { PUZZLES } from '../src/escalator/puzzles';
 
 const originalIds = ['first-notes', 'long-lunch', 'homeward', 'duet', 'everyone', 'courtyard', 'balloon', 'grand-finale'];
 const newIds = ['rooftop-lanterns', 'step-free-home', 'atrium-chorus', 'ribbon-switchbacks', 'garden-labyrinth', 'sky-parade'];
-const rounds = PUZZLES.slice(8);
+const rounds = PUZZLES.slice(8, 14);
 const languages = ['en', 'zh-CN', 'ja', 'mn-Cyrl-MN', 'mn-Mong-CN'] as const;
 const scripts = [/[A-Za-z]/, /[\u4e00-\u9fff]/, /[\u3040-\u30ff]/, /[\u0400-\u04ff]/, /[\u1800-\u18af]/];
 const piece = (type: PieceType, x: number, y: number, bx: number, by: number): Omit<Piece, 'id'> =>
@@ -25,8 +25,8 @@ const build = (puzzle: Puzzle, pieces: Puzzle['solution']) => {
 };
 
 describe('six new Escalator Orchestra rounds', () => {
-  it('appends exactly six unique IDs without moving the original eight', () => {
-    expect(PUZZLES).toHaveLength(14);
+  it('keeps the first expansion and original eight in place as the collection grows', () => {
+    expect(PUZZLES).toHaveLength(20);
     expect(PUZZLES.slice(0, 8).map(p => p.id)).toEqual(originalIds);
     expect(rounds.map(p => p.id)).toEqual(newIds);
     expect(new Set(PUZZLES.map(p => p.id)).size).toBe(PUZZLES.length);

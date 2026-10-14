@@ -1,11 +1,38 @@
 import { copy, destinationColor, destinationIcon, landingName } from './locale';
-import { type Point } from './model';
+import { type Point, type Zone } from './model';
 import { experienceCopy } from './experience-copy';
 import { type MallSnapshot } from './view';
 import { issueText, shopperLabel } from './feedback';
 export interface MallRenderer { mount(host:HTMLElement,onLanding:(p:Point)=>void,onPiece:(id:string)=>void):void; render(view:MallSnapshot):void; dispose():void }
 const project=(p:Point)=>({x:145+p.x*108,y:556-p.y*126});
 const coords=(p:Point)=>{const q=project(p);return `${q.x},${q.y}`;};
+
+// The zone describes blocked travel, not a floor slab: root its headroom gauge on the landing below it.
+export function clearanceCutaway(zone: Zone, landings: readonly Point[], floor=Math.floor(zone.y)): { anchors: Point[]; floor: number; roof: number } {
+ const anchors=landings.filter(p=>p.y===floor&&p.x>zone.x&&p.x<zone.x+zone.w).map(p=>({...p}));
+ if(!anchors.length){
+  const candidates=landings.filter(p=>p.y===floor).sort((a,b)=>Math.abs(a.x-zone.x-zone.w/2)-Math.abs(b.x-zone.x-zone.w/2));
+  if(candidates[0])anchors.push({...candidates[0]});
+ }
+ return {anchors,floor,roof:floor+Math.min(.62,Math.max(.44,zone.y+zone.h-floor))};
+}
+
+export function clearanceCutaways(zone: Zone, landings: readonly Point[]): ReturnType<typeof clearanceCutaway>[] {
+ const result: ReturnType<typeof clearanceCutaway>[]=[];
+ for(let floor=Math.floor(zone.y);floor<Math.ceil(zone.y+zone.h);floor++){
+  const cutaway=clearanceCutaway(zone,landings,floor);if(cutaway.anchors.length)result.push(cutaway);
+ }
+ return result;
+}
+
+export function clearanceSvgMarkup(zone: Zone, landings: readonly Point[], label: string): string {
+ return clearanceCutaways(zone,landings).map(cutaway=>{
+ const a=project({x:zone.x,y:cutaway.roof}),base=project({x:zone.x,y:cutaway.floor}),w=zone.w*108,h=base.y-a.y;
+ const coordinate=cutaway.anchors.map(landingName).join(' / '),description=`${coordinate} ↑ · ${label}`;
+ const gaugeX=a.x-9,signX=a.x+w+38,signY=a.y+h/2,pillWidth=Math.max(76,coordinate.length*8+32);
+ return `<g class="mall-clearance-cutaway" data-clearance-landings="${coordinate}" role="img" aria-label="${description}"><title>${description}</title><path d="M${a.x} ${a.y}h${w}l9-8h-${w}z" fill="#f2e6bd" stroke="#957041" stroke-width="2"/><path d="M${a.x} ${a.y}h${w}v9h-${w}z" fill="url(#mall-canopy)" stroke="#957041" stroke-width="2"/><path d="M${a.x+w-3} ${a.y+9}V${base.y}" stroke="#b28f61" stroke-width="3"/><path d="M${gaugeX} ${a.y+9}V${base.y}m-5 0h10m-10 ${9-h}h10" fill="none" stroke="#966d36" stroke-width="2"/>${cutaway.anchors.map(p=>{const q=project(p);return `<path d="M${q.x} ${q.y-4}L${signX-18} ${signY}" fill="none" stroke="#a44834" stroke-width="2"/><circle cx="${q.x}" cy="${q.y}" r="13" fill="none" stroke="#a44834" stroke-width="2" stroke-dasharray="3 3"/>`;}).join('')}<g transform="translate(${signX} ${signY})"><circle r="17" fill="#fcf5df" stroke="#a44834" stroke-width="2"/><ellipse cy="-3" rx="5" ry="7" fill="#d7a64e"/><path d="M0 4l-3 8M-11-11l22 22" stroke="#a44834" stroke-width="2"/><rect x="${-pillWidth/2}" y="22" width="${pillWidth}" height="22" rx="4" fill="#fcf5df" stroke="#a44834"/><text x="0" y="38" text-anchor="middle" fill="#784031" font-size="13" font-weight="700">${coordinate} ↑</text></g></g>`;
+  }).join('');
+ }
 const plant=(x:number,y:number,size=1)=>`<g transform="translate(${x} ${y}) scale(${size})"><ellipse cx="4" cy="7" rx="22" ry="7" fill="#476f5a" opacity=".16"/><path d="M-13-10h27l-4 20h-19z" fill="#c19269"/><path d="M0-9v-40M0-20q-28-28-25-32 27 3 25 22M0-29q25-30 28-26 2 26-28 31M0-38q-6-27 0-30 14 18 0 30" fill="#598367" stroke="#466f53" stroke-width="2"/></g>`;
 function scenery():string {
  let floors='';for(let f=0;f<4;f++){const y=556-f*126;floors+=`<g><path d="M74 ${y+11}H920l28-19H102z" fill="#fcf6df"/><path d="M74 ${y+11}H920v14H74z" fill="#bcbba1"/><path d="M920 ${y+11}l28-19v14l-28 19z" fill="#879b8c"/><path d="M106 ${y-3}H918" stroke="#e4d7b8" stroke-width="3"/><path d="M834 ${y-77}h83v71h-83z" fill="${['#ad6d51','#73979a','#bd9b63','#7a9370'][f]}"/><path d="M841 ${y-67}h66v51h-66z" fill="#c6dfd3"/><path d="M865 ${y-67}v51m20-51v51" stroke="#f8edd2" stroke-width="3"/><path d="M828 ${y-82}h92v10h-92z" fill="#f3e3bd"/><path d="M839 ${y-7}h72" stroke="#69817a" stroke-width="4"/>${plant(807,y-5,.55)}</g>`;}
@@ -53,8 +80,8 @@ export function createSvgRenderer():MallRenderer {
  return {mount(h,onLanding,onPiece){host=h;landingCallback=onLanding;pieceCallback=onPiece;host.innerHTML=`<svg id="escalator-board" viewBox="0 0 1000 650" role="group">${scenery()}</svg>`;svg=host.querySelector('svg');svg!.addEventListener('pointerdown',act);svg!.addEventListener('pointerup',act);svg!.addEventListener('pointercancel',act);svg!.addEventListener('click',act);svg!.addEventListener('keydown',act);},render(v){if(!svg)return;const t=copy[v.language];svg.setAttribute('aria-label',t.mall);svg.classList.toggle('is-running',v.running&&!v.reducedMotion);svg.classList.toggle('is-celebrating',v.celebrating);
  const signature=JSON.stringify([v.puzzle.id,v.pieces,v.language,v.first,v.selected,v.building]);
  if(signature!==last){last=signature;const focused=document.activeElement;const focusedLanding=focused?.getAttribute('data-landing'),focusedPiece=focused?.getAttribute('data-piece');
- svg.querySelector('#mall-geometry')!.innerHTML=v.puzzle.obstacles.map(z=>{const a=project({x:z.x,y:z.y+z.h});return `<g aria-hidden="true"><rect x="${a.x}" y="${a.y}" width="${z.w*108}" height="${z.h*126}" rx="14" fill="#8faa78"/><path d="M${a.x+9} ${a.y+z.h*126-9}h${z.w*108-18}" stroke="#667e56" stroke-width="8"/>${plant(a.x+z.w*54,a.y+z.h*63,.8)}</g>`;}).join('')+v.puzzle.lowCeilings.map(z=>{const a=project({x:z.x,y:z.y+z.h}),w=z.w*108,h=z.h*126;return `<g aria-hidden="true"><rect x="${a.x}" y="${a.y}" width="${w}" height="${h}" fill="#dba74d" opacity=".13"/><path d="M${a.x} ${a.y}h${w}v16h-${w}z" fill="url(#mall-canopy)" stroke="#957041" stroke-width="2"/><path d="M${a.x+4} ${a.y+16}v${h-16}m${w-8} ${16-h}v${h-16}" stroke="#b28f61" stroke-width="4"/></g>`;}).join('')+v.pieces.map(p=>pieceMarkup(p,v)).join('');
- svg.querySelector('#mall-clearance')!.innerHTML=v.puzzle.lowCeilings.map(z=>{const a=project({x:z.x,y:z.y+z.h}),w=z.w*108,h=z.h*126;return `<g role="img" aria-label="${experienceCopy[v.language].lowRoof}"><title>${experienceCopy[v.language].lowRoof}</title><path d="M${a.x-11} ${a.y+18}v${Math.max(12,h-22)}m-5 0h10m-10 ${22-h}h10" stroke="#966d36" stroke-width="2"/><g transform="translate(${a.x+w+15} ${a.y+24})"><circle r="16" fill="#fcf5df" stroke="#a44834" stroke-width="2"/><ellipse cy="-3" rx="5" ry="7" fill="#d7a64e"/><path d="M0 4l-3 8M-11-11l22 22" stroke="#a44834" stroke-width="2"/></g></g>`;}).join('');
+ svg.querySelector('#mall-geometry')!.innerHTML=v.puzzle.obstacles.map(z=>{const a=project({x:z.x,y:z.y+z.h});return `<g aria-hidden="true"><rect x="${a.x}" y="${a.y}" width="${z.w*108}" height="${z.h*126}" rx="14" fill="#8faa78"/><path d="M${a.x+9} ${a.y+z.h*126-9}h${z.w*108-18}" stroke="#667e56" stroke-width="8"/>${plant(a.x+z.w*54,a.y+z.h*63,.8)}</g>`;}).join('')+v.pieces.map(p=>pieceMarkup(p,v)).join('');
+ svg.querySelector('#mall-clearance')!.innerHTML=v.puzzle.lowCeilings.map(z=>clearanceSvgMarkup(z,v.puzzle.landings,experienceCopy[v.language].lowRoof)).join('');
  svg.querySelector('#mall-landings')!.innerHTML=v.puzzle.landings.map(p=>{const a=project(p),first=!!v.first&&v.first.x===p.x&&v.first.y===p.y;return `<g data-landing="${p.x},${p.y}" id="landing-${landingName(p)}" class="mall-landing ${first?'first-landing':''}" role="button" tabindex="${v.building?'0':'-1'}" aria-disabled="${!v.building}" aria-label="${t.landing} ${landingName(p)}" aria-pressed="${first}"><circle class="landing-hit" cx="${a.x}" cy="${a.y}" r="24"/><circle class="landing-dot" cx="${a.x}" cy="${a.y}" r="8"/><text x="${a.x}" y="${a.y+30}" text-anchor="middle">${landingName(p)}</text></g>`;}).join('')+v.puzzle.requests.map(r=>{const a=project(r.goal),b=project(r.start);if(v.language==='mn-Mong-CN')return `<g aria-hidden="true"><rect x="${a.x+27}" y="${a.y-99}" width="27" height="106" rx="6" fill="${destinationColor[r.destination]}"/><text x="${a.x+40}" y="${a.y-93}" class="goal-label">${t[r.destination]}</text><text x="${b.x-36}" y="${b.y-94}" class="entrance-label">${t.departure}</text></g>`;return `<g aria-hidden="true"><rect x="${a.x-39}" y="${a.y-73}" width="78" height="29" rx="6" fill="${destinationColor[r.destination]}"/><text x="${a.x}" y="${a.y-53}" text-anchor="middle" class="goal-label">${destinationIcon[r.destination]} ${t[r.destination]}</text><path d="M${a.x} ${a.y-43}v17" stroke="${destinationColor[r.destination]}" stroke-width="2"/><text x="${b.x}" y="${b.y-42}" text-anchor="middle" class="entrance-label">${r.wheelchair?'♿ ':''}${r.balloon?'♧ ':''}${!r.wheelchair&&!r.balloon?'↓ ':''}${t.departure}</text></g>`;}).join('');
  svg.querySelector('#mall-routes')!.innerHTML=v.routes.filter(r=>r.ready).map((r,i)=>`<polyline points="${r.points.map(coords).join(' ')}" fill="none" stroke="${destinationColor[r.destination]}" stroke-width="3" stroke-dasharray="5 7" transform="translate(0 ${-33-i*5})" opacity=".7"/>`).join('');
   if(focusedLanding||focusedPiece){const selector=focusedLanding?`[data-landing="${focusedLanding}"]`:`[data-piece="${focusedPiece}"]`;svg.querySelector<SVGElement>(selector)?.focus();}

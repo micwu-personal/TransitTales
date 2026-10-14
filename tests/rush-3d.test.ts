@@ -3,7 +3,7 @@ import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
 import { Matrix } from '@babylonjs/core/Maths/math.vector';
 import { ArcRotateCamera, Mesh, Scene, Vector3 } from '../src/babylon';
 import {
-  CITY_CAMERA, cityCameraRadius, cityPoint3d, cityStaticSignature, cityTrainPose,
+  CITY_CAMERA, cityCameraRadius, cityFramingPoints, cityPoint3d, cityStaticSignature, cityTrainPose,
   coastalIslandGeometry, create3dCityRenderer, layoutCityLabels,
 } from '../src/rush/renderer3d';
 import { COASTAL_LAYOUT } from '../src/rush/city';
@@ -135,16 +135,16 @@ describe('3D coastal geometry and responsive projection', () => {
     expect(cityStaticSignature({ ...initial, stations: initial.stations.map(station => ({ ...station, position: { x: station.position.x + 0.01, y: station.position.y } })) })).not.toBe(cityStaticSignature(initial));
   });
 
-  it.each([[280, 440], [320, 440], [364, 440], [390, 440], [720, 486], [1280, 680]])('fits the full coastline, skyline and selected station at %i×%i without cropping', (width, height) => {
+  it.each([[280, 440], [320, 440], [364, 440], [390, 440], [720, 486], [1280, 680]])('fits playable tracks, train bounds, skyline and selected station at %i×%i without cropping', (width, height) => {
     const engine = headless(width, height), scene = new Scene(engine);
     try {
       for (const [alpha, beta] of [[CITY_CAMERA.alpha, CITY_CAMERA.beta], [-1.91, 0.65], [-1.1, 1.02]]) {
-        const camera = new ArcRotateCamera('fit', alpha, beta, cityCameraRadius(width, height, alpha, beta), new Vector3(0, CITY_CAMERA.targetY, 0), scene);
+        const camera = new ArcRotateCamera('fit', alpha, beta, cityCameraRadius(width, height, alpha, beta, view().stations.map(station => station.position)), new Vector3(0, CITY_CAMERA.targetY, 0), scene);
         camera.fov = CITY_CAMERA.fov; camera.minZ = 0.1; camera.maxZ = 200; scene.activeCamera = camera; scene.render();
         const viewport = camera.viewport.toGlobal(width, height);
         const project = (p: Vector3) => Vector3.Project(p, Matrix.Identity(), scene.getTransformMatrix(), viewport);
-        for (const x of [-14.6, 14.6]) for (const y of [-0.25, 3.5]) for (const z of [-10.1, 10.1]) {
-          const p = project(new Vector3(x, y, z));
+        for (const point of cityFramingPoints(view().stations.map(station => station.position))) {
+          const p = project(new Vector3(point.x, point.y, point.z));
           expect(p.x).toBeGreaterThan(25); expect(p.x).toBeLessThan(width - 25);
           expect(p.y).toBeGreaterThan(25); expect(p.y).toBeLessThan(height - 25);
         }
@@ -181,7 +181,7 @@ describe('3D coastal geometry and responsive projection', () => {
 describe('3D renderer lifecycle and native controls', () => {
   it('is lazy and can reset/dispose repeatedly without a DOM or callback', () => {
     const unavailable = vi.fn(), renderer = create3dCityRenderer(unavailable);
-    renderer.resetCamera(); renderer.dispose(); renderer.dispose(); renderer.render(view());
+    renderer.zoomCamera('in'); renderer.resetCamera(); renderer.dispose(); renderer.zoomCamera('out'); renderer.dispose(); renderer.render(view());
     expect(harness.engines).toHaveLength(0); expect(unavailable).not.toHaveBeenCalled();
   });
 
@@ -230,6 +230,47 @@ describe('3D renderer lifecycle and native controls', () => {
       expect(host.children).toHaveLength(0); expect(engine.scenes).toHaveLength(0); expect(engine.releases).toBe(1); expect(engine.frame).toBeUndefined();
       expect(observers.every(observer => observer.disconnected)).toBe(true);
       for (const node of [...nodes, window]) for (const listeners of node.listeners.values()) expect(listeners.size).toBe(0);
+    } finally { renderer.dispose(); }
+  });
+
+  it('zooms without changing selection or snapshots and preserves magnification through resizing', () => {
+    const { host, renderer, engine, window, select, trainSelect } = mountHarness();
+    try {
+      renderer.render(view()); engine.frame?.();
+      const camera = engine.scenes[0].activeCamera as ArcRotateCamera, radius = camera.radius;
+      const canvas = host.all().find(node => node.tagName === 'canvas')!;
+      const meshes = engine.scenes[0].meshes.length;
+      renderer.zoomCamera('in'); engine.frame?.(); expect(camera.radius).toBeCloseTo(radius / 1.2);
+      canvas.clientWidth = 820; canvas.clientHeight = 480; window.emit('resize', {}); engine.frame?.();
+      expect(camera.radius).toBeCloseTo(cityCameraRadius(820, 480) / 1.2);
+      expect(engine.scenes[0].meshes.length).toBe(meshes); expect(select).not.toHaveBeenCalled(); expect(trainSelect).not.toHaveBeenCalled();
+      renderer.resetCamera(); engine.frame?.(); expect(camera.radius).toBeCloseTo(cityCameraRadius(820, 480));
+      expect(camera.alpha).toBe(CITY_CAMERA.alpha); expect(camera.beta).toBe(CITY_CAMERA.beta);
+      const labels = host.all().filter(node => node.dataset.station), framedLabels = labels.filter(node => !node.hidden).length;
+      for (let i = 0; i < 30; i++) renderer.zoomCamera('in'); engine.frame?.(); expect(camera.radius).toBeCloseTo(camera.lowerRadiusLimit!);
+      expect(labels.filter(node => !node.hidden).length).toBeLessThan(framedLabels);
+      renderer.resetCamera(); engine.frame?.(); expect(labels.filter(node => !node.hidden)).toHaveLength(framedLabels);
+      renderer.dispose(); renderer.zoomCamera('out');
+    } finally { renderer.dispose(); }
+  });
+
+  it('rejects drag, multitouch and cancelled synthetic clicks on projected controls but keeps keyboard activation', () => {
+    const { host, renderer, engine, window, select } = mountHarness();
+    try {
+      renderer.render(view()); engine.frame?.();
+      const wrapper = host.children[0], station = host.all().find(node => node.dataset.station === 'market')!;
+      const event = { pointerId: 1, clientX: 80, clientY: 90, timeStamp: 100, target: station, button: 0 };
+      wrapper.emit('pointerdown', event); wrapper.emit('pointermove', { ...event, clientX: 100 });
+      window.emit('pointerup', { ...event, timeStamp: 140, clientX: 100 });
+      wrapper.emit('click', { target: station, timeStamp: 141, detail: 1 }); expect(select).not.toHaveBeenCalled();
+      wrapper.emit('click', { target: station, timeStamp: 142, detail: 0 }); expect(select).toHaveBeenCalledTimes(1); select.mockClear();
+      wrapper.emit('pointerdown', { ...event, timeStamp: 1000 }); wrapper.emit('pointerdown', { ...event, pointerId: 2 });
+      window.emit('pointerup', { ...event, pointerId: 2, timeStamp: 1100 }); window.emit('pointerup', { ...event, timeStamp: 1110 });
+      wrapper.emit('click', { target: station, timeStamp: 1111, detail: 1 }); expect(select).not.toHaveBeenCalled();
+      wrapper.emit('pointerdown', { ...event, timeStamp: 2000 }); window.emit('pointercancel', { ...event, timeStamp: 2010 });
+      wrapper.emit('click', { target: station, timeStamp: 2011, detail: 1 }); expect(select).not.toHaveBeenCalled();
+      wrapper.emit('pointerdown', { ...event, timeStamp: 2020 }); window.emit('pointerup', { ...event, timeStamp: 2050 });
+      wrapper.emit('click', { target: station, timeStamp: 2051, detail: 1 }); expect(select).toHaveBeenCalledTimes(1);
     } finally { renderer.dispose(); }
   });
 

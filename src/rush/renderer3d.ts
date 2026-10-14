@@ -8,6 +8,7 @@ import '@babylonjs/core/Meshes/instancedMesh';
 import type { CityRenderer, StationSelection } from './renderer';
 import type { CitySnapshot, Point, StationView, TrainView } from './view';
 import './renderer3d.css';
+import { attachCameraControls, cameraAnchorVisible, clearCameraInertia, fitCameraZoom, zoomCamera, type CameraControls } from '../camera-controls';
 
 const WIDTH = 28, DEPTH = 19, LAND = 0.28, TRACK = 0.48;
 const ALPHA = -1.47, BETA = 0.79, FOV = 0.64;
@@ -26,20 +27,21 @@ export function cityTrainPose(train: Pick<TrainView, 'position' | 'heading'>): P
   return { x: at.x + dz / length * 0.15, y: at.y, z: at.z - dx / length * 0.15, yaw: Math.atan2(-dz, dx) };
 }
 
-// Fit the entire miniature, not just its station centers, at every permitted orbit angle.
-export function cityCameraRadius(width: number, height: number, alpha = ALPHA, beta = BETA): number {
-  const w = Math.max(90, width), h = Math.max(90, height), padding = Math.min(40, w * 0.2, h * 0.2);
+// Fit the real coastline and local skyline; empty water does not need a fictional tall corner building.
+export function cityCameraRadius(width: number, height: number, alpha = ALPHA, beta = BETA,
+  stations: readonly Point[] = []): number {
+  const w = Math.max(90, width), h = Math.max(90, height), padding = Math.min(26, w * .12, h * .12);
   const tangent = Math.tan(FOV / 2);
   const tx = tangent * (w - padding * 2) / h, ty = tangent * (h - padding * 2) / h;
   const radial = new Vector3(Math.cos(alpha) * Math.sin(beta), Math.cos(beta), Math.sin(alpha) * Math.sin(beta));
   const right = new Vector3(-Math.sin(alpha), 0, Math.cos(alpha));
   const up = new Vector3(-Math.cos(alpha) * Math.cos(beta), Math.sin(beta), -Math.sin(alpha) * Math.cos(beta));
   let radius = 24;
-  for (const x of [-14.6, 14.6]) for (const y of [-0.25, 3.5]) for (const z of [-10.1, 10.1]) {
-    const p = new Vector3(x, y - CITY_CAMERA.targetY, z);
+  for (const point of cityFramingPoints(stations)) {
+    const p = new Vector3(point.x, point.y - CITY_CAMERA.targetY, point.z);
     radius = Math.max(radius, Vector3.Dot(p, radial) + Math.max(Math.abs(Vector3.Dot(p, right)) / tx, Math.abs(Vector3.Dot(p, up)) / ty));
   }
-  return radius + 1;
+  return radius + .5;
 }
 
 export function cityStaticSignature(view: CitySnapshot): string {
@@ -92,6 +94,35 @@ const SOUTH_COAST: readonly Point[] = [
   { x: 0.96, y: 0.675 }, { x: 0.96, y: 0.96 }, { x: 0.63, y: 0.96 }, { x: 0.58, y: 0.87 },
 ];
 
+const HOMES = [[100, 220, 1.2, .75, 1.5], [175, 215, 1.1, .75, 2.1], [255, 170, 1.3, .85, 1.8], [320, 220, 1.1, .7, 1.3],
+  [575, 150, 1.35, .85, 2.35], [649, 184, 1.1, .75, 1.7], [785, 245, 1.2, .8, 1.9], [850, 190, 1.15, .75, 1.45],
+  [210, 450, 1.3, .8, 1.6], [295, 463, 1.1, .75, 2.2], [419, 440, 1.4, .9, 1.4], [740, 450, 1.25, .75, 1.6]] as const;
+const TREES = [[886, 138], [930, 111], [966, 157], [892, 217], [943, 210], [88, 110], [325, 101], [354, 144],
+  [362, 454], [97, 485], [806, 430], [771, 407], [827, 559], [1000, 552]] as const;
+
+function framingBox(center: Position, width: number, depth: number, bottom: number, top: number): Position[] {
+  const points: Position[] = [];
+  for (const x of [-width / 2, width / 2]) for (const z of [-depth / 2, depth / 2]) for (const y of [bottom, top])
+    points.push({ x: center.x + x, y, z: center.z + z });
+  return points;
+}
+const CITY_SCENERY_FRAME: readonly Position[] = [
+  ...[...MAIN_COAST, ...SOUTH_COAST].flatMap(point => framingBox(cityPoint3d(point), .4, .4, -.25, LAND)),
+  ...[...HOMES, [936, 695, 2.75, 1.05, .95] as const].flatMap(([x, y, w, d, h]) =>
+    framingBox(cityPoint3d({ x: x / 1120, y: y / 760 }), w + .8, d + .8, LAND, LAND + h + .23)),
+  ...TREES.flatMap(([x, y]) => framingBox(cityPoint3d({ x: x / 1120, y: y / 760 }), 1.2, 1.2, LAND, 1.7)),
+  ...framingBox(cityPoint3d({ x: .655, y: .335 }), 2.75, 1.8, LAND, 1.95),
+  ...framingBox(cityPoint3d({ x: .55, y: .55 }), 3.1, 2.2, LAND, .7),
+  ...framingBox(cityPoint3d({ x: .035, y: .54 }), 1.8, 1.6, -.1, .5),
+  ...framingBox(cityPoint3d({ x: .91, y: .79 }), 1, 3.2, LAND, .8),
+  ...framingBox({ x: -3.8, y: 0, z: -6.7 }, 1.7, .7, -.15, 1.2),
+];
+
+export function cityFramingPoints(stations: readonly Point[] = []): readonly Position[] {
+  return stations.length ? [...CITY_SCENERY_FRAME, ...stations.flatMap(point =>
+    framingBox(cityPoint3d(point), 2.8, 2.8, TRACK - .12, TRACK + 2.2))] : CITY_SCENERY_FRAME;
+}
+
 export function coastalIslandGeometry(outline: readonly Point[], center: Point, bottom: number, top: number): { positions: number[]; indices: number[] } {
   const positions: number[] = [], indices: number[] = [];
   const add = (p: Point, y: number) => { const at = cityPoint3d(p, y); positions.push(at.x, at.y, at.z); };
@@ -114,14 +145,15 @@ interface StationNode {
 }
 interface TrainNode { root: TransformNode; button: HTMLButtonElement; count: HTMLSpanElement; signature: string; previous?: TrainView }
 
-export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer & { resetCamera(): void } {
+export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer & CameraControls {
   let wrapper: HTMLDivElement | null = null, stage: HTMLDivElement | null = null, canvas: HTMLCanvasElement | null = null;
   let labelHost: HTMLDivElement | null = null, leaders: SVGSVGElement | null = null, trainStrip: HTMLDivElement | null = null;
   let engine: Engine | null = null, scene: Scene | null = null, camera: ArcRotateCamera | null = null;
   let observer: ResizeObserver | null = null, network: TransformNode | null = null, snapshot: CitySnapshot | null = null;
   let select: StationSelection | undefined, selectTrain: ((id: number) => void) | undefined;
-  let active = false, unavailable = false, signature = '', serial = 0, projection = '', labelsDirty = true, fitRadius = 0, generation = 0;
+  let active = false, unavailable = false, signature = '', serial = 0, projection = '', labelsDirty = true, fitRadius = 0, fitKey = '', generation = 0;
   let pointer: { id: number; x: number; y: number; time: number; distance: number; multiple: boolean } | null = null;
+  let suppressClickUntil = 0;
   const pointers = new Set<number>(), materials = new Map<string, StandardMaterial>(), shapes = new Map<string, Mesh>(), crowd = new Map<string, Mesh>();
   const stations = new Map<string, StationNode>(), trains = new Map<number, TrainNode>();
   const identity = Matrix.Identity();
@@ -247,11 +279,8 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
       const a = cityPoint3d({ x: ax / 1120, y: ay / 760 }, LAND + 0.009), b = cityPoint3d({ x: bx / 1120, y: by / 760 }, LAND + 0.009);
       segment(root, a, b, 0.45, 0.016, '#f2efdf');
     }
-    const homes = [[100, 220, 1.2, 0.75, 1.5], [175, 215, 1.1, 0.75, 2.1], [255, 170, 1.3, 0.85, 1.8], [320, 220, 1.1, 0.7, 1.3],
-      [575, 150, 1.35, 0.85, 2.35], [649, 184, 1.1, 0.75, 1.7], [785, 245, 1.2, 0.8, 1.9], [850, 190, 1.15, 0.75, 1.45],
-      [210, 450, 1.3, 0.8, 1.6], [295, 463, 1.1, 0.75, 2.2], [419, 440, 1.4, 0.9, 1.4], [740, 450, 1.25, 0.75, 1.6]];
-    homes.forEach(([x, y, w, d, h], i) => building(root, x, y, w, d, h, ['#c08c73', '#829f9c', '#c2937c', '#a4aea0'][i % 4]));
-    for (const [x, y] of [[886, 138], [930, 111], [966, 157], [892, 217], [943, 210], [88, 110], [325, 101], [354, 144], [362, 454], [97, 485], [806, 430], [771, 407], [827, 559], [1000, 552]]) {
+    HOMES.forEach(([x, y, w, d, h], i) => building(root, x, y, w, d, h, ['#c08c73', '#829f9c', '#c2937c', '#a4aea0'][i % 4]));
+    for (const [x, y] of TREES) {
       const at = cityPoint3d({ x: x / 1120, y: y / 760 }); tree(root, at.x, at.z, 0.85);
     }
     const park = cityPoint3d({ x: 0.81, y: 0.21 }, LAND);
@@ -454,7 +483,7 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
       const node = stations.get(station.id)!;
       const p = Vector3.Project(node.anchor, identity, scene.getTransformMatrix(), viewport);
       const x = p.x * width / engine.getRenderWidth(), y = p.y * height / engine.getRenderHeight();
-      const visible = Number.isFinite(x) && Number.isFinite(y) && p.z >= 0 && p.z <= 1;
+      const visible = cameraAnchorVisible(x, y, p.z, width, height);
       if (node.button.hidden !== !visible) node.button.hidden = !visible;
       if (!visible) { node.leader.style.display = 'none'; continue; }
       input.push({ id: station.id, x, y, width: width <= 560 ? 64 : 86, height: 48, priority: station.waiting >= 20 ? 0 : 1, selected: station.selected });
@@ -470,12 +499,14 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
   }
 
   function activate(event: MouseEvent): void {
+    if (event.detail > 0 && event.timeStamp <= suppressClickUntil) return;
     const button = (event.target as Element | null)?.closest<HTMLButtonElement>('button[data-station], button[data-train]');
     if (!button || button.disabled) return;
     if (button.dataset.station) select?.(button.dataset.station);
     else if (button.dataset.train) selectTrain?.(Number(button.dataset.train));
   }
   function pointerDown(event: PointerEvent): void {
+    if (pointers.size === 0) suppressClickUntil = 0;
     pointers.add(event.pointerId);
     if (pointer) { pointer.multiple = true; return; }
     pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, time: event.timeStamp, distance: 0, multiple: pointers.size > 1 };
@@ -487,6 +518,7 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
     pointers.delete(event.pointerId); if (!pointer || pointer.id !== event.pointerId) return;
     const gesture = pointer; pointer = null;
     const distance = Math.max(gesture.distance, Math.hypot(event.clientX - gesture.x, event.clientY - gesture.y));
+    if (distance >= 7 || gesture.multiple) suppressClickUntil = event.timeStamp + 700;
     if (!active || unavailable || !scene || !canvas || distance >= 7 || gesture.multiple || event.button !== 0
       || event.timeStamp - gesture.time >= 550 || event.target !== canvas) return;
     const bounds = canvas.getBoundingClientRect();
@@ -494,7 +526,11 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
     const target = hit?.pickedMesh?.metadata as { station?: string; train?: number } | undefined;
     if (target?.station) select?.(target.station); else if (target?.train !== undefined) selectTrain?.(target.train);
   }
-  function pointerCancel(event: PointerEvent): void { pointers.delete(event.pointerId); if (pointer?.id === event.pointerId) pointer = null; }
+  function pointerCancel(event: PointerEvent): void {
+    pointers.delete(event.pointerId); if (pointer) pointer.multiple = true;
+    if (pointer?.id === event.pointerId) pointer = null;
+    suppressClickUntil = event.timeStamp + 700;
+  }
   function fail(): void {
     if (!active || unavailable) return;
     unavailable = true;
@@ -506,11 +542,14 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
   function contextLost(event: Event): void { event.preventDefault(); fail(); }
   function fitCamera(): void {
     if (!camera || !canvas) return;
-    const minimum = cityCameraRadius(canvas.clientWidth, canvas.clientHeight, camera.alpha, camera.beta);
+    const key = [canvas.clientWidth, canvas.clientHeight, camera.alpha, camera.beta, signature].join(',');
+    if (key === fitKey) return;
+    fitKey = key;
+    const minimum = cityCameraRadius(canvas.clientWidth, canvas.clientHeight, camera.alpha, camera.beta,
+      snapshot?.stations.map(station => station.position));
     if (Math.abs(minimum - fitRadius) < 0.01) return;
-    const zoom = fitRadius ? Math.max(0, camera.radius - fitRadius) : 0;
-    fitRadius = minimum; camera.lowerRadiusLimit = minimum; camera.upperRadiusLimit = minimum * 1.35;
-    camera.radius = minimum + Math.min(zoom, minimum * 0.35); camera.maxZ = minimum * 2 + 40; labelsDirty = true;
+    fitCameraZoom(camera, minimum, fitRadius);
+    fitRadius = minimum; camera.maxZ = minimum * 2 + 40; labelsDirty = true;
   }
   function resize(): void {
     if (!engine || !canvas) return;
@@ -520,10 +559,9 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
   }
   function resetCamera(): void {
     if (!camera) return;
-    camera.alpha = ALPHA; camera.beta = BETA; fitRadius = 0;
-    camera.setTarget(new Vector3(0, CITY_CAMERA.targetY, 0)); fitCamera();
-    camera.inertialAlphaOffset = 0; camera.inertialBetaOffset = 0; camera.inertialRadiusOffset = 0;
-    camera.inertialPanningX = 0; camera.inertialPanningY = 0; labelsDirty = true;
+    camera.setTarget(new Vector3(0, CITY_CAMERA.targetY, 0));
+    camera.alpha = ALPHA; camera.beta = BETA; fitRadius = 0; fitKey = ''; fitCamera();
+    clearCameraInertia(camera); labelsDirty = true;
   }
   function renderFrame(): void {
     if (!active || unavailable || !scene) return;
@@ -535,14 +573,14 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
     if (typeof window !== 'undefined') {
       window.removeEventListener('resize', resize); window.removeEventListener('pointerup', pointerUp); window.removeEventListener('pointercancel', pointerCancel);
     }
-    canvas?.removeEventListener('pointerdown', pointerDown); canvas?.removeEventListener('pointermove', pointerMove); canvas?.removeEventListener('pointerup', pointerUp);
+    wrapper?.removeEventListener('pointerdown', pointerDown); wrapper?.removeEventListener('pointermove', pointerMove); canvas?.removeEventListener('pointerup', pointerUp);
     canvas?.removeEventListener('webglcontextlost', contextLost); wrapper?.removeEventListener('click', activate);
     const cleanup = (action: () => void) => { try { action(); } catch { /* Continue releasing the other resources after a lost context. */ } };
     cleanup(() => engine?.stopRenderLoop(renderFrame)); cleanup(() => camera?.detachControl()); cleanup(() => scene?.dispose()); cleanup(() => engine?.dispose());
     wrapper?.remove(); wrapper = null; stage = null; canvas = null; labelHost = null; leaders = null; trainStrip = null;
     engine = null; scene = null; camera = null; network = null; snapshot = null; select = undefined; selectTrain = undefined;
     materials.clear(); shapes.clear(); crowd.clear(); stations.clear(); trains.clear(); pointers.clear(); pointer = null;
-    signature = ''; projection = ''; labelsDirty = true; fitRadius = 0;
+    signature = ''; projection = ''; labelsDirty = true; fitRadius = 0; fitKey = ''; suppressClickUntil = 0;
   }
 
   return {
@@ -562,13 +600,13 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
         camera = new ArcRotateCamera('rush-camera', ALPHA, BETA, 40, new Vector3(0, CITY_CAMERA.targetY, 0), scene);
         camera.fov = FOV; camera.minZ = 0.1; camera.lowerAlphaLimit = -1.91; camera.upperAlphaLimit = -1.1;
         camera.lowerBetaLimit = 0.65; camera.upperBetaLimit = 1.02; camera.panningSensibility = 0;
-        camera.wheelPrecision = 55; camera.pinchPrecision = 80; camera.inertia = 0.65; camera.attachControl(canvas, true);
+        attachCameraControls(camera, canvas);
         const daylight = new HemisphericLight(name('daylight'), new Vector3(0.15, 1, -0.3), scene);
         daylight.intensity = 0.94; daylight.groundColor = Color3.FromHexString('#799e8d');
         const sun = new DirectionalLight(name('sun'), new Vector3(-0.55, -1, 0.4), scene);
         sun.intensity = 0.52; sun.diffuse = Color3.FromHexString('#fff0d0');
         buildCoast(); wrapper.addEventListener('click', activate);
-        canvas.addEventListener('pointerdown', pointerDown); canvas.addEventListener('pointermove', pointerMove); canvas.addEventListener('pointerup', pointerUp);
+        wrapper.addEventListener('pointerdown', pointerDown); wrapper.addEventListener('pointermove', pointerMove); canvas.addEventListener('pointerup', pointerUp);
         canvas.addEventListener('webglcontextlost', contextLost);
         window.addEventListener('pointerup', pointerUp); window.addEventListener('pointercancel', pointerCancel); window.addEventListener('resize', resize);
         if (typeof ResizeObserver !== 'undefined') { observer = new ResizeObserver(resize); observer.observe(stage); }
@@ -587,6 +625,7 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
       } catch { fail(); }
     },
     resetCamera,
+    zoomCamera(direction) { if (camera) { zoomCamera(camera, direction); labelsDirty = true; } },
     dispose,
   };
 }

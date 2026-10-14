@@ -19,7 +19,8 @@ html[lang="zh-CN"]{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",system
 .map-bottom .map-pan{display:none;margin:0 0 10px;color:#465f52;font-size:11px}@media(max-width:1100px){.map-bottom .map-pan{display:block}}
 
 .city-view-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 25px;background:#edf1e7;border-bottom:1px solid #d3ddce}.city-view-toolbar label{font-size:12px;font-weight:650}.city-view-toolbar select{width:auto;max-width:100%;flex:0 1 150px}.city-view-toolbar .secondary{width:auto;margin-left:auto}.city-view-status{padding:0 25px;font-size:12px;color:var(--muted)}.map-bottom .city-orbit-hint{display:block}.city-view-toolbar [hidden],.city-view-status[hidden]{display:none}#broadcast-pending{padding-block:8px;border-top:1px solid #d3ddce}#broadcast-pending[hidden]{display:none}
-@media(max-width:560px){.city-view-toolbar{padding:10px 16px;gap:8px}.city-view-toolbar select{flex-basis:125px}.city-view-status{padding-inline:16px}}
+.city-view-toolbar .camera-controls{display:flex;align-items:center;gap:5px;margin-left:auto;max-width:100%}.city-view-toolbar .camera-controls[hidden]{display:none}.city-view-toolbar .camera-controls>button{min-width:44px;min-height:44px;touch-action:manipulation}.city-view-toolbar .camera-controls>button:not(.secondary){padding:8px;font-size:20px;line-height:1}.city-view-toolbar .camera-controls .secondary{margin:0}
+@media(max-width:560px){.city-view-toolbar{padding:10px 16px;gap:8px}.city-view-toolbar select{flex-basis:125px}.city-view-toolbar .camera-controls{margin-left:0;flex-wrap:wrap}.city-view-status{padding-inline:16px}}
 
 /* Station and carriage cutaways extend the coastal city without interrupting dispatch. */
 .train{cursor:pointer;outline:none}.train-hit{pointer-events:all}.train:focus-visible .train-hit{stroke:#fff8e4;stroke-width:3}.train:hover .train-roof{stroke-width:2.5}

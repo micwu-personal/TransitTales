@@ -1,0 +1,21 @@
+BEIJING NETWORK DATABASE
+
+The original illustrative map positions in network-data.json are derived from
+OpenStreetMap geographic station coordinates with independently curated operating
+facts and map-only interpolation for unmatched stations.
+
+Database attribution: © OpenStreetMap contributors.
+Database license: Open Data Commons Open Database License (ODbL) 1.0.
+https://www.openstreetmap.org/copyright
+https://opendatacommons.org/licenses/odbl/1-0/
+
+The adapted machine-readable database is supplied in network-data.json and at:
+https://github.com/micwu-personal/TransitTales/blob/main/src/beijing/network-data.json
+The ODbL attribution and adapted-database obligations apply to this database,
+not to the independently authored game code, original scene art or music.
+
+Operating facts were independently curated from BJMTR official line rosters,
+station distance tables and Beijing government operating notices. Website map
+images, provider schematic layouts, branded art and Amap database contents are
+not included. Source URLs, dated snapshot, scope and simulated-attribute limits
+are recorded in network-data.json.provenance.
