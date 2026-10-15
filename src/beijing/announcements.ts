@@ -1,4 +1,5 @@
 import copy from './announcement-copy.json';
+import mandarin from './mandarin-announcements.json';
 import { NETWORK } from './network';
 import type { Language } from './locale';
 
@@ -17,6 +18,8 @@ export interface BeijingRecording {
 }
 const stations = new Map(NETWORK.stations.map(station => [station.id, station]));
 const lines = new Map(NETWORK.lines.map(line => [line.id, line]));
+const mandarinContexts: Readonly<Record<string, string>> = mandarin.contexts;
+const mandarinScripts: Readonly<Record<string, string>> = mandarin.scripts;
 
 export function beijingRecordingLanguage(language: Language): BeijingRecordingLanguage {
   return language === 'mn-Mong-CN' ? 'mn-Cyrl-MN' : language;
@@ -26,7 +29,16 @@ export function beijingAsset(relative: string): string {
   return `${base}audio/beijing/${relative}.mp3`;
 }
 
-/** Localized sentence parts and real Mandarin identities form one non-interruptible logical announcement. */
+function mandarinRecording(kind: string, stationId?: string, lineId?: string): BeijingRecording {
+  const key = kind === 'boarding' || kind === 'transfer' ? [kind, lineId].filter(Boolean).join('|')
+    : kind === 'ride' ? [kind, stationId, lineId].filter(Boolean).join('|')
+    : kind === 'arrival' || kind === 'walk' ? `${kind}|${stationId}` : kind;
+  const relative = mandarinContexts[key];
+  if (!relative || !mandarinScripts[relative]) throw new RangeError('Missing complete Beijing Mandarin recording');
+  return { clips: [beijingAsset(relative)], recordingText: mandarinScripts[relative] };
+}
+
+/** Complete Mandarin sentences or localized parts form one non-interruptible announcement. */
 export function beijingAnnouncement(language: Language, context?: BeijingAnnouncementContext): BeijingRecording {
   const recordingLanguage = beijingRecordingLanguage(language);
   const script = copy[recordingLanguage].phrases;
@@ -35,7 +47,10 @@ export function beijingAnnouncement(language: Language, context?: BeijingAnnounc
   function phrase(key: keyof typeof script) {
     clips.push(beijingAsset(`phrases/${recordingLanguage}/${key}`)); text.push(script[key]);
   }
-  if (!context || context.kind === 'ready') { phrase('ready'); return { clips, recordingText: text.join(' ') }; }
+  if (!context || context.kind === 'ready') {
+    if (recordingLanguage === 'zh-CN') return mandarinRecording('ready');
+    phrase('ready'); return { clips, recordingText: text.join(' ') };
+  }
   if (!BEIJING_ANNOUNCEMENT_KINDS.includes(context.kind)) throw new RangeError('Unknown Beijing announcement kind');
   const kind = context.kind === 'board' ? 'boarding' : context.kind === 'stop' ? 'arrival' : context.kind;
   const station = context.stationId ? stations.get(context.stationId) : undefined;
@@ -46,6 +61,7 @@ export function beijingAnnouncement(language: Language, context?: BeijingAnnounc
   if (station && line && (kind === 'ride' || kind === 'arrival' || kind === 'boarding') && !line.stops.includes(station.id)) {
     throw new RangeError('Station is not served by this Beijing service');
   }
+  if (recordingLanguage === 'zh-CN') return mandarinRecording(kind, station?.id, line?.id);
   phrase(kind);
   if (station) { clips.push(beijingAsset(`stations/${station.id}`)); text.push(`${station.name}。`); }
   if (line) {

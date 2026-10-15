@@ -13,11 +13,11 @@ class Media extends EventTarget {
 }
 const context: BeijingAnnouncementContext = { kind: 'ride', stationId: 'beijing-railway-station', lineId: '2' };
 const flush = async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); };
-function device(timeoutMs = 1000) {
+function device(timeoutMs = 1000, language: 'en' | 'zh-CN' = 'en') {
   vi.stubGlobal('window', {}); vi.stubGlobal('localStorage', { setItem: vi.fn() });
   const media = new Media();
   const createAudio = vi.fn(() => media as unknown as HTMLAudioElement);
-  const voice = new DeviceVoice('en', vi.fn(), { createAudio, timeoutMs });
+  const voice = new DeviceVoice(language, vi.fn(), { createAudio, timeoutMs });
   return { voice, media, createAudio };
 }
 async function finish(media: Media, count: number) { for (let i = 0; i < count; i++) { media.emit('ended'); await flush(); } }
@@ -27,6 +27,20 @@ function setup() {
   const queue=new AnnouncementQueue(port); return {queue,calls,port};
 }
 describe('Bundled Beijing voice is gesture-driven and independent of installed voices', () => {
+  it('plays Mandarin as one continuous media source and finishes it before the newest pending event', async () => {
+    const { voice, media, createAudio } = device(1000, 'zh-CN');
+    voice.offer('First', 1, 15, context); voice.enable();
+    const first = beijingAnnouncement('zh-CN', context);
+    expect(first.clips).toHaveLength(1); expect(media.src).toBe(first.clips[0]);
+    voice.offer('Old', 1, 15, { ...context, kind: 'stop' });
+    voice.offer('Newest', 1, 15, { kind: 'complete' });
+    expect(media.play).toHaveBeenCalledOnce(); expect(voice.queue.active).toBe('First');
+    await finish(media, 1);
+    expect(voice.queue.active).toBe('Newest'); expect(media.src).toBe(beijingAnnouncement('zh-CN', { kind: 'complete' }).clips[0]);
+    await finish(media, 1);
+    expect(voice.queue.active).toBe(''); expect(media.play).toHaveBeenCalledTimes(2);
+    expect(createAudio).toHaveBeenCalledOnce(); voice.dispose();
+  });
   it('retains the latest context while off, then synchronously plays it on activation at any game speed', async () => {
     const { voice, media, createAudio } = device();
     voice.offer('Station caption', 1, 15, context);

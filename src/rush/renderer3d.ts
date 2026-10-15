@@ -230,8 +230,12 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
       group.push(mesh); buckets.set(key, group);
     }
     for (const group of buckets.values()) {
-      const mesh = group.length > 1 ? Mesh.MergeMeshes(group, true, true) : group[0];
-      if (mesh) { mesh.parent = root; mesh.isPickable = false; }
+      // Keeping sources until after merging forces copied indices; mixed primitives otherwise corrupt the shared templates.
+      const mesh = group.length > 1 ? Mesh.MergeMeshes(group, false, true) : group[0];
+      if (mesh) {
+        if (group.length > 1) group.forEach(source => source.dispose());
+        mesh.parent = root; mesh.isPickable = false;
+      }
     }
   }
   function island(root: TransformNode, points: readonly Point[], center: Point): void {

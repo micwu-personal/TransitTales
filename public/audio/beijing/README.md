@@ -4,11 +4,15 @@ These are original game announcement scripts, **not official operator recordings
 
 ## Coverage and spoken languages
 
-The complete catalog contains **506 MP3 recordings**: all **426 station names**, all **28 service names**, and **52 phrase parts** (13 each in English, Mandarin, Japanese, and Mongolia Mongolian). Total recorded duration is **1,051.488 seconds**; MP3 payload is **6,308,928 bytes**. The manifest records every exact speech script, voice, byte count, duration, and SHA-256 hash.
+The complete catalog contains **2,052 MP3 recordings**: **1,546 complete Mandarin sentences**, plus the existing **426 station names**, **28 service names**, and **52 phrase parts** (13 each in English, Mandarin, Japanese, and Mongolia Mongolian). The verified audio totals 64,045,728 bytes (64.05 MB) and 10,674.288 seconds across the whole catalog. Recordings load individually when needed, not as a full-catalog download. The manifest records every exact speech script, voice, speaking rate, byte count, duration, and SHA-256 hash.
 
 Station and service identities use their actual public Chinese names and **are spoken in Mandarin in every caption language**. This deliberately avoids inventing unverified English, Japanese, or Mongolian pronunciations. Both Mongolian caption scripts use the same `mn-MN-YesuiNeural` Mongolia Mongolian phrase speech, not a China-region voice. Native-language editorial/pronunciation review is still recommended.
 
-A logical announcement joins localized phrase parts with recorded station/service identities. Gameplay cannot interrupt any of its parts. There may be natural short pauses between MP3 parts; this is not sample-gapless audio. Only the newest waiting announcement is retained and it starts automatically after the entire active announcement ends. Speed never suppresses station identity announcements.
+**Mandarin plays one complete recorded sentence per event**, at a natural speaking rate. There is no separate “线路。” label or media reload between words and identities. Boarding welcomes passengers onto the actual service; approaching uses “列车运行前方是…站”; arrivals use “…站到了”; interchange notices name other services at the same real station node, never the current service or a separate external walking connection. Station names already ending in 站 do not gain a second suffix. The two through-services retain both public service names. Completing a passenger journey does not falsely announce a train terminus or ask every passenger to get off.
+
+These are original Beijing-style scripts, not an exact recreation of every operator, train model, or historical recording. See the [historical Line 1 educational transcript](https://chinomandarin.com/en/practice-mandarin-chinese-metro-beijing/) for phrasing context; no third-party operator audio was copied. English, Japanese, and Mongolia Mongolian retain localized phrase parts plus Mandarin identities, including possible pauses between parts. That mixed-language pronunciation policy remains explicit.
+
+Gameplay cannot interrupt an active logical announcement. Only the newest waiting announcement is retained and starts automatically after it ends. Speed never suppresses station identity announcements. Natural punctuation pauses and a short pause between separate announcements remain; the claim is not sample-gapless playback across events.
 
 ## Integration
 
@@ -35,8 +39,10 @@ Run from the repository root with Python, ffprobe, and ffmpeg available. Generat
 python -m pip install --target scripts\.beijing-tts-tools -r scripts\requirements-beijing-audio.txt
 python scripts\generate-beijing-announcements.py --concurrency 6
 python scripts\generate-beijing-announcements.py --verify --concurrency 6
-npx vitest run tests\beijing-voice.test.ts tests\beijing-announcements.test.ts
+npx vitest run tests\beijing-voice.test.ts tests\beijing-announcements.test.ts tests\beijing-mandarin.test.ts
 node tests\beijing-voice.browser.cjs
 ```
 
-Generation uses at most eight concurrent requests (six by default), retries bounded failures, verifies full MP3 decode, and atomically saves a resumable manifest. `--force` regenerates matching recordings. `--verify` makes **no TTS requests**, requires no TTS Python package, and checks the exact catalog, hashes, sizes, durations, and full decode; the tests additionally verify manifest text, headers, locale mapping, and service coverage. Bundled MP3 files are served by the same static host as the game, including Vite deployments under a base path.
+`src\beijing\mandarin-copy.json` owns the original full-sentence templates, spoken service names, and speaking rate. `scripts\beijing_mandarin_catalog.py` combines them with the real network and deduplicates identical sentences by their text hash. The generated `src\beijing\mandarin-announcements.json` is the runtime context/text/URL catalog. `--prepare` refreshes only that catalog without a TTS package or request; normal generation refreshes the catalog and recordings together. Do not manually edit generated text, URLs, or manifest hashes.
+
+Generation uses at most eight concurrent requests (six by default), retries bounded failures, verifies full MP3 decode, and atomically saves a resumable manifest. Only after successful generation does it remove obsolete, generated hash-named Mandarin clips; unrelated filenames are not pruned. Cache matching includes each recording’s speaking rate. `--force` regenerates matching recordings. `--verify` makes **no TTS requests**, requires no TTS Python package, and checks the generated catalog, exact asset set, hashes, sizes, durations, and full decode; the tests additionally verify complete-sentence text, real interchange services, MP3 headers, locale mapping, and service coverage. Bundled MP3 files are served by the same static host as the game, including Vite deployments under a base path.

@@ -1,13 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
 import { Matrix } from '@babylonjs/core/Maths/math.vector';
-import { ArcRotateCamera, Mesh, Scene, Vector3 } from '../src/babylon';
+import { Ray } from '@babylonjs/core/Culling/ray';
+import { ArcRotateCamera, Mesh, Scene, Vector3, type StandardMaterial } from '../src/babylon';
 import {
   CITY_CAMERA, cityCameraRadius, cityFramingPoints, cityPoint3d, cityStaticSignature, cityTrainPose,
   coastalIslandGeometry, create3dCityRenderer, layoutCityLabels,
 } from '../src/rush/renderer3d';
 import { COASTAL_LAYOUT } from '../src/rush/city';
-import { createGame } from '../src/rush/model';
+import { createGame, dispatch, step } from '../src/rush/model';
 import { createCitySnapshot, type CitySnapshot } from '../src/rush/view';
 
 const harness = vi.hoisted(() => ({ failInit: false, width: 390, height: 440, engines: [] as unknown[] }));
@@ -230,6 +231,71 @@ describe('3D renderer lifecycle and native controls', () => {
       expect(host.children).toHaveLength(0); expect(engine.scenes).toHaveLength(0); expect(engine.releases).toBe(1); expect(engine.frame).toBeUndefined();
       expect(observers.every(observer => observer.disconnected)).toBe(true);
       for (const node of [...nodes, window]) for (const listeners of node.listeners.values()) expect(listeners.size).toBe(0);
+    } finally { renderer.dispose(); }
+  });
+
+  it('keeps batched train triangles valid without corrupting shared scenery primitives', () => {
+    const { renderer, engine, trainSelect } = mountHarness();
+    try {
+      const initial = view(); renderer.render(initial); engine.frame?.();
+      const scene = engine.scenes[0], active = new Set(scene.getActiveMeshes().data);
+      for (const train of initial.trains) {
+        const root = scene.getTransformNodeByName(`rush-train:${train.id}`)!;
+        const parts = root.getChildMeshes();
+        expect(parts).toHaveLength(6);
+        const color = initial.lines.find(line => line.id === train.line)!.color.toLowerCase();
+        const body = parts.find(mesh => (mesh.material as StandardMaterial).diffuseColor.toHexString().toLowerCase() === color)!;
+        expect(body.getTotalVertices()).toBe(72); expect(body.getTotalIndices()).toBe(108);
+        for (const mesh of parts) {
+          expect(mesh.isEnabled() && mesh.isVisible && active.has(mesh)).toBe(true);
+          expect(mesh.isPickable).toBe(true); expect(mesh.metadata).toEqual({ train: train.id });
+          expect(mesh.getIndices()!.every(index => Number.isInteger(index) && index >= 0 && index < mesh.getTotalVertices())).toBe(true);
+        }
+        const hit = scene.pickWithRay(new Ray(root.position.add(new Vector3(0, 3, 0)), Vector3.Down()), mesh => mesh.metadata?.train === train.id);
+        expect(hit?.hit).toBe(true); expect(hit?.pickedMesh?.metadata.train).toBe(train.id);
+      }
+      for (const mesh of scene.meshes.filter(mesh => mesh.name.startsWith('rush-source'))) {
+        expect(mesh.getIndices()!.every(index => index >= 0 && index < mesh.getTotalVertices())).toBe(true);
+      }
+      expect(trainSelect).not.toHaveBeenCalled();
+    } finally { renderer.dispose(); }
+  });
+
+  it('moves actual carriage meshes with the running snapshot and holds them steady while paused', () => {
+    const { renderer, engine } = mountHarness();
+    try {
+      const game = createGame(); game.phase = 'playing';
+      const options = { language: 'en' as const, layout: COASTAL_LAYOUT, selected: 'market', interpolationSeconds: 0, animate: true };
+      const render = (interpolationSeconds = 0, animate = true) => {
+        const snapshot = createCitySnapshot(game, { ...options, interpolationSeconds, animate });
+        renderer.render(snapshot); engine.frame?.(); return snapshot;
+      };
+      render();
+      const scene = engine.scenes[0], geometries = new Set(scene.geometries);
+      const carriages = game.trains.map(train => scene.getTransformNodeByName(`rush-train:${train.id}`)!.getChildMeshes());
+      const initial = carriages.map(parts => parts[0].getBoundingInfo().boundingBox.centerWorld.clone());
+      for (let i = 0; i < 6; i++) step(game);
+      const running = render(0.5);
+      running.trains.forEach((train, index) => {
+        const pose = cityTrainPose(train), root = scene.getTransformNodeByName(`rush-train:${train.id}`)!;
+        expect(Vector3.Distance(carriages[index][0].getBoundingInfo().boundingBox.centerWorld, initial[index])).toBeGreaterThan(0.1);
+        expect(root.position.equalsWithEpsilon(new Vector3(pose.x, pose.y, pose.z))).toBe(true);
+        expect(root.rotation.y).toBeCloseTo(pose.yaw);
+        expect(root.getChildMeshes()).toEqual(carriages[index]);
+      });
+      expect(new Set(scene.geometries)).toEqual(geometries);
+      render(0, false);
+      const paused = carriages.map(parts => parts.map(mesh => mesh.getWorldMatrix().clone()));
+      for (let frame = 0; frame < 5; frame++) render(0.9, false);
+      carriages.forEach((parts, train) => parts.forEach((mesh, part) => expect(mesh.getWorldMatrix().equals(paused[train][part])).toBe(true)));
+      expect(dispatch(game, 'market', 'coral')).toBe(true);
+      render();
+      const relief = scene.getTransformNodeByName(`rush-train:${game.trains.at(-1)!.id}`)!;
+      expect(relief.getChildMeshes()).toHaveLength(6);
+      for (const mesh of relief.getChildMeshes()) {
+        expect(mesh.getIndices()!.every(index => index >= 0 && index < mesh.getTotalVertices())).toBe(true);
+        expect(scene.getActiveMeshes().data).toContain(mesh);
+      }
     } finally { renderer.dispose(); }
   });
 

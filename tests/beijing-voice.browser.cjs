@@ -39,7 +39,7 @@ const { chromium } = require('playwright');
         voice.offer('First full announcement', 0.1, 15, descriptor);
         document.querySelector('#enable').onclick = () => {
           void context.resume(); voice.enable();
-          if (language === 'en' && stats.sources.length === 1) {
+          if ((language === 'en' || language === 'zh-CN') && stats.sources.length === 1) {
             voice.offer('Old pending', 0.1, 15, { ...descriptor, kind: 'stop' });
             voice.offer('Newest pending', 0.1, 15, { ...descriptor, kind: 'complete' });
           }
@@ -50,17 +50,24 @@ const { chromium } = require('playwright');
       assert.equal(await page.evaluate(() => window.voiceStats.sources.length), 0, 'no playback before gesture');
       if (language === 'en') await page.locator('#enable').click(); else await page.locator('#enable').tap();
       await page.waitForFunction(() => window.recordedVoice.status === 'ready', null, { timeout: 10000 });
-      await page.waitForFunction(() => window.voiceStats.sources.length >= 2, null, { timeout: 15000 });
-      assert.equal(await page.evaluate(() => window.recordedVoice.queue.active), 'First full announcement', 'station part does not end the logical sentence');
+      if (language === 'zh-CN') {
+        await page.waitForFunction(() => window.voiceStats.progress > .1, null, { timeout: 10000 });
+        assert.equal(await page.evaluate(() => window.voiceStats.sources.length), 1, 'one full Mandarin sentence has no source-switch/loading boundary inside the speech');
+        assert.ok((await page.evaluate(() => window.recordedVoice.recordingText)).includes('列车运行前方是北京站'));
+      } else await page.waitForFunction(() => window.voiceStats.sources.length >= 2, null, { timeout: 15000 });
+      assert.equal(await page.evaluate(() => window.recordedVoice.queue.active), 'First full announcement', 'normal progress cannot cut the logical sentence');
       await page.waitForFunction(() => window.recordedVoice.queue.active === '' && window.recordedVoice.audioState === 'ended', null, { timeout: 60000 });
       const stats = await page.evaluate(() => window.voiceStats);
       assert.equal(stats.factories, 1, 'the same media element remains activated for all parts');
-      assert.equal(stats.sources.length, language === 'en' ? 10 : 5);
-      assert.ok(stats.sources.some(source => source.includes('/stations/beijing-railway-station.mp3')));
-      assert.ok(stats.sources.some(source => source.includes('/lines/2.mp3')));
+      assert.equal(stats.sources.length, language === 'en' ? 10 : language === 'zh-CN' ? 2 : 5);
+      if (language === 'zh-CN') assert.ok(stats.sources.every(source => source.includes('/mandarin/')));
+      else {
+        assert.ok(stats.sources.some(source => source.includes('/stations/beijing-railway-station.mp3')));
+        assert.ok(stats.sources.some(source => source.includes('/lines/2.mp3')));
+      }
       assert.ok(stats.rms > 0.005, `${language}: decoded recording produces non-silent audio`);
       assert.ok(stats.progress > 0, `${language}: real playback advances`);
-      if (language === 'en') {
+      if (language === 'en' || language === 'zh-CN') {
         assert.ok(stats.active.includes('Newest pending')); assert.ok(!stats.active.includes('Old pending'));
       }
       if (language === 'mn-Mong-CN') assert.ok(stats.sources.some(source => source.includes('/phrases/mn-Cyrl-MN/')));
@@ -86,11 +93,34 @@ const { chromium } = require('playwright');
         assert.equal(await page.evaluate(() => window.voiceStats.factories), 1);
         console.log('PASS actual HTTP 404: caption retained, no automatic retries, complete explicit replay on same media element');
       }
+      if (language === 'zh-CN') {
+        let requests = 0;
+        await page.route('**/audio/beijing/mandarin/*.mp3', route => requests++ === 0
+          ? route.fulfill({ status: 404, contentType: 'text/plain', body: 'Missing full sentence' }) : route.continue());
+        await page.evaluate(() => {
+          window.recordedVoice.mute(); window.recordedVoice.offer('Mandarin caption survives', 1, 15,
+            { kind: 'board', stationId: 'beijing-railway-station', lineId: '2' });
+        });
+        await page.locator('#enable').tap();
+        await page.waitForFunction(() => window.recordedVoice.status === 'unavailable', null, { timeout: 15000 });
+        const played = await page.evaluate(() => window.voiceStats.sources.length);
+        assert.equal(played, 3); assert.equal(await page.evaluate(() => window.recordedVoice.queue.enabled), false);
+        await page.evaluate(() => {
+          window.recordedVoice.offer('Retry Mandarin caption', 1, 15, { kind: 'board', stationId: 'beijing-railway-station', lineId: '2' });
+          document.querySelector('#enable').onclick = () => window.recordedVoice.replay('Retry Mandarin caption');
+        });
+        assert.equal(await page.evaluate(() => window.voiceStats.sources.length), played);
+        await page.locator('#enable').tap();
+        await page.waitForFunction(() => window.recordedVoice.queue.active === '' && window.recordedVoice.audioState === 'ended', null, { timeout: 20000 });
+        assert.equal(await page.evaluate(() => window.voiceStats.sources.length), played + 1);
+        assert.equal(await page.evaluate(() => window.voiceStats.factories), 1);
+        console.log('PASS Mandarin HTTP 404 and touch retry: complete sentence, no automatic retry, same activated media element');
+      }
       await page.locator('#mute').click();
       assert.equal(await page.evaluate(() => window.recordedVoice.status), 'off');
       await page.evaluate(() => window.disposeVoiceCheck());
       assert.deepEqual(external, [], 'recordings need no external runtime speech service'); assert.deepEqual(errors, []);
-      console.log(`PASS ${language}: ${stats.sources.length} real MP3 parts; one media element; RMS ${stats.rms.toFixed(3)}`);
+      console.log(`PASS ${language}: ${stats.sources.length} real MP3 plays; one media element; RMS ${stats.rms.toFixed(3)}`);
       await page.close();
     }
   } finally { if (browser) await browser.close(); await server.close(); }

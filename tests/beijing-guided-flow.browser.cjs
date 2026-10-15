@@ -14,7 +14,7 @@ const { chromium } = require('playwright');
     const options = { headless: true, args: ['--autoplay-policy=user-gesture-required'] };
     try { browser = await chromium.launch(options); }
     catch (error) { if (!error.message.includes("Executable doesn't exist")) throw error; browser = await chromium.launch({ ...options, channel: 'msedge' }); }
-    for (const width of [1440, 390]) {
+    for (const { width, language } of [{ width: 1440, language: 'en' }, { width: 390, language: 'en' }, { width: 390, language: 'zh-CN' }]) {
       const page = await browser.newPage({ viewport: { width, height: width === 1440 ? 1100 : 844 }, hasTouch: width === 390 });
       const errors = []; page.on('pageerror', error => errors.push(error.message));
       await page.addInitScript(muted => {
@@ -38,13 +38,13 @@ const { chromium } = require('playwright');
         window.requestAnimationFrame = callback => raf(now => { if (stats.fast) stats.extra += 400; callback(now + stats.extra); });
       }, width === 390);
       let missing = width === 390;
-      if (missing) await page.route('**/audio/beijing/stations/*.mp3', route => {
+      if (missing) await page.route(language === 'zh-CN' ? '**/audio/beijing/mandarin/*.mp3' : '**/audio/beijing/stations/*.mp3', route => {
         if (missing) { missing = false; return route.fulfill({ status: 404, contentType: 'text/plain', body: 'Missing test recording' }); }
         return route.continue();
       });
       await page.goto(`${server.resolvedUrls.local[0]}beijing.html`);
       await page.locator('[data-candidate="0"]').waitFor();
-      await page.locator('#language').selectOption('en');
+      await page.locator('#language').selectOption(language);
       const title = await page.locator('.passenger-mission h3').textContent();
       assert.equal(await page.evaluate(() => window.beijingAudio.attempts.length), 0, 'no autoplay on opening');
       if (process.env.TRANSIT_SCREENSHOTS) await page.screenshot({ path: path.join(process.env.TRANSIT_SCREENSHOTS, `beijing-guided-${width}.png`) });
@@ -58,11 +58,12 @@ const { chromium } = require('playwright');
       if (width === 390) {
         assert.equal(await page.evaluate(() => window.beijingAudio.attempts.length), 0, 'boarding respects saved mute');
         await press(page.locator('#travel-replay'));
-        await page.waitForFunction(() => document.querySelector('#travel-voice-status').textContent.includes('blocked'), null, { timeout: 15000 });
+        await page.waitForFunction(() => document.querySelector('#travel-voice').getAttribute('aria-pressed') === 'false', null, { timeout: 15000 });
+        assert.ok((await page.locator('#travel-voice-status').textContent()).length > 0);
         assert.equal(await page.locator('#travel-voice').getAttribute('aria-pressed'), 'false');
         assert.ok((await page.locator('#caption').textContent()).length > 0, 'missing media retains captions');
         await press(page.locator('#travel-replay'));
-        await page.waitForFunction(() => window.beijingAudio.played.some(src => src.includes('/stations/')), null, { timeout: 15000 });
+        await page.waitForFunction(part => window.beijingAudio.played.some(src => src.includes(part)), language === 'zh-CN' ? '/mandarin/' : '/stations/', { timeout: 15000 });
         assert.equal(await page.locator('#travel-voice-status').textContent(), '', 'replay retries real media and clears failure');
       } else {
         await page.waitForFunction(() => window.beijingAudio.progress > .05, null, { timeout: 10000 });
@@ -77,7 +78,7 @@ const { chromium } = require('playwright');
       await press(page.locator('#pause'));
       await page.locator('.journey-postcard').waitFor({ timeout: 30000 });
       assert.equal(await page.locator('.journey-steps li.done').count(), 3);
-      assert.match(await page.locator('#best-score').textContent(), /Personal best \d+/);
+      assert.match(await page.locator('#best-score').textContent(), language === 'en' ? /Personal best \d+/ : /\d+/);
       assert.ok((await page.locator('.travel-milestones .visited').count()) >= 2);
       await page.locator('[data-action="next"]').click();
       assert.notEqual(await page.locator('.passenger-mission h3').textContent(), title);
@@ -90,7 +91,7 @@ const { chromium } = require('playwright');
       await press(page.locator('#pause'));
       assert.equal(await page.evaluate(() => window.beijingAudio.attempts.length), played, 'mute also persists across missions');
       assert.deepEqual(errors, []);
-      console.log(`PASS guided ${width}: route-to-board focus, real MP3 gesture playback/retry, mute, milestones, completion and next mission`);
+      console.log(`PASS guided ${width} ${language}: route-to-board focus, real MP3 gesture playback/retry, mute, milestones, completion and next mission`);
       await page.close();
     }
   } finally {
