@@ -4,7 +4,8 @@ import {
 } from '../babylon';
 import { Matrix, Quaternion } from '@babylonjs/core/Maths/math.vector';
 import { copy, destinationColor, destinationIcon, landingName } from './locale';
-import type { Piece, Point } from './model';
+import { key, same, type Piece, type Point } from './model';
+import { passengerNeeds, skyCopy } from './sky-copy';
 import { clearanceCutaways, type MallRenderer } from './renderer';
 import type { MallSnapshot } from './view';
 import { issueText, shopperLabel } from './feedback';
@@ -19,7 +20,7 @@ type Position = { x: number; y: number; z: number };
 type RiderView = MallSnapshot['riders'][number];
 
 export function mallPoint3d(point: Point): Position {
-  return { x: (point.x - 3) * COLUMN, y: PLATFORM + point.y * FLOOR, z: 0 };
+  return { x: (point.x - 3) * COLUMN, y: PLATFORM + point.y * FLOOR, z: (point.z ?? 0) * COLUMN };
 }
 
 export function isConstructionTap(distance: number, duration: number, multiplePointers: boolean): boolean {
@@ -29,15 +30,20 @@ export function isConstructionTap(distance: number, duration: number, multiplePo
 export const MALL_CAMERA = Object.freeze({ alpha: -1.33, beta: 1.16, fov: .64,
   minAlpha: -2.75, maxAlpha: -.35, minBeta: .72, maxBeta: 1.42 });
 
-export function mallCameraRadius(width: number, height: number, alpha: number = MALL_CAMERA.alpha, beta: number = MALL_CAMERA.beta): number {
+export function mallCameraTour(seconds: number, alpha: number = MALL_CAMERA.alpha, beta: number = MALL_CAMERA.beta): { alpha: number; beta: number } {
+  const ease = Math.min(1, Math.max(0, seconds) / 3);
+  return { alpha: alpha + Math.sin(seconds * .18) * .52 * ease, beta: beta + (Math.cos(seconds * .14) - 1) * .045 * ease };
+}
+
+export function mallCameraRadius(width: number, height: number, alpha: number = MALL_CAMERA.alpha, beta: number = MALL_CAMERA.beta, skyAtrium = false): number {
   const w = Math.max(90, width), h = Math.max(90, height), padding = Math.min(26, w * .12, h * .12);
   const tangent = Math.tan(MALL_CAMERA.fov / 2), tx = tangent * (w - 2 * padding) / h, ty = tangent * (h - 2 * padding) / h;
   const radial = new Vector3(Math.cos(alpha) * Math.sin(beta), Math.cos(beta), Math.sin(alpha) * Math.sin(beta));
   const right = new Vector3(-Math.sin(alpha), 0, Math.cos(alpha));
   const up = new Vector3(-Math.cos(alpha) * Math.cos(beta), Math.sin(beta), -Math.sin(alpha) * Math.cos(beta));
   let radius = 23;
-  for (const x of [-10, 10]) for (const y of [-.5, 13]) for (const z of [-2.1, 4.8]) {
-    const p = new Vector3(x, y - 5.9, z - 1.15);
+  for (const x of [-10, 10]) for (const y of [-.5, skyAtrium ? 17 : 13]) for (const z of [-2.1, skyAtrium ? 8 : 4.8]) {
+    const p = new Vector3(x, y - (skyAtrium ? 7.6 : 5.9), z - (skyAtrium ? 2.65 : 1.15));
     radius = Math.max(radius, Vector3.Dot(p, radial) + Math.max(Math.abs(Vector3.Dot(p, right)) / tx, Math.abs(Vector3.Dot(p, up)) / ty));
   }
   return radius;
@@ -45,7 +51,7 @@ export function mallCameraRadius(width: number, height: number, alpha: number = 
 
 export function mallStaticSignature(view: MallSnapshot): string {
   const p = view.puzzle;
-  return JSON.stringify([p.id, p.landings, p.obstacles, p.lowCeilings, p.requests]);
+  return JSON.stringify([p.id, p.building, p.landings, p.obstacles, p.lowCeilings, p.requests]);
 }
 
 export interface ProjectedLabel {
@@ -162,11 +168,13 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
   let engine: Engine | null = null, scene: Scene | null = null, camera: ArcRotateCamera | null = null;
   let resizeObserver: ResizeObserver | null = null, world: TransformNode | null = null, previews: TransformNode | null = null;
   let snapshot: MallSnapshot | null = null;
+  let depthDeck = 0, deckBar: HTMLDivElement | null = null;
+  let tourPaused = false, tourBase: { alpha: number; beta: number } = { alpha: MALL_CAMERA.alpha, beta: MALL_CAMERA.beta };
   let landingCallback: (point: Point) => void = () => {}, pieceCallback: (id: string) => void = () => {};
   let staticSignature = '', routeSignature = '', labelsSignature = '', lastProjection = '';
   let labelsDirty = true, metricsDirty = true, metricsWidth = 0, animationTime = 0, unavailable = false, active = false, fitRadius = 0;
   const targetPlacement = new Map<string, PositionedLabel>();
-  let pointer: { id: number; x: number; y: number; time: number; distance: number; multiple: boolean } | null = null;
+  let pointer: { id: number; x: number; y: number; time: number; distance: number; multiple: boolean; target: EventTarget | null } | null = null;
   let suppressClickUntil = 0;
   const pointers = new Set<number>();
   const materials = new Map<string, StandardMaterial>();
@@ -260,10 +268,53 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     return result;
   }
 
+  function createAtrium(decor: TransformNode, view: MallSnapshot): void {
+    shadow(decor, { x: .5, y: -.48, z: 3 }, 24, 13);
+    box(decor, { x: 0, y: -.3, z: 2.8 }, { x: 20.2, y: .3, z: 10.7 }, '#203e50');
+    box(decor, { x: 0, y: -.12, z: 2.8 }, { x: 19.8, y: .12, z: 10.3 }, '#779cac');
+    // Separate terraced islands leave the central void open; only player-built edges are traversable.
+    for (const landing of view.puzzle.landings) {
+      const p = mallPoint3d(landing), deck = landing.z ?? 0;
+      box(decor, { x: p.x, y: p.y - .22, z: p.z + .45 }, { x: 1.28, y: .25, z: 1.65 }, deck === 1 ? '#d5c4a8' : '#d4e3e3');
+      box(decor, { x: p.x, y: p.y - .07, z: p.z + .89 }, { x: 1.26, y: .03, z: .07 }, '#f3d2a1', 1, true);
+      if (landing.y > 0 && (landing.x === 0 || landing.x === 6)) {
+        box(decor, { x: p.x + (landing.x === 0 ? -.74 : .74), y: p.y / 2, z: p.z + .8 }, { x: .18, y: p.y, z: .18 }, '#466b80');
+      }
+      if (landing.y === 4 || (landing.y === 2 && deck === 0 && landing.x % 3 === 0)) plant(decor, { x: p.x + .36, y: p.y, z: p.z + .9 }, .55);
+    }
+    for (const side of [-1, 1]) {
+      const x = side * 9.2;
+      for (let floor = 0; floor < 5; floor++) {
+        const y = PLATFORM + FLOOR * floor, taper = 4.5 - floor * .5;
+        box(decor, { x, y: y + .86, z: 5.3 }, { x: .22, y: 1.72, z: taper }, '#47687c');
+        box(decor, { x: x - side * .16, y: y + .83, z: 5.3 }, { x: .045, y: 1.38, z: taper - .25 }, '#adcdd4', .28);
+        box(decor, { x: x - side * .18, y: y + 1.7, z: 5.3 }, { x: .065, y: .04, z: taper }, '#f6d8ad', 1, true);
+      }
+    }
+    for (let i = 0; i <= 8; i++) {
+      const angle = Math.PI * i / 8, x = Math.cos(angle) * 9.25, y = 14.6 + Math.sin(angle) * 1.9;
+      if (i) {
+        const before = Math.PI * (i - 1) / 8;
+        for (const z of [2.9, 7.3]) bar(decor, new Vector3(Math.cos(before) * 9.25, 14.6 + Math.sin(before) * 1.9, z), new Vector3(x, y, z), .1, '#b7dce0');
+      }
+      bar(decor, new Vector3(x, y, 2.9), new Vector3(x, y, 7.3), .075, '#6e9eac');
+    }
+    const fountain = cylinder(decor, { x: 0, y: .06, z: 3 }, 3.4, .18, '#537e91', 3.5);
+    fountain.material = material('#537e91');
+    cylinder(decor, { x: 0, y: .18, z: 3 }, 2.8, .025, '#b0e5e4');
+    for (let i = 0; i < 9; i++) {
+      const angle = i * Math.PI * 2 / 9;
+      bar(decor, new Vector3(Math.cos(angle) * .65, .3, 3 + Math.sin(angle) * .65), new Vector3(0, 1.6, 3), .045, '#b2e7e8');
+    }
+    for (const x of [-8.5, 8.5]) plant(decor, { x, y: 0, z: -1.2 }, 1.25);
+  }
+
   function createWorld(view: MallSnapshot): void {
     world?.dispose(); landingDots.clear();
     world = new TransformNode(name('architecture'), scene!);
     const decor = new TransformNode(name('decor'), scene!); decor.parent = world;
+    const skyAtrium = view.puzzle.building === 'sky-atrium';
+    if (skyAtrium) createAtrium(decor, view); else {
     shadow(decor, { x: 0.35, y: -0.48, z: 1.8 }, 22, 8.5);
     box(decor, { x: 0, y: -0.32, z: 1.55 }, { x: 20.2, y: 0.28, z: 7.3 }, '#95b6a0');
     box(decor, { x: 0, y: -0.12, z: 1.55 }, { x: 19.8, y: 0.12, z: 6.9 }, '#d4ddbe');
@@ -319,16 +370,25 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     for (let i = 0; i < 3; i++) box(decor, { x: 8.5, y: 0.36, z: 2.2 + i * 0.18 }, { x: 1.4, y: 0.07, z: 0.12 }, '#bc9368');
     for (const x of [7.95, 9.05]) box(decor, { x, y: 0.16, z: 2.35 }, { x: 0.08, y: 0.35, z: 0.5 }, '#668672');
 
+    }
     for (const zone of view.puzzle.obstacles) {
-      const p = mallPoint3d({ x: zone.x + zone.w / 2, y: zone.y });
+      const p = mallPoint3d({ x: zone.x + zone.w / 2, y: zone.y, z: (zone.z ?? 0) + (zone.d ?? 0) / 2 });
       const height = zone.h * FLOOR, width = zone.w * COLUMN;
-      box(decor, { x: p.x, y: p.y + height / 2, z: 0.05 }, { x: width, y: height, z: 1.3 }, '#91a679');
-      box(decor, { x: p.x, y: p.y + 0.16, z: -0.05 }, { x: width + 0.12, y: 0.32, z: 1.45 }, '#708766');
+      const depth = zone.d === undefined ? 1.3 : zone.d * COLUMN;
+      box(decor, { x: p.x, y: p.y + height / 2, z: p.z + .05 }, { x: width, y: height, z: depth }, '#91a679');
+      box(decor, { x: p.x, y: p.y + 0.16, z: p.z - .05 }, { x: width + 0.12, y: 0.32, z: depth + .15 }, '#708766');
       for (let i = 0; i < Math.ceil(zone.w * 2); i++) {
-        plant(decor, { x: p.x - width / 2 + 0.55 + i * (width - 1.1) / Math.max(1, Math.ceil(zone.w * 2) - 1), y: p.y + height, z: 0.05 }, 0.75);
+        plant(decor, { x: p.x - width / 2 + 0.55 + i * (width - 1.1) / Math.max(1, Math.ceil(zone.w * 2) - 1), y: p.y + height, z: p.z + 0.05 }, 0.75);
       }
     }
-    for (const zone of view.puzzle.lowCeilings) for (const cutaway of clearanceCutaways(zone, view.puzzle.landings)) {
+    if (skyAtrium) for (const zone of view.puzzle.lowCeilings) {
+      const at = mallPoint3d({ x: zone.x + zone.w / 2, y: zone.y, z: (zone.z ?? 0) + (zone.d ?? .3) / 2 });
+      const size = { x: zone.w * COLUMN, y: zone.h * FLOOR, z: (zone.d ?? .3) * COLUMN };
+      box(decor, { x: at.x, y: at.y + size.y / 2, z: at.z }, size, '#e9b875', .16);
+      box(decor, { x: at.x, y: at.y + size.y, z: at.z }, { x: size.x, y: .09, z: size.z }, '#e9b875', .5);
+      for (let x = at.x - size.x / 2; x < at.x + size.x / 2; x += .4) box(decor, { x, y: at.y + size.y + .06, z: at.z }, { x: .08, y: .03, z: size.z }, '#8f643c');
+    }
+    if (!skyAtrium) for (const zone of view.puzzle.lowCeilings) for (const cutaway of clearanceCutaways(zone, view.puzzle.landings)) {
       const left = mallPoint3d({ x: zone.x, y: cutaway.floor });
       const width = zone.w * COLUMN, top = PLATFORM + cutaway.roof * FLOOR, height = top - left.y;
       // A shallow open-front canopy and a floor-rooted gauge cannot be mistaken for the next concourse.
@@ -357,7 +417,7 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
       const pad = cylinder(world, { ...p, y: p.y + 0.006 }, 0.83, 0.03, '#f8f3dd');
       pad.isPickable = true; pad.metadata = { kind: 'landing', point: { ...landing } } satisfies PickTarget;
       const dot = cylinder(world, { ...p, y: p.y + 0.025 }, 0.22, 0.035, '#557d6b');
-      dot.isPickable = true; dot.metadata = pad.metadata; landingDots.set(`${landing.x},${landing.y}`, dot);
+      dot.isPickable = true; dot.metadata = pad.metadata; landingDots.set(key(landing), dot);
     }
   }
 
@@ -372,7 +432,11 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
 
   function createPiece(piece: Piece): PieceNode {
     const root = new TransformNode(name('piece'), scene!);
-    const a = position(piece.a), b = position(piece.b), delta = b.subtract(a), length = delta.length();
+    const from = position(piece.a), to = position(piece.b);
+    const horizontal = Math.hypot(to.x - from.x, to.z - from.z);
+    root.position.copyFromFloats(from.x, 0, from.z);
+    root.rotation.y = horizontal ? Math.atan2(-(to.z - from.z), to.x - from.x) : 0;
+    const a = new Vector3(0, from.y, 0), b = new Vector3(horizontal, to.y, 0), delta = b.subtract(a), length = delta.length();
     const angle = Math.atan2(delta.y, delta.x);
     let cabin: TransformNode | undefined;
     if (piece.type === 'elevator') {
@@ -442,12 +506,13 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
       node.highlight.forEach(mesh => mesh.setEnabled(view.selected === piece.id));
       if (node.cabin) {
         const rider = view.riders.find(rider => !rider.arrived && !rider.stuck && Math.abs(rider.point.x - piece.a.x) < 0.001
+          && Math.abs((rider.point.z ?? 0) - (piece.a.z ?? 0)) < .001
           && rider.point.y >= Math.min(piece.a.y, piece.b.y) && rider.point.y <= Math.max(piece.a.y, piece.b.y));
-        node.cabin.position.copyFrom(position(rider?.point ?? piece.a));
+        node.cabin.position.copyFromFloats(0, position(rider?.point ?? piece.a).y, 0);
       }
     }
-    for (const [key, mesh] of landingDots) {
-      const selected = !!view.first && `${view.first.x},${view.first.y}` === key;
+    for (const [id, mesh] of landingDots) {
+      const selected = !!view.first && key(view.first) === id;
       mesh.material = material(selected ? '#b14d37' : '#557d6b');
       mesh.scaling.setAll(selected ? 1.45 : 1);
     }
@@ -484,6 +549,18 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
       }
     }
     for (const side of [-1, 1]) bar(root, new Vector3(side * 0.12, head - 0.2, 0), new Vector3(side * 0.19, head - 0.47, -0.04), 0.075, skin);
+    if (rider.need === 'stroller') {
+      box(root, { x: .38, y: .4, z: -.14 }, { x: .37, y: .16, z: .45 }, '#e8bb92');
+      sphere(root, { x: .38, y: .55, z: -.08 }, { x: .4, y: .32, z: .4 }, '#b2dce1');
+      for (const x of [.18, .58]) for (const z of [-.32, .03]) sphere(root, { x, y: .15, z }, { x: .12, y: .15, z: .15 }, '#46687b');
+      bar(root, new Vector3(.38, .52, .14), new Vector3(.19, .65, .08), .035, '#648494');
+    } else if (rider.need === 'courier') {
+      box(root, { x: 0, y: .76, z: .23 }, { x: .32, y: .38, z: .2 }, '#daab6e');
+      box(root, { x: 0, y: .76, z: .34 }, { x: .04, y: .38, z: .02 }, '#f2d9a8');
+      cylinder(root, { x: 0, y: head + .13, z: 0 }, .29, .065, '#f2d9a8');
+    } else if (rider.need === 'acrophobia') {
+      box(root, { x: 0, y: .89, z: -.13 }, { x: .27, y: .065, z: .07 }, '#a6d3c0');
+    }
     if (rider.balloon) {
       balloon = new TransformNode(name('balloon'), scene!); balloon.parent = root;
       sphere(balloon, { x: 0.32, y: 1.9, z: 0 }, { x: 0.4, y: 0.55, z: 0.39 }, '#d4a14d');
@@ -497,7 +574,7 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     bar(note, new Vector3(0.09, 1.93, -0.13), new Vector3(0.27, 1.85, -0.13), 0.045, color);
     batch(note).forEach(mesh => mesh.unfreezeWorldMatrix());
     batch(root).forEach(mesh => mesh.unfreezeWorldMatrix());
-    return { root, signature: JSON.stringify([rider.destination, rider.wheelchair, rider.balloon]), balloon, note };
+    return { root, signature: JSON.stringify([rider.destination, rider.wheelchair, rider.balloon, rider.need]), balloon, note };
   }
 
   function updateRiders(view: MallSnapshot): void {
@@ -506,12 +583,12 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     const groups = new Map<string, number>();
     for (const rider of view.riders) {
       let node = riderNodes.get(rider.id);
-      const signature = JSON.stringify([rider.destination, rider.wheelchair, rider.balloon]);
+      const signature = JSON.stringify([rider.destination, rider.wheelchair, rider.balloon, rider.need]);
       if (!node || node.signature !== signature) { node?.root.dispose(); node = createRider(rider); riderNodes.set(rider.id, node); }
-      const p = position(rider.point), key = `${rider.point.x.toFixed(3)},${rider.point.y.toFixed(3)}`;
-      const count = groups.get(key) ?? 0; groups.set(key, count + 1);
-      // Queue lanes use depth, never a different logical column or floor.
-      p.z = -0.19 - (count % 3) * 0.23; p.x += count >= 3 ? 0.14 * Math.floor(count / 3) : 0;
+      const p = position(rider.point), id = `${rider.point.x.toFixed(3)},${rider.point.y.toFixed(3)},${(rider.point.z ?? 0).toFixed(3)}`;
+      const count = groups.get(id) ?? 0; groups.set(id, count + 1);
+      // Queue offsets remain local to the rider's logical depth deck.
+      p.z -= 0.19 + (count % 3) * 0.23; p.x += count >= 3 ? 0.14 * Math.floor(count / 3) : 0;
       node.root.position.copyFrom(p);
       node.note.setEnabled(rider.arrived && !rider.balloon);
     }
@@ -526,7 +603,7 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
         const a = position(route.points[segment - 1]), b = position(route.points[segment]);
         const count = Math.ceil(Vector3.Distance(a, b) / 0.3);
         for (let i = 1; i < count; i++) {
-          const p = Vector3.Lerp(a, b, i / count); p.y += 0.13 + index * 0.065; p.z = -0.75 - index * 0.07;
+          const p = Vector3.Lerp(a, b, i / count); p.y += 0.13 + index * 0.065; p.z -= 0.75 + index * 0.07;
           sphere(previews!, p, { x: 0.05, y: 0.05, z: 0.05 }, destinationColor[route.destination]);
         }
       }
@@ -539,6 +616,7 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     if (!node) {
       const element = document.createElement(button ? 'button' : 'span');
       element.className = `mall-3d-label ${className}`;
+      element.hidden = true;
       if (element instanceof HTMLButtonElement) element.type = 'button';
       const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       line.setAttribute('stroke', '#557a6980'); line.setAttribute('stroke-width', '1');
@@ -551,8 +629,17 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
 
   function updateLabels(view: MallSnapshot): void {
     wrapper!.classList.toggle('is-celebrating',view.celebrating);
-    const signature = JSON.stringify([staticSignature, view.pieces, view.language, view.first, view.selected, view.building, view.running,
-      view.riders.map(r => [r.id, r.destination, r.wheelchair, r.balloon, r.arrived, r.stuck, r.issues])]);
+    const skyAtrium = view.puzzle.building === 'sky-atrium';
+    deckBar!.hidden = !skyAtrium;
+    wrapper!.classList.toggle('is-sky-atrium', skyAtrium);
+    for (const button of Array.from(deckBar!.querySelectorAll<HTMLButtonElement>('button'))) {
+      const deck = Number(button.dataset.depth);
+      button.textContent = skyCopy[view.language][(['front', 'middle', 'rear'] as const)[deck]];
+      button.setAttribute('aria-pressed', String(depthDeck === deck));
+    }
+    deckBar!.setAttribute('aria-label', skyCopy[view.language].depth);
+    const signature = JSON.stringify([staticSignature, depthDeck, view.pieces, view.language, view.first, view.selected, view.building, view.running,
+      view.riders.map(r => [r.id, r.destination, r.wheelchair, r.balloon, r.need, r.arrived, r.stuck, r.issues])]);
     if (signature === labelsSignature) {
       for (const rider of view.riders) {
         const node = labels.get(`rider:${rider.id}`);
@@ -571,15 +658,16 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
       wanted.add(id); return addLabel(id, button, className, anchor, offsetY, priority);
     };
     for (const p of view.puzzle.landings) {
-      const node = keep(`landing:${p.x},${p.y}`, true, 'mall-3d-landing', position(p), 22, 0);
+      if (skyAtrium && (p.z ?? 0) !== depthDeck) continue;
+      const node = keep(`landing:${key(p)}`, true, 'mall-3d-landing', position(p), 22, 0);
       const button = node.element as HTMLButtonElement;
-      button.dataset.landing = `${p.x},${p.y}`; button.textContent = landingName(p); button.removeAttribute('aria-describedby');
+      button.dataset.landing = p.z === undefined ? `${p.x},${p.y}` : `${p.x},${p.y},${p.z}`; button.textContent = landingName(p); button.removeAttribute('aria-describedby');
       button.setAttribute('aria-label', `${t.landing} ${landingName(p)}`);
-      button.setAttribute('aria-pressed', String(!!view.first && view.first.x === p.x && view.first.y === p.y));
+      button.setAttribute('aria-pressed', String(!!view.first && same(view.first, p)));
       button.disabled = !view.building;
     }
     for (const piece of view.pieces) {
-      const at = Vector3.Lerp(position(piece.a), position(piece.b), 0.5); at.z = -0.55; at.y += 0.2;
+      const at = Vector3.Lerp(position(piece.a), position(piece.b), 0.5); at.z -= .55; at.y += 0.2;
       const node = keep(`piece:${piece.id}`, true, 'mall-3d-piece-label', at, -24, 1);
       const button = node.element as HTMLButtonElement;
       button.dataset.piece = piece.id;
@@ -600,8 +688,8 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
       destination.element.style.backgroundColor = destinationColor[request.destination];
       const start = position(request.start); start.y += request.balloon ? 2.25 : 1.35;
       const entrance = keep(`entrance:${request.id}`, false, 'mall-3d-sign mall-3d-entrance', start, -12, 3);
-      entrance.element.textContent = `${request.wheelchair ? '♿' : request.balloon ? '◯' : '↓'} ${t.departure} · ${landingName(request.start)}`;
-      entrance.element.setAttribute('aria-label', `${t.departure} ${landingName(request.start)} · ${t[request.wheelchair ? 'wheelchair' : request.balloon ? 'balloon' : 'walking']} · ${t[request.destination]}`);
+      entrance.element.textContent = `${request.need ? passengerNeeds[view.language][request.need].icon : request.wheelchair ? '♿' : request.balloon ? '◯' : '↓'} ${t.departure} · ${landingName(request.start)}`;
+      entrance.element.setAttribute('aria-label', `${t.departure} ${landingName(request.start)} · ${request.need ? passengerNeeds[view.language][request.need].label : t[request.wheelchair ? 'wheelchair' : request.balloon ? 'balloon' : 'walking']} · ${t[request.destination]}`);
     }
     view.puzzle.lowCeilings.forEach((zone, index) => {
       for (const landing of clearanceCutaways(zone, view.puzzle.landings).flatMap(cutaway => cutaway.anchors)) {
@@ -611,11 +699,11 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
         node.element.dataset.clearanceLanding = coordinate;
         node.element.setAttribute('aria-label', `${coordinate} ↑ · ${experienceCopy[view.language].lowRoof}`);
         node.line.setAttribute('stroke', '#a44834'); node.line.setAttribute('stroke-width', '2');
-        labels.get(`landing:${landing.x},${landing.y}`)?.element.setAttribute('aria-describedby', `mall-${id}`);
+        labels.get(`landing:${key(landing)}`)?.element.setAttribute('aria-describedby', `mall-${id}`);
         node.element.id = `mall-${id}`;
       }
     });
-    for (let floor = 0; floor < 4; floor++) {
+    for (let floor = 0; floor < (skyAtrium ? 5 : 4); floor++) {
       const at = new Vector3(-9.3, PLATFORM + floor * FLOOR, 1.7);
       keep(`floor:${floor}`, false, 'mall-3d-sign mall-3d-floor', at, 0, 4).element.textContent = `${t.floor} ${floor + 1}`;
     }
@@ -631,7 +719,7 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     descriptions!.replaceChildren();
     for (const rider of view.riders) {
       const text = document.createElement('span');
-      text.textContent = `${t[rider.wheelchair ? 'wheelchair' : rider.balloon ? 'balloon' : 'walking']} · ${t[rider.destination]} · ${rider.arrived ? t.delivered : rider.stuck ? `${experienceCopy[view.language].unhappy}: ${issueText(view.language,rider.issues)} · ${landingName(rider.start)} → ${landingName(rider.goal)}` : view.building ? t.ready : view.running ? t.running : t.paused}. `;
+      text.textContent = `${rider.need ? passengerNeeds[view.language][rider.need].label : t[rider.wheelchair ? 'wheelchair' : rider.balloon ? 'balloon' : 'walking']} · ${t[rider.destination]} · ${rider.arrived ? t.delivered : rider.stuck ? `${experienceCopy[view.language].unhappy}: ${issueText(view.language,rider.issues)} · ${landingName(rider.start)} → ${landingName(rider.goal)}` : view.building ? t.ready : view.running ? t.running : t.paused}. `;
       descriptions!.append(text);
     }
   }
@@ -694,14 +782,15 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     const button = event.target.closest<HTMLButtonElement>('button[data-landing],button[data-piece]');
     if (!button || button.disabled) return;
     if (button.dataset.landing) {
-      const [x, y] = button.dataset.landing.split(',').map(Number); landingCallback({ x, y });
+      const [x, y, z] = button.dataset.landing.split(',').map(Number); landingCallback(z === undefined ? { x, y } : { x, y, z });
     } else if (button.dataset.piece) pieceCallback(button.dataset.piece);
   }
   function pointerDown(event: PointerEvent): void {
     if (pointers.size === 0) suppressClickUntil = 0;
     pointers.add(event.pointerId);
     if (pointer) { pointer.multiple = true; return; }
-    pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, time: event.timeStamp, distance: 0, multiple: pointers.size > 1 };
+    if (event.target === canvas) tourPaused = true;
+    pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, time: event.timeStamp, distance: 0, multiple: pointers.size > 1, target: event.target };
   }
   function pointerMove(event: PointerEvent): void {
     if (pointer?.id === event.pointerId) pointer.distance = Math.max(pointer.distance, Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y));
@@ -712,10 +801,19 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     const gesture = pointer; pointer = null;
     gesture.distance = Math.max(gesture.distance, Math.hypot(event.clientX - gesture.x, event.clientY - gesture.y));
     if (gesture.distance >= 7 || gesture.multiple) suppressClickUntil = event.timeStamp + 700;
+    if (event.pointerType !== 'mouse' && gesture.target instanceof Element && event.target instanceof Element
+      && isConstructionTap(gesture.distance, event.timeStamp - gesture.time, gesture.multiple)) {
+      const first = gesture.target.closest('button[data-landing],button[data-piece]'), last = event.target.closest('button[data-landing],button[data-piece]');
+      if (first && first === last) {
+        first.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 0 }));
+        suppressClickUntil = event.timeStamp + 700; event.preventDefault(); return;
+      }
+    }
     if (!snapshot?.building || !scene || !canvas || !isConstructionTap(gesture.distance, event.timeStamp - gesture.time, gesture.multiple)
       || event.button !== 0 || event.target !== canvas) return;
     const bounds = canvas.getBoundingClientRect();
-    const hit = scene.pick(event.clientX - bounds.left, event.clientY - bounds.top, mesh => mesh.isPickable && !!mesh.metadata, false, camera);
+    const hit = scene.pick(event.clientX - bounds.left, event.clientY - bounds.top, mesh => mesh.isPickable && !!mesh.metadata
+      && (snapshot?.puzzle.building !== 'sky-atrium' || mesh.metadata.kind !== 'landing' || (mesh.metadata.point.z ?? 0) === depthDeck), false, camera);
     const action = hit?.pickedMesh?.metadata as PickTarget | PieceTarget | undefined;
     if (action?.kind === 'landing') landingCallback({ ...action.point });
     else if (action?.kind === 'piece') pieceCallback(action.id);
@@ -732,7 +830,9 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
   function contextLost(event: Event): void { event.preventDefault(); fail(); }
   function fitCamera(): void {
     if (!canvas || !camera) return;
-    const reference = mallCameraRadius(canvas.clientWidth, canvas.clientHeight, camera.alpha, camera.beta) + 2.5;
+    const skyAtrium = snapshot?.puzzle.building === 'sky-atrium';
+    const reference = Math.max(...(skyAtrium ? [camera.alpha - .52, camera.alpha, camera.alpha + .52] : [camera.alpha])
+      .map(alpha => mallCameraRadius(canvas!.clientWidth, canvas!.clientHeight, alpha, camera!.beta, skyAtrium))) + 2.5;
     if (Math.abs(reference - fitRadius) < .001) return;
     fitCameraZoom(camera, reference, fitRadius);
     fitRadius = reference; camera.maxZ = Math.max(90, fitRadius * 2 + 35); labelsDirty = true;
@@ -744,13 +844,23 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
   }
   function resetCamera(): void {
     if (!camera) return;
-    camera.setTarget(new Vector3(0, 5.9, 1.15));
+    const skyAtrium = snapshot?.puzzle.building === 'sky-atrium';
+    camera.setTarget(new Vector3(0, skyAtrium ? 7.6 : 5.9, skyAtrium ? 2.65 : 1.15));
+    camera.lowerAlphaLimit = skyAtrium ? -3.05 : MALL_CAMERA.minAlpha; camera.upperAlphaLimit = skyAtrium ? .05 : MALL_CAMERA.maxAlpha;
     camera.alpha = MALL_CAMERA.alpha; camera.beta = MALL_CAMERA.beta; fitRadius = 0; fitCamera();
+    tourPaused = true;
     clearCameraInertia(camera); targetPlacement.clear(); labelsDirty = true;
   }
   function renderFrame(): void {
     if (!active || unavailable || !engine || !scene) return;
     if (snapshot?.running && !snapshot.reducedMotion) animationTime += Math.min(engine.getDeltaTime(), 80) / 1000;
+    if (camera && snapshot?.puzzle.building === 'sky-atrium' && snapshot.running && !snapshot.reducedMotion
+      && !tourPaused && snapshot.routes.every(route => route.ready)) {
+      const tour = mallCameraTour(snapshot.waveElapsed, tourBase.alpha, tourBase.beta);
+      camera.alpha = Math.max(camera.lowerAlphaLimit!, Math.min(camera.upperAlphaLimit!, tour.alpha));
+      camera.beta = Math.max(MALL_CAMERA.minBeta, Math.min(MALL_CAMERA.maxBeta, tour.beta));
+      clearCameraInertia(camera);
+    }
     for (const node of riderNodes.values()) if (node.balloon) {
       node.balloon.position.y = snapshot?.reducedMotion ? 0 : Math.sin(animationTime * 1.8) * 0.035;
     }
@@ -769,7 +879,7 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     labelsHost?.removeEventListener('click', activate);
     engine?.stopRenderLoop(renderFrame); camera?.detachControl(); scene?.dispose(); engine?.dispose();
     wrapper?.remove();
-    host = null; wrapper = null; canvas = null; labelsHost = null; leaders = null; descriptions = null;
+    host = null; wrapper = null; canvas = null; labelsHost = null; leaders = null; descriptions = null; deckBar = null; depthDeck = 0; tourPaused = false;
     engine = null; scene = null; camera = null; world = null; previews = null; snapshot = null;
     materials.clear(); labels.clear(); landingDots.clear(); pieceNodes.clear(); riderNodes.clear(); pointers.clear(); pointer = null;
     staticSignature = ''; routeSignature = ''; labelsSignature = ''; lastProjection = ''; animationTime = 0; fitRadius = 0; suppressClickUntil = 0;
@@ -790,7 +900,13 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
       labelsHost = document.createElement('div'); labelsHost.className = 'mall-3d-labels';
       labelsHost.style.position = 'absolute'; labelsHost.style.inset = '0'; labelsHost.style.pointerEvents = 'none';
       descriptions = document.createElement('div'); descriptions.className = 'mall-3d-a11y';
-      wrapper.append(canvas, leaders, labelsHost, descriptions); host.replaceChildren(wrapper);
+      deckBar = document.createElement('div'); deckBar.className = 'mall-depth-controls'; deckBar.setAttribute('role', 'group'); deckBar.hidden = true;
+      for (let deck = 0; deck < 3; deck++) {
+        const button = document.createElement('button'); button.type = 'button'; button.dataset.depth = String(deck);
+        button.addEventListener('click', () => { depthDeck = deck; targetPlacement.clear(); labelsSignature = ''; if (snapshot) updateLabels(snapshot); });
+        deckBar.append(button);
+      }
+      wrapper.append(canvas, leaders, labelsHost, descriptions, deckBar); host.replaceChildren(wrapper);
       try {
         engine = new Engine(canvas, true, { stencil: false, preserveDrawingBuffer: false, powerPreference: 'low-power', doNotHandleContextLost: true }, false);
         scene = new Scene(engine); scene.clearColor = new Color4(0.79, 0.87, 0.83, 1);
@@ -816,13 +932,17 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     },
     render(view) {
       if (!active || unavailable || !scene) return;
+      const buildingChanged = snapshot?.puzzle.building !== view.puzzle.building;
+      const newWave = !view.building && (!snapshot || snapshot.building || view.waveElapsed < snapshot.waveElapsed);
       snapshot = view;
       const signature = mallStaticSignature(view);
-      if (signature !== staticSignature) { staticSignature = signature; targetPlacement.clear(); createWorld(view); }
+      if (signature !== staticSignature) { staticSignature = signature; depthDeck = 0; targetPlacement.clear(); createWorld(view); }
+      if (buildingChanged) resetCamera();
+      if (newWave && camera) { tourPaused = false; tourBase = { alpha: camera.alpha, beta: camera.beta }; }
       updatePieces(view); updatePreview(view); updateRiders(view); updateLabels(view);
     },
     resetCamera,
-    zoomCamera(direction) { if (camera) { zoomCamera(camera, direction); labelsDirty = true; } },
+    zoomCamera(direction) { if (camera) { tourPaused = true; zoomCamera(camera, direction); labelsDirty = true; } },
     dispose,
   };
 }

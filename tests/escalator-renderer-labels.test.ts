@@ -3,7 +3,7 @@ import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
 import { Matrix } from '@babylonjs/core/Maths/math.vector';
 import { ArcRotateCamera, Scene, Vector3 } from '../src/babylon';
 import { create3dRenderer, mallCameraRadius, mallPoint3d, MALL_CAMERA } from '../src/escalator/renderer3d';
-import { createBoard } from '../src/escalator/model';
+import { advanceWave, createBoard, startWave, verifiedSolution } from '../src/escalator/model';
 import { PUZZLES } from '../src/escalator/puzzles';
 import { snapshot } from '../src/escalator/view';
 
@@ -63,6 +63,7 @@ class DomNode {
   emit(name: string, event: any): void { this.listeners.get(name)?.forEach(listener => listener(event)); }
   closest(): DomNode | null { return this.tagName === 'button' ? this : this.parent?.closest() ?? null; }
   all(): DomNode[] { return [this, ...this.children.flatMap(node => node.all())]; }
+  querySelectorAll(selector: string): DomNode[] { return this.all().slice(1).filter(node => selector === 'button' && node.tagName === 'button'); }
   getBoundingClientRect() { return { left: 0, top: 0, width: this.clientWidth, height: this.clientHeight }; }
 }
 class ButtonNode extends DomNode { constructor() { super('button'); } }
@@ -88,6 +89,39 @@ const coordinates = (node: DomNode) => node.style.transform.match(/[\d.-]+/g).ma
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); harness.engines = []; harness.measurements = 0; });
 
 describe('actual projected mall label updates', () => {
+  it('builds distinct depth decks, routes exact coordinates and yields camera tours to manual controls', async () => {
+    const { renderer, host, engine, onLanding, unavailable } = mountHarness();
+    try {
+      await Promise.resolve();
+      const atrium = PUZZLES.find(p => p.building === 'sky-atrium')!, board = verifiedSolution(atrium);
+      const build = snapshot(atrium, board, null, 'en', null, null, true, false, false);
+      renderer.render(build); engine.frame?.();
+      const camera = engine.scenes[0].activeCamera as ArcRotateCamera;
+      expect(camera.target.z).toBe(2.65); expect(camera.target.y).toBe(7.6);
+      const deckButtons = host.all().filter(node => node.dataset.depth !== undefined);
+      expect(deckButtons).toHaveLength(3);
+      for (const button of deckButtons) {
+        button.emit('click', {}); engine.frame?.();
+        const landings = host.all().filter(node => node.dataset.landing);
+        expect(landings.length).toBeGreaterThan(0);
+        expect(landings.every(node => Number(node.dataset.landing.split(',')[2]) === Number(button.dataset.depth))).toBe(true);
+        const landing = landings[0], [x, y, z] = landing.dataset.landing.split(',').map(Number);
+        host.all().find(node => node.className === 'mall-3d-labels')!.emit('click', { target: landing, detail: 0, timeStamp: 0 });
+        expect(onLanding).toHaveBeenLastCalledWith({ x, y, z });
+      }
+      let wave = startWave(atrium, board);
+      const play = (seconds: number, running = true, reduced = false) => {
+        wave = advanceWave(wave, seconds);
+        renderer.render(snapshot(atrium, board, wave, 'en', null, null, false, running, reduced)); engine.frame?.();
+      };
+      const alpha = camera.alpha; play(0); play(3); expect(camera.alpha).not.toBe(alpha);
+      const paused = camera.alpha; play(0, false); engine.frame?.(); expect(camera.alpha).toBe(paused);
+      play(2, true, true); expect(camera.alpha).toBe(paused);
+      renderer.zoomCamera('in'); play(2); expect(camera.alpha).toBe(paused);
+      renderer.resetCamera(); play(1); expect(camera.alpha).toBe(MALL_CAMERA.alpha);
+      expect(unavailable).not.toHaveBeenCalled();
+    } finally { renderer.dispose(); }
+  });
   it('measures once after content/font/host changes, never during Bookshop/Café rotation', async () => {
     const { renderer, host, window, engine, unavailable } = mountHarness();
     try {

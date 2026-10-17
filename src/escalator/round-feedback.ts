@@ -1,6 +1,6 @@
 import type { Wave } from './model';
 
-export const CELEBRATION_MS = 3200;
+export const CELEBRATION_MS = 9000;
 
 /** Completion belongs to the round, never to a render or language change. */
 export function createRoundFeedback(onSuccess: () => void) {
