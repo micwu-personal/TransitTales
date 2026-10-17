@@ -6,7 +6,7 @@ import { PUZZLES } from '../src/escalator/puzzles';
 
 const originalIds = ['first-notes','long-lunch','homeward','duet','everyone','courtyard','balloon','grand-finale','rooftop-lanterns','step-free-home','atrium-chorus','ribbon-switchbacks','garden-labyrinth','sky-parade'];
 const creativeIds = ['one-way-gallery','borrowed-floor','ten-piece-town','three-kinds-of-sky','roof-reunion','low-roof-lullaby'];
-const rounds = PUZZLES.slice(14);
+const rounds = PUZZLES.slice(14, 20);
 const languages = ['en','zh-CN','ja','mn-Cyrl-MN','mn-Mong-CN'] as const;
 const scripts = [/[A-Za-z]/, /[\u4e00-\u9fff]/, /[\u3040-\u30ff]/, /[\u0400-\u04ff]/, /[\u1820-\u18aa]/];
 const find = (id: string) => rounds.find(p => p.id === id)!;
@@ -24,10 +24,10 @@ function expectSharedBottleneck(p: Puzzle, from: string, to: string) {
 
 describe('six creative rounds beyond the original fourteen', () => {
   it('preserves all fourteen existing round IDs and appends six distinct challenges', () => {
-    expect(PUZZLES).toHaveLength(20);
+    expect(PUZZLES).toHaveLength(40);
     expect(PUZZLES.slice(0, 14).map(p => p.id)).toEqual(originalIds);
     expect(rounds.map(p => p.id)).toEqual(creativeIds);
-    expect(new Set(PUZZLES.map(p => p.id)).size).toBe(20);
+    expect(new Set(PUZZLES.map(p => p.id)).size).toBe(40);
     expect(rounds.map(p => p.solution.length)).toEqual([6,7,10,10,12,12]);
   });
 

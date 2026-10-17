@@ -42,10 +42,15 @@ async function mode(page, view) {
   await page.locator(view === '3d' ? '.mall-3d canvas' : '#escalator-board').waitFor();
   await advance(page, 250);
 }
+async function effect(page) {
+  await page.locator('#hud-toggle').click(); await page.locator('#escalator-effects').click(); await page.locator('#hud-close').click();
+}
 async function fit(page) {
+  await page.locator('#hud-toggle').click();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, 'no document-level horizontal overflow');
   const effects = await page.locator('#escalator-effects').boundingBox();
   assert.ok(effects.height >= 44 && effects.x >= 0 && effects.x + effects.width <= (await page.viewportSize()).width + 1, 'reachable 44px sound control');
+  await page.locator('#hud-toggle').click();
 }
 async function addPieces(page, pieces) {
   for (const piece of pieces) {
@@ -74,7 +79,7 @@ async function desktop(browser, base) {
   await instrument(page); await page.goto(`${base}/escalator.html?view=2d`); await page.locator('#escalator-board').waitFor();
   await advance(page, 250); await page.locator('#escalator-language').selectOption('en'); await fit(page);
   assert.deepEqual(await audio(page), { contexts: 0, resumes: 0, notes: 0, stops: 0, disconnects: 0, closes: 0 });
-  await solvedFirst(page); await page.locator('#escalator-effects').click();
+  await solvedFirst(page); await effect(page);
   await page.waitForFunction(() => window.feedbackProbe.audio.resumes === 1);
   assert.equal((await audio(page)).notes, 0, 'enabling is silent');
   assert.equal(await page.locator('#escalator-sound').getAttribute('aria-pressed'), 'false', 'music stays off');
@@ -91,13 +96,14 @@ async function desktop(browser, base) {
   assert.equal(await page.locator('.celebration-notes i').first().evaluate(node => node === window.celebrationNode && (!node.getAnimations().length || node.getAnimations()[0] === window.celebrationAnimation)), true, 'view/localization does not restart animation');
   assert.equal(await page.locator('.mall-3d').evaluate(node => node.classList.contains('is-celebrating')), true);
   const banner = await page.locator('#escalator-celebration').boundingBox(), scene = await page.locator('#escalator-scene').boundingBox();
-  assert.ok(banner.y >= scene.y + scene.height, 'celebration is outside and below interactive renderer');
+  assert.ok(banner.y >= scene.y && banner.y < scene.y + scene.height, 'cinematic caption stays within the scene');
+  assert.equal(await page.locator('.cinema-canvas').evaluate(node => getComputedStyle(node).pointerEvents), 'none', 'cinematic overlay cannot intercept construction');
   if (process.env.ESCALATOR_FEEDBACK_SCREENSHOTS) await page.screenshot({ path: 'tests\\escalator-feedback-desktop.png', fullPage: true });
-  await advance(page, 3200); assert.equal(await page.locator('#escalator-celebration').isVisible(), false);
+  await advance(page, 9000); assert.equal(await page.locator('#escalator-celebration').isVisible(), false);
   await page.locator('#escalator-language').selectOption('en'); await mode(page, '2d');
   assert.equal((await audio(page)).notes, 10, 'settled success remains silent');
-  await page.locator('#escalator-effects').click(); assert.equal(await page.locator('#escalator-effects').getAttribute('aria-pressed'), 'false');
-  await page.locator('#escalator-effects').click(); assert.equal((await audio(page)).notes, 10, 'enable after success is not retroactive');
+  await effect(page); assert.equal(await page.locator('#escalator-effects').getAttribute('aria-pressed'), 'false');
+  await effect(page); assert.equal((await audio(page)).notes, 10, 'enable after success is not retroactive');
 
   const partial = await page.evaluate(async () => {
     const { PUZZLES } = await import('/src/escalator/puzzles.ts');
@@ -113,12 +119,13 @@ async function desktop(browser, base) {
     throw Error('No actual partial-route puzzle fixture');
   });
   await page.locator('#escalator-puzzle').selectOption(String(partial.index)); await addPieces(page, partial.pieces); await begin(page);
-  assert.equal(await page.locator('#escalator-problems').isVisible(), true);
+  assert.equal(await page.locator('#escalator-problems').isVisible(), false, 'failure details stay collapsed during travel');
   assert.equal(await page.locator('#escalator-goals .is-unhappy').count(), partial.missing.length);
   assert.ok(await page.locator('.shopper.is-unhappy .shopper-problem').count());
   assert.ok((await page.locator('.shopper.is-unhappy').first().getAttribute('aria-label')).includes('No complete route'));
-  for (const id of partial.missing) assert.ok(await page.locator(`[data-request-issue="${id}"]`).isVisible());
   await finish(page); assert.equal(await page.locator('#escalator-result.is-failed').isVisible(), true);
+  await page.locator('#round-issues summary').click();
+  for (const id of partial.missing) assert.ok(await page.locator(`[data-request-issue="${id}"]`).isVisible());
   assert.equal(await page.locator('#escalator-celebration').isVisible(), false); assert.equal((await audio(page)).notes, 10);
   await mode(page, '3d');
   assert.ok(await page.locator('.mall-3d-rider-label.is-unhappy').count());
@@ -158,11 +165,14 @@ async function mobile(browser, base, language) {
     await mode(page, '3d'); assert.equal(await page.locator('#escalator-celebration.is-static').isVisible(), true); await fit(page);
   }
   if (language === 'zh-CN' && process.env.ESCALATOR_FEEDBACK_SCREENSHOTS) await page.screenshot({ path: 'tests\\escalator-feedback-mobile.png', fullPage: true });
-  await advance(page, 3200); assert.equal(await page.locator('#escalator-celebration').isVisible(), false);
+  await advance(page, 9000); assert.equal(await page.locator('#escalator-celebration').isVisible(), false);
   await page.locator('#escalator-reset').click(); await begin(page);
+  assert.equal(await page.locator('#escalator-problems').isVisible(), false);
+  await finish(page); assert.equal(await page.locator('#escalator-result.is-failed').isVisible(), true);
+  await page.locator('#round-issues summary').click();
   assert.equal(await page.locator('#escalator-problems').isVisible(), true);
   assert.ok((await page.locator('[data-request-issue]').first().textContent()).includes('A1 → C3'));
-  await finish(page); assert.equal(await page.locator('#escalator-result.is-failed').isVisible(), true); await fit(page);
+  await page.locator('#round-issues summary').click(); await fit(page);
   assert.equal((await audio(page)).notes, 0); assert.deepEqual(errors, []); await page.close();
   console.log(`PASS mobile ${language}: localized controls/reasons, static celebration, silent default, no overflow`);
 }

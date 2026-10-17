@@ -1,4 +1,5 @@
 import { type Piece, type PieceType, type Puzzle, type Request, type Point } from './model';
+import { SKY_PUZZLES } from './sky-puzzles';
 const mongolianPuzzles: Record<string, { name: [string, string]; hint: [string, string] }> = {
   "first-notes": {
     "name": [
@@ -303,4 +304,5 @@ export const PUZZLES: Puzzle[]=[
       [r('lullaby-accessible',0,0,6,3,'garden',{wheelchair:true,balloon:true}), r('lullaby-walker',0,0,6,2,'cafe')],
       {obstacles:[{x:0.4,y:-0.1,w:1.2,h:0.9},{x:4.4,y:-0.1,w:1.2,h:1.8}],
         lowCeilings:[{x:2.35,y:0.7,w:1.3,h:1.6}]}),
+    ...SKY_PUZZLES,
   ];

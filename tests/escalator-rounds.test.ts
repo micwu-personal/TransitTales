@@ -26,7 +26,7 @@ const build = (puzzle: Puzzle, pieces: Puzzle['solution']) => {
 
 describe('six new Escalator Orchestra rounds', () => {
   it('keeps the first expansion and original eight in place as the collection grows', () => {
-    expect(PUZZLES).toHaveLength(20);
+    expect(PUZZLES).toHaveLength(40);
     expect(PUZZLES.slice(0, 8).map(p => p.id)).toEqual(originalIds);
     expect(rounds.map(p => p.id)).toEqual(newIds);
     expect(new Set(PUZZLES.map(p => p.id)).size).toBe(PUZZLES.length);

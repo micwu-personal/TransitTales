@@ -263,4 +263,4 @@ export const copy={en:withExperience(en,'en'),'zh-CN':withExperience(zh,'zh-CN')
 export type Message=keyof Copy;
 export const destinationColor={cafe:'#b14d37',books:'#326fa0',garden:'#397050'};
 export const destinationIcon={cafe:'☕',books:'▤',garden:'✿'};
-export const landingName=(p:{x:number;y:number})=>`${String.fromCharCode(65+p.x)}${p.y+1}`;
+export const landingName=(p:{x:number;y:number;z?:number})=>`${String.fromCharCode(65+p.x)}${p.y+1}${p.z===undefined?'':` · ${['F','M','R'][p.z]??p.z}`}`;
