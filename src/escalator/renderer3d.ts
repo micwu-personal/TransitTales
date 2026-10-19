@@ -60,9 +60,10 @@ export interface ProjectedLabel {
 export interface PositionedLabel extends ProjectedLabel { left: number; top: number }
 
 // Native targets remain in the viewport; leaders retain their exact world anchors.
-export function layout3dLabels(labels: readonly ProjectedLabel[], width: number, height: number): PositionedLabel[] {
-  const placed: PositionedLabel[] = [];
-  const offsets = [[0, 0], [0, -28], [0, 28], [-28, 0], [28, 0], [0, -56], [0, 56],
+export function layout3dLabels(labels: readonly ProjectedLabel[], width: number, height: number, nearAnchor = false,
+  obstacles: readonly PositionedLabel[] = []): PositionedLabel[] {
+  const placed: PositionedLabel[] = [...obstacles];
+  const offsets = nearAnchor ? [[0, 0], [0, -10], [0, 10], [-10, 0], [10, 0], [-10, -10], [10, -10], [-10, 10], [10, 10]] : [[0, 0], [0, -28], [0, 28], [-28, 0], [28, 0], [0, -56], [0, 56],
     [-56, -28], [56, -28], [-56, 28], [56, 28], [0, -84], [0, 84], [-84, 0], [84, 0],
     [-112, -56], [112, -56], [-112, 56], [112, 56], [0, -140], [0, 140]];
   for (const label of [...labels].sort((a, b) => a.priority - b.priority)) {
@@ -86,14 +87,14 @@ export function layout3dLabels(labels: readonly ProjectedLabel[], width: number,
       if (bestOverlap === 0 && dx === 0 && dy === 0) break;
     }
     // Crowded phone frames can use the remaining space without shrinking touch targets.
-    if (bestOverlap > 0) {
+    if (bestOverlap > 0 && !nearAnchor) {
       for (let top = 4; top <= height - h - 4; top += 12) {
         for (let left = 4; left <= width - w - 4; left += 12) consider(left, top);
       }
     }
     placed.push({ ...label, width: w, height: h, ...best });
   }
-  return placed;
+  return placed.slice(obstacles.length);
 }
 
 export function anchored3dLabel(label: ProjectedLabel, width: number, height: number): PositionedLabel {
@@ -104,17 +105,18 @@ export function anchored3dLabel(label: ProjectedLabel, width: number, height: nu
 
 // Retain each target's local offset through an orbit; collision correction never switches lanes in one frame.
 export function stable3dTargets(input: readonly ProjectedLabel[], width: number, height: number,
-  previous: ReadonlyMap<string, PositionedLabel>): { labels: PositionedLabel[]; settling: boolean } {
-  if (!previous.size) return { labels: layout3dLabels(input, width, height), settling: false };
+  previous: ReadonlyMap<string, PositionedLabel>, nearAnchor = false,
+  obstacles: readonly PositionedLabel[] = []): { labels: PositionedLabel[]; settling: boolean } {
+  if (!previous.size) return { labels: layout3dLabels(input, width, height, nearAnchor, obstacles), settling: false };
   const shifted = input.map(label => {
     const old = previous.get(label.id);
     return anchored3dLabel(old ? { ...label, x: label.x + old.left + old.width / 2 - old.x,
       y: label.y + old.top + old.height / 2 - old.y } : label, width, height);
   }).map((label, i) => ({ ...label, x: input[i].x, y: input[i].y }));
-  const crowded = shifted.some((a, i) => shifted.slice(i + 1).some(b =>
+  const crowded = shifted.some((a, i) => [...shifted.slice(i + 1), ...obstacles].some(b =>
     a.left < b.left + b.width + 2 && b.left < a.left + a.width + 2 && a.top < b.top + b.height + 2 && b.top < a.top + a.height + 2));
   if (!crowded) return { labels: shifted, settling: false };
-  const desired = new Map(layout3dLabels(input, width, height).map(label => [label.id, label]));
+  const desired = new Map(layout3dLabels(input, width, height, nearAnchor, obstacles).map(label => [label.id, label]));
   let settling = false;
   const labels = shifted.map(label => {
     const to = desired.get(label.id)!;
@@ -137,6 +139,13 @@ const CSS = `
 .mall-3d button.mall-3d-label:active:not(:disabled) { filter:brightness(.94); }
 .mall-3d button.mall-3d-label[aria-pressed="true"] { background:#b14d37; color:#fff9ed; border:2px solid #fff9ed; }
 .mall-3d button.mall-3d-label:disabled { color:#52685d; background:#f4f4e6c9; opacity:.76; cursor:default; }
+.mall-3d button.mall-3d-landing { border:0; border-radius:10px; background:transparent; padding:0; width:44px; height:44px; min-width:44px; min-height:44px; font-size:10px; isolation:isolate; z-index:2; }
+.mall-3d button.mall-3d-landing::before { content:''; position:absolute; width:38px; height:24px; left:3px; top:10px; z-index:-1; background:#faf8e9f5; border:1px solid #799986; border-radius:9px; box-sizing:border-box; box-shadow:1px 2px 3px #284d4726; }
+.mall-3d button.mall-3d-landing:hover:not(:disabled), .mall-3d button.mall-3d-landing:focus-visible { background:transparent; }
+.mall-3d button.mall-3d-landing:hover:not(:disabled)::before, .mall-3d button.mall-3d-landing:focus-visible::before { background:#d2e6da; border-color:#284d47; }
+.mall-3d button.mall-3d-landing[aria-pressed="true"] { background:transparent; border:0; }
+.mall-3d button.mall-3d-landing[aria-pressed="true"]::before { background:#b14d37; border:2px solid #fff9ed; }
+.mall-3d button.mall-3d-landing:disabled { background:transparent; }
 .mall-3d button.mall-3d-piece-label { border-radius:7px; font-size:10px; background:#ecf3e9f2; }
 .mall-3d .mall-3d-sign { max-width:160px; padding:5px 8px; border-radius:5px; color:#fff9ed; font-size:12px; font-weight:650; text-align:center; white-space:normal; overflow-wrap:anywhere; box-shadow:2px 3px 5px #284d4720; }
 @container (max-width:560px) {
@@ -261,8 +270,15 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     const result: Mesh[] = [];
     for (const bucket of buckets.values()) {
       if (bucket.length === 1) { result.push(bucket[0]); continue; }
-      const merged = Mesh.MergeMeshes(bucket, true, true);
-      if (merged) { merged.parent = root; merged.isPickable = false; result.push(merged); }
+      // Merge bakes world coordinates. Return vertices to the owner's local frame before parenting,
+      // and retain sources during merging so Babylon copies rather than mutates shared primitive indices.
+      const inverse = root.computeWorldMatrix(true).clone().invert();
+      const merged = Mesh.MergeMeshes(bucket, false, true);
+      if (merged) {
+        merged.bakeTransformIntoVertices(inverse);
+        merged.parent = root; merged.isPickable = false; result.push(merged);
+        bucket.forEach(source => source.dispose());
+      } else result.push(...bucket);
     }
     for (const mesh of result) mesh.freezeWorldMatrix();
     return result;
@@ -659,7 +675,7 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
     };
     for (const p of view.puzzle.landings) {
       if (skyAtrium && (p.z ?? 0) !== depthDeck) continue;
-      const node = keep(`landing:${key(p)}`, true, 'mall-3d-landing', position(p), 22, 0);
+      const node = keep(`landing:${key(p)}`, true, 'mall-3d-landing', position(p), 0, 0);
       const button = node.element as HTMLButtonElement;
       button.dataset.landing = p.z === undefined ? `${p.x},${p.y}` : `${p.x},${p.y},${p.z}`; button.textContent = landingName(p); button.removeAttribute('aria-describedby');
       button.setAttribute('aria-label', `${t.landing} ${landingName(p)}`);
@@ -764,10 +780,13 @@ export function create3dRenderer(onUnavailable?: () => void): MallRenderer & Cam
       if (node.element instanceof HTMLButtonElement) targets.push(label);
       else signs.push(anchored3dLabel(label, width, height));
     }
-    const stable = stable3dTargets(targets, width, height, targetPlacement);
-    labelsDirty = stable.settling;
-    for (const placed of stable.labels) targetPlacement.set(placed.id, placed);
-    for (const placed of [...stable.labels, ...signs]) {
+    const landings = targets.filter(label => label.id.startsWith('landing:'));
+    const pieces = targets.filter(label => !label.id.startsWith('landing:'));
+    const landingPlacement = stable3dTargets(landings, width, height, new Map([...targetPlacement].filter(([id]) => id.startsWith('landing:'))), true);
+    const piecePlacement = stable3dTargets(pieces, width, height, new Map([...targetPlacement].filter(([id]) => !id.startsWith('landing:'))), false, landingPlacement.labels);
+    labelsDirty = landingPlacement.settling || piecePlacement.settling;
+    for (const placed of [...landingPlacement.labels, ...piecePlacement.labels]) targetPlacement.set(placed.id, placed);
+    for (const placed of [...landingPlacement.labels, ...piecePlacement.labels, ...signs]) {
       const node = labels.get(placed.id)!, original = projected.get(placed.id)!;
       node.element.style.transform = `translate(${placed.left.toFixed(1)}px, ${placed.top.toFixed(1)}px)`;
       node.line.setAttribute('x1', String(original.x)); node.line.setAttribute('y1', String(original.y));

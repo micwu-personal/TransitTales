@@ -1,12 +1,13 @@
-import { type Game, type LineId } from './model';
+import { type Game, type LineId, type MapId } from './model';
+import { mapText } from './adventure-copy';
 import { stationNames, text, type Language } from './locale';
 
 export interface Point { readonly x: number; readonly y: number }
 export type CityLayout = Readonly<Record<string, Point>>;
-export interface StationView { readonly id: string; readonly label: string; readonly accessibleName: string; readonly position: Point; readonly waiting: number; readonly selected: boolean; readonly helped: boolean }
+export interface StationView { readonly id: string; readonly label: string; readonly accessibleName: string; readonly position: Point; readonly waiting: number; readonly selected: boolean; readonly helped: boolean; readonly eventActive: boolean }
 export interface LineView { readonly id: LineId; readonly color: string; readonly stops: readonly string[] }
 export interface TrainView { readonly id: number; readonly accessibleName: string; readonly line: LineId; readonly from: string; readonly to: string; readonly progress: number; readonly position: Point; readonly heading: number; readonly riders: number; readonly spare: boolean; readonly moving: boolean }
-export interface CitySnapshot { readonly stations: readonly StationView[]; readonly lines: readonly LineView[]; readonly trains: readonly TrainView[]; readonly accessibleName: string; readonly riverLabel: string }
+export interface CitySnapshot { readonly mapId: MapId; readonly stations: readonly StationView[]; readonly lines: readonly LineView[]; readonly trains: readonly TrainView[]; readonly accessibleName: string; readonly riverLabel: string }
 export interface ViewOptions { readonly selected: string; readonly language: Language; readonly interpolationSeconds: number; readonly animate: boolean; readonly layout: CityLayout }
 
 const trainLabels = {
@@ -25,10 +26,12 @@ export function createCitySnapshot(game: Game, options: ViewOptions): CitySnapsh
     const angle = index / Math.max(1, game.network.stations.length) * Math.PI * 2;
     return [station.id, Object.freeze(point ? { x: clamp(point.x), y: clamp(point.y) } : { x: 0.5 + Math.cos(angle) * 0.35, y: 0.5 + Math.sin(angle) * 0.35 })] as const;
   }));
+  const mapId = game.network.mapId ?? 'little-bay', copy = mapText(options.language, mapId);
+  const activeEvent = game.scenario.events[game.eventIndex - 1];
   const stations = game.network.stations.map(station => {
     const label = stationNames[options.language][station.id] ?? station.name;
     const waiting = game.queues[station.id].length;
-    return Object.freeze({ id: station.id, label, accessibleName: text(options.language, 'stationAccessible', { station: label, count: waiting }), position: points.get(station.id)!, waiting, selected: options.selected === station.id, helped: (game.crewUntil[station.id] ?? 0) > game.time });
+    return Object.freeze({ id: station.id, label, accessibleName: `${text(options.language, 'stationAccessible', { station: label, count: waiting })}${copy.places[station.id] ? ` · ${copy.places[station.id]}` : ''}`, position: points.get(station.id)!, waiting, selected: options.selected === station.id, helped: (game.crewUntil[station.id] ?? 0) > game.time, eventActive: Boolean(activeEvent && activeEvent.station === station.id && game.time - activeEvent.at < 12) });
   });
   const lines = game.network.lines.map(line => Object.freeze({ id: line.id, color: line.color, stops: Object.freeze([...line.stops]) }));
   const trains = game.trains.map(train => {
@@ -41,5 +44,5 @@ export function createCitySnapshot(game: Game, options: ViewOptions): CitySnapsh
     const accessibleName = trainLabels[options.language](text(options.language, train.line), train.id, destination, train.riders.length);
     return Object.freeze({ id: train.id, accessibleName, line: train.line, from, to, progress, position: Object.freeze({ x: a.x + (b.x - a.x) * progress, y: a.y + (b.y - a.y) * progress }), heading: Math.atan2(b.y - a.y, b.x - a.x), riders: train.riders.length, spare: train.spare, moving: train.moving });
   });
-  return Object.freeze({ stations: Object.freeze(stations), lines: Object.freeze(lines), trains: Object.freeze(trains), accessibleName: text(options.language, 'mapName'), riverLabel: text(options.language, 'river') });
+  return Object.freeze({ stations: Object.freeze(stations), lines: Object.freeze(lines), trains: Object.freeze(trains), mapId, accessibleName: `${text(options.language, 'mapName')} · ${copy.name}`, riverLabel: copy.water });
 }

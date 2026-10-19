@@ -89,6 +89,37 @@ const coordinates = (node: DomNode) => node.style.transform.match(/[\d.-]+/g).ma
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); harness.engines = []; harness.measurements = 0; });
 
 describe('actual projected mall label updates', () => {
+  it('keeps every merged tread, rail and deck on its own depth-spanning connection without corrupting later primitives', async () => {
+    const { renderer, engine, unavailable } = mountHarness();
+    try {
+      await Promise.resolve();
+      for (const atrium of PUZZLES.filter(p => p.building === 'sky-atrium')) {
+        const board = verifiedSolution(atrium);
+        renderer.render(snapshot(atrium, board, null, 'en', null, null, true, false, false)); engine.frame?.();
+        for (const piece of board.pieces) {
+          const from = mallPoint3d(piece.a), to = mallPoint3d(piece.b);
+          const meshes = engine.scenes[0].meshes.filter(mesh => mesh.metadata?.kind === 'piece' && mesh.metadata.id === piece.id);
+          expect(meshes.length, `${atrium.id}/${piece.id}`).toBeGreaterThan(0);
+          for (const mesh of meshes) {
+            const vertices = mesh.getVerticesData('position')!, indices = mesh.getIndices()!;
+            expect([...indices].every(index => index >= 0 && index < vertices.length / 3), `${atrium.id}/${piece.id}: valid indices`).toBe(true);
+            const matrix = mesh.computeWorldMatrix(true), min = new Vector3(Infinity, Infinity, Infinity), max = min.negate();
+            for (let index = 0; index < vertices.length; index += 3) {
+              const vertex = Vector3.TransformCoordinates(Vector3.FromArray(vertices, index), matrix);
+              min.minimizeInPlace(vertex); max.maximizeInPlace(vertex);
+            }
+            for (const axis of ['x', 'z'] as const) {
+              expect(min[axis], `${atrium.id}/${piece.id}: ${axis} stays by its endpoints`).toBeGreaterThanOrEqual(Math.min(from[axis], to[axis]) - .91);
+              expect(max[axis], `${atrium.id}/${piece.id}: ${axis} stays by its endpoints`).toBeLessThanOrEqual(Math.max(from[axis], to[axis]) + .91);
+            }
+            expect(min.y).toBeGreaterThanOrEqual(Math.min(from.y, to.y) - .5);
+            expect(max.y).toBeLessThanOrEqual(Math.max(from.y, to.y) + (piece.type === 'elevator' ? 2.5 : .9));
+          }
+        }
+      }
+      expect(unavailable).not.toHaveBeenCalled();
+    } finally { renderer.dispose(); }
+  }, 15_000);
   it('builds distinct depth decks, routes exact coordinates and yields camera tours to manual controls', async () => {
     const { renderer, host, engine, onLanding, unavailable } = mountHarness();
     try {

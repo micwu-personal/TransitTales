@@ -1,4 +1,5 @@
 import { SCENARIOS, type Notice } from './model';
+import { adventureCopy } from './adventure-copy';
 
 export type Language = 'en' | 'zh-CN' | 'ja' | 'mn-Cyrl-MN' | 'mn-Mong-CN';
 export const LANGUAGE_KEY = 'transit-tales-language';
@@ -423,6 +424,7 @@ export const scenarioCopy: Record<Language, Record<string, ScenarioCopy>> = {
     connections: { name: '中心站见', subtitle: '两条线路，一座小城', briefing: '许多乘客需要换乘。向繁忙站台派出备用列车，并让中心站的列车多等一会儿，接上刚到站的乘客。', events: ['航班落地了，机场站的乘客需要搭乘两条线路。', '轮渡乘客来到港口站！留意他们的换乘。', '中心站迎来最后一波人潮。你一定行！'] },
   },
 };
+for (const language of ['zh-CN', 'ja', 'mn-Cyrl-MN', 'mn-Mong-CN'] as const) Object.assign(scenarioCopy[language], adventureCopy[language]);
 export function noticeText(language: Language, notice: Notice): string {
   switch (notice.kind) {
     case 'briefing': return scenarioCopy[language][notice.scenario].briefing;

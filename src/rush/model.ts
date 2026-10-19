@@ -1,9 +1,10 @@
 export type LineId = 'coral' | 'blue';
 export interface Station { id: string; name: string; x: number; y: number; icon: string }
 export interface Line { id: LineId; name: string; color: string; stops: string[] }
-export interface Network { stations: Station[]; lines: Line[]; segmentSeconds: number }
+export type MapId = 'little-bay' | 'lantern-isles';
+export interface Network { stations: Station[]; lines: Line[]; segmentSeconds: number; mapId?: MapId }
 export const NETWORK: Network = {
-  segmentSeconds: 12,
+  mapId: 'little-bay', segmentSeconds: 12,
   stations: [
     { id: 'harbor', name: 'Harbor', x: 95, y: 245, icon: '⚓' },
     { id: 'market', name: 'Market', x: 245, y: 245, icon: '♧' },
@@ -21,12 +22,51 @@ export const NETWORK: Network = {
     { id: 'blue', name: 'B · Blue line', color: '#286cb1', stops: ['north', 'library', 'central', 'stadium', 'riverside', 'airport'] },
   ],
 };
-export interface Scenario { id: string; name: string; subtitle: string; briefing: string; duration: number; target: number; demand: number; seed: number; hot: string; events: { at: number; station: string; count: number; message: string }[] }
+export interface ShiftEvent { at: number; station: string; count: number; message: string; effect?: 'helpers' | 'spare' }
+export interface Scenario { id: string; mapId?: MapId; name: string; subtitle: string; briefing: string; duration: number; target: number; demand: number; seed: number; hot: string; events: ShiftEvent[] }
+// The sister district uses the same named services: captions, recordings and platform picking never need aliases.
+export const ISLAND_NETWORK: Network = { mapId: 'lantern-isles', segmentSeconds: 11,
+  stations: NETWORK.stations.map(station => ({ ...station })), lines: NETWORK.lines.map(line => ({ ...line, stops: [...line.stops] })) };
 export const SCENARIOS: Scenario[] = [
   { id: 'first-shift', name: 'First shift', subtitle: 'Learn the ropes', briefing: 'Market is busy! Select it and send a spare train. Get 220 people home before your shift ends.', duration: 180, target: 220, demand: 0.23, seed: 71, hot: 'market', events: [ { at: 40, station: 'garden', count: 25, message: 'Picnic finished! Garden has a fresh crowd.' }, { at: 100, station: 'north', count: 30, message: 'School is out at North Park. A spare train would help!' } ] },
   { id: 'concert', name: 'The big encore', subtitle: 'Rescue the concert crowd', briefing: 'The concert is about to finish. Keep an eye on Stadium and send relief trains before the queue grows.', duration: 195, target: 310, demand: 0.31, seed: 123, hot: 'stadium', events: [ { at: 20, station: 'stadium', count: 50, message: 'Encore over! 50 music lovers arrive at Stadium.' }, { at: 75, station: 'stadium', count: 40, message: 'Another concert wave! Let’s get everyone home.' }, { at: 130, station: 'central', count: 25, message: 'Central is busy with late connections.' } ] },
   { id: 'connections', name: 'Meet me at Central', subtitle: 'Two lines, one little city', briefing: 'Many riders need to change lines. Send spare trains to busy platforms and briefly hold a train at Central to catch arriving riders.', duration: 210, target: 390, demand: 0.36, seed: 451, hot: 'central', events: [ { at: 30, station: 'airport', count: 40, message: 'A flight has landed. Airport riders need both lines.' }, { at: 90, station: 'harbor', count: 35, message: 'Ferry arrivals at Harbor! Watch their connections.' }, { at: 150, station: 'central', count: 35, message: 'One last rush at Central. You’ve got this!' } ] },
+  { id: 'kite-day', name: 'Kites over the bay', subtitle: 'A breezy park adventure', briefing: 'Follow the kite festival from North Park to Garden. Send relief before the crowds arrive; festival volunteers help at Garden for 22 seconds.', duration: 200, target: 325, demand: 0.29, seed: 809, hot: 'north', events: [
+    { at: 25, station: 'north', count: 38, message: 'Kite prizes awarded! North Park welcomes 38 happy flyers.' },
+    { at: 70, station: 'garden', count: 42, effect: 'helpers', message: 'Garden kite workshop ends! Volunteers double boarding for 22 seconds.' },
+    { at: 125, station: 'library', count: 30, message: 'Windy-day story time ends at Library. Time for a cosy ride home!' } ] },
+  { id: 'ferry-fair', name: 'The floating fair', subtitle: 'A final coastal challenge', briefing: 'Ferries, food stalls and a museum sleepover all finish in waves. An extra spare arrives with the fair crew. Keep both lines connected at Central.', duration: 225, target: 410, demand: 0.35, seed: 1207, hot: 'harbor', events: [
+    { at: 20, station: 'harbor', count: 42, effect: 'spare', message: 'The floating fair docks! 42 riders and one extra spare arrive at Harbor.' },
+    { at: 65, station: 'market', count: 36, message: 'The last pancake is sold! Market stallholders are heading home.' },
+    { at: 120, station: 'museum', count: 38, message: 'Museum sleepover checkout! The little explorers need both lines.' },
+    { at: 165, station: 'central', count: 28, message: 'The fair’s final connections arrive at Central. Keep those doors open!' } ] },
+  { id: 'island-welcome', mapId: 'lantern-isles', name: 'Welcome to Lantern Isles', subtitle: 'Lighthouse, bridges and little trains', briefing: 'Explore Little Bay’s island district. Start at the lighthouse pier at Harbor, then meet the night-market crowd. Familiar station names, a new adventure!', duration: 180, target: 250, demand: 0.24, seed: 2473, hot: 'market', events: [
+    { at: 35, station: 'harbor', count: 30, message: 'Lighthouse tour finished! 30 visitors arrive at Harbor.' },
+    { at: 90, station: 'market', count: 36, effect: 'helpers', message: 'Night-market tasting ends. Friendly stallholders help board twice as fast for 22 seconds!' } ] },
+  { id: 'lantern-parade', mapId: 'lantern-isles', name: 'The lantern parade', subtitle: 'Follow the glow', briefing: 'The lantern parade travels from Market through Central to Riverside. Read the next-event forecast and send relief ahead of each wave.', duration: 200, target: 340, demand: 0.30, seed: 2239, hot: 'central', events: [
+    { at: 20, station: 'market', count: 42, message: 'The first lanterns set off! Market has 42 riders ready to go.' },
+    { at: 65, station: 'central', count: 35, effect: 'helpers', message: 'The clockwork plaza glows. Parade helpers double Central boarding for 22 seconds.' },
+    { at: 125, station: 'riverside', count: 45, message: 'Floating lanterns launched! Riverside spectators need a ride home.' } ] },
+  { id: 'star-party', mapId: 'lantern-isles', name: 'A pocketful of stars', subtitle: 'Observatory open night', briefing: 'Museum’s observatory and Library’s sky stories close in waves. Plan the transfers at Central; the astronomy club brings an extra spare train.', duration: 210, target: 355, demand: 0.31, seed: 2343, hot: 'museum', events: [
+    { at: 30, station: 'museum', count: 45, effect: 'spare', message: 'A shooting star! The observatory tour ends and the club lends one extra spare.' },
+    { at: 85, station: 'library', count: 38, message: 'Sky stories are over at Library. The young astronomers are coming home.' },
+    { at: 140, station: 'garden', count: 32, message: 'The glowing glasshouse closes at Garden. Catch the last connections!' } ] },
+  { id: 'regatta', mapId: 'lantern-isles', name: 'The paper-boat regatta', subtitle: 'Tiny boats, a big crowd', briefing: 'Paper boats race along Riverside, while Stadium hosts the puppet finals. Divide your spare trains between the two celebrations.', duration: 215, target: 385, demand: 0.34, seed: 2371, hot: 'riverside', events: [
+    { at: 25, station: 'riverside', count: 48, message: 'The paper-boat winner crosses the line! 48 spectators arrive at Riverside.' },
+    { at: 75, station: 'stadium', count: 42, effect: 'helpers', message: 'Puppet finals finished! The theatre crew doubles Stadium boarding for 22 seconds.' },
+    { at: 135, station: 'harbor', count: 38, message: 'The little sailboats return to the lighthouse pier. Harbor is busy again!' } ] },
+  { id: 'balloon-finale', mapId: 'lantern-isles', name: 'Balloons at sundown', subtitle: 'The island festival finale', briefing: 'Balloons land at Airport, a picnic wraps up at North Park and the whole island connects at Central. Chase your best score in the grand finale!', duration: 230, target: 440, demand: 0.37, seed: 2498, hot: 'airport', events: [
+    { at: 20, station: 'airport', count: 46, effect: 'spare', message: 'The balloons touch down! 46 visitors and one extra spare arrive at Airport.' },
+    { at: 70, station: 'north', count: 42, message: 'Cloud-garden picnic ends! North Park’s visitors need the Blue line.' },
+    { at: 125, station: 'garden', count: 38, effect: 'helpers', message: 'The glasshouse farewell begins. Garden volunteers double boarding for 22 seconds.' },
+    { at: 175, station: 'central', count: 32, message: 'One last lantern-lit connection at Central. Bring everyone home!' } ] },
 ];
+export const MAPS = [
+  { id: 'little-bay' as const, network: NETWORK, scenarios: SCENARIOS.filter(s => !s.mapId) },
+  { id: 'lantern-isles' as const, network: ISLAND_NETWORK, scenarios: SCENARIOS.filter(s => s.mapId === 'lantern-isles') },
+];
+export const mapFor = (id: MapId) => MAPS.find(map => map.id === id)!;
+export const nextScenario = (scenario: Scenario) => SCENARIOS[(SCENARIOS.indexOf(scenario) + 1) % SCENARIOS.length];
 export interface Passenger { id: number; destination: string; born: number; waited: number; changed: boolean }
 export interface Train { id: number; line: LineId; index: number; direction: 1 | -1; progress: number; dwell: number; moving: boolean; riders: Passenger[]; spare: boolean; held: boolean }
 export type Notice = { kind: 'briefing'; scenario: string } | { kind: 'event'; scenario: string; index: number } | { kind: 'dispatch'; station: string } | { kind: 'helpers' | 'hold' | 'spare' | 'finished' };
@@ -58,7 +98,7 @@ export function addCrowd(g: Game, station: string, count: number) {
     g.queues[station].push({ id: g.nextPassenger++, destination, born: g.time, waited: 0, changed: false }); g.spawned++;
   }
 }
-export function createGame(scenario: Scenario = SCENARIOS[0], network: Network = NETWORK): Game {
+export function createGame(scenario: Scenario = SCENARIOS[0], network: Network = scenario.mapId === 'lantern-isles' ? ISLAND_NETWORK : NETWORK): Game {
   const g: Game = { network, scenario, time: 0, phase: 'ready', queues: Object.fromEntries(network.stations.map(s => [s.id, []])), trains: [], delivered: 0, transfers: 0, left: 0, spawned: 0, totalWait: 0, spares: 2, nextSpare: 28, holdCooldown: 0, crewCooldown: 0, crewUntil: {}, eventIndex: 0, rng: scenario.seed, nextPassenger: 1, nextTrain: 1, notices: [{ kind: 'briefing', scenario: scenario.id }], actionCount: 0 };
   for (const l of network.lines) for (const [index, direction] of [[0, 1], [l.stops.length - 1, -1]] as const) g.trains.push({ id: g.nextTrain++, line: l.id, index, direction, progress: 0, dwell: 3, moving: false, riders: [], spare: false, held: false });
   for (const s of network.stations) addCrowd(g, s.id, s.id === scenario.hot ? 32 : 4);
@@ -115,7 +155,10 @@ export function step(g: Game): void {
   g.time++; g.holdCooldown = Math.max(0, g.holdCooldown - 1); g.crewCooldown = Math.max(0, g.crewCooldown - 1);
   if (g.time >= g.nextSpare) { g.spares = Math.min(3, g.spares + 1); g.nextSpare += 28; notice(g, { kind: 'spare' }); }
   while (g.eventIndex < g.scenario.events.length && g.scenario.events[g.eventIndex].at <= g.time) {
-    const e = g.scenario.events[g.eventIndex++]; addCrowd(g, e.station, e.count); notice(g, { kind: 'event', scenario: g.scenario.id, index: g.eventIndex - 1 });
+    const e = g.scenario.events[g.eventIndex++]; addCrowd(g, e.station, e.count);
+    if (e.effect === 'helpers') g.crewUntil[e.station] = Math.max(g.crewUntil[e.station] ?? 0, g.time + 22);
+    if (e.effect === 'spare') g.spares = Math.min(3, g.spares + 1);
+    notice(g, { kind: 'event', scenario: g.scenario.id, index: g.eventIndex - 1 });
   }
   for (const s of g.network.stations) {
     if (random(g) < g.scenario.demand) addCrowd(g, s.id, 1);

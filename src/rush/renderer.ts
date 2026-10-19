@@ -1,4 +1,4 @@
-import { CITY_HEIGHT, CITY_WIDTH, coastalScenery } from './city';
+import { CITY_HEIGHT, CITY_WIDTH, coastalScenery, islandScenery, festivalIslandAt } from './city';
 import { type CitySnapshot, type Point } from './view';
 
 export type StationSelection = (stationId: string) => void;
@@ -40,8 +40,8 @@ export function createSvgCityRenderer(): CityRenderer {
     },
     render(snapshot) {
       if (!svg) throw new Error('Mount the city renderer before rendering.');
-      svg.setAttribute('aria-label', snapshot.accessibleName);
-      const nextSignature = JSON.stringify([snapshot.stations.map(s => [s.id, s.position]), snapshot.lines]);
+      svg.setAttribute('aria-label', snapshot.accessibleName); svg.dataset.map = snapshot.mapId;
+      const nextSignature = JSON.stringify([snapshot.mapId, snapshot.stations.map(s => [s.id, s.position]), snapshot.lines]);
       if (nextSignature !== signature) {
         signature = nextSignature; stationNodes.clear(); trainNodes.clear();
         const stations = new Map(snapshot.stations.map(s => [s.id, s]));
@@ -49,7 +49,13 @@ export function createSvgCityRenderer(): CityRenderer {
           const points = line.stops.map(id => project(stations.get(id)!.position)).map(p => `${p.x},${p.y}`).join(' ');
           return `<g aria-hidden="true"><polyline points="${points}" class="rail-shadow"/><polyline points="${points}" class="rail-bed"/><polyline points="${points}" class="rail-sleepers"/><polyline points="${points}" class="rail-line" stroke="${escape(line.color)}"/><polyline points="${points}" class="rail-highlight"/></g>`;
         }).join('');
-        svg.innerHTML = `<g class="city-scenery" aria-hidden="true">${coastalScenery()}</g>${tracks}<text x="364" y="702" class="river-label" aria-hidden="true"></text><g id="station-nodes"></g><g id="train-nodes"></g>`;
+        const bridges = snapshot.mapId === 'lantern-isles' ? snapshot.lines.flatMap(line => line.stops.slice(1).map((id, i) => {
+          const a = stations.get(line.stops[i])!.position, b = stations.get(id)!.position;
+          if (festivalIslandAt(a) === festivalIslandAt(b)) return '';
+          const p = project(a), q = project(b);
+          return `<g aria-hidden="true" data-island-bridge><path d="M${p.x} ${p.y}L${q.x} ${q.y}" stroke="#859c91" stroke-width="34"/><path d="M${p.x} ${p.y}L${q.x} ${q.y}" stroke="#f2ebd7" stroke-width="25"/></g>`;
+        })).join('') : '';
+        svg.innerHTML = `<g class="city-scenery" aria-hidden="true">${snapshot.mapId === 'lantern-isles' ? islandScenery() : coastalScenery()}</g>${bridges}${tracks}<text x="364" y="702" class="river-label" aria-hidden="true"></text><g id="station-nodes"></g><g id="train-nodes"></g>`;
         const stationLayer = svg.querySelector('#station-nodes')!;
         for (const station of snapshot.stations) {
           const node = document.createElementNS(SVG_NS, 'g'); const p = project(station.position);
@@ -63,7 +69,7 @@ export function createSvgCityRenderer(): CityRenderer {
       for (const station of snapshot.stations) {
         const node = stationNodes.get(station.id)!;
         node.setAttribute('aria-label', station.accessibleName); node.setAttribute('aria-pressed', String(station.selected));
-        node.classList.toggle('selected', station.selected); node.classList.toggle('busy', station.waiting >= 20); node.classList.toggle('helped', station.helped);
+        node.classList.toggle('selected', station.selected); node.classList.toggle('busy', station.waiting >= 20); node.classList.toggle('helped', station.helped); node.classList.toggle('event-active', station.eventActive);
         const stationLabel = node.querySelector('.station-label')!;
         stationLabel.textContent = station.label;
         const vertical = /[\u1800-\u18af]/.test(station.label);

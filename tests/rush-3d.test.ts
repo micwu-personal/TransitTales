@@ -7,8 +7,8 @@ import {
   CITY_CAMERA, cityCameraRadius, cityFramingPoints, cityPoint3d, cityStaticSignature, cityTrainPose,
   coastalIslandGeometry, create3dCityRenderer, layoutCityLabels,
 } from '../src/rush/renderer3d';
-import { COASTAL_LAYOUT } from '../src/rush/city';
-import { createGame, dispatch, step } from '../src/rush/model';
+import { COASTAL_LAYOUT, ISLAND_LAYOUT, FESTIVAL_ISLANDS } from '../src/rush/city';
+import { createGame, dispatch, step, SCENARIOS } from '../src/rush/model';
 import { createCitySnapshot, type CitySnapshot } from '../src/rush/view';
 
 const harness = vi.hoisted(() => ({ failInit: false, width: 390, height: 440, engines: [] as unknown[] }));
@@ -259,6 +259,70 @@ describe('3D renderer lifecycle and native controls', () => {
       }
       expect(trainSelect).not.toHaveBeenCalled();
     } finally { renderer.dispose(); }
+  });
+
+  it('switches distinct island scenery repeatedly without stale meshes, train indices or picking identities', () => {
+    const { host, renderer, engine, select } = mountHarness();
+    const islandView = createCitySnapshot(createGame(SCENARIOS[5]), { language: 'en', selected: 'market', layout: ISLAND_LAYOUT, interpolationSeconds: 0, animate: false });
+    try {
+      let coastCount = 0, islandCount = 0;
+      for (const snapshot of [view(), islandView, view(), islandView, view(), islandView]) {
+        renderer.render(snapshot); engine.frame?.();
+        const scene = engine.scenes[0], island = snapshot.mapId === 'lantern-isles';
+        expect(scene.transformNodes.filter(n => n.name === 'rush-lantern-isles')).toHaveLength(island ? 1 : 0);
+        expect(scene.transformNodes.filter(n => n.name.startsWith('rush-place-'))).toHaveLength(island ? 9 : 0);
+        expect(scene.meshes.filter(n => n.name.startsWith('rush-island'))).toHaveLength(2);
+        const land = scene.meshes.find(n => n.name.startsWith('rush-island') && (n.material as StandardMaterial).diffuseColor.toHexString().toLowerCase() === '#d9e2cd')!;
+        expect(land.getTotalVertices()).toBe(island ? FESTIVAL_ISLANDS.reduce((sum, i) => sum + 1 + i.points.length * 5, 0) : 112);
+        if (islandCount && island) expect(scene.meshes.length).toBe(islandCount);
+        if (coastCount && !island) expect(scene.meshes.length).toBe(coastCount);
+        if (island) islandCount = scene.meshes.length; else coastCount = scene.meshes.length;
+        for (const mesh of scene.meshes) {
+          if (mesh.getTotalIndices()) expect(mesh.getIndices()!.every(index => index >= 0 && index < mesh.getTotalVertices())).toBe(true);
+        }
+        for (const train of snapshot.trains) {
+          const root = scene.getTransformNodeByName(`rush-train:${train.id}`)!;
+          expect(root.getChildMeshes()).toHaveLength(6);
+          const hit = scene.pickWithRay(new Ray(root.position.add(new Vector3(0, 3, 0)), Vector3.Down()), mesh => mesh.metadata?.train === train.id);
+          expect(hit?.hit).toBe(true);
+        }
+        const stations = host.all().filter(n => n.dataset.station);
+        expect(stations).toHaveLength(10);
+        expect(stations.find(n => n.dataset.station === 'harbor')!.getAttribute('aria-label')).toContain(island ? 'Lighthouse pier' : 'Ferry pier');
+        host.children[0].emit('click', { target: stations.find(n => n.dataset.station === 'museum')!, detail: 0 });
+        expect(select).toHaveBeenLastCalledWith('museum');
+      }
+    } finally { renderer.dispose(); }
+  });
+
+  it.each([[390, 620], [820, 940], [1440, 820]])('frames actual Lantern Isles world geometry at %i×%i and reachable camera orbits', (width, height) => {
+    harness.width = width; harness.height = height;
+    const { renderer, engine } = mountHarness();
+    try {
+      const snapshot = createCitySnapshot(createGame(SCENARIOS[5]), { language: 'en', selected: 'market', layout: ISLAND_LAYOUT, interpolationSeconds: 0, animate: false });
+      renderer.render(snapshot); engine.frame?.();
+      const scene = engine.scenes[0], camera = scene.activeCamera as ArcRotateCamera;
+      for (const [alpha, beta] of [[CITY_CAMERA.alpha, CITY_CAMERA.beta], [-1.91, 0.65], [-1.1, 1.02]]) {
+        camera.alpha = alpha; camera.beta = beta; engine.frame?.();
+        const expected = cityCameraRadius(width, height, alpha, beta, snapshot.stations.map(s => s.position), 'lantern-isles');
+        expect(camera.radius).toBeCloseTo(expected);
+        const viewport = camera.viewport.toGlobal(width, height);
+        let left = width, right = 0, top = height, bottom = 0;
+        for (const mesh of scene.meshes) {
+          if (!mesh.isEnabled() || !mesh.isVisible || mesh.getClassName() === 'InstancedMesh' || mesh.name.startsWith('rush-source')) continue;
+          const vertices = mesh.getVerticesData('position'); if (!vertices) continue;
+          for (let i = 0; i < vertices.length; i += 3) {
+            const at = Vector3.TransformCoordinates(Vector3.FromArray(vertices, i), mesh.getWorldMatrix());
+            if (at.y < 0.28) continue;
+            const p = Vector3.Project(at, Matrix.Identity(), scene.getTransformMatrix(), viewport);
+            left = Math.min(left, p.x); right = Math.max(right, p.x);
+            top = Math.min(top, p.y); bottom = Math.max(bottom, p.y);
+          }
+        }
+        expect(left).toBeGreaterThan(14); expect(right).toBeLessThan(width - 14);
+        expect(top).toBeGreaterThan(14); expect(bottom).toBeLessThan(height - 14);
+      }
+    } finally { renderer.dispose(); harness.width = 390; harness.height = 440; }
   });
 
   it('moves actual carriage meshes with the running snapshot and holds them steady while paused', () => {

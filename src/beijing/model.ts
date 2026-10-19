@@ -68,13 +68,14 @@ export function makeLeg(graph: Graph, lineId: string, from: string, to: string, 
   }
   return null;
 }
-export function validateRoute(graph: Graph, legs: Leg[], request: Request): Validation {
+export function validateRoute(graph: Graph, legs: Leg[], request: Request, startingLine?: string): Validation {
   const edges: Edge[] = [], visited = [request.origin];
   const result = (error?: Validation['error']): Validation => ({ ok: !error, error, edges, visited, metrics: metricsFor(edges) });
   if (!graph.stations.has(request.origin) || !graph.stations.has(request.destination) || request.via.some(id => !graph.stations.has(id))) return result('unknown');
   if (!legs.length) return request.origin === request.destination && request.via.every(id => id === request.origin) ? result() : result('empty');
   if (legs[0].stops[0] !== request.origin) return result('origin');
-  let last = request.origin, lastLine: string | undefined;
+  if (startingLine && !graph.edges.has(nodeId(request.origin, startingLine))) return result('unknown');
+  let last = request.origin, lastLine = startingLine;
   for (const leg of legs) {
     if (!graph.lines.has(leg.lineId) || leg.stops.length < 1 || (leg.walkToLineId ? leg.stops.length !== 2 || !graph.lines.has(leg.walkToLineId) || !graph.edges.has(nodeId(leg.stops[0],leg.lineId)) || !graph.edges.has(nodeId(leg.stops[1],leg.walkToLineId)) : leg.stops.some(id => !graph.edges.has(nodeId(id, leg.lineId))))) return result('unknown');
     if (leg.stops[0] !== last) return result('disconnected');
@@ -198,9 +199,8 @@ export function remainingRequest(journey: Journey): Request {
 }
 export function replanJourney(journey: Journey, graph: Graph, route: Leg[]): boolean {
   if (journey.status !== 'interrupted' || !journey.interruption || journey.elapsed !== 0) return false;
-  const request = remainingRequest(journey), validation = validateRoute(graph, route, request); if (!validation.ok) return false;
-  let edges = validation.edges;
-  if (journey.currentLine && route[0] && journey.currentLine !== route[0].lineId) { const edge = graph.byId.get(transferId(journey.currentStation, journey.currentLine, route[0].lineId)); if (!edge) return false; edges = [edge, ...edges]; }
+  const request = remainingRequest(journey), validation = validateRoute(graph, route, request, journey.currentLine); if (!validation.ok) return false;
+  const edges = validation.edges;
   if (!edges.length && !journey.toiletSolved) return false;
   journey.route = structuredClone(route); journey.segments = segmentsFor(edges); journey.index = 0; journey.elapsed = 0; journey.interruption = undefined; journey.status = edges.length ? 'running' : (journey.toiletSolved ? 'complete' : 'interrupted'); return true;
 }

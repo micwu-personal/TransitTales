@@ -1,16 +1,13 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const { chromium } = require('playwright');
+const { buildIntro, buildRush } = require('.\\beijing-browser-planner.cjs');
+const { startServer } = require('.\\beijing-browser-server.cjs');
 
 (async () => {
-  const { createServer, preview } = await import('vite');
-  const production = process.env.TRANSIT_PREVIEW_DIR;
-  const server = production
-    ? await preview({ base: process.env.TRANSIT_PREVIEW_BASE || '/', build: { outDir: path.resolve(production) }, preview: { host: '127.0.0.1', port: 0 }, logLevel: 'error' })
-    : await createServer({ server: { host: '127.0.0.1', port: 0 }, logLevel: 'error' });
+  const server = await startServer();
   let browser;
   try {
-    if (!production) await server.listen();
     const options = { headless: true, args: ['--autoplay-policy=user-gesture-required'] };
     try { browser = await chromium.launch(options); }
     catch (error) { if (!error.message.includes("Executable doesn't exist")) throw error; browser = await chromium.launch({ ...options, channel: 'msedge' }); }
@@ -42,14 +39,18 @@ const { chromium } = require('playwright');
         if (missing) { missing = false; return route.fulfill({ status: 404, contentType: 'text/plain', body: 'Missing test recording' }); }
         return route.continue();
       });
-      await page.goto(`${server.resolvedUrls.local[0]}beijing.html`);
-      await page.locator('[data-candidate="0"]').waitFor();
+      await page.goto(server.url);
+      await page.locator('#manual-direction').waitFor();
+      assert.equal(await page.locator('[data-candidate], .alternatives, .route-workshop').count(), 0, 'no complete-route answers or collapsed builder');
+      assert.equal(await page.locator('#manual-end').isEnabled(), false);
+      assert.equal(await page.locator('[data-action="board"]').isEnabled(), false);
       await page.locator('#language').selectOption(language);
       const title = await page.locator('.passenger-mission h3').textContent();
       assert.equal(await page.evaluate(() => window.beijingAudio.attempts.length), 0, 'no autoplay on opening');
       if (process.env.TRANSIT_SCREENSHOTS) await page.screenshot({ path: path.join(process.env.TRANSIT_SCREENSHOTS, `beijing-guided-${width}.png`) });
-      await page.locator('[data-candidate="0"]').click();
-      assert.equal(await page.evaluate(() => document.activeElement.dataset.action), 'board', 'route choice leads directly to boarding');
+      await buildIntro(page);
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.action), 'board', 'completing the player-built route leads to boarding');
+      assert.equal(await page.locator('.route-plan li').count(), 2);
       await page.locator('#dimension').evaluate(select => { select.value = '2d'; select.dispatchEvent(new Event('change', { bubbles: true })); });
       const press = locator => width === 390 ? locator.tap() : locator.click();
       await press(page.locator('[data-action="board"]'));
@@ -82,10 +83,12 @@ const { chromium } = require('playwright');
       assert.ok((await page.locator('.travel-milestones .visited').count()) >= 2);
       await page.locator('[data-action="next"]').click();
       assert.notEqual(await page.locator('.passenger-mission h3').textContent(), title);
-      assert.equal(await page.locator('.route-plan').isVisible(), false);
+      assert.equal(await page.locator('.route-plan li').count(), 0);
+      assert.equal(await page.locator('.manual-route').isVisible(), true);
+      assert.equal(await page.locator('[data-action="board"]').isEnabled(), false);
       assert.equal(await page.locator('#planner-content').evaluate(panel => panel.scrollTop), 0, 'next mission starts at its passenger request');
       const played = await page.evaluate(() => window.beijingAudio.attempts.length);
-      await page.locator('[data-candidate="0"]').click();
+      await buildRush(page);
       await press(page.locator('[data-action="board"]'));
       await page.locator('.journey-svg').waitFor();
       await press(page.locator('#pause'));
@@ -96,6 +99,6 @@ const { chromium } = require('playwright');
     }
   } finally {
     await browser?.close();
-    if (production) await new Promise(resolve => server.httpServer.close(resolve)); else await server.close();
+    await server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });

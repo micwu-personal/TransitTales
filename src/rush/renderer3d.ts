@@ -6,6 +6,8 @@ import { Matrix } from '@babylonjs/core/Maths/math.vector';
 import { VertexData } from '@babylonjs/core/Meshes/mesh.vertexData';
 import '@babylonjs/core/Meshes/instancedMesh';
 import type { CityRenderer, StationSelection } from './renderer';
+import type { MapId } from './model';
+import { FESTIVAL_ISLANDS, festivalIslandAt } from './city';
 import type { CitySnapshot, Point, StationView, TrainView } from './view';
 import './renderer3d.css';
 import { attachCameraControls, cameraAnchorVisible, clearCameraInertia, fitCameraZoom, zoomCamera, type CameraControls } from '../camera-controls';
@@ -29,7 +31,7 @@ export function cityTrainPose(train: Pick<TrainView, 'position' | 'heading'>): P
 
 // Fit the real coastline and local skyline; empty water does not need a fictional tall corner building.
 export function cityCameraRadius(width: number, height: number, alpha = ALPHA, beta = BETA,
-  stations: readonly Point[] = []): number {
+  stations: readonly Point[] = [], mapId: MapId = 'little-bay'): number {
   const w = Math.max(90, width), h = Math.max(90, height), padding = Math.min(26, w * .12, h * .12);
   const tangent = Math.tan(FOV / 2);
   const tx = tangent * (w - padding * 2) / h, ty = tangent * (h - padding * 2) / h;
@@ -37,7 +39,7 @@ export function cityCameraRadius(width: number, height: number, alpha = ALPHA, b
   const right = new Vector3(-Math.sin(alpha), 0, Math.cos(alpha));
   const up = new Vector3(-Math.cos(alpha) * Math.cos(beta), Math.sin(beta), -Math.sin(alpha) * Math.cos(beta));
   let radius = 24;
-  for (const point of cityFramingPoints(stations)) {
+  for (const point of cityFramingPoints(stations, mapId)) {
     const p = new Vector3(point.x, point.y - CITY_CAMERA.targetY, point.z);
     radius = Math.max(radius, Vector3.Dot(p, radial) + Math.max(Math.abs(Vector3.Dot(p, right)) / tx, Math.abs(Vector3.Dot(p, up)) / ty));
   }
@@ -45,7 +47,7 @@ export function cityCameraRadius(width: number, height: number, alpha = ALPHA, b
 }
 
 export function cityStaticSignature(view: CitySnapshot): string {
-  return JSON.stringify([view.stations.map(station => [station.id, station.position]), view.lines]);
+  return JSON.stringify([view.mapId, view.stations.map(station => [station.id, station.position]), view.lines]);
 }
 
 export interface CityProjectedLabel {
@@ -118,9 +120,17 @@ const CITY_SCENERY_FRAME: readonly Position[] = [
   ...framingBox({ x: -3.8, y: 0, z: -6.7 }, 1.7, .7, -.15, 1.2),
 ];
 
-export function cityFramingPoints(stations: readonly Point[] = []): readonly Position[] {
-  return stations.length ? [...CITY_SCENERY_FRAME, ...stations.flatMap(point =>
-    framingBox(cityPoint3d(point), 2.8, 2.8, TRACK - .12, TRACK + 2.2))] : CITY_SCENERY_FRAME;
+const ISLAND_SCENERY_FRAME: readonly Position[] = [
+  ...FESTIVAL_ISLANDS.flatMap(island => island.points.flatMap(point => framingBox(cityPoint3d(point), .4, .4, -.25, LAND))),
+  ...[[.107,.43,1.3,1.3,3.4],[.65,.21,2.8,2.5,2.3],[.86,.265,2.5,1.7,2.3],
+    [.36,.23,1.6,1.3,2.6],[.56,.40,1.8,1.6,2.5],[.48,.79,2.7,2,1.5],
+    [.865,.62,1.1,1.1,3.2],[.91,.59,1.1,1.1,3.2],[.935,.64,1.1,1.1,3.2]].flatMap(([x,y,w,d,h]) => framingBox(cityPoint3d({x,y}),w,d,LAND,LAND+h)),
+  ...[[.45,.125],[.49,.135],[.53,.14],[.08,.64],[.17,.73],[.27,.63],[.90,.45]].flatMap(([x,y]) => framingBox(cityPoint3d({x,y}),1.2,1.2,LAND,1.8)),
+];
+export function cityFramingPoints(stations: readonly Point[] = [], mapId: MapId = 'little-bay'): readonly Position[] {
+  const scenery = mapId === 'lantern-isles' ? ISLAND_SCENERY_FRAME : CITY_SCENERY_FRAME;
+  return stations.length ? [...scenery, ...stations.flatMap(point =>
+    framingBox(cityPoint3d(point), 2.8, 2.8, TRACK - .12, TRACK + 2.2))] : scenery;
 }
 
 export function coastalIslandGeometry(outline: readonly Point[], center: Point, bottom: number, top: number): { positions: number[]; indices: number[] } {
@@ -149,6 +159,8 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
   let wrapper: HTMLDivElement | null = null, stage: HTMLDivElement | null = null, canvas: HTMLCanvasElement | null = null;
   let labelHost: HTMLDivElement | null = null, leaders: SVGSVGElement | null = null, trainStrip: HTMLDivElement | null = null;
   let engine: Engine | null = null, scene: Scene | null = null, camera: ArcRotateCamera | null = null;
+  let scenery: TransformNode | null = null;
+  let sceneryMap: MapId = 'little-bay';
   let observer: ResizeObserver | null = null, network: TransformNode | null = null, snapshot: CitySnapshot | null = null;
   let select: StationSelection | undefined, selectTrain: ((id: number) => void) | undefined;
   let active = false, unavailable = false, signature = '', serial = 0, projection = '', labelsDirty = true, fitRadius = 0, fitKey = '', generation = 0;
@@ -270,7 +282,7 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
   }
 
   function buildCoast(): void {
-    const root = new TransformNode('rush-coast', scene!);
+    const root = scenery = new TransformNode('rush-coast', scene!);
     box(root, { x: 0, y: -0.22, z: 0 }, { x: 29.2, y: 0.18, z: 20.2 }, '#a9cfca');
     for (let row = 0; row < 12; row++) for (let col = 0; col < 15; col++) {
       const x = -13.5 + col * 1.86 + (row % 2) * 0.35, z = -9.4 + row * 1.6;
@@ -318,6 +330,79 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
     for (const mesh of root.getChildMeshes()) mesh.freezeWorldMatrix();
   }
 
+  function buildFestival(): void {
+    const root = scenery = new TransformNode('rush-lantern-isles', scene!);
+    box(root, { x: 0, y: -.22, z: 0 }, { x: 29.2, y: .18, z: 20.2 }, '#91c4ca');
+    for (let row = 0; row < 12; row++) for (let col = 0; col < 15; col++)
+      box(root, { x: -13.5 + col * 1.86, y: -.122, z: -9.4 + row * 1.6 }, { x: .55, y: .005, z: .025 }, '#d4efed');
+    FESTIVAL_ISLANDS.forEach(i => island(root, i.points, i.center));
+    const landmark = (id: string) => { const node = new TransformNode(`rush-place-${id}`, scene!); node.parent = root; return node; };
+    for (const [ax,ay,bx,by] of [[.108,.63,.244,.28],[.244,.28,.323,.438],[.396,.54,.413,.2],[.413,.2,.58,.21],[.456,.816,.687,.906],[.687,.906,.88,.788],[.78,.46,.87,.258]])
+      segment(root, cityPoint3d({ x: ax, y: ay }, LAND+.015), cityPoint3d({ x: bx, y: by }, LAND+.015), .28, .02, '#f2ebd7');
+    const lighthouse = landmark('lighthouse'), at = cityPoint3d({x:.107,y:.43},LAND);
+    box(lighthouse, {...at,y:LAND+.05}, {x:1.6,y:.1,z:1}, '#b5a388');
+    cylinder(lighthouse, {...at,y:LAND+1.25}, .65, 2.5, '#fbf0da');
+    for (const y of [.6,1.45,2.3]) cylinder(lighthouse, {...at,y:LAND+y}, .67, .22, '#c87059');
+    cylinder(lighthouse, {...at,y:LAND+2.7}, .82, .4, '#638f9b');
+    orb(lighthouse, {...at,y:LAND+2.7}, {x:.4,y:.28,z:.4}, '#ffe5a2');
+    const roof = shape(lighthouse,'triangle',{...at,y:LAND+3.02},{x:1.05,y:.2,z:1.05},'#ad6755'); roof.rotation.x=Math.PI;
+    const market = landmark('night-market');
+    for (let i=0;i<3;i++) {
+      const x=.22+i*.039,y=.35; building(market,x*1120,y*760,.8,.6,.65,'#cf7c63');
+      const a=cityPoint3d({x,y},LAND+.64); box(market,{...a,z:a.z-.44},{x:.95,y:.12,z:.5},i%2?'#729e97':'#d7965d');
+    }
+    for (let i=0;i<9;i++) {
+      const a=cityPoint3d({x:.192+i*.015,y:.307},LAND+1.24+Math.sin(i/2)*.15);
+      orb(market,a,{x:.21,y:.3,z:.21},i%2?'#e9a746':'#cf6954');
+      cylinder(market,{...a,y:a.y-.2},.025,.15,'#f6e3b5');
+      if(i) segment(market,cityPoint3d({x:.192+(i-1)*.015,y:.307},LAND+1.5+Math.sin((i-1)/2)*.15),{...a,y:a.y+.25},.025,.025,'#8a7856');
+    }
+    const plaza=landmark('clock-plaza'), clock=cityPoint3d({x:.56,y:.40},LAND);
+    cylinder(plaza,{...clock,y:LAND+.025},1.8,.05,'#ecddbd');
+    building(plaza,.56*1120,.40*760,.55,.5,1.95,'#aa7962');
+    const face=shape(plaza,'disc',{...clock,y:LAND+1.55,z:clock.z-.265},{x:.4,y:.4,z:1},'#fff7df'); face.rotation.y=Math.PI;
+    box(plaza,{x:clock.x,y:LAND+1.62,z:clock.z-.28},{x:.025,y:.16,z:.02},'#425f5b');
+    const hand=box(plaza,{x:clock.x+.055,y:LAND+1.52,z:clock.z-.28},{x:.14,y:.025,z:.02},'#425f5b'); hand.rotation.z=-.4;
+    const observatory=landmark('observatory'), dome=cityPoint3d({x:.65,y:.21},LAND);
+    cylinder(observatory,{...dome,y:LAND+.35},1.9,.7,'#e9dcca');
+    orb(observatory,{...dome,y:LAND+.8},{x:2.1,y:1.4,z:1.9},'#789ea8');
+    box(observatory,{...dome,y:LAND+.95},{x:.06,y:1.25,z:1.92},'#c9e0df');
+    const telescope=cylinder(observatory,{x:dome.x+.8,y:LAND+1.65,z:dome.z-.2},.19,.85,'#466d77'); telescope.rotation.z=-.9;
+    orb(observatory,{x:dome.x+1.12,y:LAND+1.95,z:dome.z-.2},{x:.23,y:.23,z:.23},'#ebd39d');
+    const glasshouse=landmark('glasshouse'), glass=cityPoint3d({x:.86,y:.265},LAND);
+    box(glasshouse,{...glass,y:LAND+.65},{x:2.1,y:1.3,z:1.25},'#c5dfcf');
+    const glassRoof=shape(glasshouse,'triangle',{...glass,y:LAND+1.45},{x:2.15,y:.32,z:1.4},'#8dbbab'); glassRoof.rotation.y=Math.PI;
+    for(const x of [-.8,-.4,0,.4,.8]) box(glasshouse,{x:glass.x+x,y:LAND+.67,z:glass.z-.636},{x:.045,y:1.3,z:.035},'#f2f0d8');
+    box(glasshouse,{...glass,y:LAND+.67,z:glass.z-.66},{x:2.1,y:.04,z:.025},'#f2f0d8');
+    tree(glasshouse,glass.x-.75,glass.z-.85,.5); tree(glasshouse,glass.x+.7,glass.z-.85,.5);
+    const library=landmark('sky-story-tower'); building(library,.36*1120,.23*760,.65,.65,1.9,'#7192a0');
+    const cap=cityPoint3d({x:.36,y:.23},LAND+2.05);
+    shape(library,'triangle',cap,{x:.9,y:.35,z:.9},'#ba8067');
+    const theatre=landmark('puppet-theatre'), stageAt=cityPoint3d({x:.48,y:.79},LAND);
+    shape(theatre,'ring',{...stageAt,y:LAND+.11},{x:2.4,y:3,z:1.6},'#d5b992');
+    box(theatre,{...stageAt,y:LAND+.6,z:stageAt.z+.35},{x:1.3,y:1.2,z:.3},'#9c6f5a');
+    box(theatre,{...stageAt,y:LAND+.65,z:stageAt.z+.18},{x:1.1,y:.7,z:.03},'#e8bb80');
+    for(const x of [-.48,.48]) box(theatre,{x:stageAt.x+x,y:LAND+.65,z:stageAt.z+.14},{x:.17,y:.7,z:.03},'#be6c65');
+    orb(theatre,{...stageAt,y:LAND+.65,z:stageAt.z+.10},{x:.18,y:.18,z:.1},'#608b89');
+    const boats=landmark('paper-boats');
+    for(let i=0;i<4;i++) {
+      const boat=cityPoint3d({x:.672+i*.029,y:.90+(i%2)*.019},LAND+.07);
+      const hull=shape(boats,'triangle',boat,{x:.5,y:.08,z:.35},i%2?'#ebbb79':'#f8ecda'); hull.rotation.y=Math.PI/2;
+      const sail=shape(boats,'triangle',{...boat,y:boat.y+.15},{x:.4,y:.025,z:.3},'#f8f0db'); sail.rotation.x=Math.PI/2;
+    }
+    const balloons=landmark('balloons');
+    for(const [x,y,color] of [[.865,.62,'#ce776d'],[.91,.59,'#6595b0'],[.935,.64,'#e0b552']] as const) {
+      const at=cityPoint3d({x,y},LAND);
+      orb(balloons,{...at,y:LAND+2.1},{x:.95,y:1.25,z:.95},color);
+      box(balloons,{...at,y:LAND+1.12},{x:.24,y:.2,z:.24},'#9b7854');
+      for(const dx of [-.1,.1]) cylinder(balloons,{x:at.x+dx,y:LAND+1.42,z:at.z},.02,.45,'#fae9ca');
+    }
+    for(const [x,y] of [[.45,.125],[.49,.135],[.53,.14],[.08,.64],[.17,.73],[.27,.63],[.90,.45]]) {
+      const at=cityPoint3d({x,y}); tree(root,at.x,at.z,.85);
+    }
+    batch(root); for(const mesh of root.getChildMeshes()) mesh.freezeWorldMatrix();
+  }
+
   function buildRails(view: CitySnapshot): void {
     const points = new Map(view.stations.map(s => [s.id, s.position]));
     const decor = new TransformNode(name('rails'), scene!); decor.parent = network;
@@ -335,8 +420,9 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
         const at = { x: a.x + dx * step, y: TRACK - 0.005, z: a.z + dz * step };
         const sleeper = box(decor, at, { x: 0.035, y: 0.04, z: 0.59 }, '#a6aa96'); sleeper.rotation.y = Math.atan2(-dz, dx);
       }
-      // The southern connection is a real raised viaduct over the water, with piers and handrails.
-      if (Math.max(pa.y, pb.y) > 0.74 && Math.min(pa.y, pb.y) < 0.7) {
+      const bridge = view.mapId === 'lantern-isles' ? festivalIslandAt(pa) !== festivalIslandAt(pb)
+        : Math.max(pa.y, pb.y) > 0.74 && Math.min(pa.y, pb.y) < 0.7;
+      if (bridge) {
         segment(decor, { ...a, y: TRACK - 0.14 }, { ...b, y: TRACK - 0.14 }, 0.85, 0.16, '#859c91');
         for (const lane of [-0.4, 0.4]) segment(decor,
           { x: a.x + dz * lane, y: TRACK + 0.28, z: a.z - dx * lane },
@@ -414,6 +500,7 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
       if (previous?.helped !== station.helped) {
         node.button.classList.toggle('is-helped', station.helped); node.platform.material = material(station.helped ? '#b8d7b7' : '#fbf6e5');
       }
+      if (previous?.eventActive !== station.eventActive) node.button.classList.toggle('is-event', station.eventActive);
       if (previous?.waiting !== station.waiting) {
         node.count.textContent = String(station.waiting); node.people.forEach((person, index) => person.setEnabled(index < Math.min(8, station.waiting)));
       }
@@ -550,7 +637,7 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
     if (key === fitKey) return;
     fitKey = key;
     const minimum = cityCameraRadius(canvas.clientWidth, canvas.clientHeight, camera.alpha, camera.beta,
-      snapshot?.stations.map(station => station.position));
+      snapshot?.stations.map(station => station.position), snapshot?.mapId ?? 'little-bay');
     if (Math.abs(minimum - fitRadius) < 0.01) return;
     fitCameraZoom(camera, minimum, fitRadius);
     fitRadius = minimum; camera.maxZ = minimum * 2 + 40; labelsDirty = true;
@@ -582,7 +669,7 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
     const cleanup = (action: () => void) => { try { action(); } catch { /* Continue releasing the other resources after a lost context. */ } };
     cleanup(() => engine?.stopRenderLoop(renderFrame)); cleanup(() => camera?.detachControl()); cleanup(() => scene?.dispose()); cleanup(() => engine?.dispose());
     wrapper?.remove(); wrapper = null; stage = null; canvas = null; labelHost = null; leaders = null; trainStrip = null;
-    engine = null; scene = null; camera = null; network = null; snapshot = null; select = undefined; selectTrain = undefined;
+    engine = null; scene = null; camera = null; network = null; scenery = null; sceneryMap = 'little-bay'; snapshot = null; select = undefined; selectTrain = undefined;
     materials.clear(); shapes.clear(); crowd.clear(); stations.clear(); trains.clear(); pointers.clear(); pointer = null;
     signature = ''; projection = ''; labelsDirty = true; fitRadius = 0; fitKey = ''; suppressClickUntil = 0;
   }
@@ -623,6 +710,13 @@ export function create3dCityRenderer(onUnavailable?: () => void): CityRenderer &
       try {
         if (snapshot?.accessibleName !== view.accessibleName) wrapper.setAttribute('aria-label', view.accessibleName);
         snapshot = view;
+        wrapper.dataset.map = view.mapId;
+        if (sceneryMap !== view.mapId) {
+          scenery?.dispose(); sceneryMap = view.mapId;
+          if (view.mapId === 'lantern-isles') buildFestival(); else buildCoast();
+          scene.clearColor = Color4.FromHexString(view.mapId === 'lantern-isles' ? '#91c4caFF' : '#a9cfcaFF');
+          resetCamera();
+        }
         const next = cityStaticSignature(view);
         if (next !== signature) { signature = next; rebuildNetwork(view); }
         updateStations(view); updateTrains(view);

@@ -2,7 +2,7 @@ import { escapeHtml as e, languages, stationLabel, t, type Language } from './lo
 import type { Graph, Journey } from './model';
 
 const copy = {
-  choose: ['Choose a route', '选一条路线', '経路を選ぼう', 'Зам сонгох', 'ᠵᠠᠮ ᠰᠣᠩᠭᠣᠬᠤ'],
+  choose: ['Build your route', '逐段拼路线', '経路をつなごう', 'Замаа байгуулах', 'ᠵᠠᠮ ᠪᠦᠲᠦᠭᠡᠬᠦ'],
   board: ['Board & explore', '上车出发', '乗って出発', 'Сууж аялах', 'ᠰᠤᠭᠤᠵᠤ ᠠᠶᠠᠯᠠᠬᠤ'],
   arrive: ['Bring them there', '送达目的地', '目的地へ届けよう', 'Зорчигчоо хүргэх', 'ᠵᠣᠷᠴᠢᠭᠴᠢ ᠬᠦᠷᠭᠡᠬᠦ'],
   story: ['Passenger request & details', '乘客心愿与详情', '乗客のお願いと詳細', 'Зорчигчийн хүсэлт, дэлгэрэнгүй', 'ᠵᠣᠷᠴᠢᠭᠴᠢ ᠶᠢᠨ ᠬᠦᠰᠡᠯᠲᠡ'],
@@ -30,25 +30,9 @@ export function decoratePlanner(host: HTMLElement, state: { language: Language; 
   story.innerHTML = `<summary>${e(text(language, 'story'))}</summary>`; story.append(briefing);
   const steps = document.createElement('div'); steps.innerHTML = stepsMarkup(language, stage);
   host.prepend(mission, steps);
-  const choices = host.querySelector<HTMLElement>('.alternatives')!;
   const route = host.querySelector<HTMLElement>('.route-plan')!;
-  route.hidden = !state.hasDraft;
-  const board = route.querySelector<HTMLElement>('.board-button')!;
-  route.querySelector('h3')!.after(board);
-  if (state.hasDraft) {
-    const compare = document.createElement('details'); compare.className = 'route-comparison';
-    compare.innerHTML = `<summary>${e(text(language, 'compare'))}</summary>`;
-    choices.replaceWith(compare); compare.append(choices);
-  }
-  choices.querySelectorAll<HTMLButtonElement>('[data-candidate]').forEach(button => {
-    button.classList.add('route-choice');
-    button.setAttribute('aria-label', `${button.textContent}. ${button.parentElement!.querySelector('.candidate-lines')!.textContent}. ${button.parentElement!.querySelector('p:not(.candidate-lines)')!.textContent}`);
-  });
-  const workshop = document.createElement('details'); workshop.className = 'route-workshop';
-  workshop.innerHTML = `<summary>${e(text(language, 'workshop'))}</summary>`;
-  workshop.open = state.hasDraft && stage === 'choose';
   const manual = host.querySelector<HTMLElement>('.manual-route')!;
-  manual.replaceWith(workshop); workshop.append(manual);
+  route.before(manual);
   const tutorial = host.querySelector<HTMLDetailsElement>('.tutorial')!;
   tutorial.open = false;
   const round = host.querySelector<HTMLSelectElement>('#round')!.parentElement!;

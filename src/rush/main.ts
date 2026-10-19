@@ -8,8 +8,9 @@ import type { CameraControls } from '../camera-controls';
 import { createInteriorInspector } from './inspector';
 import { interiorText } from './interior';
 import { createCitySnapshot } from './view';
-import { COASTAL_LAYOUT } from './city';
-import { NETWORK, SCENARIOS, CAPACITY, createGame, step, stats, lineFor, dispatch, canDispatch, preferredDirection, sendCrew, holdConnection, type LineId } from './model';
+import { layoutFor } from './city';
+import { mapText } from './adventure-copy';
+import { MAPS, mapFor, nextScenario, SCENARIOS, CAPACITY, createGame, step, stats, lineFor, dispatch, canDispatch, preferredDirection, sendCrew, holdConnection, type LineId } from './model';
 
 import { createLanguageController, languageOptions, isLanguage, text, stationNames, scenarioCopy, noticeText, type MessageArgs, type StaticMessageKey, messages } from './locale';
 let languageStorage: Storage | undefined;
@@ -28,10 +29,10 @@ root.innerHTML = `
 <div class="map-bottom"><p class="map-pan">${label('mapPan')}</p><div class="legend"><span><i class="coral"></i>${label('coralLegend')}</span><span><i class="blue"></i>${label('blueLegend')}</span><span>${label('queueLegend')}</span></div><p id="map-hint"></p></div>
 <div class="shift-progress"><div id="progress"></div></div>
 </section>
-<aside class="desk" data-label-key="controls"><div class="scenario-row"><label for="scenario">${label('scenario')}</label><select id="scenario"></select></div>
+<aside class="desk" data-label-key="controls"><div class="scenario-row"><label id="map-label" for="rush-map"></label><select id="rush-map"></select></div><p id="map-description" class="map-description"></p><div class="scenario-row"><label id="round-label" for="scenario"></label><select id="scenario"></select></div>
 <p id="briefing" class="briefing"></p><div class="shift-buttons"><button id="start" class="primary"></button><button id="speed">1×</button></div>
-<div id="goal" class="goal"></div>
-<section class="station-desk"><div class="station-heading"><span id="station-icon" aria-hidden="true"></span><div><h2 id="station-name"></h2><p id="station-queue"></p></div></div><div id="queue-visual" aria-hidden="true"></div><button id="inspect-station" class="secondary"></button><div class="depot"><span>${label('spareTrains')} <strong id="spares">● ●</strong></span><small id="refill"></small></div><div id="dispatch-actions"></div><button id="crew" class="secondary"></button><small class="action-explainer">${label('helperExplanation')}</small><div id="connection"></div></section>
+<div id="goal" class="goal"></div><section class="event-forecast" aria-labelledby="event-heading"><h2 id="event-heading"></h2><button id="event-next" class="secondary" type="button"><strong id="event-where"></strong><span id="event-copy"></span></button><p id="event-finale" hidden></p></section>
+<section class="station-desk"><div class="station-heading"><span id="station-icon" aria-hidden="true"></span><div><h2 id="station-name"></h2><p id="station-place" class="station-place"></p><p id="station-queue"></p></div></div><div id="queue-visual" aria-hidden="true"></div><button id="inspect-station" class="secondary"></button><div class="depot"><span>${label('spareTrains')} <strong id="spares">● ●</strong></span><small id="refill"></small></div><div id="dispatch-actions"></div><button id="crew" class="secondary"></button><small class="action-explainer">${label('helperExplanation')}</small><div id="connection"></div></section>
 <div class="bulletin"><span aria-hidden="true">✦</span><p id="notice" role="status" aria-live="polite"></p></div>
 <details id="help"><summary>${label('helpTitle')}</summary><ol><li>${label('help1')}</li><li>${label('help2')}</li><li>${label('help3')}</li><li>${label('help4')}</li></ol><p>${label('helpKeys')}</p></details>
 </aside>
@@ -49,19 +50,25 @@ function applyLanguage() {
   ($('language') as HTMLSelectElement).value = locale.language;
   root.querySelectorAll<HTMLElement>('[data-i18n]').forEach(node => { node.textContent = text(locale.language, node.dataset.i18n as StaticMessageKey); });
   root.querySelectorAll<HTMLElement>('[data-label-key]').forEach(node => { node.setAttribute('aria-label', text(locale.language, node.dataset.labelKey as StaticMessageKey)); });
-  const select = $('scenario') as HTMLSelectElement;
-  if (!select.options.length) select.innerHTML = SCENARIOS.map(s => `<option value="${s.id}"></option>`).join('');
-  for (const option of Array.from(select.options)) { const copy = scenarioCopy[locale.language][option.value]; option.textContent = `${copy.name} — ${copy.subtitle}`; }
-  select.value = game.scenario.id;
+  renderMapChoices();
   announced = ''; render();
   if (game.phase === 'finished') renderResult(false);
   $('save-note').textContent = t(storageAvailable ? 'saved' : 'storageUnavailable');
 }
 
+function renderMapChoices() {
+  const map = mapFor(game.network.mapId ?? 'little-bay'), copy = mapText(locale.language, map.id);
+  const maps = $('rush-map') as HTMLSelectElement, select = $('scenario') as HTMLSelectElement;
+  maps.replaceChildren(...MAPS.map(m => new Option(mapText(locale.language, m.id).name, m.id))); maps.value = map.id;
+  select.replaceChildren(...map.scenarios.map((s, i) => new Option(`${i + 1}/5 · ${scenarioCopy[locale.language][s.id].name}`, s.id))); select.value = game.scenario.id;
+  $('map-label').textContent = copy.choose; $('round-label').textContent = `${copy.round} ${map.scenarios.indexOf(game.scenario) + 1}/5`;
+  $('map-description').textContent = copy.description;
+  const stamp = root.querySelector<HTMLElement>('.city-stamp')!; stamp.firstChild!.textContent = copy.name;
+}
 let storageAvailable = true;
 function best(id: string): number { try { return Number(localStorage.getItem(`rush-best-${id}`)) || 0; } catch { storageAvailable = false; return 0; } }
 function saveBest() { try { localStorage.setItem(`rush-best-${game.scenario.id}`, String(Math.max(best(game.scenario.id), stats(game).score))); } catch { storageAvailable = false; } }
-function reset(id: string) { inspector.close(); game = createGame(SCENARIOS.find(s => s.id === id)!); selected = game.scenario.hot; paused = false; accumulator = 0; announced = ''; $('result').hidden = true; render(); }
+function reset(id: string) { inspector.close(); game = createGame(SCENARIOS.find(s => s.id === id)!); selected = game.scenario.hot; paused = false; accumulator = 0; announced = ''; $('result').hidden = true; renderMapChoices(); render(); renderer.resetCamera?.(); }
 function selectStation(id: string) { selected = id; renderDesk(); renderMap(); inspector.open({kind: 'station', id}); }
 let renderer: CityRenderer & Partial<CameraControls> = createSvgCityRenderer();
 let currentView: '2d' | '3d' = '2d';
@@ -132,7 +139,7 @@ $('city-reset').onclick = () => renderer.resetCamera?.();
 $('city-zoom-in').onclick = () => renderer.zoomCamera?.('in');
 $('city-zoom-out').onclick = () => renderer.zoomCamera?.('out');
 function renderMap() {
-  renderer.render(createCitySnapshot(game, { selected, language: locale.language, interpolationSeconds: accumulator, animate: !paused && !reducedMotion, layout: COASTAL_LAYOUT }));
+  renderer.render(createCitySnapshot(game, { selected, language: locale.language, interpolationSeconds: accumulator, animate: !paused && !reducedMotion, layout: layoutFor(game.network.mapId ?? 'little-bay') }));
 }
 window.addEventListener('pagehide', event => { pageInactive = true; viewRequest++; cancelAnimationFrame(animationFrame); renderer.dispose(); inspector.stop(); if (!event.persisted) { hud.dispose(); interiorObserver.disconnect(); } });
 window.addEventListener('pageshow', event => { if (event.persisted) {
@@ -143,11 +150,20 @@ window.addEventListener('pageshow', event => { if (event.persisted) {
 document.addEventListener('visibilitychange', () => { previous = performance.now(); accumulator = 0; });
 function renderDesk() {
   $('inspect-station').textContent = interiorText(locale.language).inspect;
-  const station = NETWORK.stations.find(s => s.id === selected)!; const count = game.queues[selected].length; const st = stats(game);
+  const copy = mapText(locale.language, game.network.mapId ?? 'little-bay');
+  $('station-place').textContent = copy.places[selected];
+  $('event-heading').textContent = copy.forecast;
+  const event = game.scenario.events[game.eventIndex];
+  $('event-next').hidden = !event; $('event-finale').hidden = Boolean(event); $('event-finale').textContent = copy.finale;
+  if (event) {
+    $('event-where').textContent = `${name(event.station)} · ${copy.countdown(Math.max(0, event.at - game.time))}`;
+    $('event-copy').textContent = scenarioCopy[locale.language][game.scenario.id].events[game.eventIndex];
+  }
+  const station = game.network.stations.find(s => s.id === selected)!; const count = game.queues[selected].length; const st = stats(game);
   $('station-name').textContent = name(selected); $('station-icon').textContent = station.icon; $('station-queue').textContent = t(count === 1 ? 'queueOne' : 'queueMany', { count }) + t(count >= 20 ? 'queueBusy' : count ? 'queueCalm' : 'queueEmpty');
   $('queue-visual').innerHTML = Array.from({ length: Math.min(16, count) }, (_, i) => `<span style="--person:${['#b94432','#286cb1','#397455','#906237'][i%4]}">♟</span>`).join('') + (count > 16 ? `<small>+${count-16}</small>` : '');
   $('spares').textContent = `${'▣ '.repeat(game.spares)}${'· '.repeat(3-game.spares)}`; $('spares').setAttribute('aria-label', t('spareCount', { count: game.spares })); $('refill').textContent = t('refill', { seconds: Math.max(0, game.nextSpare-game.time) });
-  const lines = NETWORK.lines.filter(l => l.stops.includes(selected));
+  const lines = game.network.lines.filter(l => l.stops.includes(selected));
   const actions = $('dispatch-actions');
   const markup = lines.map(l => {
     const d = preferredDirection(game, selected, l.id); const terminal = name((d === 1 ? l.stops.at(-1) : l.stops[0])!);
@@ -173,12 +189,14 @@ function renderResult(persist = true) {
   $('result').innerHTML = `<div class="result-art" aria-hidden="true">${'★'.repeat(s.stars)}${'☆'.repeat(3-s.stars)}</div><div><h2>${t(s.stars >= 2 ? 'resultGreat' : 'resultGood')}</h2><p>${t('resultStats', { delivered: game.delivered, transfers: game.transfers, wait: s.averageWait })}</p><p>${t('resultLeft', { count: game.left })} ${t(s.stars >= 2 ? 'resultChallenge' : 'resultTip')}</p><p>${t('resultScore')} <strong>${s.score}</strong> · ${t('resultBest')} <strong>${Math.max(best(game.scenario.id),s.score)}</strong></p><div class="result-buttons"><button id="replay" class="primary">${t('replay')}</button><button id="next" class="secondary">${t('next')}</button></div></div>`;
   $('result').hidden = false;
   $('replay').onclick = () => reset(game.scenario.id);
-  $('next').onclick = () => { const next = SCENARIOS[(SCENARIOS.indexOf(game.scenario)+1)%SCENARIOS.length]; $('scenario').setAttribute('value', next.id); ($('scenario') as HTMLSelectElement).value = next.id; reset(next.id); };
+  $('next').onclick = () => reset(nextScenario(game.scenario).id);
   $('save-note').textContent = t(storageAvailable ? 'saved' : 'storageUnavailable');
 }
 function render() { renderDesk(); renderMap(); renderViewControls(); inspector.render(); }
 ($('language') as HTMLSelectElement).onchange = e => { const value = (e.target as HTMLSelectElement).value; if (isLanguage(value)) locale.setLanguage(value); };
 $('inspect-station').onclick = () => inspector.open({kind: 'station', id: selected});
+$('rush-map').onchange = e => { const map = MAPS.find(m => m.id === (e.target as HTMLSelectElement).value); if (map) reset(map.scenarios[0].id); };
+$('event-next').onclick = () => { const event = game.scenario.events[game.eventIndex]; if (event) selectStation(event.station); };
 $('start').onclick = () => { if (game.phase === 'ready') game.phase = 'playing'; else if (game.phase === 'finished') reset(game.scenario.id); else paused = !paused; accumulator = 0; render(); };
 $('speed').onclick = () => { speed = speed === 1 ? 2 : speed === 2 ? 3 : 1; renderDesk(); };
 ($('scenario') as HTMLSelectElement).onchange = e => reset((e.target as HTMLSelectElement).value);
