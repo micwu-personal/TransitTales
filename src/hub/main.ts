@@ -3,6 +3,7 @@ import '../languages.css';
 import { hubCopy, type HubLanguage } from './locale';
 import { concourseScene } from './scene';
 import { beijingHubCopy } from './beijing-copy';
+import { melodyCopy } from '../melody/locale';
 import { createLanguageController, languageOptions } from '../rush/locale';
 
 const host = document.querySelector<HTMLDivElement>('#hub')!;
@@ -10,7 +11,7 @@ let storage: Storage | undefined;
 try { storage = window.localStorage; } catch { /* The collection is playable without storage. */ }
 const language = createLanguageController(storage, navigator.languages, render);
 function render(lang: HubLanguage) {
-  const c = hubCopy(lang), beijing = beijingHubCopy[lang];
+  const c = hubCopy(lang), beijing = beijingHubCopy[lang], melody = melodyCopy(lang);
   const focused = (document.activeElement as HTMLElement | null)?.id;
   document.documentElement.lang = lang;
   document.title = c.title;
@@ -26,6 +27,7 @@ function render(lang: HubLanguage) {
       </div>
     </section>
     <section class="city-connection" aria-labelledby="beijing-invitation"><svg viewBox="0 0 160 130" aria-hidden="true"><path d="M8 109h144M19 106V69h122v37M38 67V50h84v17M53 48V32h54v16" fill="#dce7db" stroke="#52775c" stroke-width="3"/><path d="M13 68q67-17 134 0M32 50q48-15 96 0M45 31q35-16 70 0" fill="none" stroke="#ad4938" stroke-width="7" stroke-linecap="round"/><path d="M29 71v34m24-34v34m27-34v34m27-34v34m24-34v34" stroke="#ad4938" stroke-width="5"/><path d="M25 118h110" stroke="#286cb1" stroke-width="5"/><circle cx="40" cy="118" r="5" fill="#fcfaf3" stroke="#286cb1" stroke-width="3"/><circle cx="80" cy="118" r="5" fill="#fcfaf3" stroke="#286cb1" stroke-width="3"/><circle cx="120" cy="118" r="5" fill="#fcfaf3" stroke="#286cb1" stroke-width="3"/></svg><div><small>${beijing.label}</small><h2 id="beijing-invitation">${beijing.title}</h2><p>${beijing.body}</p><span>${beijing.note}</span></div><a id="play-beijing" class="play" href="beijing.html">${beijing.action}<span aria-hidden="true">→</span></a></section>
+    <section class="city-connection music-connection" aria-labelledby="melody-invitation"><svg viewBox="0 0 160 130" aria-hidden="true"><path d="M8 24h144M8 38h144M8 52h144M8 66h144M8 80h144" stroke="#71877e" stroke-width="1.5"/><path d="M45 64V25m46 25V11m40 25V0" stroke="#284d47" stroke-width="3"/><ellipse cx="36" cy="66" rx="10" ry="7" fill="#284d47"/><ellipse cx="82" cy="52" rx="10" ry="7" fill="#284d47"/><ellipse cx="122" cy="38" rx="10" ry="7" fill="#284d47"/><path d="M8 121h144" stroke="#526961" stroke-width="3"/><rect x="27" y="88" width="106" height="29" rx="7" fill="#ad4938"/><path d="M39 96h24m9 0h24m9 0h17" stroke="#d7e9e4" stroke-width="9"/><circle cx="45" cy="119" r="5" fill="#284d47"/><circle cx="115" cy="119" r="5" fill="#284d47"/></svg><div><h2 id="melody-invitation">${melody.title}</h2><p>${melody.intro}</p><span>${melody.tuning} · ${melody.ear}</span></div><a id="play-melody" class="play" href="melody.html">${melody.play}<span aria-hidden="true">→</span></a></section>
     <section class="future"><div><h2>${c.explore}</h2><p>${c.future}</p><a href="transit-concepts/">${c.gallery} <span aria-hidden="true">↗</span></a></div><div class="studio"><a href="build-world.html">${c.studio} <span aria-hidden="true">↗</span></a><p>${c.studioNote}</p></div></section>
   </main><footer>${c.footer}</footer>`;
   const select = host.querySelector<HTMLSelectElement>('#language')!;

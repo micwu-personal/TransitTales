@@ -15,6 +15,7 @@ export default defineConfig({
         rush: resolve(process.cwd(), 'rush-hour.html'),
         escalator: resolve(process.cwd(), 'escalator.html'),
         beijing: resolve(process.cwd(), 'beijing.html'),
+        melody: resolve(process.cwd(), 'melody.html'),
       },
     },
   },
