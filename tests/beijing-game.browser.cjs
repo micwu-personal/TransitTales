@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const { chromium } = require('playwright');
+const { buildIntro, chooseDirection } = require('.\\beijing-browser-planner.cjs');
 
 (async () => {
   const { createServer } = await import('vite');
@@ -12,17 +13,20 @@ const { chromium } = require('playwright');
     const options = { headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] };
     try { browser = await chromium.launch(options); }
     catch (error) { if (!error.message.includes("Executable doesn't exist")) throw error; browser = await chromium.launch({ ...options, channel: 'msedge' }); }
-    for (const [width, height] of [[1440, 1100], [390, 844], [820, 1180], [1180, 820], [712, 650], [1024, 360]]) {
+    for (const [width, height] of process.env.BEIJING_VIEWPORTS ? JSON.parse(process.env.BEIJING_VIEWPORTS) : [[1440, 1100], [390, 844], [820, 1180], [1180, 820], [712, 650], [1024, 360]]) {
       const page = await browser.newPage({ viewport: { width, height }, hasTouch: width < 1100 });
       const errors = []; page.on('pageerror', error => errors.push(error.message));
       const touch = width < 1100 ? await page.context().newCDPSession(page) : undefined;
       if (touch) await touch.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
       await page.goto(`${base}beijing.html`);
-      await page.locator('[data-candidate="0"]').waitFor();
+      await page.locator('#manual-direction').waitFor();
+      assert.equal(await page.locator('[data-candidate], .alternatives, .route-workshop').count(), 0);
       assert.equal(await page.locator('.map-station').count(), 426);
       assert.equal(await page.locator('#round option').count(), 7);
       assert.equal(await page.locator('#speed').inputValue(), '5');
-      assert.equal(await page.locator('.route-plan').isVisible(), false, 'empty plan does not bury the first route choice');
+      assert.equal(await page.locator('.manual-route').isVisible(), true, 'the origin-led builder is always available');
+      assert.equal(await page.locator('#manual-end').isEnabled(), false, 'direction is required before choosing where to get off');
+      assert.equal(await page.locator('[data-action="board"]').isEnabled(), false);
       assert.equal(await page.locator('.journey-steps [aria-current="step"]').count(), 1);
       assert.equal(await page.locator('.passenger-portrait').isVisible(), true);
       const selectedContrast = await page.locator('#map-view').evaluate(button => {
@@ -73,21 +77,30 @@ const { chromium } = require('playwright');
       await page.locator('#search-results button').first().click();
       assert.match(await page.locator('#selected-station').textContent(), /天安门/);
       await page.locator('#fit').click();
-      // Construct the introductory two-service trip without using a suggestion.
-      if (!await page.locator('#manual-end').isVisible()) await page.locator('.route-workshop > summary').click();
-      await page.locator('#manual-end').selectOption({ label: '西单 · Xidan' });
-      await page.locator('[data-action="add-leg"]').click();
-      const transferLine = await page.locator('#manual-line option').evaluateAll(options => options.find(option => /4号线/.test(option.textContent)).value);
-      await page.locator('#manual-line').selectOption(transferLine);
-      const south = await page.locator('#manual-end option').evaluateAll(options => options.find(option => /北京南站/.test(option.textContent)).value);
-      await page.locator('#manual-end').selectOption(south);
-      await page.locator('[data-action="add-leg"]').click();
+      // Direction constrains alighting, and map taps select a stop without adding a leg.
+      await chooseDirection(page, '1-batong', 'wangfujing');
+      assert.equal(await page.locator('#manual-end option[value="xidan"]').count(), 0);
+      await page.locator('#search').fill('西单');
+      await page.locator('#search-results button').first().click();
+      assert.equal(await page.locator('#manual-end').inputValue(), '');
+      assert.equal(await page.locator('.route-plan li').count(), 0);
+      assert.ok((await page.locator('.manual-route .notice').textContent()).length > 0);
+      await chooseDirection(page, '1-batong', 'tian-anmen-west');
+      const xidan = page.locator('.map-station[data-station="xidan"]');
+      await xidan.focus(); await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#manual-end').inputValue(), 'xidan');
+      assert.equal(await page.locator('.route-plan li').count(), 0, 'map selection is not a committed route');
+      await page.locator('#language').selectOption('ja');
+      assert.equal(await page.locator('#manual-end').inputValue(), 'xidan', 'locale switching preserves the in-progress choice');
+      await page.locator('#language').selectOption('en');
+      await buildIntro(page);
       assert.equal(await page.locator('.route-plan li').count(), 2);
       assert.equal(await page.locator('[data-action="board"]').isEnabled(), true);
       await page.locator('[data-action="undo"]').click();
       assert.equal(await page.locator('[data-action="board"]').isEnabled(), false);
       await page.locator('[data-action="clear"]').click();
-      await page.locator('[data-candidate="0"]').click();
+      assert.match(await page.locator('.current-plan-station').textContent(), /天安门东/);
+      await buildIntro(page);
       assert.equal(await page.locator('[data-action="board"]').isEnabled(), true);
       if (process.env.TRANSIT_SCREENSHOTS && (width === 1440 || width === 390)) {
         await page.locator('#planner-toggle').click();

@@ -1,23 +1,19 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const { chromium } = require('playwright');
+const { startServer } = require('.\\beijing-browser-server.cjs');
 
 (async () => {
-  const { createServer, preview } = await import('vite');
-  const production = process.env.TRANSIT_PREVIEW_DIR;
-  const server = production
-    ? await preview({ base: process.env.TRANSIT_PREVIEW_BASE || '/', build: { outDir: path.resolve(production) }, preview: { host: '127.0.0.1', port: 0 }, logLevel: 'error' })
-    : await createServer({ server: { host: '127.0.0.1', port: 0 }, logLevel: 'error' });
+  const server = await startServer();
   let browser;
   try {
-    if (!production) await server.listen();
     try { browser = await chromium.launch({ headless: true }); }
     catch (error) { if (!error.message.includes("Executable doesn't exist")) throw error; browser = await chromium.launch({ headless: true, channel: 'msedge' }); }
     for (const [width, height] of [[1440, 1100], [390, 844]]) {
       const page = await browser.newPage({ viewport: { width, height }, hasTouch: width === 390 });
       const errors = []; page.on('pageerror', error => errors.push(error.message));
-      await page.goto(`${server.resolvedUrls.local[0]}beijing.html`);
-      await page.locator('[data-candidate="0"]').waitFor();
+      await page.goto(server.url);
+      await page.locator('#manual-direction').waitFor();
       await page.locator('#language').selectOption('en');
       await page.locator('#search').fill('西单');
       await page.locator('#search-results button').first().click();
@@ -92,6 +88,6 @@ const { chromium } = require('playwright');
     }
   } finally {
     await browser?.close();
-    if (production) await new Promise(resolve => server.httpServer.close(resolve)); else await server.close();
+    await server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -56,4 +56,19 @@ html:lang(mn-Mong) .passenger-needs span,html:lang(mn-Mong) .journey-steps li{wr
 html:lang(mn-Mong) .travel-milestones{font-family:'Segoe UI',system-ui,sans-serif;writing-mode:horizontal-tb}
 @media(max-width:760px){.passenger-heading{gap:10px;margin-bottom:8px}.passenger-heading h3{font-size:19px}.passenger-portrait{width:40px;height:40px}.journey-steps{margin:12px 0 5px;gap:8px}.journey-steps li{font-size:10px}.journey-steps li>span{width:20px;height:20px;margin-right:3px}.candidate{padding:7px 0 10px}.candidate p{margin:4px 0}.candidate>button{margin-top:3px}.travel-controls{flex-wrap:wrap;justify-content:flex-start}.travel-controls>label{flex-direction:row;align-items:center}.travel-milestones{margin-bottom:5px}.travel-controls #travel-voice{flex:1;max-width:130px}}
 @media(max-height:540px){.travel-milestones{display:none}}
+.current-plan-station{font-size:12px;margin:0 0 8px;color:#536a60}
+.current-plan-station strong{display:block;font-size:16px;line-height:1.4;color:#284d47;margin-top:3px;overflow-wrap:anywhere}
+.remaining-destinations{font-size:11px;color:#536a60;overflow-wrap:anywhere;margin:8px 0}
+.remaining-destinations strong{color:#284d47;font-weight:550}
+.builder-help{margin:4px 0 6px}
+.builder-help summary{min-height:44px;padding:12px 0;cursor:pointer;font-size:11px}
+.builder-help p{font-size:12px;margin-top:0}
+.manual-route h3{margin-top:12px}
+.manual-route select{font-size:12px}
+.manual-route button+button{margin-top:8px}
+.external-walk.map-choice{outline:2px solid #315d50;outline-offset:2px}
+.transfer-estimate{font-size:11px;color:#665035;margin:8px 0}
+.route-plan .route-validation{color:#536a60}
+.route-plan .route-validation.valid{color:#315d50}
+html:lang(mn-Mong) .remaining-destinations,html:lang(mn-Mong) .transfer-estimate{writing-mode:horizontal-tb;font-family:'Segoe UI',system-ui,sans-serif}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}

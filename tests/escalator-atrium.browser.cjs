@@ -46,6 +46,29 @@ async function run(browser, base, view, reducedMotion, viewport, index) {
         await tap(page, target, true);
       }
     }
+    if (view === '3d') {
+      const geometry = await page.evaluate(async pieces => {
+        const { Engine, Vector3 } = await import('/src/babylon.ts');
+        const { mallPoint3d } = await import('/src/escalator/renderer3d.ts');
+        const scene = Engine.Instances.at(-1).scenes[0];
+        const invalid = [];
+        for (let p = 0; p < pieces.length; p++) {
+          const piece = pieces[p], a = mallPoint3d(piece.a), b = mallPoint3d(piece.b);
+          for (const mesh of scene.meshes.filter(mesh => mesh.metadata?.kind === 'piece' && mesh.metadata.id === `p${p + 1}`)) {
+            const vertices = mesh.getVerticesData('position'), indices = mesh.getIndices(), matrix = mesh.computeWorldMatrix(true);
+            if (!indices.every(index => index >= 0 && index < vertices.length / 3)) invalid.push(`p${p + 1}: indices`);
+            for (let index = 0; index < vertices.length; index += 3) {
+              const v = Vector3.TransformCoordinates(Vector3.FromArray(vertices, index), matrix);
+              if (['x', 'z'].some(axis => v[axis] < Math.min(a[axis], b[axis]) - .91 || v[axis] > Math.max(a[axis], b[axis]) + .91)) {
+                invalid.push(`p${p + 1}: detached geometry`); break;
+              }
+            }
+          }
+        }
+        return invalid;
+      }, pieces);
+      assert.deepEqual(geometry, [], 'real rendered escalators stay in one connected span');
+    }
     assert.equal(await page.locator('[data-piece]').count(), pieces.length, 'every two-touch placement creates exactly one piece');
     assert.equal(await page.locator('.route-status').count(), await page.locator('.route-status').filter({ hasText: '✓' }).count());
     for (const language of ['en', 'zh-CN', 'ja', 'mn-Cyrl-MN', 'mn-Mong-CN']) {

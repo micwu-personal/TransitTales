@@ -67,6 +67,16 @@ describe('3D mall adapter helpers', () => {
     expect(layout3dLabels(labels, 720, 486)).toEqual(positioned);
   });
 
+  it('bounds landing displacement to ten pixels per axis even when a depth deck is dense', () => {
+    const labels = Array.from({ length: 28 }, (_, index) => ({ id: `landing:${index}`, x: 120 + (index % 7) * 27, y: 90 + Math.floor(index / 7) * 30, width: 44, height: 44, priority: 0 }));
+    const placed = layout3dLabels(labels, 390, 420, true);
+    for (const label of placed) {
+      expect(Math.abs(label.left + label.width / 2 - label.x)).toBeLessThanOrEqual(10);
+      expect(Math.abs(label.top + label.height / 2 - label.y)).toBeLessThanOrEqual(10);
+      expect(label.width).toBe(44); expect(label.height).toBe(44);
+    }
+  });
+
   it.each([[320, 420], [364, 420], [390, 420], [720, 486], [1280, 680]])('fits all landing targets and architecture in a %i×%i camera frame', (width, height) => {
     const engine = new NullEngine({ renderWidth: width, renderHeight: height, textureSize: 256, deterministicLockstep: false, lockstepMaxSteps: 4 });
     const scene = new Scene(engine);
