@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Language } from '../src/rush/locale';
 import { destinationName, encounterText, epochName, epochText, factText, universeCopy } from '../src/universe/locale';
+import { mapCopy, mapObjectName, mapScopeName } from '../src/universe/minimap-locale';
+import { MAP_SCOPES } from '../src/universe/minimap';
 
 const languages: Language[] = ['en', 'zh-CN', 'ja', 'mn-Cyrl-MN', 'mn-Mong-CN'];
 const uiKeys = [
@@ -43,6 +45,19 @@ function expectTranslated(value: string, english: string, language: Language): v
 }
 
 describe('Cosmic Transit localization', () => {
+  it.each(languages)('translates map controls, nine scopes and additional catalogue anchors in %s', language => {
+    const copy = mapCopy(language), english = mapCopy('en');
+    const keys = ['title', 'scope', 'adaptive', 'nearby', 'earthMoon', 'solar', 'milkyWay', 'localGroup', 'virgo', 'laniakea', 'universe', 'radius', 'location', 'outside', 'plane', 'anchors', 'empty', 'span', 'unknown', 'note'];
+    expect(Object.keys(copy).sort()).toEqual(keys.sort());
+    for (const key of Object.keys(copy) as (keyof typeof copy)[]) expectTranslated(copy[key], english[key], language);
+    for (const scope of MAP_SCOPES) expectTranslated(mapScopeName(scope, language), mapScopeName(scope, 'en'), language);
+    for (const id of ['m33', 'smc', 'virgo-cluster', 'norma-cluster', 'centaurus-cluster', 'hydra-cluster']) {
+      expectTranslated(mapObjectName(id, language), mapObjectName(id, 'en'), language);
+      expect(mapObjectName(id, language)).not.toBe(universeCopy(language).destination);
+    }
+    expect(mapObjectName('earth', language)).toBe(destinationName('earth', language));
+  });
+
   it.each(languages)('provides exactly the complete string-only UI shape in %s', language => {
     const copy = universeCopy(language);
     const english = universeCopy('en');

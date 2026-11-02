@@ -26,7 +26,7 @@ const { chromium } = require('playwright');
       await page.goto(`${url}/universe.html?view=${view}`);
       await page.locator(view==='2d'?'.cosmic-scene>svg':'.cosmic-scene canvas').waitFor();
       await page.waitForTimeout(120);
-      return page.locator('.cosmic-scene').screenshot({style:'.window-caption,.crew-portrait,.scene-toolbar,.window-footnote{visibility:hidden!important}'});
+      return page.locator('.cosmic-scene').screenshot({style:'.window-caption,.crew-portrait,.scene-toolbar,.window-footnote,.cosmic-map{visibility:hidden!important}'});
     };
     const screenshots=[];
     for (const view of ['2d','3d']) {
@@ -37,7 +37,7 @@ const { chromium } = require('playwright');
       assert.equal(approach.equals(middle),false,`${view}: approach must visibly develop`);
       const paused=await sample(view,.42);
       await page.waitForTimeout(350);
-      const still=await page.locator('.cosmic-scene').screenshot({style:'.window-caption,.crew-portrait,.scene-toolbar,.window-footnote{visibility:hidden!important}'});
+      const still=await page.locator('.cosmic-scene').screenshot({style:'.window-caption,.crew-portrait,.scene-toolbar,.window-footnote,.cosmic-map{visibility:hidden!important}'});
       assert.equal(still.equals(paused),true,`${view}: paused travel must not drift`);
       if(view==='2d') {
         await page.evaluate(()=>{window.__routeSvg=document.querySelector('.cosmic-scene>svg');window.__routeEarth=document.querySelector('[data-route-body="earth"]');window.__routeTransform=window.__routeEarth.getAttribute('transform');});

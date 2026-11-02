@@ -281,6 +281,9 @@ function createCoordinateFlight(world: World): CoordinateFlight {
   // One persistent enclosing field, never an epoch-specific central explosion.
   earlyField(scene, root, 'hot');
   const environment = root.getChildMeshes()[0] as Mesh; environment.scaling.setAll(125 / 45);
+  // StandardMaterial adds emissive textures instead of tinting them. Keep only
+  // the diffuse texture so the primordial pattern cannot glow orange at 2.7 K.
+  (environment.material as StandardMaterial).emissiveTexture = null;
   environment.metadata = { illustration: 'whole-sky toy thermal history; not an explosion or measured CMB map' };
   const knots = starMesh(scene, root, 'fixed-comoving-illustrative-knots', COSMIC_KNOTS.map(() => ({ position: Vector3.Zero(), size: .02, color: ivory })));
   const positions = new Float32Array(COSMIC_KNOTS.length * 12), colors = new Float32Array(COSMIC_KNOTS.length * 16);

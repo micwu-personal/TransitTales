@@ -9,6 +9,9 @@ import { createAmbientMusic } from './music';
 import { freezeSnapshot, type UniverseRenderer, type UniverseSnapshot } from './view';
 import { routeItinerary, routeFrame } from './route';
 import { coordinateBody } from './coordinates';
+import { createNavigationMap } from './minimap-view';
+import { mapCopy } from './minimap-locale';
+import { MAP_SOURCES } from './minimap';
 
 const host = document.querySelector<HTMLDivElement>('#universe')!;
 const esc = (text: string) => text.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]!));
@@ -21,6 +24,7 @@ let audioFailed = false, musicWanted = false, volume = .25, atlasOpen = true, he
 let resetOpen = false, frame = 0, audioGeneration = 0, lastTime = performance.now(), lastUiTime = 0;
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const sceneHost = document.createElement('div'); sceneHost.className = 'cosmic-scene';
+const navigationMap = createNavigationMap();
 const language = createLanguageController(storage, navigator.languages, () => render());
 const c = () => universeCopy(language.language);
 const destination = () => DESTINATIONS.find(d => d.id === state.destinationId)!;
@@ -55,9 +59,11 @@ function render() {
   <div class="flight-desk"><section class="navigation-desk" aria-labelledby="navigation-title"><h2 id="navigation-title">${esc(destinationName(selected,lang))}</h2><p class="selected-era">${esc(epochName(selectedEpoch,lang))}</p><p class="destination-fact">${esc(factText(selected,lang))}</p><div class="coordinates"><span>${esc(copy.distance)} <b>${number(picked().distanceLy)} ly</b></span><span>${esc(copy.lookback)} <b>${number(picked().lookbackGyr, 4)} Gyr</b></span><span>${esc(copy.localEpoch)} <b>${number(pickedEpoch().ageGyr,4)} Gyr</b></span></div><p class="epoch-note">${esc(epochText(selectedEpoch,lang))}</p>${!canObserve(picked(),pickedEpoch()) ? `<p class="temporal-warning">${esc(copy.notFormed)}</p>` : ''}<p class="fine-print">${esc(copy.simulationNote)}</p></section>
   <section class="discovery-desk" aria-labelledby="discovery-title"><h2 id="discovery-title">${esc(copy.encounter)}</h2><div class="meters"><div><span>${esc(copy.shield)}</span><b id="shield">${state.shield}%</b></div><div><span>${esc(copy.energy)}</span><b id="energy">${state.energy}%</b></div><div><span>${esc(copy.research)}</span><b id="research">${state.research}</b></div><div><span>${esc(copy.friendship)}</span><b id="friendship">${state.friendship}</b></div></div><p class="crew-line">${esc(copy.crewLine)}</p>${challenge ? `<div class="encounter-story"><p>${esc(available ? translated!.prompt : copy.notFormed)}</p><div class="encounter-choices" role="group" aria-label="${esc(copy.choose)}">${challenge.choices.map(choice => `<button id="choice-${choice.id}" data-choice="${choice.id}">${esc(translated!.choices[choice.id] ?? (lang === 'zh-CN' ? choice.labelZh : choice.label))}</button>`).join('')}</div></div>` : `<p class="quiet-message">${esc(state.outcome === 'success' ? copy.success : busy ? copy.travelling : copy.choose)}</p>`}<p class="safe-note">${esc(copy.safeBubble)}</p><dl class="relativity"><div><dt>${esc(copy.gammaLabel)}</dt><dd id="gamma">${number(lorentzFactor(state.beta),3)}×</dd></div><div><dt>${esc(copy.dopplerLabel)}</dt><dd id="doppler">${number(dopplerFactor(state.beta),3)}×</dd></div><div><dt>${esc(copy.observerClock)}</dt><dd id="observer-clock">${number(state.elapsed,1)} s</dd></div><div><dt>${esc(copy.crewClock)}</dt><dd id="crew-clock">${number(state.properElapsed,1)} s</dd></div></dl><p class="fine-print">${esc(copy.speedNote)}</p><p class="fine-print">${esc(copy.flightTime)}</p></section></div>
   <section class="after-flight"><details id="journal"${journalOpen ? ' open' : ''}><summary>${esc(copy.journal)} · ${state.visited.length}/${DESTINATIONS.length}</summary>${state.visited.length ? `<ul>${state.visited.map(id => `<li>${esc(destinationName(id,lang))}</li>`).join('')}</ul>` : `<p>${esc(copy.emptyJournal)}</p>`}${state.visited.length === DESTINATIONS.length ? `<p>${esc(copy.allDiscovered)}</p>` : ''}</details><div class="sound-desk"><button id="music" aria-pressed="${musicWanted}">${esc(musicWanted ? copy.musicOff : copy.musicOn)}</button><label for="volume">${esc(copy.volume)}<input id="volume" type="range" min="0" max="50" value="${Math.round(volume * 100)}"></label><p>${esc(audioFailed ? copy.audioUnavailable : copy.music)}</p></div></section>
-  <section id="help-panel" class="help-panel"${helpOpen ? '' : ' hidden'}><h2>${esc(copy.help)}</h2><p>${esc(copy.helpBody)}</p><p>${esc(copy.timeNote)}</p><p>${esc(copy.lightCone)}</p><p>${esc(copy.formationNote)}</p><p>${esc(copy.futureNote)}</p><p>${esc(copy.unknownSurface)}</p><p>${esc(copy.coordinateNote)}</p><h3>${esc(copy.sources)}</h3><ul><li><a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html" target="_blank" rel="noopener noreferrer">JPL · Approximate planetary positions</a></li><li><a href="https://simbad.cds.unistra.fr/simbad/" target="_blank" rel="noopener noreferrer">SIMBAD · Astronomical catalogue</a></li><li><a href="https://science.nasa.gov/universe/overview/" target="_blank" rel="noopener noreferrer">NASA · Universe history</a></li><li><a href="https://science.nasa.gov/solar-system/" target="_blank" rel="noopener noreferrer">NASA · Solar system</a></li><li><a href="https://science.nasa.gov/exoplanet-catalog/proxima-centauri-b/" target="_blank" rel="noopener noreferrer">NASA · Proxima Centauri b</a></li><li><a href="https://eventhorizontelescope.org/blog/astronomers-reveal-first-image-black-hole-heart-our-galaxy" target="_blank" rel="noopener noreferrer">EHT · Sagittarius A*</a></li><li><a href="https://science.nasa.gov/missions/hubble/apocalypse-when-hubble-casts-doubt-on-certainty-of-galactic-collision/" target="_blank" rel="noopener noreferrer">NASA · Uncertain galaxy futures</a></li></ul><button id="close-help">${esc(copy.close)}</button></section>
+  <section id="help-panel" class="help-panel"${helpOpen ? '' : ' hidden'}><h2>${esc(copy.help)}</h2><p>${esc(copy.helpBody)}</p><p>${esc(copy.timeNote)}</p><p>${esc(copy.lightCone)}</p><p>${esc(copy.formationNote)}</p><p>${esc(copy.futureNote)}</p><p>${esc(copy.unknownSurface)}</p><p>${esc(copy.coordinateNote)}</p><h3>${esc(mapCopy(lang).title)}</h3><p>${esc(mapCopy(lang).note)}</p><h3>${esc(copy.sources)}</h3><ul>${MAP_SOURCES.map(source => `<li><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.name)}</a></li>`).join('')}<li><a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html" target="_blank" rel="noopener noreferrer">JPL · Approximate planetary positions</a></li><li><a href="https://simbad.cds.unistra.fr/simbad/" target="_blank" rel="noopener noreferrer">SIMBAD · Astronomical catalogue</a></li><li><a href="https://science.nasa.gov/universe/overview/" target="_blank" rel="noopener noreferrer">NASA · Universe history</a></li><li><a href="https://science.nasa.gov/solar-system/" target="_blank" rel="noopener noreferrer">NASA · Solar system</a></li><li><a href="https://science.nasa.gov/exoplanet-catalog/proxima-centauri-b/" target="_blank" rel="noopener noreferrer">NASA · Proxima Centauri b</a></li><li><a href="https://eventhorizontelescope.org/blog/astronomers-reveal-first-image-black-hole-heart-our-galaxy" target="_blank" rel="noopener noreferrer">EHT · Sagittarius A*</a></li><li><a href="https://science.nasa.gov/missions/hubble/apocalypse-when-hubble-casts-doubt-on-certainty-of-galactic-collision/" target="_blank" rel="noopener noreferrer">NASA · Uncertain galaxy futures</a></li></ul><button id="close-help">${esc(copy.close)}</button></section>
   <footer><p id="save-status">${esc(saveOk ? copy.saved : copy.saveUnavailable)}${fallback ? ` · ${esc(copy.fallback)}` : ''}</p><button id="reset-journey">${esc(copy.resetJourney)}</button>${resetOpen ? `<div class="reset-confirm"><p>${esc(copy.resetConfirm)}</p><button id="confirm-reset">${esc(copy.confirmed)}</button><button id="cancel-reset">${esc(copy.close)}</button></div>` : ''}</footer></main>`;
   host.querySelector('#scene-slot')!.append(sceneHost);
+  host.querySelector('.window')!.append(navigationMap.element);
+  updateMap();
   host.querySelector<HTMLSelectElement>('#language')!.addEventListener('change', e => language.setLanguage((e.target as HTMLSelectElement).value as Language));
   host.querySelector<HTMLSelectElement>('#destination')!.addEventListener('change', e => selectDestination((e.target as HTMLSelectElement).value));
   host.querySelectorAll<HTMLButtonElement>('[data-destination]').forEach(button => button.addEventListener('click', () => selectDestination(button.dataset.destination!)));
@@ -85,6 +91,13 @@ function selectDestination(id: string) { if (state.phase === 'travelling') retur
 function jump(id: string, epochId: typeof selectedEpoch) {
   if (state.phase === 'travelling') return;
   state = beginJump(state,id,epochId); selected = id; selectedEpoch = epochId; lastTime = performance.now(); persist(); render();
+}
+function updateMap(now = performance.now()) {
+  const current = snapshot();
+  const keepCompletedRoute = state.phase === 'encounter' && selected === state.destinationId && selectedEpoch === state.epochId;
+  const origin = keepCompletedRoute ? { destinationId: departureDestination().id, kind: departureDestination().kind, color: departureDestination().color, epoch: departureEpoch().id } : { destinationId: state.destinationId, kind: destination().kind, color: destination().color, epoch: state.epochId };
+  const planned = current.travelling ? current : freezeSnapshot({ ...current, destinationId: selected, kind: picked().kind, color: picked().color, epoch: selectedEpoch, travelling: true, progress: 0, origin });
+  navigationMap.draw(current, planned, language.language, now);
 }
 function updateFlight() {
   if (state.phase === 'travelling') {
@@ -140,6 +153,7 @@ function animate(now: number) {
     if (phase !== state.phase) { persist(); render(); }
     else if (phase === 'travelling' && now - lastUiTime >= 100) { lastUiTime = now; updateFlight(); }
     renderer?.render(snapshot());
+    updateMap(now);
   }
   frame = requestAnimationFrame(animate);
 }

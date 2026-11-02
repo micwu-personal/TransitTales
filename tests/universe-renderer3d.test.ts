@@ -36,6 +36,24 @@ function harness() {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('coordinate Babylon flight lifecycle (NullEngine)', () => {
+  it('does not add an untinted orange primordial texture to present-era travel', () => {
+    const h = harness(); h.renderer.render(view());
+    const scene = h.engine.scenes[0], field = scene.getMeshByName('whole-sky-no-explosion-center')!.material as StandardMaterial;
+    expect(field.diffuseTexture).not.toBeNull();
+    expect(field.emissiveTexture).toBeNull();
+    expect(field.emissiveColor.b).toBeGreaterThan(field.emissiveColor.r);
+    expect(scene.clearColor.r).toBeLessThan(.02);
+    for (const progress of [.1, .5, .9]) {
+      h.renderer.render(view({ progress }));
+      expect(field.emissiveTexture).toBeNull();
+      expect(field.emissiveColor.b).toBeGreaterThan(field.emissiveColor.r);
+    }
+    h.renderer.render(view({ epoch: 'bang', progress: 1 }));
+    expect(field.emissiveColor.r).toBeGreaterThan(field.emissiveColor.b);
+    expect(scene.clearColor.r).toBeGreaterThan(.7);
+    h.renderer.dispose();
+  });
+
   it('moves measured camera coordinates and parallax, never crossfades endpoint dioramas, and caches full-opacity bodies', () => {
     const h = harness(); h.renderer.render(view({ beta: 0 }));
     expect(h.unavailable).not.toHaveBeenCalled();
