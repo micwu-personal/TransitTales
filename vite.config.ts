@@ -16,6 +16,7 @@ export default defineConfig({
         escalator: resolve(process.cwd(), 'escalator.html'),
         beijing: resolve(process.cwd(), 'beijing.html'),
         melody: resolve(process.cwd(), 'melody.html'),
+        universe: resolve(process.cwd(), 'universe.html'),
       },
     },
   },

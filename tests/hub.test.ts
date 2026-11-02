@@ -2,6 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import hubEntry from '../index.html?raw';
 import worldEntry from '../build-world.html?raw';
+import universeEntry from '../universe.html?raw';
+import hubSource from '../src/hub/main.ts?raw';
 import buildConfig from '../vite.config.ts?raw';
 import rushEntry from '../src/rush/main.ts?raw';
 import { hubCopy } from '../src/hub/locale';
@@ -13,6 +15,10 @@ describe('Transit Tales collection', () => {
     expect(worldEntry).toContain('/src/main.ts');
     expect(buildConfig).toContain("'build-world.html'");
     expect(buildConfig).toContain("'escalator.html'");
+    expect(buildConfig).toContain("'universe.html'");
+    expect(universeEntry).toContain('/src/universe/main.ts');
+    expect(hubSource).toMatch(/id="play-universe"[^>]*href="universe\.html"/);
+    expect(hubSource).toContain('universeCopy(lang)');
     expect(rushEntry).toContain('href="build-world.html"');
     expect(rushEntry).toContain("label('home')");
   });
