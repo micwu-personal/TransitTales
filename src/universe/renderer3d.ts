@@ -1,6 +1,7 @@
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
+import { FreeCamera } from '@babylonjs/core/Cameras/freeCamera';
 import { Color3, Color4 } from '@babylonjs/core/Maths/math.color';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
@@ -18,6 +19,7 @@ import { CreateCylinder } from '@babylonjs/core/Meshes/Builders/cylinderBuilder'
 import { CONTINENTS, cosmicRandom, universeScene, type CosmicScene } from './renderer';
 import { FLIGHT_STARS, dopplerTint, flightFrame, flightStar, type FlightFrame } from './flight';
 import { freezeSnapshot } from './view';
+import { COSMIC_KNOTS, cosmicKnot, routeFrame, type RouteFrame, type RouteObject } from './route';
 import type { UniverseRenderer, UniverseSnapshot } from './view';
 
 type Star = { position: Vector3; size: number; color: Color3 };
@@ -263,19 +265,144 @@ function buildWorld(world: World, snapshot: UniverseSnapshot): Layer {
   return { root, meshes: root.getChildMeshes() as Mesh[], field: primordial || kind === 'remnants' };
 }
 
+type RouteBody = { root: TransformNode; marker: Mesh; shape?: TransformNode; meshes: Mesh[] };
+type CoordinateFlight = {
+  root: TransformNode; camera: FreeCamera; bodies: Map<string, RouteBody>; environment: Mesh; knots: Mesh;
+  positions: Float32Array; colors: Float32Array;
+};
+const routeFov = 2 * Math.atan(310 / 850);
+const resolvedAngle = .002;
+const compactKinds = new Set(['earth', 'moon', 'rock', 'gas', 'ring', 'ice', 'sun', 'triple', 'neutron', 'blackhole', 'quasar', 'comet']);
+
+function createCoordinateFlight(world: World): CoordinateFlight {
+  const { scene } = world, root = new TransformNode('coordinate-flight', scene);
+  const camera = new FreeCamera('coordinate-flight-camera', Vector3.Zero(), scene);
+  camera.minZ = .01; camera.maxZ = 256; camera.fov = routeFov; camera.setTarget(new Vector3(0, 0, 1));
+  // One persistent enclosing field, never an epoch-specific central explosion.
+  earlyField(scene, root, 'hot');
+  const environment = root.getChildMeshes()[0] as Mesh; environment.scaling.setAll(125 / 45);
+  environment.metadata = { illustration: 'whole-sky toy thermal history; not an explosion or measured CMB map' };
+  const knots = starMesh(scene, root, 'fixed-comoving-illustrative-knots', COSMIC_KNOTS.map(() => ({ position: Vector3.Zero(), size: .02, color: ivory })));
+  const positions = new Float32Array(COSMIC_KNOTS.length * 12), colors = new Float32Array(COSMIC_KNOTS.length * 16);
+  knots.setVerticesData(VertexBuffer.PositionKind, positions, true); knots.setVerticesData(VertexBuffer.ColorKind, colors, true);
+  knots.alwaysSelectAsActiveMesh = true;
+  knots.metadata = { illustration: 'fixed procedural comoving knots, not measured corridor stars' };
+  return { root, camera, bodies: new Map(), environment, knots, positions, colors };
+}
+
+function routeShape(world: World, body: RouteBody, object: RouteObject, snapshot: UniverseSnapshot): void {
+  const { scene } = world;
+  if (compactKinds.has(object.kind)) {
+    const shape = new TransformNode(`physical-${object.id}`, scene); shape.parent = body.root; body.shape = shape;
+    const textureKind = object.kind === 'triple' ? 'giant' : ['earth', 'moon', 'rock', 'gas', 'ring', 'ice', 'sun'].includes(object.kind) ? object.kind as 'earth' | 'moon' | 'rock' | 'gas' | 'ring' | 'ice' | 'sun' : object.kind === 'comet' ? 'moon' : null;
+    const mat = textureKind ? textured(scene, textureKind, object.id) : material(scene, `${object.id}-surface`, object.kind === 'blackhole' || object.kind === 'quasar' ? '#02050a' : object.color, true);
+    const globe = orb(scene, shape, `coordinate-sphere-${object.id}`, Vector3.Zero(), 1, mat, 40);
+    globe.metadata = { surfaceBase: mat.diffuseColor.asArray() };
+    globe.rotation.set(0, object.kind === 'earth' ? .72 : 0, object.id === 'uranus' ? 1.45 : -.18);
+    if (object.id === 'saturn') for (let i = 0; i < 8; i++) ring(scene, shape, Vector3.Zero(), 1.3 + i * .11, i % 3 === 0 ? '#e5d6b4' : '#af9b7c', .022, .52, -.28);
+    shape.metadata = { physicalBody: object.id, surface: object.id === 'proxima-b' ? 'imagined surface; not measured' : 'original illustrative surface texture', radiusModel: 'present-reference angular size; future Sun enlargement is artistic, not a predicted radius', evolution: 'toy future evolution, not a prediction' };
+  } else if (['nebula', 'cluster', 'galaxy'].includes(object.kind)) {
+    // Only a resolved region gets a local morphology, not invented nearby corridor objects.
+    const local = buildWorld(world, { ...snapshot, destinationId: object.id, kind: object.kind, color: object.color, epoch: 'present', travelling: false });
+    local.root.parent = body.root; local.root.name = `local-morphology-${object.id}`;
+    local.root.scaling.setAll(1 / 8); body.shape = local.root;
+    local.root.metadata = { illustration: 'local morphology, not measured individual members', region: object.id };
+  }
+  body.meshes = body.root.getChildMeshes() as Mesh[];
+}
+
+function updateCoordinateFlight(world: World, flight: CoordinateFlight, frame: RouteFrame, snapshot: UniverseSnapshot): void {
+  const { scene } = world;
+  scene.metadata = { cameraAU: [...frame.cameraAU], ageGyr: frame.ageGyr, routeItinerary: [...frame.itinerary], leg: frame.leg, legProgress: frame.legProgress, expansion: frame.expansion, temperatureK: frame.temperatureK, structure: frame.structure, floatingOrigin: true, coordinates: 'heliocentric J2000 AU; bounded direction-preserving GPU shells', evolution: 'toy expansion and future evolution' };
+  const selected = [...frame.objects].sort((a, b) => Number(frame.itinerary.includes(b.id)) - Number(frame.itinerary.includes(a.id)) || b.angularRadius - a.angularRadius).slice(0, 28);
+  const active = new Set(selected.map(object => object.id));
+  for (const [id, body] of flight.bodies) if (!active.has(id)) { body.root.dispose(false, true); flight.bodies.delete(id); }
+  const future = Math.max(0, Math.min(1, (frame.ageGyr - 13.8) / 5));
+  const stellarFade = 1 / (1 + Math.max(0, frame.ageGyr - 18.8) / 60);
+  for (const object of selected) {
+    let body = flight.bodies.get(object.id);
+    if (!body) {
+      const root = new TransformNode(`coordinate-body-${object.id}`, scene); root.parent = flight.root;
+      const marker = orb(scene, root, `coordinate-glyph-${object.id}`, Vector3.Zero(), 1, material(scene, `${object.id}-glyph-light`, object.color, true), 8);
+      marker.metadata = { glyph: 'unresolved luminous locator; radius is a screen glyph, not the physical body' };
+      body = { root, marker, meshes: [marker] }; flight.bodies.set(object.id, body);
+    }
+    const angularRadius = Math.max(0, Math.min(.6, object.angularRadius));
+    const resolved = angularRadius >= resolvedAngle && (compactKinds.has(object.kind) || ['nebula', 'cluster', 'galaxy'].includes(object.kind));
+    if (resolved && !body.shape) routeShape(world, body, object, snapshot);
+    // AU coordinates never enter a float vertex buffer. Only the relative direction
+    // and angular radius are mapped to a bounded shell (10..74 GPU units).
+    const shell = 10 + Math.min(64, Math.log1p(Math.max(0, object.distanceAU)) * 1.4);
+    body.root.position.set(object.direction[0] * shell, object.direction[1] * shell, object.direction[2] * shell);
+    body.root.metadata = { id: object.id, direction: [...object.direction], distanceAU: object.distanceAU, angularRadius, shell, factor: object.factor, formed: object.formed, evidence: object.evidence, resolved };
+    body.root.setEnabled(object.formed > 0);
+    body.marker.setEnabled(!resolved);
+    body.marker.scaling.setAll(shell * .0012);
+    if (body.shape) {
+      body.shape.setEnabled(resolved);
+      const growth = object.id === 'sun' ? 1 + future * .7 : 1;
+      body.shape.scaling.setAll(shell * Math.sin(angularRadius) * growth / (compactKinds.has(object.kind) ? 1 : 8));
+    }
+    const tint = dopplerTint(object.factor);
+    for (const mesh of body.meshes) {
+      mesh.visibility = 1;
+      const mat = mesh.material as StandardMaterial;
+      const base = mesh === body.marker ? Color3.FromHexString(object.color) : mesh.metadata?.surfaceBase ? Color3.FromArray(mesh.metadata.surfaceBase) : Color3.White();
+      const darkness = object.id === 'earth' ? 1 - future * .8 : 1;
+      const stellar = ['sun', 'triple', 'neutron', 'quasar'].includes(object.kind) || mesh === body.marker ? stellarFade : 1;
+      const strength = object.formed * Math.min(1.5, object.brightness) * darkness * stellar;
+      const color = new Color3(base.r * tint[0], base.g * tint[1], base.b * tint[2]).scale(strength);
+      if (object.id === 'sun') { color.g *= 1 - future * .4; color.b *= 1 - future * .7; }
+      if (mesh.name.startsWith('coordinate-sphere-') || mesh === body.marker) {
+        mat.diffuseColor.copyFrom(color); mat.emissiveColor.copyFrom(mat.disableLighting ? color : color.scale(.05));
+      }
+    }
+  }
+  const heat = Math.max(0, Math.min(1, Math.log10(Math.max(2.7255, frame.temperatureK) / 2.7255) / 4));
+  const thermalColor = new Color3(.012 + heat * .96, .023 + heat * .66, .04 + heat * .38);
+  const field = flight.environment.material as StandardMaterial;
+  field.diffuseColor.copyFrom(thermalColor); field.emissiveColor.copyFrom(thermalColor);
+  scene.clearColor = new Color4(thermalColor.r, thermalColor.g, thermalColor.b, 1);
+  const tetra = [[1, 1, 1], [-1, -1, 1], [-1, 1, -1], [1, -1, -1]];
+  COSMIC_KNOTS.forEach((point, i) => {
+    const knot = cosmicKnot(point, frame);
+    const relative = [frame.right, frame.up, frame.forward].map(axis => axis[0] * knot[0] + axis[1] * knot[1] + axis[2] * knot[2]);
+    for (let j = 0; j < 4; j++) {
+      const at = i * 12 + j * 3, colorAt = i * 16 + j * 4;
+      for (let k = 0; k < 3; k++) flight.positions[at + k] = relative[k] * 2 + tetra[j][k] * .025;
+      const light = .73 * frame.structure * stellarFade;
+      flight.colors[colorAt] = ivory.r * light; flight.colors[colorAt + 1] = ivory.g * light; flight.colors[colorAt + 2] = ivory.b * light; flight.colors[colorAt + 3] = 1;
+    }
+  });
+  flight.knots.updateVerticesData(VertexBuffer.PositionKind, flight.positions, true);
+  flight.knots.updateVerticesData(VertexBuffer.ColorKind, flight.colors);
+  flight.knots.visibility = 1;
+  flight.root.metadata = { cacheSize: flight.bodies.size, proceduralField: 'illustrative, not measured route objects' };
+}
+
 export function createUniverse3dRenderer(options: { onUnavailable: () => void; createEngine?: (canvas: HTMLCanvasElement) => Engine }): UniverseRenderer {
   let engine: Engine | null = null, canvas: HTMLCanvasElement | null = null, world: World | null = null, observer: ResizeObserver | null = null;
   let latest: UniverseSnapshot | null = null, failed = false, radius = 13.8, alpha = -Math.PI / 2, beta = 1.18;
   const layers = new Map<string, Layer>();
+  let coordinateFlight: CoordinateFlight | null = null;
   let sky: Mesh | null = null, positions = new Float32Array(0), colors = new Float32Array(0), skyKey = '';
   const cleanup: (() => void)[] = [], pointers = new Map<number, { x: number; y: number }>();
   const dispose = () => {
     cleanup.splice(0).forEach(fn => fn()); pointers.clear(); observer?.disconnect(); observer = null;
     engine?.stopRenderLoop(); world?.scene.dispose(); world = null; engine?.dispose(); engine = null;
-    canvas?.remove(); canvas = null; layers.clear(); sky = null; skyKey = '';
+    canvas?.remove(); canvas = null; layers.clear(); coordinateFlight = null; sky = null; skyKey = '';
   };
   const unavailable = () => { if (failed) return; failed = true; dispose(); options.onUnavailable(); };
-  const applyCamera = () => { if (world) { world.camera.radius = radius; world.camera.alpha = alpha; world.camera.beta = beta; } };
+  const isCoordinateFlight = () => Boolean(latest?.travelling && latest.origin);
+  const applyCamera = () => {
+    if (!world) return;
+    world.camera.radius = radius; world.camera.alpha = alpha; world.camera.beta = beta;
+    if (coordinateFlight && isCoordinateFlight()) {
+      coordinateFlight.camera.position.setAll(0);
+      coordinateFlight.camera.rotation.set(beta - 1.18, -alpha - Math.PI / 2, 0);
+      coordinateFlight.camera.fov = 2 * Math.atan(Math.tan(routeFov / 2) * radius / 13.8);
+    }
+  };
   const updateSky = (frame: FlightFrame) => {
     if (!world || !sky || !latest) return;
     const next = `${frame.progress}|${frame.visualBeta}|${frame.skyTravel}`;
@@ -308,7 +435,7 @@ export function createUniverse3dRenderer(options: { onUnavailable: () => void; c
   const display = () => {
     if (!world || !latest || document.hidden) return;
     // There is deliberately no wall-clock animation, including on paused scenes.
-    try { updateSky(flightFrame(latest)); world.scene.render(); } catch { unavailable(); }
+    try { if (!isCoordinateFlight()) updateSky(flightFrame(latest)); world.scene.render(); } catch { unavailable(); }
   };
   const render = (snapshot: UniverseSnapshot) => {
     latest = freezeSnapshot(snapshot);
@@ -327,6 +454,22 @@ export function createUniverse3dRenderer(options: { onUnavailable: () => void; c
         sky.alwaysSelectAsActiveMesh = true;
         applyCamera();
       }
+      if (isCoordinateFlight()) {
+        for (const layer of layers.values()) layer.root.dispose(false, true);
+        layers.clear(); sky!.setEnabled(false);
+        coordinateFlight ??= createCoordinateFlight(world);
+        coordinateFlight.root.setEnabled(true); world.scene.activeCamera = coordinateFlight.camera;
+        const route = routeFrame(latest);
+        updateCoordinateFlight(world, coordinateFlight, route, latest);
+        canvas?.setAttribute('data-camera-au', route.cameraAU.join(','));
+        canvas?.setAttribute('data-age-gyr', String(route.ageGyr));
+        canvas?.setAttribute('data-route-leg', String(route.leg));
+        applyCamera(); return;
+      }
+      coordinateFlight?.root.setEnabled(false); sky!.setEnabled(true);
+      for (const attribute of ['data-camera-au', 'data-age-gyr', 'data-route-leg']) canvas?.removeAttribute(attribute);
+      world.scene.activeCamera = world.camera; world.scene.metadata = { floatingOrigin: false, observatory: true };
+      world.scene.clearColor = Color4.FromHexString('#101d30ff'); applyCamera();
       const frame = flightFrame(latest), active = new Set<string>();
       frame.layers.forEach((flight, index) => {
         const view = { ...latest!, ...flight.location }, id = layerKey(view); active.add(id);

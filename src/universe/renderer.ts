@@ -1,6 +1,7 @@
 import type { SceneKind, UniverseRenderer, UniverseSnapshot } from './view';
 import { freezeSnapshot } from './view';
 import { FLIGHT_STARS, dopplerTint, flightFrame, flightStar, type FlightFrame, type FlightLayer } from './flight';
+import { routeFrame, projectDirection, COSMIC_KNOTS, cosmicKnot, type RouteFrame, type RouteObject } from './route';
 
 export type CosmicScene = SceneKind | 'hot' | 'plasma-field' | 'cmb' | 'dark-field' | 'early-stars' | 'protogalaxies' | 'giant' | 'scorched' | 'remnants';
 
@@ -65,12 +66,12 @@ function clouds(count: number, seed: number, colors: string[], spread = 1): stri
 function sphere(x: number, y: number, r: number, gradient: string, detail = ''): string {
   return `<g data-art="sphere">${circle(x, y, r + 12, 'url(#u-halo)', .7)}${circle(x, y, r, `url(#u-${gradient})`)}${detail}${circle(x, y, r, 'url(#u-shade)')}</g>`;
 }
-function earth(scorched = false): string {
+function earth(scorched = false, companion = true): string {
   return `<g data-art="${scorched ? 'scorched-earth' : 'blue-marble'}">${circle(465, 317, 212, 'url(#u-atmosphere)')}${circle(465, 317, 198, scorched ? 'url(#u-rock)' : 'url(#u-ocean)')}
     <g clip-path="url(#u-globe)"><g transform="translate(241 113) scale(.5 .65)" fill="${scorched ? '#694632' : '#75a487'}" stroke="${scorched ? '#bb7842' : '#d3c593'}" stroke-width="2">${CONTINENTS.map(path => `<path d="${path}"/>`).join('')}</g>
     ${scorched ? '<path d="M305 345Q410 200 590 370T620 220" fill="none" stroke="#f4b35e" stroke-width="4" opacity=".5"/>' : '<g fill="none" stroke="#fffbea" stroke-linecap="round" opacity=".6"><path d="M315 206Q425 181 489 218T620 205M281 283Q346 252 405 280M423 363Q505 332 605 365M344 442Q411 420 467 445" stroke-width="9"/><path d="M350 229Q425 200 528 245M395 396Q480 374 600 410" stroke-width="3"/></g>'}
     ${circle(465, 317, 198, 'url(#u-shade)')}</g><circle cx="465" cy="317" r="199" fill="none" stroke="${scorched ? '#d89b62' : '#b5e6f3'}" stroke-width="2" opacity=".55"/>
-    ${sphere(798, 171, 43, 'moon', craters(798, 171, 43))}</g>`;
+    ${companion ? sphere(798, 171, 43, 'moon', craters(798, 171, 43)) : ''}</g>`;
 }
 function craters(x: number, y: number, r: number): string {
   const random = cosmicRandom(151);
@@ -183,7 +184,60 @@ function flightSky(frame: FlightFrame): string {
 function frameKey(frame: FlightFrame, snapshot: UniverseSnapshot): string {
   return frame.layers.map(layer => `${layer.location.destinationId}|${layer.location.epoch}|${layerScene(layer, snapshot)}`).join(';');
 }
+function coordinateFlight(snapshot: UniverseSnapshot): boolean {
+  return snapshot.travelling && !!snapshot.origin && Object.hasOwn(formationGyr, snapshot.destinationId) && Object.hasOwn(formationGyr, snapshot.origin.destinationId);
+}
+function routeBody(object: RouteObject): { art: string; center: [number, number]; radius: number } {
+  if (object.kind === 'earth') return { art: earth(false, false), center: [465, 317], radius: 198 };
+  if (object.kind === 'moon') return { art: sphere(490, 312, 188, 'moon', craters(490, 312, 188)), center: [490, 312], radius: 188 };
+  if (['rock', 'gas', 'ring', 'ice', 'sun'].includes(object.kind)) return { art: planet(object.kind, object.id), center: object.kind === 'sun' ? [480, 310] : [490, 312], radius: object.kind === 'sun' ? 184 : 176 };
+  if (object.kind === 'triple') return { art: sphere(500, 310, 176, 'giant'), center: [500, 310], radius: 176 };
+  if (object.kind === 'blackhole' || object.kind === 'quasar') return { art: blackhole(object.kind === 'quasar'), center: [500, 308], radius: 78 };
+  if (object.kind === 'neutron') return { art: sphere(500, 310, 26, 'ice'), center: [500, 310], radius: 26 };
+  if (object.kind === 'galaxy' || object.kind === 'group') return { art: spiral(500, 310, 200, 781), center: [500, 310], radius: 200 };
+  if (object.kind === 'nebula') return { art: clouds(24, 67, ['#b07175', '#638ea5', '#d5ad8b'], .35), center: [500, 310], radius: 200 };
+  // Region markers are translucent diagrams, not invented individually located debris.
+  return { art: `<g data-art="region-outline"><ellipse cx="500" cy="310" rx="176" ry="${object.kind === 'belt' && object.id !== 'oort' ? 40 : 176}" fill="none" stroke="${object.color}" stroke-width="2" stroke-dasharray="4 9"/></g>`, center: [500, 310], radius: 176 };
+}
+function futureFraction(frame: RouteFrame): number { return Math.max(0, Math.min(1, (frame.ageGyr - 13.8) / 5)); }
+function stellarFade(frame: RouteFrame): number { return 1 / (1 + Math.max(0, frame.ageGyr - 18.8) / 60); }
+function routeTint(object: RouteObject, frame: RouteFrame): string {
+  const future = futureFraction(frame), stars = ['sun', 'triple', 'neutron', 'quasar'];
+  const fading = stars.includes(object.kind) ? stellarFade(frame) : 1;
+  const brightness = Math.min(1.5, object.brightness) * fading * (object.id === 'earth' ? 1 - .8 * future : 1);
+  const tint = dopplerTint(object.factor).map(v => v * brightness);
+  if (object.id === 'sun') { tint[1] *= 1 - .4 * future; tint[2] *= 1 - .7 * future; }
+  return `${tint[0]} 0 0 0 0 0 ${tint[1]} 0 0 0 0 0 ${tint[2]} 0 0 0 0 0 1 0`;
+}
+function routeTransform(object: RouteObject, frame: RouteFrame): string {
+  const point = projectDirection(object.direction), body = routeBodyCenter(object);
+  const radius = Math.min(1000, 850 * Math.tan(object.angularRadius) / Math.max(.03, object.direction[2])) * (object.id === 'sun' ? 1 + .7 * futureFraction(frame) : 1);
+  return `translate(${n(point.x)} ${n(point.y)}) scale(${n(Math.max(.00001, radius / body.radius))}) translate(${-body.center[0]} ${-body.center[1]})`;
+}
+// Avoid generating the procedural surface again on every animation frame.
+const routeArt = new Map<string, ReturnType<typeof routeBody>>();
+function routeBodyCenter(object: RouteObject): ReturnType<typeof routeBody> {
+  let art = routeArt.get(object.id); if (!art) { art = routeBody(object); routeArt.set(object.id, art); } return art;
+}
+function thermalColor(frame: RouteFrame): string {
+  const hot = Math.max(0, Math.min(1, (Math.log10(Math.max(2.7, frame.temperatureK)) - 2) / 2));
+  return `rgb(${Math.round(16 + 225 * hot)},${Math.round(29 + 151 * hot)},${Math.round(48 + 82 * hot)})`;
+}
+function knotTransform(point: readonly [number, number, number], frame: RouteFrame): string {
+  const expanded = cosmicKnot(point, frame), z = Math.max(.3, expanded[2] + 18);
+  return `translate(${n(500 + expanded[0] * 700 / z)} ${n(310 - expanded[1] * 700 / z)}) scale(${n(Math.max(.04, 18 / z))})`;
+}
+function routeMarkup(snapshot: UniverseSnapshot): string {
+  const frame = routeFrame(snapshot);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true" data-scene="coordinate-transit" data-camera-au="${frame.cameraAU.join(',')}" data-age-gyr="${frame.ageGyr}" data-route-leg="${frame.leg}" data-motion="${snapshot.paused || snapshot.reducedMotion ? 'frozen' : 'active'}" style="display:block;width:100%;height:100%;touch-action:none;background:#101d30">
+    ${definitions}<defs>${frame.objects.map(object => `<filter id="u-tint-${object.id}" color-interpolation-filters="sRGB"><feColorMatrix data-route-tint="${object.id}" type="matrix" values="${routeTint(object,frame)}"/></filter>`).join('')}</defs><rect data-route-background="" width="1000" height="620" fill="${thermalColor(frame)}"/>
+    <g data-object="comoving-illustration" opacity="${n(frame.structure)}">${COSMIC_KNOTS.map((point, i) => `<g data-knot="${i}" transform="${knotTransform(point, frame)}">${circle(0, 0, 1.2 + i % 3, '#b9cbdc', .5)}${i % 4 === 0 ? '<path d="M0 0l12 -8" stroke="#6e8aa3" opacity=".3"/>' : ''}</g>`).join('')}</g>
+    <g data-object="scene">${frame.objects.map(object => `<g data-route-body="${object.id}" data-evidence="${object.evidence}" data-distance-au="${object.distanceAU}" transform="${routeTransform(object,frame)}" filter="url(#u-tint-${object.id})" opacity="${n(object.formed)}" visibility="${projectDirection(object.direction).visible ? 'visible' : 'hidden'}">${routeBodyCenter(object).art}</g>`).join('')}</g>
+    <g data-object="catalogue-points">${frame.objects.map(object => { const point = projectDirection(object.direction), color = dopplerTint(object.factor).map(v => Math.round(v * 245)); return `<circle data-route-point="${object.id}" cx="${n(point.x)}" cy="${n(point.y)}" r="${n(Math.min(2.5, object.brightness))}" fill="rgb(${color.join(',')})" opacity="${n(object.formed * stellarFade(frame))}" visibility="${point.visible && object.angularRadius < .001 ? 'visible' : 'hidden'}"/>`; }).join('')}</g>
+  </svg>`;
+}
 export function universeMarkup(snapshot: UniverseSnapshot): string {
+  if (coordinateFlight(snapshot)) return routeMarkup(snapshot);
   const frame = flightFrame(snapshot);
   const represented = frame.layers.reduce<FlightLayer | undefined>((best, layer) => !best || layer.opacity > best.opacity ? layer : best, undefined);
   const kind = represented ? layerScene(represented, snapshot) : 'transit';
@@ -208,13 +262,34 @@ export function createUniverseRenderer(): UniverseRenderer {
   const render = (snapshot: UniverseSnapshot) => {
     latest = freezeSnapshot(snapshot);
     if (!host) return;
-    const frame = flightFrame(latest), nextKey = frameKey(frame, latest);
+    const frame = flightFrame(latest), routing = coordinateFlight(latest);
+    const nextKey = routing ? `route:${latest.origin!.destinationId}:${latest.destinationId}` : frameKey(frame, latest);
     if (!svg || key !== nextKey) {
       key = nextKey;
       host.innerHTML = universeMarkup(latest).replaceAll('u-', `cosmos-${serial}-`);
       svg = host.querySelector('svg'); viewBox();
     }
     if (!svg) return;
+    if (routing) {
+      const route = routeFrame(latest);
+      svg.setAttribute('data-camera-au', route.cameraAU.join(',')); svg.setAttribute('data-age-gyr', String(route.ageGyr)); svg.setAttribute('data-route-leg', String(route.leg));
+      svg.setAttribute('data-motion', latest.paused || latest.reducedMotion || document.hidden ? 'frozen' : 'active');
+      svg.querySelector('[data-route-background]')?.setAttribute('fill', thermalColor(route));
+      svg.querySelector('[data-object="comoving-illustration"]')?.setAttribute('opacity', n(route.structure));
+      COSMIC_KNOTS.forEach((point, i) => svg?.querySelector(`[data-knot="${i}"]`)?.setAttribute('transform', knotTransform(point, route)));
+      route.objects.forEach(object => {
+        const node = svg?.querySelector(`[data-route-body="${object.id}"]`), point = projectDirection(object.direction);
+        node?.setAttribute('transform', routeTransform(object,route)); node?.setAttribute('opacity', n(object.formed));
+        svg?.querySelector(`[data-route-tint="${object.id}"]`)?.setAttribute('values', routeTint(object,route));
+        node?.setAttribute('visibility', point.visible ? 'visible' : 'hidden'); node?.setAttribute('data-distance-au', String(object.distanceAU));
+        const dot = svg?.querySelector(`[data-route-point="${object.id}"]`);
+        dot?.setAttribute('cx', n(point.x)); dot?.setAttribute('cy', n(point.y)); dot?.setAttribute('opacity', n(object.formed * stellarFade(route)));
+        dot?.setAttribute('visibility', point.visible && object.angularRadius < .001 ? 'visible' : 'hidden');
+        dot?.setAttribute('fill', `rgb(${dopplerTint(object.factor).map(v => Math.round(v * 245)).join(',')})`);
+        dot?.setAttribute('r', n(Math.min(2.5, object.brightness)));
+      });
+      return;
+    }
     frame.layers.forEach((layer, i) => {
       const node = svg?.querySelector(`[data-flight-layer="${i}"]`);
       node?.setAttribute('opacity', n(layer.opacity));

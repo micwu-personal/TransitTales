@@ -16,13 +16,13 @@ const { chromium } = require('playwright');
     await page.goto(`${url}/universe.html?view=2d`);
     await page.locator('.cosmic-scene>svg').waitFor();
     await page.locator('#language').selectOption('en');
-    const sample = async (view,progress,epoch='present',arrived=false) => {
+    const sample = async (view,progress,epoch='present',arrived=false,destination=epoch==='present'?'moon':'earth') => {
       await page.goto(`${url}/universe-flight-check`);
-      await page.evaluate(async ({progress,epoch,arrived}) => {
+      await page.evaluate(async ({progress,epoch,arrived,destination}) => {
         const {createJourney,beginJump,tickJourney,writeJourney} = await import('/src/universe/model.ts');
-        const flight = tickJourney(beginJump({...createJourney(),beta:.999},epoch==='present'?'moon':'earth',epoch),7*progress);
+        const flight = tickJourney(beginJump({...createJourney(),beta:.6},destination,epoch),7*progress);
         if (!writeJourney(localStorage,{...flight,progress,paused:!arrived})) throw Error(`Cannot save the flight fixture at ${progress}`);
-      },{progress,epoch,arrived});
+      },{progress,epoch,arrived,destination});
       await page.goto(`${url}/universe.html?view=${view}`);
       await page.locator(view==='2d'?'.cosmic-scene>svg':'.cosmic-scene canvas').waitFor();
       await page.waitForTimeout(120);
@@ -39,10 +39,33 @@ const { chromium } = require('playwright');
       await page.waitForTimeout(350);
       const still=await page.locator('.cosmic-scene').screenshot({style:'.window-caption,.crew-portrait,.scene-toolbar,.window-footnote{visibility:hidden!important}'});
       assert.equal(still.equals(paused),true,`${view}: paused travel must not drift`);
+      if(view==='2d') {
+        await page.evaluate(()=>{window.__routeSvg=document.querySelector('.cosmic-scene>svg');window.__routeEarth=document.querySelector('[data-route-body="earth"]');window.__routeTransform=window.__routeEarth.getAttribute('transform');});
+        await page.locator('#pause').click(); await page.waitForTimeout(160); await page.locator('#pause').click();
+        assert.equal(await page.evaluate(()=>document.querySelector('.cosmic-scene>svg')===window.__routeSvg&&document.querySelector('[data-route-body="earth"]')===window.__routeEarth),true,'SVG and full-opacity body geometry must persist while moving');
+        assert.notEqual(await page.evaluate(()=>window.__routeEarth.getAttribute('transform')),await page.evaluate(()=>window.__routeTransform));
+      }
       const timeDeparture=await sample(view,0,'bang'), timeMiddle=await sample(view,.5,'bang'), timeArrival=await sample(view,1,'bang',true);
       assert.notDeepEqual(timeDeparture,timeArrival,`${view}: time travel must retain the departure era initially`);
       assert.notDeepEqual(timeMiddle,timeDeparture,`${view}: intermediate cosmic history must evolve`);
       assert.notDeepEqual(timeMiddle,timeArrival,`${view}: time travel must not immediately become the target era`);
+      const camera = () => page.locator(view==='2d'?'.cosmic-scene>svg':'.cosmic-scene canvas').getAttribute('data-camera-au');
+      await sample(view,.1); const departureCamera = await camera();
+      await sample(view,.8); const approachCamera = await camera();
+      assert.ok(departureCamera && approachCamera,`${view}: rendered world coordinates must be inspectable`);
+      assert.notEqual(departureCamera,approachCamera,`${view}: camera must translate through astronomical space`);
+      await sample(view,.5,'bang');
+      const age = Number(await page.locator(view==='2d'?'.cosmic-scene>svg':'.cosmic-scene canvas').getAttribute('data-age-gyr'));
+      assert.ok(age>0 && age<13.8,`${view}: continuous intermediate cosmic age`);
+      await sample(view,1/3,'present',false,'saturn');
+      assert.deepEqual(await page.locator('[data-route-stop]').evaluateAll(nodes=>nodes.map(node=>node.dataset.routeStop)),['earth','mars','jupiter','saturn']);
+      assert.equal(Number(await page.locator(view==='2d'?'.cosmic-scene>svg':'.cosmic-scene canvas').getAttribute('data-route-leg')),1);
+      assert.ok((await page.locator('#route-readout').textContent()).includes('AU'));
+      if(view==='2d') {
+        const mars = await page.locator('[data-route-body="mars"]').getAttribute('data-distance-au');
+        await sample(view,.5,'present',false,'saturn');
+        assert.ok(Number(await page.locator('[data-route-body="mars"]').getAttribute('data-distance-au'))>Number(mars)*10,'Passed Mars must recede at its real route location');
+      }
       screenshots.push(view);
     }
     await sample('3d',.42);

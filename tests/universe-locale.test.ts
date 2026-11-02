@@ -12,7 +12,7 @@ const uiKeys = [
   'futureNote', 'lookback', 'localEpoch', 'distance', 'crew', 'crewLine', 'help', 'helpBody', 'close', 'resetJourney',
   'resetConfirm', 'confirmed', 'candidate', 'unknownSurface', 'safeBubble', 'completed', 'flightTime', 'pausedTab',
   'allDiscovered', 'destination', 'lightCone', 'simulationNote', 'sources', 'epochApply', 'betaLabel', 'gammaLabel',
-  'dopplerLabel', 'formationNote',
+  'dopplerLabel', 'formationNote', 'itinerary', 'routeGuide', 'routeAnchor', 'reconstruction', 'coordinateNote', 'coordinateEvidence',
 ] as const;
 const destinationIds = [
   'earth', 'moon', 'sun', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'asteroids', 'comet',

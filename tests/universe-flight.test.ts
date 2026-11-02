@@ -4,6 +4,7 @@ import { createJourney, beginJump, tickJourney, readJourney, writeJourney } from
 import { universeMarkup } from '../src/universe/renderer';
 import { freezeSnapshot, type UniverseSnapshot } from '../src/universe/view';
 import { EPOCHS } from '../src/universe/catalog';
+import { routeFrame } from '../src/universe/route';
 
 const view = (patch: Partial<UniverseSnapshot> = {}): UniverseSnapshot => ({ destinationId: 'saturn', kind: 'ring', color: '#dcba89', epoch: 'present', beta: .85, travelling: true, progress: 0, paused: false, reducedMotion: false, origin: { destinationId: 'earth', kind: 'earth', color: '#abcdef', epoch: 'present' }, ...patch });
 
@@ -38,8 +39,8 @@ describe('progress-driven flight and exact angular SR', () => {
     expect(end.visualBeta).toBe(0);
     const near = flightFrame(view({ progress: .7 })).layers.find(layer => layer.location.destinationId === 'saturn')!;
     expect(near.opacity).toBeGreaterThan(0); expect(near.opacity).toBeLessThan(.3); expect(near.scale).toBeLessThan(.5);
-    expect(universeMarkup(view())).toContain('blue-marble'); expect(universeMarkup(view())).not.toContain('ring-planet');
-    expect(universeMarkup(view({ progress: .5 }))).toContain('data-scene="transit"');
+    expect(universeMarkup(view())).toContain('blue-marble');
+    expect(universeMarkup(view({ progress: .5 }))).toContain('data-scene="coordinate-transit"');
     expect(universeMarkup(view({ progress: 1 }))).toContain('ring-planet');
   });
   it('travels through intermediate eras in either direction, at the same place for time-only jumps', () => {
@@ -56,11 +57,12 @@ describe('progress-driven flight and exact angular SR', () => {
   });
   it('gates late-forming modern objects during quasar-to-present interpolation', () => {
     const base = view({ destinationId: 'earth', kind: 'earth', origin: { ...view().origin!, epoch: 'quasar' } });
-    expect(universeMarkup({ ...base, progress: .5 })).not.toContain('blue-marble');
-    expect(universeMarkup({ ...base, progress: .8 })).toContain('blue-marble');
+    expect(routeFrame({ ...base, progress: .5 }).objects.find(o => o.id === 'earth')!.formed).toBe(0);
+    expect(routeFrame({ ...base, progress: .8 }).objects.find(o => o.id === 'earth')!.formed).toBe(1);
     for (const epoch of EPOCHS.slice(0, 5)) {
-      const markup = universeMarkup(view({ epoch: epoch.id, origin: { ...view().origin!, epoch: epoch.id }, progress: .8 }));
-      expect(markup).not.toContain('ring-planet'); expect(markup).not.toContain('blue-marble');
+      const frame = routeFrame(view({ epoch: epoch.id, origin: { ...view().origin!, epoch: epoch.id }, progress: .8 }));
+      expect(frame.objects.find(o => o.id === 'saturn')!.formed).toBe(0);
+      expect(frame.objects.find(o => o.id === 'earth')!.formed).toBe(0);
     }
   });
   it('is stateless across paused/recreated views and reduced-motion removes optical sweep, streaks and scales', () => {
