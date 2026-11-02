@@ -13,6 +13,8 @@ const { chromium } = require('playwright');
     catch {browser = await chromium.launch({headless:true,channel:'msedge'});}
     const page = await browser.newPage({viewport:{width:1280,height:1000}}), errors=[];
     page.on('pageerror',error=>errors.push(error.message));
+    // Rounded-border compositor pixels can vary even when paused scene pixels do not.
+    const sceneStyle = '.window{border-radius:0!important}.window-caption,.crew-portrait,.scene-toolbar,.window-footnote,.cosmic-map{visibility:hidden!important}';
     await page.goto(`${url}/universe.html?view=2d`);
     await page.locator('.cosmic-scene>svg').waitFor();
     await page.locator('#language').selectOption('en');
@@ -26,7 +28,7 @@ const { chromium } = require('playwright');
       await page.goto(`${url}/universe.html?view=${view}`);
       await page.locator(view==='2d'?'.cosmic-scene>svg':'.cosmic-scene canvas').waitFor();
       await page.waitForTimeout(120);
-      return page.locator('.cosmic-scene').screenshot({style:'.window-caption,.crew-portrait,.scene-toolbar,.window-footnote,.cosmic-map{visibility:hidden!important}'});
+      return page.locator('.cosmic-scene').screenshot({style:sceneStyle});
     };
     const screenshots=[];
     for (const view of ['2d','3d']) {
@@ -36,8 +38,8 @@ const { chromium } = require('playwright');
       assert.equal(middle.equals(arrival),false,`${view}: cruise must not immediately display arrival`);
       assert.equal(approach.equals(middle),false,`${view}: approach must visibly develop`);
       const paused=await sample(view,.42);
-      await page.waitForTimeout(350);
-      const still=await page.locator('.cosmic-scene').screenshot({style:'.window-caption,.crew-portrait,.scene-toolbar,.window-footnote,.cosmic-map{visibility:hidden!important}'});
+            await page.waitForTimeout(350);
+            const still=await page.locator('.cosmic-scene').screenshot({style:sceneStyle});
       assert.equal(still.equals(paused),true,`${view}: paused travel must not drift`);
       if(view==='2d') {
         await page.evaluate(()=>{window.__routeSvg=document.querySelector('.cosmic-scene>svg');window.__routeEarth=document.querySelector('[data-route-body="earth"]');window.__routeTransform=window.__routeEarth.getAttribute('transform');});
