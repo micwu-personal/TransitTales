@@ -1,4 +1,5 @@
 // Run: node tests\universe-narration.browser.cjs (Playwright and Chromium/Edge required).
+// Speech is mocked: these checks verify scheduling, not audible quality or macOS voices.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -7,13 +8,13 @@ function mockSpeech() {
   const voice = (name,lang,localService=true) => ({name,lang,voiceURI:name,localService,default:false});
   let voices = [voice('English','en-US'),voice('Huihui','zh-CN'),voice('Xiaoxiao Natural','zh-CN',false),voice('Japanese','ja-JP')], active, timer;
   const events = new EventTarget();
-  window.__speech = { entries:[], cancels:0, duration:900, fail:false, voicesChanged(list) { voices = list; events.dispatchEvent(new Event('voiceschanged')); }, finish() { clearTimeout(timer); active?.onend?.(); active = null; } };
+  window.__speech = { entries:[], completed:[], cancels:0, duration:900, fail:false, voicesChanged(list) { voices = list; events.dispatchEvent(new Event('voiceschanged')); }, finish() { clearTimeout(timer); const item = active; active = null; if (item) { window.__speech.completed.push(item.text); item.onend?.(); } } };
   class Utterance { constructor(text) { this.text = text; } }
   const synth = { getVoices:() => voices, addEventListener:events.addEventListener.bind(events), removeEventListener:events.removeEventListener.bind(events), cancel() { clearTimeout(timer); active = null; window.__speech.cancels++; }, speak(item) {
     if (window.__speech.fail) throw Error('Blocked speech');
-    active = item;
+    active = item; item.onstart?.();
     window.__speech.entries.push({ text:item.text, voice:item.voice.name, lang:item.lang, rate:item.rate, object:document.querySelector('#narration-caption')?.dataset.object, progress:document.querySelector('#progress')?.value, age:document.querySelector('#route-readout')?.dataset.ageGyr, camera:document.querySelector('#route-readout')?.dataset.cameraAu });
-    item.onstart?.(); timer = setTimeout(() => { if (active === item) window.__speech.finish(); },window.__speech.duration);
+    timer = setTimeout(() => { if (active === item) window.__speech.finish(); },window.__speech.duration);
   } };
   Object.defineProperty(window,'speechSynthesis',{value:synth,configurable:true}); Object.defineProperty(window,'SpeechSynthesisUtterance',{value:Utterance,configurable:true});
   window.__levels = [];
@@ -31,6 +32,22 @@ function mockSpeech() {
     const page = await context.newPage(), errors = []; page.on('pageerror',error=>errors.push(error.message));
     const open = async (lang='zh-CN') => { await page.goto(`${url}/universe.html?view=2d`); await page.locator('.cosmic-scene>svg').waitFor(); await page.locator('#language').selectOption(lang); };
     const entries = () => page.evaluate(()=>window.__speech.entries);
+    await open('en'); assert.equal((await entries()).length,0,'Narration never autoplays');
+    await page.evaluate(()=>window.__speech.voicesChanged([
+      {name:'Microsoft Abeo Online (Natural) - English (Nigeria)',voiceURI:'Nigeria',lang:'en-NG',default:true,localService:false},
+      {name:'Samantha',voiceURI:'US',lang:'en-US',default:false,localService:true},
+      {name:'Microsoft Ana Online (Natural) - English (United States)',voiceURI:'Ana',lang:'en-US',default:false,localService:false},
+    ]));
+    await page.locator('#narration-listen').click(); assert.equal((await entries()).at(-1).voice,'Microsoft Ana Online (Natural) - English (United States)');
+    await page.locator('#narration-voice').selectOption('Nigeria'); assert.equal((await entries()).at(-1).lang,'en-NG','Manual accent remains available');
+    await page.locator('#language').selectOption('ja'); await page.locator('#language').selectOption('en');
+    assert.equal((await entries()).at(-1).lang,'en-NG','Manual English accent survives language changes');
+    await page.locator('#narration-voice').selectOption(''); assert.equal((await entries()).at(-1).voice,'Microsoft Ana Online (Natural) - English (United States)');
+    await page.evaluate(()=>window.__speech.voicesChanged([
+      {name:'Nigeria Natural',voiceURI:'Nigeria',lang:'en-NG',default:true,localService:false},
+      {name:'Samantha',voiceURI:'US',lang:'en-US',default:false,localService:true},
+    ]));
+    await page.locator('#narration-listen').click(); assert.equal((await entries()).at(-1).voice,'Samantha','US accent wins even without Ana');
     await open(); assert.equal((await entries()).length,0,'Narration never autoplays');
     await page.evaluate(()=>window.__speech.duration=20000); await page.locator('#narration-listen').click();
     assert.equal((await entries()).at(-1).voice,'Xiaoxiao Natural'); assert.equal((await entries()).at(-1).lang,'zh-CN');
@@ -50,6 +67,18 @@ function mockSpeech() {
       assert.equal(await page.locator('#object-description').textContent(),latest.text);
     }
     await page.locator('#destination').selectOption('saturn');
+    await page.evaluate(()=>{window.__speech.entries=[];window.__speech.completed=[];window.__speech.duration=20000;}); await page.locator('#depart').click();
+    const flightCancels = await page.evaluate(()=>window.__speech.cancels);
+    await page.waitForFunction(()=>!document.querySelector('#depart').disabled);
+    assert.deepEqual((await entries()).map(e=>e.object),['earth'],'A long departure line spans all flybys without interruption');
+    assert.equal(await page.evaluate(()=>window.__speech.cancels),flightCancels,'Automatic flybys and arrival never cancel the active line');
+    assert.equal(await page.locator('#narration-caption').getAttribute('data-object'),'earth','Caption stays with the actually spoken object');
+    await page.evaluate(()=>window.__speech.finish());
+    assert.deepEqual((await entries()).map(e=>e.object),['earth','saturn'],'Arrival supersedes pending flybys; no stale short plays after arrival');
+    assert.equal((await entries()).at(-1).rate,.94); assert.equal(await page.locator('#narration-caption').getAttribute('data-object'),'saturn');
+    await page.evaluate(()=>window.__speech.finish());
+    assert.equal(await page.locator('#narration-stop').isDisabled(),true); assert.equal(await page.evaluate(()=>window.__speech.completed.length),2);
+    await page.locator('#reset-journey').click(); await page.locator('#confirm-reset').click(); await page.locator('#destination').selectOption('saturn');
     await page.evaluate(()=>{window.__speech.entries=[];window.__speech.duration=900;}); await page.locator('#depart').click();
     await page.waitForFunction(()=>window.__speech.entries.some(e=>e.object==='mars'));
     await page.locator('#pause').click(); const stopped = await page.locator('#progress').getAttribute('value'), pausedCount=(await entries()).length;
@@ -88,6 +117,25 @@ function mockSpeech() {
         await page.locator('#epoch').selectOption('bang'); await page.evaluate(()=>window.__speech.entries=[]); await page.locator('#epoch-apply').click();
         await page.waitForFunction(()=>!document.querySelector('#depart').disabled); const timeOnly = await entries();
         assert.deepEqual(timeOnly.map(e=>e.object),['earth','earth'],'Time-only travel never invents a passed planet'); assert.notEqual(timeOnly[0].text,timeOnly[1].text,'Big Bang arrival does not describe present Earth');
+        const legacyPage = await context.newPage(); legacyPage.on('pageerror',error=>errors.push(error.message));
+        await legacyPage.goto(`http://127.0.0.1:${server.httpServer.address().port}/universe-voice-check`);
+        const legacyResult = await legacyPage.evaluate(async()=> {
+          const replaceAll = String.prototype.replaceAll;
+          String.prototype.replaceAll = undefined;
+          const synth = window.speechSynthesis;
+          synth.addEventListener = undefined; synth.removeEventListener = undefined;
+          synth.getVoices = () => { throw Error('Voice registry temporarily unavailable'); };
+          const { createNarration } = await import('/src/universe/narration.ts');
+          const narrator = createNarration(()=>{});
+          try {
+            narrator.setEnabled(true); narrator.speak('Legacy browser story');
+            const missingStatus = narrator.status;
+            synth.getVoices = () => [{name:'US legacy',voiceURI:'US',lang:'en_US',default:false,localService:true}];
+            synth.onvoiceschanged(new Event('voiceschanged'));
+            return { missingStatus, text:window.__speech.entries.at(-1).text, voice:window.__speech.entries.at(-1).voice };
+          } finally { narrator.dispose(); String.prototype.replaceAll = replaceAll; }
+        });
+        assert.deepEqual(legacyResult,{missingStatus:'no-voice',text:'Legacy browser story',voice:'US legacy'},'Legacy voice API absence/failure does not break narration startup or cleanup');
         await context.close();
         const unsupported = await browser.newContext(); await unsupported.addInitScript(()=>{Object.defineProperty(window,'speechSynthesis',{value:undefined,configurable:true});});
         const silent = await unsupported.newPage(); await silent.goto(`${url}/universe.html?view=2d`); await silent.locator('.cosmic-scene>svg').waitFor();
@@ -103,6 +151,6 @@ function mockSpeech() {
       await p.locator('#narration-listen').click(); const buttonRects=await p.locator('.narration-actions button').evaluateAll(buttons=>buttons.map(b=>({h:b.getBoundingClientRect().height,w:b.getBoundingClientRect().width}))); assert.ok(buttonRects.every(r=>r.h>=44&&r.w>=44));
       if(output && [1440,390].includes(width) && ['en','zh-CN','mn-Mong-CN'].includes(lang)) {await p.locator('.flight-desk').screenshot({path:path.join(output,`voice-${width}-${lang}.png`)});}
     }
-    await layout.close(); assert.deepEqual(errors,[]); console.log('Cosmic narration browser checks passed: opt-in, 28 descriptions, Mandarin/manual voices, coordinate flybys, pause/hidden/replay, late/missing voices, errors, music duck/mute and 25 responsive locale layouts.');
+    await layout.close(); assert.deepEqual(errors,[]); console.log('Cosmic narration browser checks passed: US Ana/default/manual accents, finish-before-replace across a whole flight, arrival priority/current captions, opt-in, 28 descriptions, coordinate flybys, pause/hidden/replay, late/missing voices, errors, music duck/mute and 25 responsive locale layouts (mock speech scheduling, not audible quality).');
   } finally { await browser?.close(); await server.close(); }
 })().catch(error=>{console.error(error);process.exitCode=1;});

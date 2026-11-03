@@ -25,6 +25,7 @@ let view: '2d' | '3d' = new URLSearchParams(location.search).get('view') === '2d
 let renderer: UniverseRenderer | null = null, generation = 0, disposed = false, fallback = false, saveOk = !!storage;
 let audioFailed = false, musicWanted = false, volume = .25, atlasOpen = true, helpOpen = false, journalOpen = false;
 let resetOpen = false, frame = 0, audioGeneration = 0, lastTime = performance.now(), lastUiTime = 0;
+let sceneTimer: ReturnType<typeof setTimeout> | undefined;
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const sceneHost = document.createElement('div'); sceneHost.className = 'cosmic-scene';
 const navigationMap = createNavigationMap();
@@ -72,7 +73,6 @@ function render() {
   <footer><p id="save-status">${esc(saveOk ? copy.saved : copy.saveUnavailable)}${fallback ? ` · ${esc(copy.fallback)}` : ''}</p><button id="reset-journey">${esc(copy.resetJourney)}</button>${resetOpen ? `<div class="reset-confirm"><p>${esc(copy.resetConfirm)}</p><button id="confirm-reset">${esc(copy.confirmed)}</button><button id="cancel-reset">${esc(copy.close)}</button></div>` : ''}</footer></main>`;
   host.querySelector('#scene-slot')!.append(sceneHost);
   host.querySelector('.window')!.append(navigationMap.element);
-  updateMap();
   host.querySelector<HTMLSelectElement>('#language')!.addEventListener('change', e => { clearNarration(); language.setLanguage((e.target as HTMLSelectElement).value as Language); if (narrator.enabled) state.phase === 'travelling' ? syncNarration() : describeSelected(); });
   host.querySelector<HTMLSelectElement>('#destination')!.addEventListener('change', e => selectDestination((e.target as HTMLSelectElement).value));
   host.querySelectorAll<HTMLButtonElement>('[data-destination]').forEach(button => button.addEventListener('click', () => selectDestination(button.dataset.destination!)));
@@ -98,6 +98,7 @@ function render() {
   click('confirm-reset', () => { clearNarration(); spokenStops.clear(); state = createJourney(); selected = state.destinationId; selectedEpoch = state.epochId; resetOpen = false; persist(); render(); });
   updateFlight();
   updateNarration();
+  updateMap();
   renderer?.render(snapshot());
   if (focused) document.getElementById(focused)?.focus({preventScroll: true});
 }
@@ -129,11 +130,12 @@ function updateNarration() {
   if (caption) { caption.textContent = narrationCaption; caption.hidden = !narrationCaption; caption.dataset.object = narrationObject; }
 }
 function clearNarration() { narrator.stop(); narrationCaption = ''; narrationObject = ''; updateNarration(); }
-function speakObject(id: string, age: number, short = false) {
-  narrationObject = id;
+function speakObject(id: string, age: number, short = false, automatic = false) {
   const text = narrationText(id, language.language, age, short);
-  narrationCaption = short ? `${narrationCopy(language.language).flyby} · ${text}` : text;
-  narrator.speak(text,short); updateNarration();
+  const caption = short ? `${narrationCopy(language.language).flyby} · ${text}` : text;
+  const show = () => { narrationObject = id; narrationCaption = caption; };
+  if (!automatic || !narrator.busy) show();
+  narrator.speak(text,short,{ automatic, onStart: show }); updateNarration();
 }
 function describeSelected() {
   objectStoryOpen = true; const story = host.querySelector<HTMLDetailsElement>('#object-story'); if (story) story.open = true;
@@ -143,7 +145,7 @@ function syncNarration() {
   if (!narrator.enabled) return;
   const cue = flybyCue(snapshot());
   if (!cue || spokenStops.has(cue.key)) return;
-  spokenStops.add(cue.key); speakObject(cue.id,cue.ageGyr,true);
+  spokenStops.add(cue.key); speakObject(cue.id,cue.ageGyr,true,true);
 }
 function click(id: string, action: () => void) { host.querySelector(`#${id}`)?.addEventListener('click',action); }
 function selectDestination(id: string) { if (state.phase === 'travelling') return; clearNarration(); selected = id; render(); if (narrator.enabled) describeSelected(); }
@@ -151,7 +153,7 @@ function jump(id: string, epochId: typeof selectedEpoch) {
   if (state.phase === 'travelling') return;
   clearNarration(); spokenStops.clear();
   state = beginJump(state,id,epochId); selected = id; selectedEpoch = epochId; lastTime = performance.now(); persist(); render();
-  if (narrator.enabled) speakObject(departureDestination().id, departureEpoch().ageGyr, true);
+  if (narrator.enabled) speakObject(departureDestination().id, departureEpoch().ageGyr, true, true);
 }
 function updateMap(now = performance.now()) {
   const current = snapshot();
@@ -187,32 +189,40 @@ async function toggleMusic() {
   if (!played) musicWanted = false;
   render();
 }
+function mountIllustration() {
+  renderer?.dispose(); renderer = createUniverseRenderer();
+  renderer.mount(sceneHost); renderer.render(snapshot());
+}
 async function mountScene() {
   const ticket = ++generation; let candidate: UniverseRenderer | null = null;
+  clearTimeout(sceneTimer);
+  if (view === '2d') { mountIllustration(); return; }
   try {
-    if (view === '3d') {
-      const module = await import('./renderer3d');
-      if (disposed || ticket !== generation) return;
-      candidate = module.createUniverse3dRenderer({onUnavailable: () => fallBack(ticket)});
-    } else candidate = createUniverseRenderer();
+    // Keep the interactive illustration visible while optional GPU assets arrive.
+    sceneTimer = setTimeout(() => fallBack(ticket), 8000);
+    const module = await import('./renderer3d');
+    if (disposed || ticket !== generation) return;
+    clearTimeout(sceneTimer);
+    candidate = module.createUniverse3dRenderer({onUnavailable: () => fallBack(ticket)});
     if (disposed || ticket !== generation) { candidate.dispose(); return; }
     renderer?.dispose(); renderer = candidate; renderer.mount(sceneHost); renderer.render(snapshot());
   } catch { candidate?.dispose(); if (!disposed && ticket === generation) fallBack(ticket); }
 }
 function fallBack(ticket: number) {
   if (disposed || ticket !== generation) return;
-  generation++; renderer?.dispose(); renderer = null; view = '2d'; fallback = true; render(); void mountScene();
+  generation++; clearTimeout(sceneTimer); view = '2d'; fallback = true;
+  mountIllustration(); render();
 }
 function switchView(next: typeof view) {
   if (next === view) return;
-  view = next; fallback = false; generation++; renderer?.dispose(); renderer = null; render(); void mountScene();
+  view = next; fallback = false; render(); void mountScene();
 }
 function animate(now: number) {
   if (disposed) return;
   const seconds = Math.max(0,Math.min(.1,(now - lastTime) / 1000)); lastTime = now;
   if (!document.hidden) {
     const phase = state.phase; state = tickJourney(state,seconds);
-    if (phase !== state.phase) { persist(); render(); if (narrator.enabled) speakObject(state.destinationId,epoch().ageGyr); }
+    if (phase !== state.phase) { persist(); render(); if (narrator.enabled) speakObject(state.destinationId,epoch().ageGyr,false,true); }
     else if (phase === 'travelling' && now - lastUiTime >= 100) { lastUiTime = now; updateFlight(); }
     renderer?.render(snapshot());
     updateMap(now);
@@ -230,9 +240,14 @@ function keyboard(event: KeyboardEvent) {
   if (event.code === 'Space' && state.phase === 'travelling') { event.preventDefault(); state = {...state,paused:!state.paused}; persist(); render(); }
 }
 function dispose() {
-  if (disposed) return; persist(); disposed = true; generation++; cancelAnimationFrame(frame); renderer?.dispose(); renderer = null; music.dispose(); narrator.dispose();
-  document.removeEventListener('visibilitychange',visibility); document.removeEventListener('keydown',keyboard); motion.removeEventListener('change',render);
+  if (disposed) return; persist(); disposed = true; generation++; clearTimeout(sceneTimer); cancelAnimationFrame(frame); renderer?.dispose(); renderer = null; music.dispose(); narrator.dispose();
+  document.removeEventListener('visibilitychange',visibility); document.removeEventListener('keydown',keyboard);
+  if (typeof motion.removeEventListener === 'function') motion.removeEventListener('change',render);
+  else motion.removeListener(render);
 }
-document.addEventListener('visibilitychange',visibility); document.addEventListener('keydown',keyboard); motion.addEventListener('change',render);
+document.addEventListener('visibilitychange',visibility); document.addEventListener('keydown',keyboard);
+if (typeof motion.addEventListener === 'function') motion.addEventListener('change',render);
+else motion.addListener(render);
 window.addEventListener('pagehide',dispose); window.addEventListener('pageshow', e => { if (e.persisted && disposed) location.reload(); });
-render(); void mountScene(); frame = requestAnimationFrame(animate);
+render(); mountIllustration(); if (view === '3d') void mountScene(); frame = requestAnimationFrame(animate);
+host.dataset.ready = 'true'; document.dispatchEvent(new Event('universe-ready'));

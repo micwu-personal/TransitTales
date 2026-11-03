@@ -135,9 +135,9 @@ function record(value: unknown): value is Record<string, unknown> {
 function parseState(value: unknown): JourneyState | null {
   if (!record(value)) return null;
   const defaults = createJourney(), departureKeys = ['departureDestinationId', 'departureEpochId'];
-  if (Object.keys(value).some(key => !Object.hasOwn(defaults, key)) || Object.keys(defaults).some(key => !departureKeys.includes(key) && !Object.hasOwn(value, key))) return null;
-  if (Object.hasOwn(value, 'departureDestinationId') && (typeof value.departureDestinationId !== 'string' || !destinations.has(value.departureDestinationId))) return null;
-  if (Object.hasOwn(value, 'departureEpochId') && (typeof value.departureEpochId !== 'string' || !epochs.has(value.departureEpochId as Epoch['id']))) return null;
+  if (Object.keys(value).some(key => !Object.prototype.hasOwnProperty.call(defaults, key)) || Object.keys(defaults).some(key => !departureKeys.includes(key) && !Object.prototype.hasOwnProperty.call(value, key))) return null;
+  if (Object.prototype.hasOwnProperty.call(value, 'departureDestinationId') && (typeof value.departureDestinationId !== 'string' || !destinations.has(value.departureDestinationId))) return null;
+  if (Object.prototype.hasOwnProperty.call(value, 'departureEpochId') && (typeof value.departureEpochId !== 'string' || !epochs.has(value.departureEpochId as Epoch['id']))) return null;
   if (typeof value.destinationId !== 'string' || !destinations.has(value.destinationId) || typeof value.epochId !== 'string' || !epochs.has(value.epochId as Epoch['id'])) return null;
   if (!finiteRange(value.beta, 0, 0.9999) || !finiteRange(value.progress, 0, 1) || !finiteRange(value.shield, 0, 100) || !finiteRange(value.energy, 0, 100) || !finiteRange(value.elapsed, 0, MAX_ELAPSED) || !finiteRange(value.properElapsed, 0, value.elapsed) || !finiteRange(value.research, 0, MAX_COMPLETED * 10) || !finiteRange(value.friendship, 0, MAX_COMPLETED * 5)) return null;
   if (typeof value.phase !== 'string' || !['ready', 'travelling', 'encounter'].includes(value.phase) || typeof value.paused !== 'boolean' || (value.outcome !== null && value.outcome !== 'success' && value.outcome !== 'retry') || (value.choiceId !== null && (typeof value.choiceId !== 'string' || !CHOICE_IDS.includes(value.choiceId)))) return null;

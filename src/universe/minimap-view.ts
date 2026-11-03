@@ -67,7 +67,8 @@ export function createNavigationMap() {
     const copy = mapCopy(language);
     if (lastLanguage !== language) {
       summary.textContent = copy.title; scopeLabel.textContent = copy.scope;
-      select.replaceChildren(...MAP_SCOPES.map(value => { const option = document.createElement('option'); option.value = value; option.textContent = mapScopeName(value, language); return option; }));
+      select.textContent = '';
+      for (const value of MAP_SCOPES) { const option = document.createElement('option'); option.value = value; option.textContent = mapScopeName(value, language); select.appendChild(option); }
       select.value = scope; radiusText.textContent = copy.radius; legend.textContent = copy.anchors; projection.textContent = copy.plane;
       lastLanguage = language;
     }

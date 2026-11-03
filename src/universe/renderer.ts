@@ -185,7 +185,7 @@ function frameKey(frame: FlightFrame, snapshot: UniverseSnapshot): string {
   return frame.layers.map(layer => `${layer.location.destinationId}|${layer.location.epoch}|${layerScene(layer, snapshot)}`).join(';');
 }
 function coordinateFlight(snapshot: UniverseSnapshot): boolean {
-  return snapshot.travelling && !!snapshot.origin && Object.hasOwn(formationGyr, snapshot.destinationId) && Object.hasOwn(formationGyr, snapshot.origin.destinationId);
+  return snapshot.travelling && !!snapshot.origin && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.destinationId) && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.origin.destinationId);
 }
 function routeBody(object: RouteObject): { art: string; center: [number, number]; radius: number } {
   if (object.kind === 'earth') return { art: earth(false, false), center: [465, 317], radius: 198 };
@@ -266,7 +266,7 @@ export function createUniverseRenderer(): UniverseRenderer {
     const nextKey = routing ? `route:${latest.origin!.destinationId}:${latest.destinationId}` : frameKey(frame, latest);
     if (!svg || key !== nextKey) {
       key = nextKey;
-      host.innerHTML = universeMarkup(latest).replaceAll('u-', `cosmos-${serial}-`);
+      host.innerHTML = universeMarkup(latest).replace(/u-/g, `cosmos-${serial}-`);
       svg = host.querySelector('svg'); viewBox();
     }
     if (!svg) return;

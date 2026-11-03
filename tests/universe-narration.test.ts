@@ -12,7 +12,111 @@ function speech(initial: SpeechSynthesisVoice[] = [voice('English','en-US'),voic
   return synth;
 }
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
+// Mock utterances verify scheduling and settings, not audible quality or accents.
 describe('Optional browser cosmic voice', () => {
+  it('prefers exact US Ana, then every US voice ahead of other English accents', () => {
+    const nigeria = { ...voice('Microsoft Abeo Online (Natural) - English (Nigeria)', 'en-NG', false), default: true };
+    const ana = voice('Microsoft Ana Online (Natural) - English (United States)', 'en-US', false);
+    const american = voice('Samantha', 'en_US');
+    const choices = [nigeria, voice('British Natural', 'en-GB'), voice('Generic Natural', 'en'), american, ana];
+    expect(narrationVoices(choices, 'en').slice(0, 2)).toEqual([ana, american]);
+    const synth = speech(choices), narrator = createNarration(vi.fn()); narrator.setEnabled(true);
+    narrator.speak('Earth'); expect(synth.speak.mock.calls[0][0].voice).toBe(ana);
+    narrator.setVoice(nigeria.voiceURI); narrator.speak('Moon'); expect(synth.speak.mock.calls[1][0].voice).toBe(nigeria);
+    synth.dispatchEvent(new Event('voiceschanged'));
+    narrator.setLanguage('zh-CN'); narrator.setLanguage('en'); narrator.speak('Mars');
+    expect(synth.speak.mock.calls[2][0].voice).toBe(nigeria);
+    narrator.setVoice(''); narrator.speak('Sun'); expect(synth.speak.mock.calls[3][0].voice).toBe(ana); narrator.dispose();
+    expect(narrationVoices([nigeria, american], 'en')[0]).toBe(american);
+    expect(narrationVoices([nigeria], 'en')[0]).toBe(nigeria);
+  });
+  it('lets long automatic lines finish across flybys, replaces only one pending cue, and prioritizes arrival', () => {
+    vi.useFakeTimers(); const synth = speech(), narrator = createNarration(vi.fn()), started = vi.fn(); narrator.setEnabled(true);
+    narrator.speak('Long departure sentence', true, { automatic: true });
+    const departure = synth.speak.mock.calls[0][0];
+    vi.advanceTimersByTime(1800); narrator.speak('Mars', true, { automatic: true });
+    vi.advanceTimersByTime(2400); narrator.speak('Jupiter', true, { automatic: true, onStart: started });
+    synth.dispatchEvent(new Event('voiceschanged'));
+    expect(synth.speak).toHaveBeenCalledOnce(); expect(synth.cancel).not.toHaveBeenCalled(); expect(started).not.toHaveBeenCalled();
+    departure.onend?.(); expect(synth.speak.mock.calls[1][0].text).toBe('Jupiter'); expect(started).toHaveBeenCalledOnce();
+    narrator.speak('Another short flyby', true, { automatic: true });
+    narrator.speak('Full arrival story', false, { automatic: true });
+    vi.advanceTimersByTime(20000); expect(synth.cancel).not.toHaveBeenCalled();
+    synth.speak.mock.calls[1][0].onend?.(); expect(synth.speak.mock.calls[2][0].text).toBe('Full arrival story');
+    synth.speak.mock.calls[2][0].onend?.(); expect(synth.speak).toHaveBeenCalledTimes(3); expect(narrator.busy).toBe(false);
+    expect(synth.cancel).not.toHaveBeenCalled(); narrator.dispose();
+  });
+  it('drops expired automatic flybys instead of narrating a passed object after a long line', () => {
+    vi.useFakeTimers(); const synth = speech(), narrator = createNarration(vi.fn()); narrator.setEnabled(true);
+    narrator.speak('Departure', true, { automatic: true }); narrator.speak('Mars', true, { automatic: true });
+    vi.advanceTimersByTime(2501); synth.speak.mock.calls[0][0].onend?.();
+    expect(synth.speak).toHaveBeenCalledOnce(); expect(narrator.busy).toBe(false); expect(narrator.status).toBe('ready'); narrator.dispose();
+  });
+  it('retains only arrival when voices arrive late and does not expire full stories', () => {
+    vi.useFakeTimers(); const synth = speech([]), narrator = createNarration(vi.fn()); narrator.setEnabled(true);
+    narrator.speak('Mars', true, { automatic: true }); narrator.speak('Arrival', false, { automatic: true });
+    vi.advanceTimersByTime(30000); synth.getVoices.mockReturnValue([voice('US', 'en-US')]); synth.dispatchEvent(new Event('voiceschanged'));
+    expect(synth.speak.mock.calls[0][0].text).toBe('Arrival'); narrator.dispose();
+  });
+  it.each(['stop', 'disable', 'language', 'voice', 'dispose'] as const)('clears active and queued automatic narration on %s', action => {
+    const synth = speech(), narrator = createNarration(vi.fn()); narrator.setEnabled(true);
+    narrator.speak('Departure', true, { automatic: true }); const staleEnd = synth.speak.mock.calls[0][0].onend!;
+    narrator.speak('Queued flyby', true, { automatic: true });
+    if (action === 'stop') narrator.stop();
+    if (action === 'disable') narrator.setEnabled(false);
+    if (action === 'language') narrator.setLanguage('zh-CN');
+    if (action === 'voice') narrator.setVoice('English');
+    if (action === 'dispose') narrator.dispose();
+    staleEnd(); synth.dispatchEvent(new Event('voiceschanged')); narrator.setPaused(true); narrator.setPaused(false);
+    expect(synth.speak).toHaveBeenCalledOnce(); expect(synth.cancel).toHaveBeenCalledOnce(); expect(narrator.busy).toBe(false); narrator.dispose();
+  });
+  it('resumes the newest pending automatic line after pause, never an older interrupted one', () => {
+    vi.useFakeTimers(); const synth = speech(), narrator = createNarration(vi.fn()); narrator.setEnabled(true);
+    narrator.speak('Departure', true, { automatic: true }); narrator.speak('Mars', true, { automatic: true }); narrator.setPaused(true);
+    vi.advanceTimersByTime(10000); narrator.setPaused(false);
+    expect(synth.speak.mock.calls[1][0].text).toBe('Mars'); expect(synth.cancel).toHaveBeenCalledOnce(); narrator.dispose();
+  });
+  it('explicit user replacement removes a queued flyby immediately', () => {
+    const synth = speech(), narrator = createNarration(vi.fn()); narrator.setEnabled(true);
+    narrator.speak('Departure', true, { automatic: true }); narrator.speak('Queued flyby', true, { automatic: true });
+    narrator.speak('Manual story'); expect(synth.speak.mock.calls[1][0].text).toBe('Manual story'); expect(synth.cancel).toHaveBeenCalledOnce();
+    synth.speak.mock.calls[1][0].onend?.(); expect(synth.speak).toHaveBeenCalledTimes(2); narrator.dispose();
+  });
+  it('normalizes voice locale tags without requiring String.replaceAll', () => {
+    const descriptor = Object.getOwnPropertyDescriptor(String.prototype, 'replaceAll')!;
+    let choices: SpeechSynthesisVoice[];
+    try {
+      Object.defineProperty(String.prototype, 'replaceAll', { ...descriptor, value: undefined });
+      choices = narrationVoices([voice('Nigeria Natural', 'en_NG'), voice('US', 'en_US')], 'en');
+    } finally { Object.defineProperty(String.prototype, 'replaceAll', descriptor); }
+    expect(choices!.map(v => v.name)).toEqual(['US', 'Nigeria Natural']);
+  });
+  it('survives throwing or absent getVoices and retries the latest story when voices recover', () => {
+    const synth = speech(); synth.getVoices.mockImplementation(() => { throw Error('Unavailable voice registry'); });
+    const narrator = createNarration(vi.fn()); narrator.setEnabled(true); narrator.speak('Old'); narrator.speak('Latest');
+    expect(narrator.voices()).toEqual([]); expect(narrator.status).toBe('no-voice');
+    synth.getVoices.mockReturnValue([voice('US', 'en-US')]); synth.dispatchEvent(new Event('voiceschanged'));
+    expect(synth.speak.mock.calls[0][0].text).toBe('Latest'); narrator.dispose();
+    Object.defineProperty(synth, 'getVoices', { value: undefined });
+    const missing = createNarration(vi.fn()); missing.setEnabled(true); missing.speak('No voices');
+    expect(missing.status).toBe('no-voice'); missing.dispose();
+  });
+  it('supports old onvoiceschanged callbacks without add/removeEventListener and restores the previous handler', () => {
+    const synth = speech([]), previous = vi.fn();
+    Object.defineProperties(synth, { addEventListener: { value: undefined }, removeEventListener: { value: undefined }, onvoiceschanged: { value: previous, writable: true } });
+    const legacy = synth as unknown as SpeechSynthesis, narrator = createNarration(vi.fn()); narrator.setEnabled(true); narrator.speak('Latest');
+    synth.getVoices.mockReturnValue([voice('US', 'en-US')]); legacy.onvoiceschanged?.call(legacy, new Event('voiceschanged'));
+    expect(previous).toHaveBeenCalledOnce(); expect(synth.speak.mock.calls[0][0].text).toBe('Latest');
+    narrator.dispose(); expect(legacy.onvoiceschanged).toBe(previous);
+  });
+  it('tolerates absent removal APIs and throwing voice event registration', () => {
+    const synth = speech(); Object.defineProperty(synth, 'addEventListener', { value: () => { throw Error('Registration unavailable'); } });
+    const narrator = createNarration(vi.fn()); narrator.setEnabled(true); narrator.speak('Still available'); narrator.dispose();
+    expect(synth.speak).toHaveBeenCalledOnce();
+    const removable = speech(), other = createNarration(vi.fn());
+    Object.defineProperty(removable, 'removeEventListener', { value: undefined });
+    expect(() => other.dispose()).not.toThrow();
+  });
   it('prioritizes natural Mainland Mandarin, accepts Mandarin alternatives but never Cantonese or unrelated languages', () => {
     const voices = [voice('Cantonese','zh-HK'),voice('English','en-US'),voice('Taiwan Natural','zh-TW'),voice('Huihui','zh-CN'),voice('Xiaoxiao Natural','zh-CN'),voice('Yue','yue-CN')];
     expect(narrationVoices(voices,'zh-CN').map(v=>v.name)).toEqual(['Xiaoxiao Natural','Huihui','Taiwan Natural']);
@@ -33,7 +137,7 @@ describe('Optional browser cosmic voice', () => {
     narrator.setLanguage('en'); narrator.setLanguage('zh-CN'); expect(narrator.selectedVoice).toBe('Microsoft Huihui');
     narrator.speak('木星。',true); expect(synth.speak.mock.calls[1][0].rate).toBe(1.06); narrator.dispose();
   });
-  it('replaces stale speech instead of queuing flybys, and stale callbacks cannot change new speech state', () => {
+  it('immediately replaces speech for explicit user requests, and stale callbacks cannot change new speech state', () => {
     const synth = speech(), narrator = createNarration(vi.fn()); narrator.setEnabled(true); narrator.speak('Mars');
     const staleEnd = synth.speak.mock.calls[0][0].onend!; narrator.speak('Jupiter',true);
     expect(synth.cancel).toHaveBeenCalledOnce(); staleEnd(); expect(narrator.status).toBe('speaking');

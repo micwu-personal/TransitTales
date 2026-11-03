@@ -84,7 +84,7 @@ describe('localized cosmic narration', () => {
         expect(Array.from(short).length, id).toBeGreaterThanOrEqual(8);
         expect(Array.from(short).length, id).toBeLessThanOrEqual(18);
       }
-      if (language === 'en') expect(short.split(/\s+/).length, id).toBeLessThanOrEqual(9);
+      if (language === 'en') expect(short.split(/\s+/).length, id).toBeLessThanOrEqual(7);
     }
   });
 

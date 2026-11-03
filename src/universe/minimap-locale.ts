@@ -44,5 +44,5 @@ export function mapScopeName(scope: MapScope, language: Language): string {
   return mapCopy(language)[keys[scope]];
 }
 export function mapObjectName(id: string, language: Language): string {
-  return Object.hasOwn(names, id) ? names[id as keyof typeof names][index[language]] : destinationName(id, language);
+  return Object.prototype.hasOwnProperty.call(names, id) ? names[id as keyof typeof names][index[language]] : destinationName(id, language);
 }

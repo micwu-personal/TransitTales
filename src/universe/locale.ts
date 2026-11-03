@@ -183,7 +183,7 @@ const epochDescriptions = {
 } satisfies Record<keyof typeof epochs, Translation>;
 
 function lookup(rows: Record<string, Translation>, id: string, language: Language, fallback: string): string {
-  return Object.hasOwn(rows, id) ? translate(rows[id], language) : fallback;
+  return Object.prototype.hasOwnProperty.call(rows, id) ? translate(rows[id], language) : fallback;
 }
 
 export function destinationName(id: string, language: Language): string {

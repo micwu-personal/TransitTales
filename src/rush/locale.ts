@@ -8,7 +8,7 @@ const languageLabels: Record<Language, string> = {
   'mn-Cyrl-MN': 'Монгол', 'mn-Mong-CN': 'ᠮᠣᠩᠭᠣᠯ',
 };
 export function isLanguage(value: unknown): value is Language {
-  return typeof value === 'string' && Object.hasOwn(languageLabels, value);
+  return typeof value === 'string' && Object.prototype.hasOwnProperty.call(languageLabels, value);
 }
 export function languageOptions(selected?: Language): string {
   return (Object.entries(languageLabels) as [Language, string][]).map(([language, label]) =>
