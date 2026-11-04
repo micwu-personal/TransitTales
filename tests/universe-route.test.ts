@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DESTINATIONS } from '../src/universe/catalog';
 import { coordinateBodies, coordinateBody } from '../src/universe/coordinates';
-import { routeFrame, routeItinerary, subtract, length, dot, projectDirection } from '../src/universe/route';
+import { routeFrame, routeItinerary, routeTravelEstimate, subtract, length, dot, projectDirection } from '../src/universe/route';
 import { universeMarkup } from '../src/universe/renderer';
 import type { UniverseSnapshot } from '../src/universe/view';
 
@@ -11,6 +11,33 @@ function snapshot(to: string, progress: number, from = 'earth', epoch: UniverseS
 }
 
 describe('continuous coordinate routes', () => {
+  it('matches stationary observation poses and all departure/arrival camera bases', () => {
+    for (const from of ['earth', 'andromeda', 'm87']) for (const to of DESTINATIONS.map(item => item.id)) {
+      const start = routeFrame({ ...snapshot(to, 0, from), coordinateView: true });
+      const idleStart = routeFrame({ ...snapshot(from, 0, from), coordinateView: true, travelling: false });
+      const end = routeFrame({ ...snapshot(to, 1, from), coordinateView: true });
+      const idleEnd = routeFrame({ ...snapshot(to, 1, from), coordinateView: true, travelling: false });
+      expect(start.cameraAU).toEqual(idleStart.cameraAU);
+      expect(end.cameraAU).toEqual(idleEnd.cameraAU);
+      for (const axis of ['forward', 'right', 'up'] as const) {
+        expect(dot(start[axis], idleStart[axis]), `${from} → ${to}: departure ${axis}`).toBeGreaterThan(.999999);
+        expect(dot(end[axis], idleEnd[axis]), `${from} → ${to}: arrival ${axis}`).toBeGreaterThan(.999999);
+      }
+    }
+  });
+  it('shows every formed young destination at the present epoch', () => {
+    const frame = routeFrame(snapshot('moon', 0));
+    for (const object of frame.objects) expect(object.formed, object.id).toBe(1);
+  });
+  it('estimates astronomical elapsed time monotonically without changing route coordinates for inspection', () => {
+    const start = snapshot('andromeda', 0), middle = { ...start, progress: .5 }, end = { ...start, progress: 1 };
+    expect(routeTravelEstimate(start).distanceAU).toBe(0);
+    expect(routeTravelEstimate(middle).distanceAU).toBeGreaterThan(0);
+    expect(routeTravelEstimate(end).distanceAU).toBeGreaterThan(routeTravelEstimate(middle).distanceAU);
+    expect(routeTravelEstimate(end).observerSeconds).toBeGreaterThan(1e12);
+    expect(routeFrame({ ...middle, inspection: { yaw: .5, pitch: .4, roll: 0, offset: [1, 0, -1] }, effectTime: 42 })).toBe(routeFrame(middle));
+    expect(routeTravelEstimate({ ...end, travelling: false, coordinateView: true }).distanceAU).toBeCloseTo(routeTravelEstimate(end).distanceAU);
+  });
   it('declares actual guided detours and keeps the Moon trip local', () => {
     expect(routeItinerary('earth', 'moon')).toEqual(['earth', 'moon']);
     expect(routeItinerary('moon', 'earth')).toEqual(['moon', 'earth']);

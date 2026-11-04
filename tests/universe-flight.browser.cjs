@@ -22,11 +22,11 @@ const { chromium } = require('playwright');
       await page.goto(`${url}/universe-flight-check`);
       await page.evaluate(async ({progress,epoch,arrived,destination}) => {
         const {createJourney,beginJump,tickJourney,writeJourney} = await import('/src/universe/model.ts');
-        const flight = tickJourney(beginJump({...createJourney(),beta:.6},destination,epoch),7*progress);
+        const flight = tickJourney(beginJump({...createJourney(),beta:.65},destination,epoch),7*progress);
         if (!writeJourney(localStorage,{...flight,progress,paused:!arrived})) throw Error(`Cannot save the flight fixture at ${progress}`);
       },{progress,epoch,arrived,destination});
       await page.goto(`${url}/universe.html?view=${view}`);
-      await page.locator(view==='2d'?'.cosmic-scene>svg':'.cosmic-scene canvas').waitFor();
+      await page.locator(view==='2d'?'.cosmic-scene>svg':'#universe[data-renderer="3d-ready"]').waitFor();
       await page.waitForTimeout(120);
       return page.locator('.cosmic-scene').screenshot({style:sceneStyle});
     };

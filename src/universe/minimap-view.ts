@@ -20,6 +20,7 @@ const point = (position: Vec3, viewport: MapViewport) => {
 /** A renderer-independent overlay: it tracks the same camera, not the orbit camera or planner selection. */
 export function createNavigationMap() {
   let scope: MapScope = 'adaptive', radiusLy = 5, language: Language = 'en', lastLanguage: Language | undefined;
+  let drawn = '';
   let key = '', from: MapViewport | undefined, target: MapViewport | undefined, viewport: MapViewport | undefined, started = 0;
   const element = document.createElement('details'); element.className = 'cosmic-map'; element.id = 'navigation-map'; element.open = true;
   const summary = document.createElement('summary'); summary.id = 'map-title'; element.append(summary);
@@ -63,6 +64,9 @@ export function createNavigationMap() {
   const markers = new Map<string, { circle: SVGCircleElement; title: SVGTitleElement; label: SVGTextElement }>();
 
   function draw(snapshot: UniverseSnapshot, planned: UniverseSnapshot, lang: Language, now = performance.now()) {
+    const signature = `${lang}|${scope}|${radiusLy}|${element.open}|${snapshot.destinationId}|${snapshot.epoch}|${snapshot.origin?.destinationId}|${snapshot.origin?.epoch}|${snapshot.travelling}|${snapshot.progress}|${snapshot.coordinateView}|${snapshot.reducedMotion}|${planned.destinationId}|${planned.epoch}|${planned.origin?.destinationId}|${planned.origin?.epoch}`;
+    if (drawn === signature && target && element.dataset.transition === '1') return;
+    drawn = signature;
     language = lang;
     const copy = mapCopy(language);
     if (lastLanguage !== language) {

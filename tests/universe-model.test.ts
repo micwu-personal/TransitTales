@@ -105,21 +105,30 @@ describe('relativity and display-compressed travel', () => {
     const paused = { ...flight, paused: true };
     expect(beginJump(paused, 'sun', 'present')).toBe(paused);
   });
-  it('arrives in seven play seconds, independent of physical distance; integrates proper elapsed', () => {
-    let flight = beginJump({ ...createJourney(), beta: 0.6 }, 'horizon', 'present');
+  it('arrives in seven play seconds at the reference cruise, independent of physical distance; integrates proper elapsed', () => {
+    let flight = beginJump({ ...createJourney(), beta: 0.65 }, 'horizon', 'present');
     flight = tickJourney(flight, 3);
     expect(flight.phase).toBe('travelling');
     expect(flight.progress).toBeCloseTo(3 / 7);
     expect(flight.elapsed).toBe(3);
-    expect(flight.properElapsed).toBeCloseTo(2.4);
+    expect(flight.properElapsed).toBeCloseTo(3 * Math.sqrt(1 - .65 ** 2));
     flight = tickJourney(flight, 60);
     expect(flight.phase).toBe('encounter');
     expect(flight.progress).toBe(1);
     expect(flight.elapsed).toBe(7);
-    expect(flight.properElapsed).toBeCloseTo(5.6);
+    expect(flight.properElapsed).toBeCloseTo(7 * Math.sqrt(1 - .65 ** 2));
     expect(flight.visited).toEqual(['horizon']);
     expect(tickJourney(flight, 7)).toBe(flight);
     expect(arrive('moon').elapsed).toBe(arrive('beyond').elapsed);
+  });
+  it('makes spatial cruise speed visible in progress, while time-only jumps can run at rest', () => {
+    const slow = tickJourney(beginJump({ ...createJourney(), beta: .2 }, 'moon', 'present'), 2);
+    const fast = tickJourney(beginJump({ ...createJourney(), beta: .8 }, 'moon', 'present'), 2);
+    expect(fast.progress).toBeGreaterThan(slow.progress);
+    const rest = beginJump({ ...createJourney(), beta: 0 }, 'moon', 'present');
+    expect(tickJourney(rest, 2)).toBe(rest);
+    const timeOnly = beginJump({ ...createJourney(), beta: 0 }, 'earth', 'bang');
+    expect(tickJourney(timeOnly, 7).phase).toBe('encounter');
   });
   it('integrates varying beta per tick and preserves paused/zero/ready state', () => {
     const flight = beginJump(createJourney(), 'moon', 'present');
@@ -130,8 +139,10 @@ describe('relativity and display-compressed travel', () => {
     expect(tickJourney(ready, 60)).toBe(ready);
     const first = tickJourney({ ...flight, beta: 0 }, 2);
     const second = tickJourney({ ...first, beta: 0.6 }, 5);
-    expect(second.properElapsed).toBeCloseTo(6);
-    expect(second.elapsed).toBe(7);
+    expect(first.progress).toBe(0);
+    expect(second.properElapsed).toBeCloseTo(4);
+    expect(second.elapsed).toBe(5);
+    expect(second.progress).toBeCloseTo(5 * .6 / .65 / 7);
   });
   it('does not mutate inputs or arrays and remains playable at the elapsed cap', () => {
     const original = createJourney();
@@ -213,7 +224,8 @@ describe('safe, temporal, deterministic encounters', () => {
     const arrival = arrive('moon', 'present', { ...createJourney(), beta: 0.999 });
     const unsafeId = encounterFor(arrival).choices.find(choice => !choice.safe)!.id;
     const retry = resolveEncounter(arrival, unsafeId);
-    expect(retry).toMatchObject({ phase: 'encounter', outcome: 'retry', shield: 80, energy: 86, research: 0 });
+    expect(retry).toMatchObject({ phase: 'encounter', outcome: 'retry', shield: 80, research: 0 });
+    expect(retry.energy).toBeCloseTo(100 - 2 * 7 / 1.5);
     const saved = storage();
     expect(writeJourney(saved, retry)).toBe(true);
     for (const choice of encounterFor(retry).choices.filter(choice => choice.safe)) {
@@ -282,7 +294,7 @@ describe('strict versioned persistence', () => {
     { phase: 'dead' }, { phase: ['ready'] }, { paused: 1 }, { choiceId: 'hack' }, { outcome: 'dead' },
     { visited: ['invalid'] }, { visited: ['earth', 1] }, { visited: 'earth' },
     { completed: ['earth:nope'] }, { completed: [null] }, { completed: ['earth:present'] },
-    { visited: Array(29).fill('earth') }, { completed: Array(253).fill('earth:present') },
+    { visited: Array(DESTINATIONS.length + 1).fill('earth') }, { completed: Array(DESTINATIONS.length * EPOCHS.length + 1).fill('earth:present') },
     { phase: 'encounter', progress: 1 }, { phase: 'travelling', progress: 1 }, { progress: 0.1 },
     { choiceId: 'scan' }, { outcome: 'success' }, { extra: true },
   ])('rejects corrupted state %j', patch => {

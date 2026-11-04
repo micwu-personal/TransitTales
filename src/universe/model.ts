@@ -76,8 +76,10 @@ export function tickJourney(state: JourneyState, seconds: number): JourneyState 
   if (!Number.isFinite(seconds) || seconds < 0 || seconds > 60) throw new RangeError('Tick seconds must be finite and between 0 and 60');
   const gamma = lorentzFactor(state.beta);
   if (state.paused || state.phase !== 'travelling' || seconds === 0) return state;
-  const duration = Math.min(seconds, (1 - state.progress) * JUMP_SECONDS);
-  const progress = clamp(state.progress + duration / JUMP_SECONDS, 0, 1);
+  const rate = state.destinationId === state.departureDestinationId ? 1 : Math.min(1.5, state.beta / .65);
+  if (rate === 0) return state;
+  const duration = Math.min(seconds, (1 - state.progress) * JUMP_SECONDS / rate);
+  const progress = clamp(state.progress + duration * rate / JUMP_SECONDS, 0, 1);
   const arrived = progress >= 1 - 1e-12;
   return { ...state, progress: arrived ? 1 : progress, phase: arrived ? 'encounter' : 'travelling', energy: clamp(state.energy - duration * 2, 0, 100), elapsed: clamp(state.elapsed + duration, 0, MAX_ELAPSED), properElapsed: clamp(state.properElapsed + duration / gamma, 0, Math.min(MAX_ELAPSED, state.elapsed + duration)), visited: arrived && !state.visited.includes(state.destinationId) ? [...state.visited, state.destinationId] : [...state.visited], completed: [...state.completed] };
 }

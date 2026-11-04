@@ -44,7 +44,7 @@ const { mkdirSync } = require('node:fs');
     }
     await page.setViewportSize({width:1440,height:1100});
     await page.locator('.cosmic-scene canvas').waitFor();assert.equal(await page.locator('#view3d').getAttribute('aria-pressed'),'true');
-    assert.equal(await page.locator('#destination option').count(),28);assert.equal(await page.locator('#epoch option').count(),9);
+    assert.equal(await page.locator('#destination option').count(),40);assert.equal(await page.locator('#epoch option').count(),9);
     await page.locator('#help-toggle').click();await page.locator('#close-help').focus();await page.keyboard.press('Escape');assert.equal(await page.locator('#help-panel').isVisible(),false);assert.equal(await page.evaluate(() => document.activeElement.id),'help-toggle');
     await page.locator('#music').click();await page.waitForFunction(() => window.__contexts.some(c=>c.state==='running'));
     await page.locator('#music').click();await page.waitForFunction(() => window.__contexts.every(c=>c.state!=='running'));
@@ -67,7 +67,7 @@ const { mkdirSync } = require('node:fs');
     await page.locator(`#choice-${safe.id}`).click();assert.equal(await page.locator('[data-choice]').count(),0,JSON.stringify(await page.evaluate(async () => {const {readJourney}=await import('/src/universe/model.ts');return readJourney(localStorage);})));
     const saved = await page.evaluate(async () => {const {readJourney}=await import('/src/universe/model.ts');return readJourney(localStorage);});
     assert.ok(saved.visited.includes('moon'));assert.ok(saved.properElapsed<saved.elapsed/10);
-    await page.reload();await page.locator('#language').selectOption('en');assert.ok((await page.locator('#journal summary').textContent()).includes(`${saved.visited.length}/28`));
+    await page.reload();await page.locator('#language').selectOption('en');assert.ok((await page.locator('#journal summary').textContent()).includes(`${saved.visited.length}/40`));
     await page.locator('#view2d').click();await page.locator('.cosmic-scene>svg').waitFor();
     await page.locator('#go-quasar').click();await page.locator('#epoch').selectOption('quasar');await page.locator('#depart').click();await page.locator('[data-choice]').first().waitFor({timeout:15000});
     await page.locator('#choice-shield,#choice-detour,#choice-scan,#choice-listen').first().click();

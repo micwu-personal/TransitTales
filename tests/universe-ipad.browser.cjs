@@ -46,7 +46,7 @@ const { webkit, devices } = require('playwright');
     ]) {
       await check(`${name}: production layout and touch controls`, null, async page => {
         await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-        await page.locator('.cosmic-scene>canvas').waitFor({ timeout: 15000 });
+        await page.locator('#universe[data-renderer="3d-ready"]').waitFor({ timeout: 15000 });
         assert.equal(await page.locator('#universe-startup').isVisible(), false);
         assert.equal(await page.locator('#map-scope>option').count(), 9);
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
@@ -105,8 +105,50 @@ const { webkit, devices } = require('playwright');
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
       assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
       await page.locator('#destination').selectOption('moon');
-      await page.locator('.cosmic-scene>canvas').waitFor();
+      await page.locator('#universe[data-renderer="3d-ready"]').waitFor();
       assert.equal(await page.locator('#navigation-title').textContent(), '月球');
+    });
+    let releaseShaders;
+    await check('delayed shaders: SVG survives journey and language rerenders until a genuine GPU frame', async page => {
+      const held = new Promise(resolve => { releaseShaders = resolve; });
+      await page.route(/\/(?:default|pbr)\.(?:vertex|fragment)-[^/]+\.js$/, async route => { await held; await route.continue(); });
+    }, async page => {
+      await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
+      await page.locator('.cosmic-scene>canvas').waitFor({ state: 'attached' });
+      assert.equal(await page.locator('#universe').getAttribute('data-renderer'), '3d-warming');
+      assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
+      await page.evaluate(() => {
+        for (const [id, value] of [['destination', 'moon'], ['epoch', 'first']]) {
+          const select = document.getElementById(id); select.value = value; select.dispatchEvent(new Event('change'));
+        }
+        document.getElementById('depart').click(); document.getElementById('pause').click();
+        const language = document.getElementById('language'); language.value = 'ja'; language.dispatchEvent(new Event('change'));
+      });
+      assert.equal(await page.locator('.cosmic-scene>canvas').count(), 1);
+      assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
+      releaseShaders();
+      await page.locator('#universe[data-renderer="3d-ready"]').waitFor({ timeout: 15000 });
+      assert.equal(await page.locator('.cosmic-scene>svg').count(), 0);
+      assert.equal(await page.locator('#language').inputValue(), 'ja');
+    });
+    await check('blocked shaders: usable SVG and local diagnostics instead of a blank canvas', async page => {
+      await page.route(/\/(?:default|pbr)\.(?:vertex|fragment)-[^/]+\.js$/, route => route.abort());
+    }, async page => {
+      await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
+      await page.locator('#universe[data-renderer="2d-ready"]').waitFor({ timeout: 12000 });
+      assert.equal(await page.locator('.cosmic-scene>canvas').count(), 0);
+      assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
+      await page.locator('#universe-diagnostics>summary').tap();
+      assert.match(await page.locator('#universe-diagnostic-output').textContent(), /SVG: true; GPU: false/);
+      await page.locator('#destination').selectOption('moon'); await page.locator('#depart').tap();
+      assert.equal(await page.locator('#depart').isDisabled(), true);
+    });
+    await check('removed stylesheet: essential scene geometry still renders', null, async page => {
+      await page.goto(address('view=2d'), { waitUntil: 'domcontentloaded' }); await ready(page);
+      await page.evaluate(() => document.querySelectorAll('link[rel="stylesheet"]').forEach(link => link.remove()));
+      const geometry = await page.locator('.cosmic-scene>svg').boundingBox();
+      assert.ok(geometry && geometry.width > 100 && geometry.height >= 300);
+      await page.locator('#destination').selectOption('moon'); assert.equal(await page.locator('#navigation-title').textContent(), '月球');
     });
     await check('3D timeout: late module cannot override the fallback', async page => {
       await page.route('**/renderer3d-*.js', async route => { await delay(10500); await route.continue(); });

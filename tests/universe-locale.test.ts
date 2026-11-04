@@ -3,6 +3,7 @@ import type { Language } from '../src/rush/locale';
 import { destinationName, encounterText, epochName, epochText, factText, universeCopy } from '../src/universe/locale';
 import { mapCopy, mapObjectName, mapScopeName } from '../src/universe/minimap-locale';
 import { MAP_SCOPES } from '../src/universe/minimap';
+import { DESTINATIONS } from '../src/universe/catalog';
 
 const languages: Language[] = ['en', 'zh-CN', 'ja', 'mn-Cyrl-MN', 'mn-Mong-CN'];
 const uiKeys = [
@@ -16,11 +17,7 @@ const uiKeys = [
   'allDiscovered', 'destination', 'lightCone', 'simulationNote', 'sources', 'epochApply', 'betaLabel', 'gammaLabel',
   'dopplerLabel', 'formationNote', 'itinerary', 'routeGuide', 'routeAnchor', 'reconstruction', 'coordinateNote', 'coordinateEvidence',
 ] as const;
-const destinationIds = [
-  'earth', 'moon', 'sun', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'asteroids', 'comet',
-  'kuiper', 'oort', 'proxima', 'proxima-b', 'nebula', 'cluster', 'neutron', 'stellar-hole', 'sagittarius', 'milky-way',
-  'magellanic', 'andromeda', 'local-group', 'quasar', 'horizon', 'beyond',
-];
+const destinationIds = DESTINATIONS.map(({ id }) => id);
 const epochIds = ['bang', 'plasma', 'recombination', 'dark', 'first', 'quasar', 'present', 'future', 'far'];
 const kinds = ['debris', 'radiation', 'gravity', 'signal'] as const;
 const choiceIds = ['shield', 'detour', 'scan', 'rush', 'approach', 'listen', 'trade', 'compete'];

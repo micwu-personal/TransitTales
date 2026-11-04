@@ -19,30 +19,34 @@ const { chromium } = require('playwright');
       await page.goto(`${url}/universe-map-check`);
       await page.evaluate(async ({ progress, epoch, destination }) => {
         const { createJourney, beginJump, tickJourney, writeJourney } = await import('/src/universe/model.ts');
-        const state = tickJourney(beginJump({ ...createJourney(), beta: 0 }, destination, epoch), 7 * progress);
+        const state = tickJourney(beginJump({ ...createJourney(), beta: .65 }, destination, epoch), 7 * progress);
         if (!writeJourney(localStorage, { ...state, paused: true })) throw Error('Cannot save map fixture');
         localStorage.setItem('transit-tales-language', 'en');
       }, { progress, epoch, destination });
       await page.goto(`${url}/universe.html?view=${view}`);
-      await page.locator(view === '2d' ? '.cosmic-scene>svg' : '.cosmic-scene>canvas').waitFor();
+      await page.locator(view === '2d' ? '.cosmic-scene>svg' : '#universe[data-renderer="3d-ready"]').waitFor();
       await page.locator('#language').selectOption('en');
       await page.waitForTimeout(750);
+            assert.equal(await page.locator('#navigation-map').getAttribute('data-transition'), '1', 'Demand-driven zoom draws its exact final frame before becoming idle');
     };
     const camera = () => page.locator('#navigation-map').getAttribute('data-camera-au');
     const matchingCamera = async view => {
       const pair = await page.evaluate(view => [document.querySelector('#navigation-map').dataset.cameraAu, document.querySelector(view === '2d' ? '.cosmic-scene>svg' : '.cosmic-scene>canvas').dataset.cameraAu], view);
       assert.equal(pair[0], pair[1], `${view}: map follows the actual shared flight camera`);
     };
-    const gpuCorners = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => {
-      const canvas = document.querySelector('.cosmic-scene>canvas');
+    const gpuCorners = () => page.evaluate(() => {
+          // Sample before presentation discards the non-preserved GPU buffer.
+          document.querySelector('#zoom-in').click();
+          const canvas = document.querySelector('.cosmic-scene>canvas');
       const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
       const pixel = new Uint8Array(4), samples = [];
       for (const [x, y] of [[.04,.04],[.96,.04],[.04,.96],[.96,.96],[.5,.04]]) {
         gl.readPixels(Math.floor(gl.drawingBufferWidth * x), Math.floor(gl.drawingBufferHeight * y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
         samples.push([...pixel]);
       }
-      resolve(samples);
-    })));
+      document.querySelector('#camera-reset').click();
+      return samples;
+    });
     for (const view of ['2d', '3d']) {
       await fixture(view);
       assert.equal(await page.locator('#navigation-map').getAttribute('open'), '');
@@ -59,7 +63,7 @@ const { chromium } = require('playwright');
       await page.waitForTimeout(700);
       await matchingCamera(view);
       assert.notEqual(await camera(), start, `${view}: map location moves through space`);
-      assert.equal(await page.locator('#navigation-map').getAttribute('data-radius-au'), bounds, `${view}: adaptive extent remains stable during flight`);
+      assert.ok(Math.abs(Number(await page.locator('#navigation-map').getAttribute('data-radius-au')) / Number(bounds) - 1) < 1e-12, `${view}: adaptive extent remains stable during flight`);
       await page.locator('#map-scope').selectOption('solar');
       await page.waitForTimeout(140);
       const progress = Number(await page.locator('#navigation-map').getAttribute('data-transition'));

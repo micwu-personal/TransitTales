@@ -110,8 +110,11 @@ class NodeStub {
   attributes = new Map<string, string>();
   listeners = new Map<string, EventListener>();
   parts = new Map<string, NodeStub>();
-  markup = ''; writes = 0; removed = false;
-  set innerHTML(value: string) { this.markup = value; this.writes++; this.parts.set('svg', new NodeStub()); }
+  markup = ''; writes = 0; removed = false; parent: NodeStub | null = null;
+  set innerHTML(value: string) { this.markup = value; this.writes++; const svg = new NodeStub(); svg.markup = value; this.parts.set('svg', svg); }
+  prepend(node: NodeStub) { node.parent = this; this.parts.set('svg', node); this.markup = node.markup; this.writes++; }
+  replaceWith(node: NodeStub) { if (this.parent) this.parent.prepend(node); this.removed = true; }
+  querySelectorAll() { return []; }
   get innerHTML() { return this.markup; }
   setAttribute(key: string, value: string) { this.attributes.set(key, value); }
   querySelector(selector: string): NodeStub { if (!this.parts.has(selector)) this.parts.set(selector, new NodeStub()); return this.parts.get(selector)!; }
@@ -122,7 +125,7 @@ class NodeStub {
 }
 describe('SVG renderer lifecycle and display-only controls', () => {
   it('holds snapshots before mounting, caches geometry, updates optics, and cleans up', () => {
-    vi.stubGlobal('document', { hidden: false });
+    vi.stubGlobal('document', { hidden: false, createElement: () => new NodeStub() });
     const renderer = createUniverseRenderer(), host = new NodeStub();
     const view = Object.freeze(snapshot()); renderer.render(view); renderer.mount(host as unknown as HTMLElement);
     expect(host.markup).toContain('blue-marble'); expect(host.writes).toBe(1);
@@ -139,7 +142,7 @@ describe('SVG renderer lifecycle and display-only controls', () => {
     expect(host.writes).toBe(2); expect(view.progress).toBe(0);
   });
   it('does not advance transforms while paused, reduced-motion, or hidden', () => {
-    const document = { hidden: false }; vi.stubGlobal('document', document);
+    const document = { hidden: false, createElement: () => new NodeStub() }; vi.stubGlobal('document', document);
     const renderer = createUniverseRenderer(), host = new NodeStub(); renderer.mount(host as unknown as HTMLElement);
     renderer.render(snapshot({ progress: .1 }));
     const object = host.querySelector('svg').querySelector('[data-object="scene"]');

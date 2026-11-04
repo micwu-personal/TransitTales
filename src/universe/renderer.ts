@@ -1,19 +1,12 @@
 import type { SceneKind, UniverseRenderer, UniverseSnapshot } from './view';
 import { freezeSnapshot } from './view';
+import { DESTINATIONS } from './catalog';
 import { FLIGHT_STARS, dopplerTint, flightFrame, flightStar, type FlightFrame, type FlightLayer } from './flight';
 import { routeFrame, projectDirection, COSMIC_KNOTS, cosmicKnot, type RouteFrame, type RouteObject } from './route';
 
 export type CosmicScene = SceneKind | 'hot' | 'plasma-field' | 'cmb' | 'dark-field' | 'early-stars' | 'protogalaxies' | 'giant' | 'scorched' | 'remnants';
 
-// Renderer-local rounded formation ages mirror destination IDs without importing gameplay.
-const formationGyr: Readonly<Record<string, number>> = {
-  earth: 9.26, moon: 9.3, sun: 9.2, mercury: 9.2, venus: 9.2, mars: 9.2,
-  jupiter: 9.2, saturn: 9.2, uranus: 9.2, neptune: 9.2, asteroids: 9.2,
-  comet: 9.2, kuiper: 9.2, oort: 9.2, proxima: 8, 'proxima-b': 8,
-  nebula: 13.79, cluster: 1.8, neutron: 1, 'stellar-hole': 1, sagittarius: 1,
-  'milky-way': .8, magellanic: 1, andromeda: 1, 'local-group': 1,
-  quasar: .8, horizon: .00038, beyond: 0,
-};
+const formationGyr: Readonly<Record<string, number>> = Object.fromEntries(DESTINATIONS.map(destination => [destination.id, destination.formedGyr]));
 export function universeScene(snapshot: UniverseSnapshot): CosmicScene {
   switch (snapshot.epoch) {
     case 'bang': return 'hot';
@@ -80,9 +73,13 @@ function craters(x: number, y: number, r: number): string {
 function planet(kind: CosmicScene, destinationId: string): string {
   if (kind === 'earth' || kind === 'scorched') return earth(kind === 'scorched');
   if (kind === 'moon') return sphere(490, 312, 188, 'moon', craters(490, 312, 188)) + sphere(817, 155, 37, 'ocean');
+  if (destinationId === 'europa') return sphere(490, 312, 176, 'ice', '<g clip-path="url(#u-planet)" data-art="europa-fractures"><path d="M335 212Q510 302 625 399M360 421Q439 315 581 197M298 317Q449 253 644 320" fill="none" stroke="#a77e6f" stroke-width="3" opacity=".7"/></g>');
+  if (destinationId === 'titan') return `<g data-art="titan-haze">${circle(490, 312, 190, 'url(#u-halo)', .3)}${sphere(490, 312, 176, 'venus')}</g>`;
+  if (destinationId === 'pluto') return sphere(490, 312, 176, 'moon', '<path data-art="pluto-heart" d="M455 328C381 275 399 232 448 258Q478 208 527 256Q553 290 501 342Z" fill="#eee4d3" opacity=".75"/>');
   if (kind === 'sun' || kind === 'giant') {
-    const random = cosmicRandom(56), r = kind === 'giant' ? 223 : 184;
-    return `<g data-art="${kind === 'giant' ? 'red-giant' : 'solar-wind'}">${circle(480, 310, r + 95, 'url(#u-corona)')}${sphere(480, 310, r, kind === 'giant' ? 'giant' : 'sun')}
+    const giant = kind === 'giant' || destinationId === 'betelgeuse';
+    const random = cosmicRandom(56), r = giant ? 223 : 184;
+    return `<g data-art="${giant ? 'red-giant' : 'solar-wind'}">${circle(480, 310, r + 95, 'url(#u-corona)')}${sphere(480, 310, r, giant ? 'giant' : 'sun')}${destinationId === 'betelgeuse' ? '<circle data-outburst="" cx="480" cy="310" r="225" fill="none" stroke="#e8b59a" opacity=".08" data-illustration="compressed mass-loss shell; not a supernova prediction"/>' : ''}
       ${Array.from({ length: 65 }, () => { const a = random() * Math.PI * 2, d = r + 18 + random() * 190; return circle(480 + Math.cos(a) * d, 310 + Math.sin(a) * d * .76, 1 + random() * 2, '#ffe5a3', .15 + random() * .45); }).join('')}
       <path d="M365 161C340 85 457 99 429 152M622 335C729 309 707 404 640 383" fill="none" stroke="#ffc878" stroke-width="5" opacity=".45"/></g>`;
   }
@@ -108,7 +105,8 @@ function blackhole(quasar = false): string {
     <path d="M342 302C370 170 627 162 653 305" fill="none" stroke="#d3b792" stroke-width="5" opacity=".38"/>
     ${circle(500, 308, 73, '#050b15')}<circle cx="500" cy="308" r="78" fill="none" stroke="#e7d8b8" stroke-width="2" opacity=".7"/>
     <path d="M327 346Q487 380 673 274" stroke="${quasar ? '#fff1c8' : '#b59c82'}" stroke-width="${quasar ? 8 : 3}" fill="none" opacity=".55"/>
-    <path d="M273 202Q359 173 394 205M613 412Q683 455 748 410" stroke="#aacbdd" stroke-width="2" fill="none" opacity=".3"/></g>`;
+    <path d="M273 202Q359 173 394 205M613 412Q683 455 748 410" stroke="#aacbdd" stroke-width="2" fill="none" opacity=".3"/>
+    <g data-effect="accretion" data-illustration="time-compressed infall; not ray tracing">${Array.from({ length: 12 }, (_, i) => `<circle data-infall="${i}" cx="${500 + Math.cos(i * Math.PI / 6) * 150}" cy="${310 + Math.sin(i * Math.PI / 6) * 38}" r="2" fill="#e8c492"/>`).join('')}</g></g>`;
 }
 function web(beyond = false): string {
   const random = cosmicRandom(beyond ? 411 : 145);
@@ -126,7 +124,10 @@ function scenery(kind: CosmicScene, snapshot: UniverseSnapshot): string {
     case 'early-stars': return `<g data-art="first-stars">${clouds(20, 29, ['#535873', '#4c656c'])}${[[344, 273, 25], [573, 364, 17], [717, 178, 11]].map(([x, y, r]) => sphere(x, y, r, 'ice')).join('')}</g>`;
     case 'protogalaxies': return `<g data-art="gas-protogalaxies">${clouds(38, 93, ['#b28e91', '#a0b5b8', '#8b779a'])}${[[360, 270, 66], [668, 383, 48], [782, 158, 24]].map(([x, y, r]) => circle(x, y, r, 'url(#u-halo)', .32)).join('')}</g>`;
     case 'belt': case 'comet': return debris(kind === 'comet', snapshot.destinationId);
-    case 'triple': return `<g data-art="hierarchical-triple">${sphere(415, 304, 68, 'sun')}${sphere(565, 315, 48, 'gas')}${sphere(848, 130, 17, 'giant')}<ellipse cx="491" cy="307" rx="153" ry="53" fill="none" stroke="#a4b4c6" stroke-width="1" opacity=".14"/></g>`;
+    case 'triple': {
+      const binary = snapshot.destinationId === 'sirius' || snapshot.destinationId === 'eta-carinae';
+      return `<g data-art="${binary ? 'binary-system' : 'hierarchical-triple'}" data-illustration="system overview; illustrative component phases and separation">${snapshot.destinationId === 'eta-carinae' ? '<g data-art="homunculus-lobes"><ellipse cx="405" cy="236" rx="115" ry="71" transform="rotate(35 405 236)" fill="#c08365" opacity=".3"/><ellipse cx="601" cy="402" rx="115" ry="71" transform="rotate(35 601 402)" fill="#c08365" opacity=".3"/><path d="M432 311Q474 230 538 319" fill="none" stroke="#edcfa0" opacity=".5"/></g>' : ''}${sphere(415, 304, 68, snapshot.destinationId === 'sirius' ? 'ice' : 'sun')}${sphere(565, 315, snapshot.destinationId === 'sirius' ? 9 : 48, binary ? 'ice' : 'gas')}${binary ? '' : sphere(848, 130, 17, 'giant')}<ellipse cx="491" cy="307" rx="153" ry="53" fill="none" stroke="#a4b4c6" stroke-width="1" opacity=".14"/></g>`;
+    }
     case 'nebula': return `<g data-art="bounded-nebula">${clouds(72, 67, ['#b07175', '#638ea5', '#d5ad8b'], .7)}<path d="M324 460Q448 358 396 166Q456 294 503 300Q489 216 541 139Q529 286 605 379L552 491Z" fill="#101e30" opacity=".58"/>${stars(37, 67)}</g>`;
     case 'cluster': { const random = cosmicRandom(322); return `<g data-art="globular-cluster">${circle(500, 310, 190, 'url(#u-galaxy-core)', .45)}${Array.from({ length: 850 }, () => { const a = random() * Math.PI * 2, d = Math.pow(random(), 1.9) * 260; return circle(500 + Math.cos(a) * d, 310 + Math.sin(a) * d, .5 + random() * 1.8, '#fff1cb', .25 + random() * .65); }).join('')}</g>`; }
     case 'neutron': return `<g data-art="neutron-spin-poles" transform="rotate(-23 500 310)"><path d="M482 295L455 44Q500 15 545 44L518 295M482 325L455 576Q500 605 545 576L518 325" fill="url(#u-jet)"/>${sphere(500, 310, 26, 'ice')}<ellipse cx="500" cy="310" rx="118" ry="44" fill="none" stroke="#a6cedd" opacity=".25"/><path d="M490 280Q380 137 404 310T490 340M510 280Q620 137 596 310T510 340" fill="none" stroke="#94c7d9" opacity=".22" stroke-width="2"/></g>`;
@@ -185,17 +186,21 @@ function frameKey(frame: FlightFrame, snapshot: UniverseSnapshot): string {
   return frame.layers.map(layer => `${layer.location.destinationId}|${layer.location.epoch}|${layerScene(layer, snapshot)}`).join(';');
 }
 function coordinateFlight(snapshot: UniverseSnapshot): boolean {
-  return snapshot.travelling && !!snapshot.origin && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.destinationId) && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.origin.destinationId);
+  return (snapshot.travelling || !!snapshot.coordinateView) && !!snapshot.origin && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.destinationId) && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.origin.destinationId);
 }
 function routeBody(object: RouteObject): { art: string; center: [number, number]; radius: number } {
   if (object.kind === 'earth') return { art: earth(false, false), center: [465, 317], radius: 198 };
   if (object.kind === 'moon') return { art: sphere(490, 312, 188, 'moon', craters(490, 312, 188)), center: [490, 312], radius: 188 };
-  if (['rock', 'gas', 'ring', 'ice', 'sun'].includes(object.kind)) return { art: planet(object.kind, object.id), center: object.kind === 'sun' ? [480, 310] : [490, 312], radius: object.kind === 'sun' ? 184 : 176 };
-  if (object.kind === 'triple') return { art: sphere(500, 310, 176, 'giant'), center: [500, 310], radius: 176 };
-  if (object.kind === 'blackhole' || object.kind === 'quasar') return { art: blackhole(object.kind === 'quasar'), center: [500, 308], radius: 78 };
-  if (object.kind === 'neutron') return { art: sphere(500, 310, 26, 'ice'), center: [500, 310], radius: 26 };
+  if (['rock', 'gas', 'ring', 'ice', 'sun'].includes(object.kind)) return { art: planet(object.kind, object.id), center: object.kind === 'sun' ? [480, 310] : [490, 312], radius: object.kind === 'sun' ? object.id === 'betelgeuse' ? 223 : 184 : 176 };
+  if (object.kind === 'triple') return { art: scenery('triple', { destinationId: object.id } as UniverseSnapshot), center: [500, 310], radius: object.id === 'proxima' ? 365 : 200 };
+  if (object.kind === 'blackhole' || object.kind === 'quasar') return { art: blackhole(object.kind === 'quasar' || object.id === 'cygnus-x1') + (object.id === 'cygnus-x1' ? '<g data-illustration="binary overview; companion separation and wind not to scale"><path data-art="companion-wind" d="M825 217Q703 240 640 309" fill="none" stroke="#a9cae2" stroke-width="4" opacity=".4"/>' + sphere(825, 217, 30, 'ice') + '</g>' : ''), center: [500, 308], radius: 78 };
+  if (object.kind === 'neutron') return { art: `<g data-effect="pulsar">${scenery('neutron', { destinationId: object.id } as UniverseSnapshot)}</g>`, center: [500, 310], radius: 26 };
+  if (object.kind === 'galaxy' && ['m87', 'centaurus-a'].includes(object.id)) {
+    const random = cosmicRandom(872);
+    return { art: `<g data-art="elliptical-active-galaxy">${circle(500, 310, 190, 'url(#u-galaxy-core)', .7)}${Array.from({ length: 350 }, () => { const angle = random() * Math.PI * 2, radius = Math.sqrt(random()) * 200; return circle(500 + Math.cos(angle) * radius, 310 + Math.sin(angle) * radius * .75, .7 + random(), '#eed9be', .2 + random() * .4); }).join('')}${object.id === 'centaurus-a' ? '<path data-art="dust-lane" d="M314 208L680 383L655 419L305 242Z" fill="#182335" opacity=".8"/>' : ''}<path data-art="active-galaxy-jet" d="M500 310L276 91M500 310L706 509" fill="none" stroke="#a1d7f4" stroke-width="7" opacity=".28"/><g transform="translate(500 310) scale(.11) translate(-500 -310)">${blackhole(true)}</g></g>`, center: [500, 310], radius: 200 };
+  }
   if (object.kind === 'galaxy' || object.kind === 'group') return { art: spiral(500, 310, 200, 781), center: [500, 310], radius: 200 };
-  if (object.kind === 'nebula') return { art: clouds(24, 67, ['#b07175', '#638ea5', '#d5ad8b'], .35), center: [500, 310], radius: 200 };
+  if (object.kind === 'nebula') return { art: `<g data-art="stellar-nursery" data-illustration="compressed star formation">${clouds(24, 67, ['#b07175', '#638ea5', '#d5ad8b'], .35)}${Array.from({ length: 8 }, (_, i) => `<circle data-newborn="${i}" cx="${420 + (i * 47) % 160}" cy="${235 + (i * 31) % 160}" r="${5 + i % 3}" fill="url(#u-halo)" opacity=".4"/>`).join('')}</g>`, center: [500, 310], radius: 200 };
   // Region markers are translucent diagrams, not invented individually located debris.
   return { art: `<g data-art="region-outline"><ellipse cx="500" cy="310" rx="176" ry="${object.kind === 'belt' && object.id !== 'oort' ? 40 : 176}" fill="none" stroke="${object.color}" stroke-width="2" stroke-dasharray="4 9"/></g>`, center: [500, 310], radius: 176 };
 }
@@ -212,7 +217,7 @@ function routeTint(object: RouteObject, frame: RouteFrame): string {
 function routeTransform(object: RouteObject, frame: RouteFrame): string {
   const point = projectDirection(object.direction), body = routeBodyCenter(object);
   const radius = Math.min(1000, 850 * Math.tan(object.angularRadius) / Math.max(.03, object.direction[2])) * (object.id === 'sun' ? 1 + .7 * futureFraction(frame) : 1);
-  return `translate(${n(point.x)} ${n(point.y)}) scale(${n(Math.max(.00001, radius / body.radius))}) translate(${-body.center[0]} ${-body.center[1]})`;
+  return `translate(${n(point.x)} ${n(point.y)}) scale(${Math.max(.00001, radius / body.radius).toFixed(6)}) translate(${-body.center[0]} ${-body.center[1]})`;
 }
 // Avoid generating the procedural surface again on every animation frame.
 const routeArt = new Map<string, ReturnType<typeof routeBody>>();
@@ -253,23 +258,45 @@ export function universeMarkup(snapshot: UniverseSnapshot): string {
 
 export function createUniverseRenderer(): UniverseRenderer {
   let host: HTMLElement | null = null, svg: SVGSVGElement | null = null, key = '', latest: UniverseSnapshot | null = null;
-  let zoomLevel = 1, panX = 0, panY = 0, serial = 0;
+  let zoomLevel = 1, panX = 0, panY = 0, serial = 0, lastSnapshotKey = '';
   const pointers = new Map<number, { x: number; y: number }>();
   const cleanup: (() => void)[] = [];
-  const viewBox = () => { svg?.setAttribute('viewBox', `${n(500 - 500 / zoomLevel + panX)} ${n(310 - 310 / zoomLevel + panY)} ${n(1000 / zoomLevel)} ${n(620 / zoomLevel)}`); };
+  const viewBox = () => {
+    const pose = latest?.inspection, localZoom = zoomLevel * Math.exp(-(pose?.offset[2] ?? 0) * .12);
+    svg?.setAttribute('viewBox', `${n(500 - 500 / localZoom + panX + (pose?.yaw ?? 0) * 850 + (pose?.offset[0] ?? 0) * 40)} ${n(310 - 310 / localZoom + panY - (pose?.pitch ?? 0) * 850 + (pose?.offset[1] ?? 0) * 40)} ${n(1000 / localZoom)} ${n(620 / localZoom)}`);
+  };
   const zoom = (direction: number) => { if (!Number.isFinite(direction)) return; zoomLevel = Math.max(.65, Math.min(4, zoomLevel * Math.pow(1.18, Math.sign(direction)))); viewBox(); };
-  const dispose = () => { cleanup.splice(0).forEach(fn => fn()); pointers.clear(); svg?.remove(); host = null; svg = null; key = ''; };
+  const dispose = () => { cleanup.splice(0).forEach(fn => fn()); pointers.clear(); svg?.remove(); host = null; svg = null; key = ''; lastSnapshotKey = ''; };
   const render = (snapshot: UniverseSnapshot) => {
     latest = freezeSnapshot(snapshot);
     if (!host) return;
+    const snapshotKey = JSON.stringify(latest);
+    if (snapshotKey === lastSnapshotKey && svg) return;
+    lastSnapshotKey = snapshotKey;
     const frame = flightFrame(latest), routing = coordinateFlight(latest);
     const nextKey = routing ? `route:${latest.origin!.destinationId}:${latest.destinationId}` : frameKey(frame, latest);
     if (!svg || key !== nextKey) {
       key = nextKey;
-      host.innerHTML = universeMarkup(latest).replace(/u-/g, `cosmos-${serial}-`);
-      svg = host.querySelector('svg'); viewBox();
+      const container = document.createElement('div');
+      container.innerHTML = universeMarkup(latest).replace(/u-/g, `cosmos-${serial}-`);
+      const replacement = container.querySelector('svg')!;
+      if (svg) svg.replaceWith(replacement); else host.prepend(replacement);
+      svg = replacement; viewBox();
     }
     if (!svg) return;
+    viewBox();
+    if (!latest.paused && !latest.reducedMotion && !document.hidden) {
+      const time = latest.effectTime ?? 0;
+      svg.querySelectorAll<SVGElement>('[data-infall]').forEach(node => {
+        const index = Number(node.dataset.infall), phase = (time * .13 + index / 12) % 1, angle = index * Math.PI / 6 + phase * Math.PI * 4;
+        node.setAttribute('cx', n(500 + Math.cos(angle) * (150 - phase * 65)));
+        node.setAttribute('cy', n(310 + Math.sin(angle) * (38 - phase * 18)));
+        node.setAttribute('opacity', n(1 - phase));
+      });
+      svg.querySelectorAll<SVGElement>('[data-effect="pulsar"]').forEach(node => node.setAttribute('transform', `rotate(${n(Math.sin(time * 2) * 28)} 500 310)`));
+      svg.querySelectorAll<SVGElement>('[data-newborn]').forEach(node => node.setAttribute('opacity', n(.35 + .3 * Math.sin(time * .45 + Number(node.dataset.newborn)))));
+      svg.querySelectorAll<SVGElement>('[data-outburst]').forEach(node => { const phase = (time * .045) % 1; node.setAttribute('r', n(225 + phase * 90)); node.setAttribute('opacity', n(.18 * Math.sin(Math.PI * phase))); });
+    }
     if (routing) {
       const route = routeFrame(latest);
       svg.setAttribute('data-camera-au', route.cameraAU.join(',')); svg.setAttribute('data-age-gyr', String(route.ageGyr)); svg.setAttribute('data-route-leg', String(route.leg));

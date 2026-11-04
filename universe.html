@@ -9,6 +9,12 @@
 .universe-startup a:focus-visible{outline:2px solid #234d49;outline-offset:4px}
 .universe-startup .boot-zh{display:none}html[lang="zh-CN"] .universe-startup .boot-en{display:none}html[lang="zh-CN"] .universe-startup .boot-zh{display:inline}
 #universe[hidden],.universe-startup[hidden]{display:none!important}
+/* Essential scene sizing survives an unsupported or interrupted optional stylesheet. */
+.window{position:relative;height:620px;min-width:0;background:#101d32;overflow:hidden}
+.cosmic-scene,#scene-slot{position:absolute;top:0;left:0;width:100%;height:100%}
+.cosmic-scene>svg,.cosmic-scene>canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+.universe-diagnostics{max-width:38rem;margin:1rem auto;padding:1rem;color:#234d49;background:#f4f1e7;font:13px/1.6 system-ui,-apple-system,sans-serif}
+.universe-diagnostics summary{cursor:pointer;min-height:44px;padding:.5rem 0}.universe-diagnostics pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}.universe-diagnostics button{min-height:44px;padding:.6rem;border:1px solid #739487;background:#fcfaf4;color:#234d49;border-radius:5px}.universe-diagnostics .boot-zh{display:none}html[lang="zh-CN"] .universe-diagnostics .boot-en{display:none}html[lang="zh-CN"] .universe-diagnostics .boot-zh{display:inline}
 </style></head><body>
 <section id="universe-startup" class="universe-startup" aria-labelledby="startup-title">
 <h1 id="startup-title"><span class="boot-en">Milo & Pip’s Universe Journey</span><span class="boot-zh" lang="zh-CN">米洛与皮普——宇宙旅途</span></h1>
@@ -16,11 +22,28 @@
 <nav aria-label="Loading options"><a id="startup-retry" href="universe.html"><span class="boot-en">Retry loading</span><span class="boot-zh" lang="zh-CN">重新加载</span></a><a id="startup-fresh" href="universe.html" target="_blank" rel="noopener"><span class="boot-en">Open game in a new tab</span><span class="boot-zh" lang="zh-CN">在新标签页打开游戏</span></a><a href="?view=2d"><span class="boot-en">Try 2D mode</span><span class="boot-zh" lang="zh-CN">尝试二维模式</span></a><a href="index.html"><span class="boot-en">Return to games</span><span class="boot-zh" lang="zh-CN">返回游戏主页</span></a></nav>
 <noscript><p>This journey needs JavaScript. Please enable it, or return to the other games. 本游戏需要 JavaScript。请启用它，或返回游戏主页。</p></noscript>
 </section><div id="universe" hidden></div>
+<details id="universe-diagnostics" class="universe-diagnostics"><summary><span class="boot-en">Loading & scene diagnostics</span><span class="boot-zh" lang="zh-CN">加载与画面诊断</span></summary><p><span class="boot-en">Local information only; nothing is automatically sent. If the scene fails, copy this report when asking for help. Byte counts may omit cached or unavailable resource timing.</span><span class="boot-zh" lang="zh-CN">信息只在本机显示，不会自动发送。画面异常时，可复制报告以便排查；缓存或浏览器限制可能使下载字节统计不完整。</span></p><pre id="universe-diagnostic-output"></pre><button id="universe-diagnostic-copy" type="button"><span class="boot-en">Copy report</span><span class="boot-zh" lang="zh-CN">复制报告</span></button></details>
 <script>
 (function () {
   var root = document.getElementById('universe'), startup = document.getElementById('universe-startup');
   var status = document.getElementById('startup-status'), chinese = /^zh/i.test(navigator.language || '');
   var settled = false, timer;
+  var diagnostics = document.getElementById('universe-diagnostics'), output = document.getElementById('universe-diagnostic-output');
+  var stages = ['startup'], errors = [];
+  function report() {
+    var scene = document.querySelector('.cosmic-scene'), rect = scene && scene.getBoundingClientRect();
+    var canvas = scene && scene.querySelector('canvas'), resources = typeof performance.getEntriesByType === 'function' ? performance.getEntriesByType('resource') : [];
+    var bytes = resources.reduce(function (total, resource) { return total + (resource.transferSize || 0); }, 0);
+    output.textContent = [navigator.userAgent, 'Viewport: ' + innerWidth + ' × ' + innerHeight + '; DPR: ' + (devicePixelRatio || 1), 'Game ready: ' + (root.getAttribute('data-ready') || 'false'), 'Stages: ' + stages.join(' → '), 'Scene: ' + (rect ? Math.round(rect.width) + ' × ' + Math.round(rect.height) : 'not mounted'), 'SVG: ' + !!(scene && scene.querySelector('svg')) + '; GPU: ' + !!canvas, 'GPU pixels: ' + (canvas ? canvas.width + ' × ' + canvas.height : '—'), 'Resource transfer bytes (partial/cached possible): ' + bytes, 'Errors: ' + (errors.join(' | ') || 'none')].join('\n');
+  }
+  diagnostics.addEventListener('toggle', function () { if (diagnostics.open) report(); });
+  document.getElementById('universe-diagnostic-copy').addEventListener('click', function () {
+    report();
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(output.textContent).catch(function () { output.focus(); });
+    else { var selection = window.getSelection(), range = document.createRange(); range.selectNodeContents(output); selection.removeAllRanges(); selection.addRange(range); }
+  });
+  document.addEventListener('universe-scene-status', function (event) { stages.push(String(event.detail)); if (stages.length > 12) stages.shift(); if (diagnostics.open) report(); });
+  window.addEventListener('error', function (event) { errors.push(String(event.message || 'resource unavailable').slice(0, 180)); if (errors.length > 3) errors.shift(); if (diagnostics.open) report(); }, true);
   if (chinese) document.documentElement.lang = 'zh-CN';
   var fresh = new URL(location.href); fresh.searchParams.set('retry', String(Date.now()));
   document.getElementById('startup-fresh').href = fresh.href;
@@ -39,7 +62,8 @@
     if (event.target === window || /^(SCRIPT|LINK)$/.test(event.target.tagName || '')) failed();
   }, true);
   document.addEventListener('universe-ready', function () {
-    settled = true; window.clearTimeout(timer); root.hidden = false; startup.hidden = true;
+    settled = true; window.clearTimeout(timer); root.hidden = false; startup.hidden = true; stages.push('game-ready');
+    if (diagnostics.open) report();
     document.documentElement.classList.remove('universe-booting');
   });
   document.addEventListener('DOMContentLoaded', function () {

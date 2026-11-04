@@ -12,6 +12,9 @@ export interface UniverseSnapshot extends UniverseLocation {
   readonly progress: number;
   readonly paused: boolean;
   readonly reducedMotion: boolean;
+  readonly coordinateView?: boolean;
+  readonly effectTime?: number;
+  readonly inspection?: { readonly yaw: number; readonly pitch: number; readonly roll: number; readonly offset: readonly [number, number, number] };
 }
 export interface UniverseRenderer {
   mount(host: HTMLElement): void;
@@ -23,5 +26,6 @@ export interface UniverseRenderer {
 export function freezeSnapshot(snapshot: UniverseSnapshot): UniverseSnapshot {
   const copy = { ...snapshot };
   if (snapshot.origin) copy.origin = Object.freeze({ destinationId: snapshot.origin.destinationId, kind: snapshot.origin.kind, color: snapshot.origin.color, epoch: snapshot.origin.epoch });
+  if (snapshot.inspection) copy.inspection = Object.freeze({ ...snapshot.inspection, offset: Object.freeze([...snapshot.inspection.offset]) as readonly [number, number, number] });
   return Object.freeze(copy);
 }

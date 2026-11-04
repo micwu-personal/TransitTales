@@ -145,6 +145,18 @@ const STATIC_BODIES: readonly CoordinateBody[] = Object.freeze([
     { name: 'Illustrative observable-horizon direction', urls: [], notes: 'Arbitrary +x anchor at educational present observable-radius scale 46.5 billion ly, not a measured target, wall, or traversable boundary. 1 billion ly illustrative region extent.' }),
   body('beyond', vector(50e9 * LIGHT_YEAR_AU, 0, 0), 1e9 * LIGHT_YEAR_AU, '#bca3e8', 'region', 'illustrative',
     { name: 'Unobserved speculative direction', urls: [], notes: 'Arbitrary +x anchor at 50 billion ly; beyond the observable horizon has no measured target point. Position, extent and any encounter are wholly speculative.' }),
+  body('pluto', vector(20.04991226189572, -29.33598776798562, -2.659750554079825), 1188.5 / AU_KM, '#d8b7a2', 'planet', 'ephemeris',
+    { name: 'Pluto (fixed Horizons reference)', urls: ['https://ssd.jpl.nasa.gov/horizons/', 'https://science.nasa.gov/dwarf-planets/pluto/facts/'], referenceYear: DEFAULT_REFERENCE_YEAR,
+      notes: 'JPL Horizons target 999, centre 500@10, ICRF/ecliptic, AU, 2026-11-02 00:00 TDB vector. Fixed present-day snapshot: NOT an ephemeris of any other requested epoch; no extrapolation. Rounded mean radius; surface descriptions grounded in New Horizons imagery.' }),
+  catalogue('sirius', 'Sirius', hours(6, 45, 8.91728), degrees(-16, 42, 58.0171), 8.6 * LIGHT_YEAR_AU, 35, '#c5dcff', 'star', ['https://science.nasa.gov/missions/hubble/measuring-a-white-dwarf-star/'], 'Rounded 8.6 ly distance; 35 AU representative binary extent, not stellar radius or a measured companion phase. Two stars: main sequence and white dwarf, not three.'),
+  catalogue('betelgeuse', 'Betelgeuse', hours(5, 55, 10.30536), degrees(7, 24, 25.4304), 550 * LIGHT_YEAR_AU, 4, '#ef9567', 'star', ['https://science.nasa.gov/missions/hubble/hubble-finds-that-betelgeuses-mysterious-dimming-is-due-to-a-traumatic-outburst/', 'https://arxiv.org/abs/2006.09837'], 'Distance is uncertain: 550 ly is a rounded educational anchor, not precision navigation; published estimates differ. Rough 4 AU photospheric scale varies with wavelength and stellar pulsation. Dimming involved surface mass loss and dust, not an observed terminal supernova.'),
+  catalogue('crab-pulsar', 'PSR J0534+2200', hours(5, 34, 31.94747), degrees(22, 0, 52.1537), 6500 * LIGHT_YEAR_AU, 12 / AU_KM, '#94dcf1', 'compact', [`${MESSIER}messier-1/`], 'NASA rounded 6500 ly distance; nominal 12 km neutron-star radius is illustrative, not a measured surface. The 1054 supernova remnant has rotating beams and a pulsar wind nebula, not wind-fed accretion.'),
+  catalogue('cygnus-x1', 'Cyg X-1', hours(19, 58, 21.67574), degrees(35, 12, 5.7845), 7200 * LIGHT_YEAR_AU, 62 / AU_KM, '#e5b9f2', 'compact', ['https://arxiv.org/abs/2102.09091', 'https://blackholes.stardate.org/objects/factsheet-Cygnus-X-1.html'], 'Rounded 2021 distance 7200 ly and mass about 21 Suns. Nominal 62 km nonrotating horizon scale is illustrative: this hole spins. Direction anchors the binary; companion orbit, wind-fed accretion disk and radio jet are not resolved by these coordinates.'),
+  catalogue('eta-carinae', 'eta Car', hours(10, 45, 3.545808), degrees(-59, 41, 3.95124), 7500 * LIGHT_YEAR_AU, 10000, '#e7b27e', 'star', ['https://www.nasa.gov/universe/astronomers-bring-the-third-dimension-to-a-doomed-stars-outburst/', 'https://www.nas.nasa.gov/SC14/demos/demo39.html'], 'Rounded 7500 ly distance; 10000 AU representative eruption-region extent, not stellar radius. Massive binary and colliding winds; nineteenth-century ejecta form bipolar Homunculus lobes. Eruption survived, not a terminal supernova.'),
+  catalogue('tarantula', 'NGC 2070', hours(5, 38, 42), degrees(-69, 6, 0), 161000 * LIGHT_YEAR_AU, 300 * LIGHT_YEAR_AU, '#e598bb', 'region', ['https://science.nasa.gov/missions/webb/a-cosmic-tarantula-caught-by-nasas-webb/'], '30 Doradus anchored on its central NGC 2070 cluster; NASA rounded 161000 ly LMC distance. 300 ly representative star-forming region radius, not a sharp boundary; gas cavities, dusty pillars and embedded forming stars.'),
+  catalogue('m33', 'M33', hours(1, 33, 50.8966), degrees(30, 39, 36.6304), 3e6 * LIGHT_YEAR_AU, 30000 * LIGHT_YEAR_AU, '#a8c7ef', 'galaxy', [`${MESSIER}messier-33/`], 'NASA rounded 3 million ly distance, consistent with the minimap; 30000 ly representative disk radius. Spiral galaxy with the NGC 604 stellar nursery.'),
+  catalogue('m87', 'M87', hours(12, 30, 49.4234), degrees(12, 23, 28.0437), 54e6 * LIGHT_YEAR_AU, 50000 * LIGHT_YEAR_AU, '#e6bc98', 'galaxy', [`${MESSIER}messier-87/`], 'NASA rounded 54 million ly distance; 50000 ly representative galactic extent, not black-hole radius. Active central accretion and relativistic jet; emission outside the horizon, unlike dim Sagittarius A*.'),
+  catalogue('centaurus-a', 'NGC 5128', hours(13, 25, 27.6152), degrees(-43, 1, 8.8050), 13e6 * LIGHT_YEAR_AU, 50000 * LIGHT_YEAR_AU, '#cfb09b', 'galaxy', ['https://www.eso.org/public/images/eso0005b/', 'https://sci.esa.int/web/xmm-newton/-/50236-centaurus-a-s-far-reaching-jets'], 'Rounded 13 million ly distance: published estimates differ around 10–13 million ly. 50000 ly representative galactic extent, not jet/lobe length. Dust-lane merger signatures, active nucleus, radio jets and lobes; black hole itself emits no light.'),
 ]);
 
 /** Decimal Julian year relative to J2000 noon; requests outside 1800–2050 clamp. */
@@ -175,7 +187,17 @@ export function coordinateBodies(referenceYear = DEFAULT_REFERENCE_YEAR): readon
   const moon = body('moon', vector(earth[0] + lunarOffset[0], earth[1] + lunarOffset[1], earth[2] + lunarOffset[2]), 1740 / AU_KM, '#b7bfce', 'planet', clamped ? 'illustrative' : 'inferred',
     { name: 'Moon (low-precision representative orbit)', urls: [LUNAR, 'https://science.nasa.gov/moon/facts/'], ...sourceDate,
       notes: `Unperturbed Schlyter lunar elements added to Earth, approximate J2000 precession; omitted solar perturbations cause degree-scale errors. Rounded physical radius. Not a precision lunar ephemeris.${dateNotes}` });
-  return Object.freeze([...planets, moon, ...STATIC_BODIES]);
+  const satellites = [
+    ['europa', 'jupiter', 670900, 1560.8, '#d9ccb6', 'https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/'],
+    ['titan', 'saturn', 1221865, 2575, '#d8a35d', 'https://science.nasa.gov/saturn/moons/titan/facts/'],
+  ] as const;
+  const outerMoons = satellites.map(([id, hostId, orbitKm, radiusKm, color, url]) => {
+    const host = planets.find(planet => planet.id === hostId)!.position;
+    return body(id, vector(host[0] + orbitKm / AU_KM, host[1], host[2]), radiusKm / AU_KM, color, 'planet', 'illustrative',
+      { name: `${id} host-relative orbital anchor`, urls: [url, 'https://ssd.jpl.nasa.gov/sats/elem/'], ...sourceDate,
+        notes: `Anchored on modeled ${hostId} with real approximate mean orbital radius ${orbitKm} km. Arbitrary fixed +x phase and ecliptic plane, NOT measured moon orientation or an ephemeris. Physical mean moon radius; no ocean or terrain coordinates are supplied.${dateNotes}` });
+  });
+  return Object.freeze([...planets, moon, ...outerMoons, ...STATIC_BODIES]);
 }
 
 /** Unknown IDs throw rather than silently sending a route to the wrong object. */

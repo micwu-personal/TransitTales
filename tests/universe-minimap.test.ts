@@ -38,6 +38,13 @@ describe('astronomical minimap model', () => {
     expect(MAP_EXTRA_BODIES.find(body => body.id === 'norma-cluster')!.source!.notes).toContain('cz/H0');
   });
 
+  it('shows M33 once and uses its destination coordinates rather than the former extra anchor', () => {
+    const data = universeMap(snapshot('m33', 1), options('local-group'));
+    const markers = data.markers.filter(marker => marker.id === 'm33');
+    expect(markers).toHaveLength(1);
+    expect(markers[0].position).toEqual(coordinateBody('m33').position);
+  });
+
   it('uses the exact flight camera, including pause and reduced-motion stops', () => {
     for (const to of ['moon', 'neptune', 'andromeda', 'quasar', 'horizon', 'beyond']) for (const progress of [0, .17, .333, .5, .83, 1]) {
       for (const reducedMotion of [false, true]) {

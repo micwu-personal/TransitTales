@@ -88,7 +88,21 @@ function mockSpeech() {
         await page.locator('#pause').click(); await page.waitForFunction(()=>window.__speech.entries.some(e=>e.object==='saturn' && e.rate<1));
     const flight = await entries(), intermediate = flight.filter(e=>e.object==='mars'||e.object==='jupiter');
     assert.equal(intermediate.filter(e=>e.object==='jupiter').length,1); assert.ok(intermediate.filter(e=>e.object==='mars').length<=2,'Only a paused active utterance may restart');
-    for (const item of intermediate) { assert.ok(item.camera); assert.equal(Number(item.age),13.8); assert.ok(item.progress> (item.object==='mars' ? .23 : .56) && item.progress < (item.object==='mars' ? .34 : .67),`Position-synchronized cue: ${JSON.stringify(item)}`); }
+    const positions = await page.evaluate(async items => {
+      const { DESTINATIONS } = await import('/src/universe/catalog.ts');
+      const { flybyCue } = await import('/src/universe/narration-cues.ts');
+      const { routeFrame } = await import('/src/universe/route.ts');
+      const location = id => { const body = DESTINATIONS.find(body => body.id === id); return { destinationId:id, kind:body.kind, color:body.color, epoch:'present' }; };
+      return items.map(item => {
+        const snapshot = { ...location('saturn'), origin:location('earth'), beta:.65, travelling:true, progress:Number(item.progress), paused:false, reducedMotion:false, coordinateView:true };
+        return { cue:flybyCue(snapshot)?.id, camera:routeFrame(snapshot).cameraAU.join(',') };
+      });
+    }, intermediate);
+    intermediate.forEach((item, index) => {
+      const resumedActiveLine = item.object === 'mars' && intermediate.slice(0,index).some(previous => previous.object === 'mars') && Number(item.progress) === Number(stopped);
+            assert.equal(Number(item.age),13.8); assert.ok(positions[index].cue === item.object || resumedActiveLine,`Position-synchronized cue or explicit paused-line restart: ${JSON.stringify(item)}`);
+            assert.equal(positions[index].camera,item.camera,'Narration uses the actual coordinate-flight camera');
+    });
     assert.equal(flight[0].object,'earth'); assert.equal(flight.at(-1).object,'saturn');
     assert.equal(await page.locator('#energy').textContent(),'86%','Completed fractional simulation value is formatted');
     await page.locator('#destination').selectOption('earth'); await page.locator('#depart').click(); await page.waitForTimeout(150);
@@ -151,6 +165,6 @@ function mockSpeech() {
       await p.locator('#narration-listen').click(); const buttonRects=await p.locator('.narration-actions button').evaluateAll(buttons=>buttons.map(b=>({h:b.getBoundingClientRect().height,w:b.getBoundingClientRect().width}))); assert.ok(buttonRects.every(r=>r.h>=44&&r.w>=44));
       if(output && [1440,390].includes(width) && ['en','zh-CN','mn-Mong-CN'].includes(lang)) {await p.locator('.flight-desk').screenshot({path:path.join(output,`voice-${width}-${lang}.png`)});}
     }
-    await layout.close(); assert.deepEqual(errors,[]); console.log('Cosmic narration browser checks passed: US Ana/default/manual accents, finish-before-replace across a whole flight, arrival priority/current captions, opt-in, 28 descriptions, coordinate flybys, pause/hidden/replay, late/missing voices, errors, music duck/mute and 25 responsive locale layouts (mock speech scheduling, not audible quality).');
+    await layout.close(); assert.deepEqual(errors,[]); console.log('Cosmic narration browser checks passed: US Ana/default/manual accents, finish-before-replace across a whole flight, arrival priority/current captions, opt-in, 40 descriptions, coordinate flybys, pause/hidden/replay, late/missing voices, errors, music duck/mute and 25 responsive locale layouts (mock speech scheduling, not audible quality).');
   } finally { await browser?.close(); await server.close(); }
 })().catch(error=>{console.error(error);process.exitCode=1;});

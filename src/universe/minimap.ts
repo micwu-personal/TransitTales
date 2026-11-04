@@ -59,7 +59,8 @@ export const MAP_EXTRA_BODIES: readonly CoordinateBody[] = Object.freeze([
     'Approximate low-redshift distance cz/H0, SIMBAD cz=4880.62 km/s, assumed H0=70 km/s/Mpc. Peculiar velocities matter; not a precision distance. Representative cluster near the Great Attractor, not a measured Great Attractor point or Laniakea barycentre.'),
 ]);
 
-const bodies = Object.freeze([...coordinateBodies(), ...MAP_EXTRA_BODIES]);
+const destinations = coordinateBodies();
+const bodies = Object.freeze([...destinations, ...MAP_EXTRA_BODIES.filter(extra => !destinations.some(destination => destination.id === extra.id))]);
 const comoving = new Set(['quasar', 'horizon', 'beyond']);
 const solarPlanets = bodies.filter(body => body.evidence === 'ephemeris');
 const point = (x: number, y: number, z: number): Vec3 => Object.freeze([x, y, z] as const);

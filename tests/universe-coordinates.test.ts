@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DESTINATIONS } from '../src/universe/catalog';
+import { routeFrame } from '../src/universe/route';
 import {
   AU_KM, DEFAULT_REFERENCE_YEAR, J2000_OBLIQUITY_DEGREES, LIGHT_YEAR_AU, PARSEC_AU,
   coordinateBodies, coordinateBody, equatorialToEcliptic, solveKepler, type Vec3,
@@ -15,8 +16,8 @@ const PLANET_BOUNDS = [
 describe('astronomical coordinate catalogue', () => {
   it('covers every existing destination exactly once with finite AU coordinates and source status', () => {
     const bodies = coordinateBodies();
-    expect(bodies).toHaveLength(28);
-    expect(new Set(bodies.map(body => body.id)).size).toBe(28);
+    expect(bodies).toHaveLength(40);
+    expect(new Set(bodies.map(body => body.id)).size).toBe(DESTINATIONS.length);
     expect(bodies.map(body => body.id).sort()).toEqual(DESTINATIONS.map(body => body.id).sort());
     for (const body of bodies) {
       expect(body.position).toHaveLength(3);
@@ -30,6 +31,73 @@ describe('astronomical coordinate catalogue', () => {
       expect(coordinateBody(body.id)).toEqual(body);
     }
     expect(() => coordinateBody('not-an-object')).toThrow(RangeError);
+  });
+
+  it('appends twelve named destinations without changing saved destination IDs or ordering', () => {
+    expect(DESTINATIONS.slice(0, 28).map(({ id }) => id)).toEqual([
+      'earth', 'moon', 'sun', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'asteroids', 'comet',
+      'kuiper', 'oort', 'proxima', 'proxima-b', 'nebula', 'cluster', 'neutron', 'stellar-hole', 'sagittarius', 'milky-way',
+      'magellanic', 'andromeda', 'local-group', 'quasar', 'horizon', 'beyond',
+    ]);
+    expect(DESTINATIONS.slice(28).map(({ id }) => id)).toEqual([
+      'europa', 'titan', 'pluto', 'sirius', 'betelgeuse', 'crab-pulsar', 'cygnus-x1', 'eta-carinae', 'tarantula', 'm33', 'm87', 'centaurus-a',
+    ]);
+  });
+
+  it.each([2000, DEFAULT_REFERENCE_YEAR, 2051])('keeps new moons at real host-relative radii but labels arbitrary orbital phase at %s', year => {
+    for (const [id, host, orbitKm, radiusKm] of [['europa', 'jupiter', 670900, 1560.8], ['titan', 'saturn', 1221865, 2575]] as const) {
+      const moon = coordinateBody(id, year);
+      expect(length(difference(moon.position, coordinateBody(host, year).position)) * AU_KM).toBeCloseTo(orbitKm, 5);
+      expect(moon.radiusAU * AU_KM).toBeCloseTo(radiusKm, 6);
+      expect(moon.evidence).toBe('illustrative');
+      expect(moon.source?.notes).toContain('Arbitrary fixed +x phase');
+      expect(moon.source?.notes).toContain('NOT measured moon orientation or an ephemeris');
+      expect(moon.source?.requestedReferenceYear).toBe(year);
+    }
+  });
+
+  it('keeps the dated Pluto Horizons vector fixed rather than claiming unmodeled orbital evolution', () => {
+    const pluto = coordinateBody('pluto');
+    expect(pluto.position).toEqual([20.04991226189572, -29.33598776798562, -2.659750554079825]);
+    expect(length(pluto.position)).toBeGreaterThan(35);
+    expect(length(pluto.position)).toBeLessThan(36);
+    expect(pluto.radiusAU * AU_KM).toBeCloseTo(1188.5, 6);
+    expect(pluto.evidence).toBe('ephemeris');
+    expect(pluto.source?.referenceYear).toBe(DEFAULT_REFERENCE_YEAR);
+    expect(pluto.source?.notes).toContain('2026-11-02 00:00 TDB');
+    expect(pluto.source?.notes).toContain('NOT an ephemeris of any other requested epoch');
+    expect(coordinateBody('pluto', 2000)).toEqual(pluto);
+    expect(coordinateBody('pluto', 5e9)).toEqual(pluto);
+  });
+
+  it('uses distinct measured J2000 directions and rounded source-backed distances for the new stars and galaxies', () => {
+    for (const item of DESTINATIONS.slice(31)) {
+      const anchor = coordinateBody(item.id);
+      expect(anchor.evidence).toBe('catalogue');
+      expect(length(anchor.position) / LIGHT_YEAR_AU / item.distanceLy).toBeCloseTo(1, 12);
+      expect(anchor.source?.urls.some(url => url.includes('simbad'))).toBe(true);
+      expect(anchor.source?.urls.length).toBeGreaterThan(1);
+      expect(anchor.source?.notes).toContain('no proper motion');
+    }
+    expect(coordinateBody('sirius').position).toEqual(equatorialToEcliptic(15 * (6 + 45 / 60 + 8.91728 / 3600), -(16 + 42 / 60 + 58.0171 / 3600), 8.6 * LIGHT_YEAR_AU));
+    expect(coordinateBody('m33').position).toEqual(equatorialToEcliptic(15 * (1 + 33 / 60 + 50.8966 / 3600), 30 + 39 / 60 + 36.6304 / 3600, 3e6 * LIGHT_YEAR_AU));
+    expect(coordinateBody('betelgeuse').source?.urls).toContain('https://arxiv.org/abs/2006.09837');
+    expect(coordinateBody('cygnus-x1').source?.notes).toContain('this hole spins');
+    expect(coordinateBody('m87').source?.notes).toContain('not black-hole radius');
+  });
+
+  it.each(DESTINATIONS.slice(28))('arrives at the named coordinate anchor for $id rather than a generic route point', item => {
+    const target = coordinateBody(item.id);
+    const earth = DESTINATIONS.find(({ id }) => id === 'earth')!;
+    const frame = routeFrame({ destinationId: item.id, kind: item.kind, color: item.color, epoch: 'present',
+      origin: { destinationId: earth.id, kind: earth.kind, color: earth.color, epoch: 'present' },
+      beta: .65, travelling: true, progress: 1, paused: false, reducedMotion: false });
+    expect(frame.itinerary.at(-1)).toBe(item.id);
+    expect(frame.cameraAU.every(Number.isFinite)).toBe(true);
+    const clearance = length(difference(frame.cameraAU, target.position));
+    expect(clearance).toBeGreaterThan(target.radiusAU);
+    expect(clearance).toBeLessThan(Math.max(target.radiusAU * 8, 1e-7));
+    expect(frame.objects.find(({ id }) => id === item.id)?.evidence).toBe(target.evidence);
   });
 
   it('uses physical AU units, not normalized scene units or Earth-centred coordinates', () => {

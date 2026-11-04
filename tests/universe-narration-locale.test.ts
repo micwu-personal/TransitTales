@@ -67,8 +67,8 @@ const caveats: Record<Language, Record<string, readonly RegExp[]>> = {
 };
 
 describe('localized cosmic narration', () => {
-  it.each(languages)('covers all 28 destinations with distinct paragraphs and brief cues in %s', language => {
-    expect(DESTINATIONS).toHaveLength(28);
+  it.each(languages)('covers all 40 destinations with distinct paragraphs and brief cues in %s', language => {
+    expect(DESTINATIONS).toHaveLength(40);
     for (const { id } of DESTINATIONS) {
       const paragraph = objectNarration(id, language);
       const short = objectNarration(id, language, true);
@@ -86,6 +86,24 @@ describe('localized cosmic narration', () => {
       }
       if (language === 'en') expect(short.split(/\s+/).length, id).toBeLessThanOrEqual(7);
     }
+  });
+
+  it('preserves each new destination’s distinctive science and observational limits', () => {
+    const story = (id: string) => objectNarration(id, 'en').toLowerCase();
+    expect(story('europa')).toContain('no life has been confirmed');
+    expect(story('titan')).toContain('methane and ethane');
+    expect(story('pluto')).toContain('nitrogen ice');
+    expect(story('sirius')).toContain('white dwarf');
+    expect(story('sirius')).toContain('measured gravitational redshift');
+    expect(story('betelgeuse')).toContain('not an observed supernova');
+    expect(story('crab-pulsar')).toContain('particle-wind nebula');
+    expect(story('crab-pulsar')).toContain('thirty times');
+    expect(story('cygnus-x1')).toContain('stellar wind');
+    expect(story('eta-carinae')).toContain('survived');
+    expect(story('tarantula')).toContain('forming stars');
+    expect(story('m33')).toContain('spiral');
+    expect(story('m87')).toContain('outside the horizon');
+    expect(story('centaurus-a')).toContain('radio');
   });
 
   it('has independent translations instead of falling back to another language', () => {
