@@ -64,7 +64,7 @@ beforeEach(() => {
 afterEach(() => { for (const value of players.splice(0)) value.dispose(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 describe('pure sine tone scheduling', () => {
-  it('schedules exact tuning, zero detune, a click-free envelope and stop at the boundary', () => {
+  it('schedules exact tuning, zero detune, an articulated envelope and stop at the boundary', () => {
     const context = new Context();
     const destination = new Node();
     const handles = scheduleTone(asContext(context), 69, 11, .5, asNode(destination));
@@ -78,8 +78,8 @@ describe('pure sine tone scheduling', () => {
     expect(gain.connect).toHaveBeenCalledWith(destination);
     expect(oscillator.start).toHaveBeenCalledExactlyOnceWith(11);
     expect(oscillator.stop).toHaveBeenCalledExactlyOnceWith(11.5);
-    expect(gain.gain.setValueAtTime.mock.calls).toEqual([[0, 11], [1, 11.482]]);
-    expect(gain.gain.linearRampToValueAtTime.mock.calls).toEqual([[1, 11.008], [0, 11.5]]);
+    expect(gain.gain.setValueAtTime.mock.calls).toEqual([[0, 11], [.72, 11.5 - .012 - .012]]);
+    expect(gain.gain.linearRampToValueAtTime.mock.calls).toEqual([[1, 11.004], [.72, 11.004 + .035], [0, 11.5 - .012]]);
   });
   it('preserves frequency precision at every MIDI and keeps tiny envelopes inside duration', () => {
     const context = new Context();
@@ -88,8 +88,12 @@ describe('pure sine tone scheduling', () => {
       const oscillator = context.oscillators.at(-1)!;
       const gain = context.gains.at(-1)!;
       expect(oscillator.frequency.setValueAtTime).toHaveBeenCalledWith(midiToFrequency(midi), 0);
-      expect(gain.gain.linearRampToValueAtTime.mock.calls).toEqual([[1, .00015], [0, .001]]);
-      expect(gain.gain.setValueAtTime.mock.calls).toEqual([[0, 0], [1, .0008]]);
+      const ramps = gain.gain.linearRampToValueAtTime.mock.calls;
+      expect(ramps.map(([value]) => value)).toEqual([1, .72, 0]);
+      expect(ramps[0][1]).toBeCloseTo(.00008, 12);
+      expect(ramps[1][1]).toBeCloseTo(.00028, 12);
+      expect(ramps[2][1]).toBeCloseTo(.0009, 12);
+      expect(gain.gain.setValueAtTime.mock.calls[1][1]).toBeCloseTo(.00078, 12);
       expect(oscillator.stop).toHaveBeenCalledWith(.001);
     }
   });
@@ -190,7 +194,7 @@ describe('note player playback', () => {
   it('rejects invalid drafts, malformed inputs and out-of-bounds BPM without audio creation', async () => {
     const unavailable = vi.fn(); const value = player({ onUnavailable: unavailable });
     for (const invalid of [score([]), score([note({ octave: 9 })]), score([note({ duration: 'half', dotted: true }), note({ duration: 'half' })]),
-      score(Array.from({ length: 17 }, () => note({ duration: 'sixteenth' }))), null as unknown as Score]) {
+      score(Array.from({ length: 65 }, () => note({ duration: 'sixteenth' }))), null as unknown as Score]) {
       expect(await value.play(invalid, 80)).toBe(false);
     }
     for (const bpm of [0, 39, 161, NaN, Infinity]) expect(await value.play(score(), bpm)).toBe(false);
@@ -307,7 +311,7 @@ it.skipIf(environment.MELODY_BROWSER !== '1')('renders pure, correctly tuned sin
   const profile: string = resolve('.melody-audio-browser-profile');
   await mkdir(profile, { recursive: true });
   const server = await createServer({ configFile: false, optimizeDeps: { noDiscovery: true, entries: [] },
-    server: { host: '127.0.0.1', port: 0 }, logLevel: 'silent', plugins: [{ name: 'melody-offline-check', configureServer(server) {
+    server: { host: '127.0.0.1', port: 0, watch: null }, logLevel: 'silent', plugins: [{ name: 'melody-offline-check', configureServer(server) {
       server.middlewares.use('/melody-frequency-check', (_request, response) => {
         response.setHeader('Content-Type', 'text/html');
         response.end('<!doctype html><body>Melody audio check</body>');
@@ -371,8 +375,8 @@ it.skipIf(environment.MELODY_BROWSER !== '1')('renders pure, correctly tuned sin
       const audioPath = `${base}/src/melody/audio.ts`;
       const modelPath = `${base}/src/melody/model.ts`;
       const browserImport = new Function('path', 'return import(path)');
-      const { scheduleTone } = await browserImport(audioPath);
-      const { midiToFrequency } = await browserImport(modelPath);
+      const { scheduleTone, createNotePlayer } = await browserImport(audioPath);
+      const { midiToFrequency, totalBeats } = await browserImport(modelPath);
       const results = [];
       for (const midi of [0, 12, 59, 60, 65, 69, 81, 120, 127]) {
         const rate = 44100;
@@ -394,22 +398,111 @@ it.skipIf(environment.MELODY_BROWSER !== '1')('renders pure, correctly tuned sin
         const tailSilent = data.slice(Math.ceil(3.101 * rate)).every(x => x === 0);
         results.push({ midi, expected, measured, fundamentalPowerRatio, tailSilent, rms: Math.sqrt(power / (last - first)) });
       }
-      return results;
+      const rate = 44100;
+      const peak = (data: Float32Array, from: number, to: number) => {
+        let maximum = 0;
+        for (let i = Math.ceil(from * rate); i < Math.floor(to * rate); i++) maximum = Math.max(maximum, Math.abs(data[i]));
+        return maximum;
+      };
+      const silent = (data: Float32Array, from: number, to: number) => peak(data, from, to) === 0;
+      const repeatedContext = new OfflineAudioContext(1, Math.ceil(.8 * rate), rate);
+      const repeatedMaster = repeatedContext.createGain();
+      repeatedMaster.gain.value = .25; repeatedMaster.connect(repeatedContext.destination);
+      for (let i = 0; i < 3; i++) scheduleTone(repeatedContext, 69, .05 + i * .2, .2, repeatedMaster);
+      const repeatedData = (await repeatedContext.startRendering()).getChannelData(0);
+      const repeated = Array.from({ length: 3 }, (_, i) => {
+        const start = .05 + i * .2;
+        return {
+          earlyAttack: peak(repeatedData, start + .0005, start + .0015),
+          attackPeak: peak(repeatedData, start + .004, start + .009),
+          decayPeak: peak(repeatedData, start + .018, start + .024),
+          sustainPeak: peak(repeatedData, start + .065, start + .095),
+          releasePeak: peak(repeatedData, start + .181, start + .185),
+          gapSilent: silent(repeatedData, start + .189, start + .199),
+        };
+      });
+      const event = { letter: 'C', octave: 4, accidental: null, duration: 'half', dotted: false, rest: false,
+        chord: ['E', 'G', 'B'].map(letter => ({ letter, octave: 4, accidental: null })) };
+      const events = [event, { ...event, duration: 'quarter', rest: true }, { ...event, duration: 'quarter', dynamic: 'f' }];
+      const polyphonicScore = { clef: 'treble', key: 'C', meter: { beats: 4, unit: 4 }, events, dynamic: 'ff', repeat: true,
+        parts: Array.from({ length: 3 }, () => ({ clef: 'bass', events })) };
+      const seconds = totalBeats(polyphonicScore) * .5;
+      const polyphonicContext = new OfflineAudioContext(1, Math.ceil((seconds + .1) * rate), rate);
+      let sources = 0;
+      // Real player scheduling and normalization, backed by offline nodes and a running clock facade.
+      const originalConstructor = window.AudioContext;
+      window.AudioContext = function () {
+        return {
+          get currentTime() { return polyphonicContext.currentTime; }, state: 'running', destination: polyphonicContext.destination,
+          createGain: () => polyphonicContext.createGain(),
+          createOscillator: () => { sources++; return polyphonicContext.createOscillator(); },
+          addEventListener() {}, removeEventListener() {}, close: async () => {},
+        };
+      } as unknown as typeof AudioContext;
+      const player = createNotePlayer();
+      let polyphony;
+      try {
+        if (!await player.play(polyphonicScore, 120)) throw new Error('Offline-backed polyphonic player refused the score');
+        const data = (await polyphonicContext.startRendering()).getChannelData(0);
+        const rms = (from: number, to: number) => {
+          let power = 0;
+          const first = Math.ceil(from * rate), last = Math.floor(to * rate);
+          for (let i = first; i < last; i++) power += data[i] * data[i];
+          return Math.sqrt(power / (last - first));
+        };
+        polyphony = { sources, finite: data.every(Number.isFinite), peak: peak(data, 0, seconds + .1),
+          firstPassRms: rms(.1, .9), secondPassRms: rms(2.1, 2.9),
+          firstPassPeak: peak(data, .05, 1), secondPassPeak: peak(data, 2.05, 3),
+          firstRestSilent: silent(data, 1.04, 1.51), secondRestSilent: silent(data, 3.04, 3.51),
+          repeatBoundarySilent: silent(data, 2.015, 2.024), tailSilent: silent(data, seconds + .03, seconds + .09) };
+      } finally {
+        player.dispose(); window.AudioContext = originalConstructor;
+      }
+      return { tuning: results, repeated, polyphony };
     }
     const result = await Promise.race([
       call('Runtime.evaluate', { expression: `(${check.toString()})(${JSON.stringify(base)})`, awaitPromise: true, returnByValue: true }),
       new Promise<never>((_resolve, reject) => { renderTimeout = setTimeout(() => reject(new Error('Offline rendering timed out')), 45000); }),
     ]);
     if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
-    const metrics = result.result?.value as { midi: number; expected: number; measured: number; fundamentalPowerRatio: number; tailSilent: boolean; rms: number }[];
-    expect(metrics).toHaveLength(9);
-    for (const metric of metrics) {
+    const metrics = result.result?.value as {
+      tuning: { midi: number; expected: number; measured: number; fundamentalPowerRatio: number; tailSilent: boolean; rms: number }[];
+      repeated: { earlyAttack: number; attackPeak: number; decayPeak: number; sustainPeak: number; releasePeak: number; gapSilent: boolean }[];
+      polyphony: { sources: number; finite: boolean; peak: number; firstPassRms: number; secondPassRms: number; firstPassPeak: number;
+        secondPassPeak: number; firstRestSilent: boolean; secondRestSilent: boolean; repeatBoundarySilent: boolean; tailSilent: boolean };
+    };
+    expect(metrics.tuning).toHaveLength(9);
+    for (const metric of metrics.tuning) {
       expect(Math.abs(metric.measured - metric.expected), `MIDI ${metric.midi} frequency`).toBeLessThan(.02);
       expect(metric.fundamentalPowerRatio, `MIDI ${metric.midi} spectrum`).toBeGreaterThan(.95);
       expect(metric.tailSilent, `MIDI ${metric.midi} release`).toBe(true);
-      expect(metric.rms).toBeGreaterThan(.16); expect(metric.rms).toBeLessThan(.19);
+      // A .25 master and .72 sustain yield .25 * .72 / sqrt(2) RMS.
+      expect(metric.rms).toBeCloseTo(.25 * .72 / Math.sqrt(2), 2);
     }
-    console.info('Offline tuning verified:', JSON.stringify(metrics));
+    expect(metrics.repeated).toHaveLength(3);
+    for (const [index, articulation] of metrics.repeated.entries()) {
+      expect(articulation.earlyAttack, `Attack ${index} starts softly`).toBeLessThan(articulation.attackPeak * .45);
+      expect(articulation.attackPeak, `Attack ${index} is distinct`).toBeGreaterThan(.24);
+      expect(articulation.attackPeak, `Decay ${index} leaves the peak`).toBeGreaterThan(articulation.decayPeak * 1.1);
+      expect(articulation.decayPeak, `Decay ${index} reaches sustain`).toBeGreaterThan(articulation.sustainPeak * 1.1);
+      expect(articulation.sustainPeak).toBeCloseTo(.18, 3);
+      expect(articulation.releasePeak, `Release ${index} fades`).toBeLessThan(articulation.sustainPeak * .65);
+      expect(articulation.gapSilent, `Repeated onset ${index} is separated`).toBe(true);
+    }
+    expect(metrics.polyphony.sources).toBe(64);
+    expect(metrics.polyphony.finite).toBe(true);
+    expect(metrics.polyphony.peak).toBeGreaterThan(.08);
+    expect(metrics.polyphony.peak).toBeLessThanOrEqual(.25 + 1e-6);
+    expect(metrics.polyphony.firstPassPeak).toBeGreaterThan(.08);
+    expect(metrics.polyphony.secondPassPeak).toBeGreaterThan(.08);
+    // Browser oscillator phase at restart may differ; compare phase-independent sustained energy.
+    expect(metrics.polyphony.firstPassRms).toBeCloseTo(.25 * .72 / Math.sqrt(8), 3);
+    expect(metrics.polyphony.secondPassRms).toBeCloseTo(metrics.polyphony.firstPassRms, 3);
+    expect(metrics.polyphony.firstRestSilent).toBe(true);
+    expect(metrics.polyphony.secondRestSilent).toBe(true);
+    expect(metrics.polyphony.repeatBoundarySilent).toBe(true);
+    expect(metrics.polyphony.tailSilent).toBe(true);
+    console.info('Offline audio verified:', JSON.stringify(metrics));
   } finally {
     if (renderTimeout !== undefined) clearTimeout(renderTimeout);
     if (socket?.readyState === WebSocket.OPEN) await closeBrowser?.();
@@ -420,3 +513,130 @@ it.skipIf(environment.MELODY_BROWSER !== '1')('renders pure, correctly tuned sin
     await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 300 });
   }
 }, 90000);
+
+describe('articulated polyphonic playback', () => {
+  const pitch = { letter: 'C' as const, octave: 4, accidental: null };
+  it('rearticulates repeated pitches with attack, decay, release and silence before each onset', async () => {
+    const value = player();
+    expect(await value.play(score([note(), note(), note()]), 120)).toBe(true);
+    const context = contexts[0];
+    expect(context.oscillators).toHaveLength(3);
+    for (let index = 0; index < 3; index++) {
+      const oscillator = context.oscillators[index]; const gain = context.gains[index + 1].gain;
+      const start = 10.025 + index * .5;
+      expect(oscillator.frequency.setValueAtTime).toHaveBeenCalledExactlyOnceWith(440, start);
+      expect(oscillator.detune.setValueAtTime).toHaveBeenCalledExactlyOnceWith(0, start);
+      expect(gain.setValueAtTime.mock.calls[0]).toEqual([0, start]);
+      const ramps = gain.linearRampToValueAtTime.mock.calls;
+      expect(ramps).toHaveLength(3);
+      expect(ramps[0][0]).toBeCloseTo(10 ** (-6 / 20), 12);
+      expect(ramps[1][0]).toBeCloseTo(ramps[0][0] * .72, 12);
+      expect(ramps[0][1]).toBeCloseTo(start + .004, 12);
+      expect(ramps[1][1]).toBeCloseTo(start + .039, 12);
+      expect(ramps[2]).toEqual([0, start + .5 - .012]);
+      expect(oscillator.stop).toHaveBeenCalledWith(start + .5);
+    }
+  });
+  it('normalizes maximum sustained overlap, not just the number of simultaneous attacks', async () => {
+    const value = player();
+    const melody: Score = { ...score([note({ duration: 'whole', chord: [pitch], dynamic: 'ff' })]),
+      parts: [{ clef: 'bass', events: [note({ letter: 'E', dynamic: 'ff' }), note({ letter: 'F', dynamic: 'pp' }), note({ letter: 'G' }), note({ letter: 'B' })] }],
+    };
+    expect(await value.play(melody, 60)).toBe(true);
+    const context = contexts[0];
+    expect(context.oscillators).toHaveLength(6);
+    expect(context.oscillators.map(oscillator => oscillator.frequency.setValueAtTime.mock.calls[0][0])).toEqual([
+      440, midiToFrequency(60), midiToFrequency(64), midiToFrequency(65), midiToFrequency(67), midiToFrequency(71),
+    ]);
+    const peaks = context.gains.slice(1).map(gain => gain.gain.linearRampToValueAtTime.mock.calls[0][0]);
+    expect(peaks.slice(0, 3)).toEqual([1 / 3, 1 / 3, 1 / 3]);
+    expect(peaks[3]).toBeCloseTo(10 ** (-18 / 20) / 3, 12);
+    expect(peaks[4]).toBe(peaks[3]); expect(peaks[5]).toBe(peaks[3]);
+    expect(peaks[0] + peaks[1] + peaks[2]).toBeLessThanOrEqual(1);
+    expect(context.oscillators[0].stop).toHaveBeenCalledWith(14.025);
+    expect(context.oscillators[3].stop).toHaveBeenCalledWith(12.025);
+  });
+  it('uses principled monotonic dB dynamics and independently persistent voice markings', async () => {
+    const dynamics = ['pp', 'p', 'mp', 'mf', 'f', 'ff'] as const;
+    const melody = score(dynamics.map(dynamic => note({ dynamic })));
+    const value = player();
+    expect(await value.play(melody, 120)).toBe(true);
+    const gains = contexts[0].gains.slice(1).map(gain => gain.gain.linearRampToValueAtTime.mock.calls[0][0]);
+    expect(gains).toEqual([-18, -14, -10, -6, -3, 0].map(db => 10 ** (db / 20)));
+    expect(gains.every((gain, i) => !i || gain > gains[i - 1])).toBe(true);
+  });
+  it('supports all sixteen simultaneous sine tones while bounding the sum of peak gains', async () => {
+    const event = note({ duration: 'whole', chord: [pitch, { ...pitch, letter: 'E' }, { ...pitch, letter: 'G' }] });
+    const melody: Score = { ...score([event]), dynamic: 'ff', parts: Array.from({ length: 3 }, () => ({ clef: 'bass', events: [event] })) };
+    const value = player(); expect(await value.play(melody, 80)).toBe(true);
+    const context = contexts[0]; expect(context.oscillators).toHaveLength(16);
+    expect(context.oscillators.every(oscillator => oscillator.type === 'sine')).toBe(true);
+    const peaks = context.gains.slice(1).map(gain => gain.gain.linearRampToValueAtTime.mock.calls[0][0]);
+    expect(peaks.reduce((sum, peak) => sum + peak, 0)).toBe(1);
+    value.stop();
+    expect(context.oscillators.every(oscillator => oscillator.disconnect.mock.calls.length === 1)).toBe(true);
+  });
+  it('schedules exact triplet/rest spacing and two full passes with clock-driven moment callbacks', async () => {
+    const onPosition = vi.fn(); const onFinish = vi.fn();
+    const value = player({ onPosition, onFinish });
+    const melody: Score = { ...score(Array.from({ length: 3 }, (_, i) => note({ tuplet: 3, duration: 'eighth', rest: i === 1 }))), repeat: true };
+    expect(await value.play(melody, 120)).toBe(true);
+    const context = contexts[0];
+    expect(context.oscillators).toHaveLength(4);
+    expect(context.oscillators.map(oscillator => oscillator.start.mock.calls[0][0])).toEqual([10.025, 10.025 + 1 / 3, 10.525, 10.525 + 1 / 3]);
+    expect(context.oscillators[0].stop.mock.calls[0][0]).toBeCloseTo(10.025 + 1 / 6, 12);
+    context.currentTime = 10.025 + .25; vi.advanceTimersByTime(34);
+    expect(onPosition.mock.calls.at(-1)![0]).toBe(1);
+    expect(onPosition.mock.calls.at(-1)![1]).toBeCloseTo(.5, 12);
+    context.currentTime = 10.525 + .25; vi.advanceTimersByTime(34);
+    expect(onPosition.mock.calls.at(-1)![0]).toBe(4);
+    expect(onPosition.mock.calls.at(-1)![1]).toBeCloseTo(.5, 12);
+    context.currentTime = 11.025; vi.advanceTimersByTime(34);
+    expect(value.playing).toBe(false); expect(value.elapsedSeconds).toBe(1);
+    expect(onFinish).toHaveBeenCalledExactlyOnceWith();
+  });
+  it('highlights the shared onset timeline without retriggering sustained tones', async () => {
+    const onPosition = vi.fn(); const value = player({ onPosition });
+    const melody: Score = { ...score([note({ duration: 'whole' })]), parts: [{ clef: 'bass', events: [note(), note({ rest: true })] }] };
+    expect(await value.play(melody, 120)).toBe(true);
+    const context = contexts[0]; expect(context.oscillators).toHaveLength(2);
+    context.currentTime = 11.275; vi.advanceTimersByTime(34);
+    expect(onPosition).toHaveBeenLastCalledWith(1, .5);
+    expect(value.playing).toBe(true);
+    context.currentTime = 12.025; vi.advanceTimersByTime(34);
+    expect(value.playing).toBe(false); expect(value.elapsedSeconds).toBe(2);
+  });
+  it('previews partial tuplets and unequal voice lengths but rejects staff/chord caps', async () => {
+    const value = player();
+    const partial: Score = { ...score([note({ duration: 'half', dotted: true }), note({ tuplet: 3 }), note()]), parts: [{ clef: 'bass', events: [note()] }] };
+    expect(await value.play(partial, 80)).toBe(true);
+    expect(contexts[0].oscillators).toHaveLength(4);
+    const invalidChord = score([note({ chord: Array.from({ length: 4 }, () => pitch) })]);
+    expect(await value.play(invalidChord, 80)).toBe(false);
+    const invalidVoices: Score = { ...score(), parts: Array.from({ length: 4 }, () => ({ clef: 'bass', events: [note()] })) };
+    expect(await value.play(invalidVoices, 80)).toBe(false);
+    expect(value.playing).toBe(false);
+  });
+  it('snapshots written performance before pending resume even if the caller edits the score', async () => {
+    initialState = 'suspended'; const pending = deferred(); resumeFactory = () => pending.promise;
+    const value = player(); const melody: Score = { ...score([note()]), repeat: true };
+    const playing = value.play(melody, 120);
+    melody.repeat = false; melody.events[0].duration = 'whole'; melody.events[0].letter = 'C';
+    pending.resolve(); expect(await playing).toBe(true);
+    const context = contexts[0]; expect(context.oscillators).toHaveLength(2);
+    expect(context.oscillators[0].frequency.setValueAtTime).toHaveBeenCalledWith(440, 10.025);
+    context.currentTime = 11.025; vi.advanceTimersByTime(34);
+    expect(value.playing).toBe(false); expect(value.elapsedSeconds).toBe(1);
+  });
+  it('validates optional tone gain and retains the legacy five-argument signature', () => {
+    const context = new Context();
+    for (const amplitude of [-1, 1.1, NaN, Infinity]) {
+      expect(() => scheduleTone(asContext(context), 69, 0, 1, asNode(context.destination), amplitude)).toThrow(RangeError);
+    }
+    expect(context.oscillators).toHaveLength(0);
+    scheduleTone(asContext(context), 69, 0, 1, asNode(context.destination), .2);
+    expect(context.gains[0].gain.linearRampToValueAtTime.mock.calls.map(([value]) => value)).toEqual([.2, .2 * .72, 0]);
+    scheduleTone(asContext(context), 69, 1, 1, asNode(context.destination));
+    expect(context.gains[1].gain.linearRampToValueAtTime.mock.calls[0][0]).toBe(1);
+  });
+});

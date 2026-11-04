@@ -66,31 +66,85 @@ const { mkdirSync } = require('node:fs');
     assert.ok(await page.locator('#status').evaluate(el => el.classList.contains('success')));
     await page.locator('#next').click();
     assert.equal(await page.locator('#lesson-length').getAttribute('aria-current'),'step');
-    await page.locator('#letter').selectOption('C');
+    await page.locator('#duration').selectOption('half');
     await page.locator('#undo').click();
-    assert.equal(await page.locator('#letter').inputValue(),'D');
+    assert.equal(await page.locator('#duration').inputValue(),'quarter');
     await page.locator('#reset').click();
+    await page.locator('#listen').click();
+    await page.waitForFunction(() => !document.querySelector('#stop').disabled);
+    assert.equal(await page.locator('#target-staff').count(),0,'Listening does not reveal the target score');
+    assert.equal(await page.locator('#draft-staff .playing').count(),0,'Hidden target has no draft playhead');
+    await page.locator('#stop').click();
     await page.locator('#hint').click();
     assert.equal(await page.locator('#target-staff [tabindex]').count(),0);
     await page.locator('#score-note-0').focus();
     await page.keyboard.press('ArrowUp');
-    assert.equal(await page.locator('#letter').inputValue(),'E');
+    assert.equal(await page.locator('#letter').inputValue(),'D');
     assert.equal(await page.evaluate(() => document.activeElement.id),'score-note-0');
     await page.locator('#undo').click();
 
     const lessons = await page.evaluate(async () => {
       const {LESSONS} = await import('/src/melody/lessons.ts');
-      return LESSONS.map(l => ({id:l.id,letter:l.target.events[0].letter}));
+      return LESSONS;
     });
-    for (const lesson of lessons) {
+    for (const lesson of lessons.filter(lesson => !process.env.MELODY_LESSON || lesson.id === process.env.MELODY_LESSON)) {
+      await page.locator(`[data-group="${lesson.group}"]`).click();
       await page.locator(`#lesson-${lesson.id}`).click();
-      await page.locator('#letter').selectOption(lesson.letter);
+      const select = async (id,value) => {
+        if (await page.locator(`#${id}`).inputValue() !== String(value)) await page.locator(`#${id}`).selectOption({ value: String(value) });
+        assert.equal(await page.locator(`#${id}`).inputValue(),String(value),`${lesson.id}: ${id} selection`);
+      };
+      await select('key',lesson.target.key);
+      await select('meter',`${lesson.target.meter.beats}/${lesson.target.meter.unit}`);
+      await select('score-dynamic',lesson.target.dynamic ?? 'mf');
+      await page.locator('#repeat').setChecked(lesson.target.repeat ?? false);
+      const targetParts = [lesson.target,...(lesson.target.parts ?? [])], initialParts = [lesson.initial,...(lesson.initial.parts ?? [])];
+      for (let partIndex=0;partIndex<targetParts.length;partIndex++) {
+        await select('part',partIndex);
+        await select('clef',targetParts[partIndex].clef);
+        for (let index=0;index<targetParts[partIndex].events.length;index++) {
+          const target=targetParts[partIndex].events[index], initial=initialParts[partIndex].events[index];
+          if (JSON.stringify(target) === JSON.stringify(initial)) continue;
+          await page.locator(`[data-select="${index}"]`).click();
+          await select('duration',target.duration);
+          await page.locator('#dotted').setChecked(target.dotted);
+          await page.locator('#rest').setChecked(target.rest);
+          await select('event-dynamic',target.dynamic ?? 'inherit');
+          if (target.tuplet !== initial.tuplet) await page.locator('#tuplet').setChecked(target.tuplet === 3);
+          if (!target.rest) for (const [pitchIndex,pitch] of [target,...(target.chord ?? [])].entries()) {
+            await select('tone',pitchIndex);
+            await select('letter',pitch.letter); await select('octave',pitch.octave);
+            await select('accidental',pitch.accidental === null ? 'inherit' : pitch.accidental);
+          }
+        }
+      }
       await page.locator('#check').click();
-      assert.ok(await page.locator('#status').evaluate(el => el.classList.contains('success')),`complete ${lesson.id}`);
+      const success = await page.locator('#status').evaluate(el => el.classList.contains('success'));
+      if (!success) {
+        const observed = [];
+        for (let partIndex=0;partIndex<targetParts.length;partIndex++) {
+          await select('part',partIndex);
+          const events = [];
+          for (let index=0;index<targetParts[partIndex].events.length;index++) {
+            await page.locator(`[data-select="${index}"]`).click();
+            const tones = [];
+            for (let pitchIndex=0;pitchIndex<await page.locator('#tone option').count();pitchIndex++) {
+              await select('tone',pitchIndex);
+              tones.push({letter:await page.inputValue('#letter'),octave:await page.inputValue('#octave'),accidental:await page.inputValue('#accidental')});
+            }
+            events.push({tones,duration:await page.inputValue('#duration'),dotted:await page.isChecked('#dotted'),rest:await page.isChecked('#rest'),tuplet:await page.isChecked('#tuplet'),dynamic:await page.inputValue('#event-dynamic')});
+          }
+          observed.push({clef:await page.inputValue('#clef'),events});
+        }
+        console.error('Observed score for',lesson.id,JSON.stringify(observed));
+        console.error('Expected score',JSON.stringify(lesson.target));
+      }
+      assert.ok(success,`complete ${lesson.id}: ${await page.locator('#status').textContent()}`);
     }
+    if (process.env.MELODY_LESSON) { console.log('PASS focused round:',process.env.MELODY_LESSON); return; }
     await page.reload();
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('transit-tales-melody-v1')));
-    assert.equal(saved.completed.length,12);
+    assert.equal(saved.completed.length,36);
 
     await page.locator('#mode-studio').click();
     await page.locator('#reset').click();
@@ -155,6 +209,7 @@ const { mkdirSync } = require('node:fs');
     for (const viewport of [{width:1440,height:1100},{width:390,height:844},{width:320,height:568},{width:844,height:390}]) {
       await page.setViewportSize(viewport);
       for (const lang of ['en','zh-CN','ja','mn-Cyrl-MN','mn-Mong-CN']) {
+        await page.locator('[data-group="foundations"]').click();
         await page.locator('#lesson-first').click();
         await page.locator('#language').selectOption(lang);
         await page.locator('#view2d').click();
@@ -200,6 +255,6 @@ const { mkdirSync } = require('node:fs');
     await page.evaluate(() => { Object.defineProperty(document,'hidden',{configurable:true,value:false}); document.dispatchEvent(new Event('visibilitychange')); });
     assert.equal(await page.locator('#stop').isDisabled(),true);
     assert.deepEqual(errors,[]);
-    console.log('PASS: all twelve lessons, persistence, keyboard edits, genuine 3D/SVG state, context-loss fallback, concealed ear answers, audio controls and 20 responsive locale combinations.');
+    console.log('PASS: all thirty-six lessons, persistence, keyboard edits, genuine 3D/SVG state, context-loss fallback, concealed ear answers, audio controls and 20 responsive locale combinations.');
   } finally { await browser?.close(); await server.close(); }
 })().catch(error => { console.error(error); process.exitCode=1; });

@@ -15,7 +15,7 @@ import { CreateSphere } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
 import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import { Scene } from '@babylonjs/core/scene';
-import type { JourneyRenderer, JourneySnapshot } from './renderer';
+import { createRailwayGeometryCache, sampleRailwayFrame, railwayPointAt, railwayLaneColor, type RailwayPoint, type JourneyRenderer, type JourneySnapshot } from './renderer';
 
 type RendererOptions = {
   onUnavailable?: () => void;
@@ -24,7 +24,7 @@ type RendererOptions = {
 type Stop = { x: number; y: number; label: string; rest: boolean };
 const clamp = (value: number, low: number, high: number) => Math.max(low, Math.min(high, Number.isFinite(value) ? value : low));
 
-/** Procedural toy scenery: heights indicate contour, never semitone distance. */
+/** A shared beat-and-pitch railway, rendered as a miniature physical ensemble. */
 export function createJourney3dRenderer(options: RendererOptions = {}): JourneyRenderer {
   let engine: Engine | undefined;
   let scene: Scene | undefined;
@@ -42,6 +42,8 @@ export function createJourney3dRenderer(options: RendererOptions = {}): JourneyR
   let fingerprint = '';
   let unavailable = false;
   let latest: JourneySnapshot | undefined;
+  const geometryCache = createRailwayGeometryCache();
+  const world = (point: RailwayPoint) => new Vector3(point.x * 14 - 7, point.y, point.z);
   const materials = new Map<string, StandardMaterial>();
 
   const material = (color: string): StandardMaterial => {
@@ -77,19 +79,6 @@ export function createJourney3dRenderer(options: RendererOptions = {}): JourneyR
     return mesh;
   };
 
-  const position = (x: number) => {
-    if (!stops.length) return new Vector3(x, 1.05, 0);
-    let previous = { ...stops[0], x: -7.3 };
-    for (const next of [...stops, { ...stops[stops.length - 1], x: 7.3 }]) {
-      if (x <= next.x) {
-        const fraction = clamp((x - previous.x) / Math.max(0.001, next.x - previous.x), 0, 1);
-        return new Vector3(x, previous.y + (next.y - previous.y) * fraction, 0);
-      }
-      previous = next;
-    }
-    return new Vector3(x, previous.y, 0);
-  };
-
   const clearRoute = () => {
     for (const mesh of route?.getChildMeshes() ?? []) shadow?.removeShadowCaster(mesh);
     route?.dispose();
@@ -99,87 +88,77 @@ export function createJourney3dRenderer(options: RendererOptions = {}): JourneyR
   };
 
   const rebuild = (snapshot: JourneySnapshot) => {
-    const stations = snapshot.stations.slice(0, 16).map(station => ({
-      step: clamp(station.step, -16, 24), label: String(station.label).slice(0, 32), rest: Boolean(station.rest),
-      startBeat: clamp(station.startBeat, 0, 1024), durationBeats: clamp(station.durationBeats, 0.0625, 64),
-    }));
-    const key = JSON.stringify(stations);
+    const geometry = geometryCache.get(snapshot);
+    const key = JSON.stringify([snapshot.stations, snapshot.meter, snapshot.repeat]);
     if (key === fingerprint) return;
     fingerprint = key;
     clearRoute();
-    route = new TransformNode('melodic-contour', scene!);
-    const extent = Math.max(1, ...stations.map(station => station.startBeat + station.durationBeats));
-    const low = Math.min(0, ...stations.filter(station => !station.rest).map(station => station.step));
-    const high = Math.max(8, ...stations.filter(station => !station.rest).map(station => station.step));
-    let previousY = 1.05;
-    stops = stations.map(station => {
-      const y = station.rest ? previousY : 0.75 + (station.step - low) / (high - low) * 1.6;
-      previousY = y;
-      return { x: -5.6 + station.startBeat / extent * 11.5, y, label: station.label, rest: station.rest };
-    });
-    const points = [position(-7.3), ...stops.map(stop => new Vector3(stop.x, stop.y, 0)), position(7.3)];
-    for (let index = 1; index < points.length; index++) {
-      const start = points[index - 1];
-      const end = points[index];
-      const delta = end.subtract(start);
-      if (delta.lengthSquared() < 0.000001) continue;
-      const deck = box('raised-garden-route', new Vector3(delta.length(), 0.16, 0.8), start.add(end).scale(0.5).add(new Vector3(0, -0.12, 0)), '#d8d4bd', route);
-      deck.rotation.z = Math.atan2(delta.y, delta.x);
-      for (const z of [-0.24, 0.24]) {
-        const rail = box('rail', new Vector3(delta.length(), 0.055, 0.045), start.add(end).scale(0.5).add(new Vector3(0, 0.01, z)), '#284d47', route);
-        rail.rotation.z = deck.rotation.z;
+    route = new TransformNode('musical-ensemble-route', scene!);
+    const segment = (from: RailwayPoint, to: RailwayPoint, width: number, height: number, color: string, offset = 0) => {
+      const start = world(from), end = world(to), delta = end.subtract(start);
+      if (delta.lengthSquared() < 0.000001) return;
+      const mesh = box('musical-rail', new Vector3(delta.length(), height, width), start.add(end).scale(0.5).add(new Vector3(0, offset, 0)), color, route);
+      mesh.rotation.y = -Math.atan2(delta.z, delta.x);
+      mesh.rotation.z = Math.atan2(delta.y, Math.hypot(delta.x, delta.z));
+    };
+    for (const points of [...geometry.routes, ...geometry.returnRoutes]) {
+      for (let i = 1; i < points.length; i++) {
+        segment(points[i-1], points[i], 0.52, 0.12, '#d8d4bd', -0.09);
+        for (const side of [-0.19, 0.19]) segment({...points[i-1],z:points[i-1].z+side}, {...points[i],z:points[i].z+side}, 0.035, 0.04, '#284d47');
       }
     }
-    for (let x = -7.2; x < 7.3; x += 0.34) box('sleeper', new Vector3(0.1, 0.055, 0.69), position(x).add(new Vector3(0, -0.035, 0)), '#aaa88c', route);
-    stops.forEach((stop, index) => {
-      const platform = box('station-platform', new Vector3(0.9, 0.18, 0.62), new Vector3(stop.x, stop.y - 0.09, 0.76), '#f5f3eb', route);
-      for (const x of [-0.32, 0.32]) box('platform-pier', new Vector3(0.09, stop.y - 0.15, 0.09), new Vector3(stop.x + x, (stop.y - 0.15) / 2, 0.76), '#c8c4a9', route);
-      box('sign-post', new Vector3(0.045, 0.64, 0.045), new Vector3(stop.x, stop.y + 0.34, 0.96), '#284d47', route);
-      box('sign-frame', new Vector3(0.7, 0.39, 0.065), new Vector3(stop.x, stop.y + 0.76, 0.96), stop.rest ? '#739b80' : '#284d47', route);
-      const texture = new DynamicTexture(`station-label-${index}`, { width: 256, height: 128 }, scene!, false);
+    for (const tie of geometry.ties) for (const point of tie.points) box(tie.strong ? 'bar-sleeper' : 'beat-sleeper', new Vector3(tie.strong ? 0.13 : 0.065, 0.04, 0.5), world(point).add(new Vector3(0,-0.025,0)), tie.strong ? '#ad4938' : '#aaa88c', route);
+    // A pitch's own duration is visible as a colored suspended ribbon, not the next voice's onset.
+    for (const note of geometry.notes.filter(note => note.pass === 0).slice(0,1024)) segment({x:note.x,y:note.height,z:(note.lane-(geometry.voices.length-1)/2)*0.78+note.chord}, {x:note.endX,y:note.height,z:(note.lane-(geometry.voices.length-1)/2)*0.78+note.chord}, 0.07, 0.035, railwayLaneColor(note.lane), 0.18);
+    stops = geometry.stops.map(stop => ({x:stop.x*14-7,y:stop.y,label:stop.label,rest:stop.rest}));
+    geometry.stops.forEach((stop, index) => {
+      if (stop.pass !== 0) return;
+      const at = world(stop);
+      const platform = box('station-platform', new Vector3(0.38,0.12,0.44), at.add(new Vector3(0,-0.08,0.53)), stop.rest ? '#739b80' : '#f5f3eb', route);
+      signs[index] = platform;
+      box('station-pier', new Vector3(0.07,Math.max(0.1,at.y-0.1),0.07), new Vector3(at.x,Math.max(0.1,at.y-0.1)/2,at.z+0.53), '#c8c4a9', route);
+      if (geometry.stops.length > 24 && index % 4) return;
+      box('sign-post', new Vector3(0.035,0.43,0.035), at.add(new Vector3(0,0.23,0.68)), '#284d47', route);
+      const texture = new DynamicTexture(`station-label-${index}`, {width:256,height:128}, scene!, false);
       const context = texture.getContext() as CanvasRenderingContext2D;
-      context.fillStyle = '#f5f3eb';
-      context.fillRect(0, 0, 256, 128);
-      context.fillStyle = '#284d47';
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
-      context.font = 'bold 54px system-ui, sans-serif';
-      context.fillText(stop.rest ? '—' : stop.label, 128, 64, 228);
-      texture.update();
-      const faceMaterial = new StandardMaterial(`station-ink-${index}`, scene!);
-      faceMaterial.diffuseTexture = texture;
-      faceMaterial.emissiveColor = new Color3(0.22, 0.22, 0.22);
-      faceMaterial.specularColor = Color3.Black();
-      faceMaterial.backFaceCulling = false;
-      signMaterials.push(faceMaterial);
-      const face = CreatePlane('station-label', { width: 0.63, height: 0.32, sideOrientation: Mesh.DOUBLESIDE }, scene!);
-      face.position.set(stop.x, stop.y + 0.76, 0.921);
-      face.material = faceMaterial;
-      face.parent = route!;
-      face.isPickable = false;
-      signs.push(platform);
-      pebble('station-planter', new Vector3(stop.x + 0.33, stop.y + 0.12, 0.76), new Vector3(0.17, 0.27, 0.17), '#739b80', route);
+      context.fillStyle = '#f5f3eb'; context.fillRect(0,0,256,128);
+      context.fillStyle = '#284d47'; context.textAlign = 'center'; context.textBaseline = 'middle'; context.font = 'bold 38px system-ui, sans-serif';
+      context.fillText(stop.rest ? '—' : stop.label,128,64,240); texture.update();
+      const ink = new StandardMaterial(`station-ink-${index}`,scene!);
+      ink.diffuseTexture = texture; ink.emissiveColor = new Color3(0.22,0.22,0.22); ink.specularColor = Color3.Black(); ink.backFaceCulling = false;
+      signMaterials.push(ink);
+      const face = CreatePlane('station-label',{width:0.6,height:0.3,sideOrientation:Mesh.DOUBLESIDE},scene!);
+      face.position.copyFrom(at.add(new Vector3(0,0.59,0.65))); face.material = ink; face.parent = route!; face.isPickable = false;
     });
   };
 
   const render = (snapshot: JourneySnapshot) => {
-    snapshot = { ...snapshot, stations: snapshot.stations.slice(0, 16).map(station => ({ ...station })) };
     latest = snapshot;
     if (!scene || unavailable) return;
     try {
       rebuild(snapshot);
-      const index = Math.trunc(clamp(snapshot.activeIndex, -1, stops.length - 1));
-      const current = stops[index];
-      const next = stops[index + 1];
-      const fraction = motion?.matches ? 0 : clamp(snapshot.progress, 0, 1);
-      const x = current ? current.x + ((next?.x ?? 7) - current.x) * fraction : -5.9;
-      cars.forEach((car, carIndex) => {
-        const at = position(x - carIndex * 0.78);
-        car.position.copyFrom(at);
-        const delta = position(at.x + 0.02).subtract(position(at.x - 0.02));
-        car.rotation.z = Math.atan2(delta.y, delta.x);
+      const geometry = geometryCache.get(snapshot), frame = sampleRailwayFrame(geometry,snapshot,motion?.matches);
+      const primary = frame.lanes[0];
+      cars.forEach((car,index) => {
+        const coach = frame.coaches[index-1];
+        const visible = index === 0 || Boolean(coach);
+        car.setEnabled(visible); if (!visible) return;
+        const point = coach?.at ?? primary;
+        car.position.copyFrom(world(point));
+        car.position.y += coach?.attack ?? frame.pulse;
+        if (index === 0) car.position.x += 0.42;
+        const points = geometry.routes[coach?.note.lane ?? 0];
+        const before = railwayPointAt(points,point.x-0.002), after = railwayPointAt(points,point.x+0.002);
+        car.rotation.z = frame.returning ? 0 : Math.atan2(after.y-before.y,(after.x-before.x)*14);
+        car.rotation.y = frame.returning ? Math.PI : 0;
+        car.scaling.x = coach ? Math.min(1.5,coach.length) : 1;
+        for (const mesh of car.getChildMeshes()) {
+          if (mesh.name === 'wheel') mesh.rotation.y = frame.wheelAngle;
+          if (coach && (mesh.name === 'car-body' || mesh.name === 'rounded-car-body')) mesh.material = material(railwayLaneColor(coach.note.lane));
+        }
       });
-      signs.forEach((sign, signIndex) => { sign.material = material(signIndex === index ? '#a9cfca' : '#f5f3eb'); });
+      const active = geometry.stops[frame.index]?.replayOf ?? -1;
+      signs.forEach((sign,index) => { sign.material = material(index === frame.index || index === active ? '#a9cfca' : '#f5f3eb'); });
     } catch { fail(); }
   };
 
@@ -234,6 +213,7 @@ export function createJourney3dRenderer(options: RendererOptions = {}): JourneyR
     materials.clear();
     fingerprint = '';
     latest = undefined;
+    geometryCache.clear();
   };
   const fail = () => {
     if (unavailable) return;
@@ -294,7 +274,7 @@ export function createJourney3dRenderer(options: RendererOptions = {}): JourneyR
         for (const x of [-6.45, -5.55]) box('shelter-column', new Vector3(0.07, 0.9, 0.07), new Vector3(x, 0.62, -1.55), '#284d47', shelter);
         box('shelter-roof', new Vector3(1.4, 0.15, 1), new Vector3(-6, 1.15, -1.35), '#ad4938', shelter);
         box('station-bench', new Vector3(0.7, 0.12, 0.24), new Vector3(-6, 0.37, -1.55), '#e7cb83', shelter);
-        cars = [0, 1, 2].map(index => {
+        cars = Array.from({length:17}, (_, index) => {
           const car = new TransformNode(`car-${index}`, scene!);
           const color = index === 0 ? '#ad4938' : '#a9cfca';
           pebble('rounded-car-body', new Vector3(-0.28, 0.27, 0), new Vector3(0.72, 0.48, 0.46), color, car);
