@@ -30,6 +30,7 @@ export default defineConfig({
         beijing: resolve(process.cwd(), 'beijing.html'),
         melody: resolve(process.cwd(), 'melody.html'),
         universe: resolve(process.cwd(), 'universe.html'),
+        economic: resolve(process.cwd(), 'economic.html'),
       },
     },
   },

@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import hubEntry from '../index.html?raw';
 import worldEntry from '../build-world.html?raw';
 import universeEntry from '../universe.html?raw';
+import economicEntry from '../economic.html?raw';
+import { economicHubCopy } from '../src/hub/economic-copy';
 import hubSource from '../src/hub/main.ts?raw';
 import buildConfig from '../vite.config.ts?raw';
 import rushEntry from '../src/rush/main.ts?raw';
@@ -19,6 +21,18 @@ describe('Transit Tales collection', () => {
     expect(universeEntry).toContain('/src/universe/main.ts');
     expect(hubSource).toMatch(/id="play-universe"[^>]*href="universe\.html"/);
     expect(hubSource).toContain('universeCopy(lang)');
+    expect(buildConfig).toContain("'economic.html'");
+    expect(economicEntry).toContain('/src/economic/main.ts');
+    expect(hubSource).toMatch(/id="play-economic"[^>]*href="economic\.html"/);
+    expect(hubSource).toContain('economicHubCopy(lang)');
+    for (const language of ['en', 'zh-CN', 'ja', 'mn-Cyrl-MN', 'mn-Mong-CN'] as const) {
+      const entry = economicHubCopy(language);
+      expect(Object.keys(entry)).toEqual(Object.keys(economicHubCopy('en')));
+      for (const value of Object.values(entry)) expect(value.trim()).not.toBe('');
+      expect(entry.note).toContain('24');
+      expect(entry.note).toContain('English');
+      expect(entry.note).toContain('简体中文');
+    }
     expect(rushEntry).toContain('href="build-world.html"');
     expect(rushEntry).toContain("label('home')");
   });
