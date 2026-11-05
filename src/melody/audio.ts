@@ -1,4 +1,4 @@
-import { midiToFrequency, resolveScore, scoreIssues, type ResolvedNote, type Score } from './model';
+import { midiToFrequency, partCount, resolvePerformance, scoreIssues, type Dynamic, type PerformanceMoment, type Score } from './model';
 
 export interface NotePlayer {
   play(score: Score, bpm: number): Promise<boolean>;
@@ -23,9 +23,10 @@ function disconnectTone(tone: Tone): void {
 }
 
 /** Exact mathematical 440-Hz equal-temperament target; physical output is subject to device clock precision. */
-export function scheduleTone(context: BaseAudioContext, midi: number, start: number, duration: number, destination: AudioNode): Tone {
+export function scheduleTone(context: BaseAudioContext, midi: number, start: number, duration: number, destination: AudioNode, amplitude = 1): Tone {
   const frequency = midiToFrequency(midi);
-  if (!Number.isFinite(start) || start < 0 || !Number.isFinite(duration) || duration <= 0 || !Number.isFinite(start + duration)) {
+  if (!Number.isFinite(start) || start < 0 || !Number.isFinite(duration) || duration <= 0 || !Number.isFinite(start + duration)
+    || !Number.isFinite(amplitude) || amplitude < 0 || amplitude > 1) {
     throw new RangeError('Tone start must be nonnegative and duration positive and finite');
   }
   const oscillator = context.createOscillator();
@@ -35,12 +36,16 @@ export function scheduleTone(context: BaseAudioContext, midi: number, start: num
     oscillator.type = 'sine';
     oscillator.frequency.setValueAtTime(frequency, start);
     oscillator.detune.setValueAtTime(0, start);
-    const attack = Math.min(.008, duration * .15);
-    const release = Math.min(.018, duration * .2);
+    const attack = Math.min(.004, duration * .08);
+    const decay = Math.min(.035, duration * .2);
+    const release = Math.min(.012, duration * .12);
+    const gap = Math.min(.012, duration * .1);
+    const sustain = amplitude * .72;
     gain.gain.setValueAtTime(0, start);
-    gain.gain.linearRampToValueAtTime(1, start + attack);
-    gain.gain.setValueAtTime(1, start + duration - release);
-    gain.gain.linearRampToValueAtTime(0, start + duration);
+    gain.gain.linearRampToValueAtTime(amplitude, start + attack);
+    gain.gain.linearRampToValueAtTime(sustain, start + attack + decay);
+    gain.gain.setValueAtTime(sustain, start + duration - gap - release);
+    gain.gain.linearRampToValueAtTime(0, start + duration - gap);
     oscillator.connect(gain);
     gain.connect(destination);
     oscillator.start(start);
@@ -54,7 +59,21 @@ export function scheduleTone(context: BaseAudioContext, midi: number, start: num
   }
 }
 
-/** BPM must be finite and within 40..160; invalid drafts/BPM return false without claiming audio is unavailable. */
+// Relative amplitude in dB, not frequency or timbre changes. ff is the bounded peak.
+const dynamicDecibels: Record<Dynamic, number> = { pp: -18, p: -14, mp: -10, mf: -6, f: -3, ff: 0 };
+
+function polyphonyLimit(moments: PerformanceMoment[]): number {
+  const edges = moments.flatMap(moment => moment.pitches.flatMap(pitch => [
+    { tick: Math.round(moment.startBeat * 24), change: 1 },
+    { tick: Math.round((moment.startBeat + pitch.durationBeats) * 24), change: -1 },
+  ])).sort((a, b) => a.tick - b.tick || a.change - b.change);
+  let active = 0;
+  let maximum = 1;
+  for (const edge of edges) { active += edge.change; maximum = Math.max(maximum, active); }
+  return maximum;
+}
+
+/** BPM 40..160; incomplete/partial-tuplet/unequal-length voice drafts are safe previews. */
 export function createNotePlayer(options: NotePlayerOptions = {}): NotePlayer {
   let context: AudioContext | undefined;
   let master: GainNode | undefined;
@@ -108,10 +127,15 @@ export function createNotePlayer(options: NotePlayerOptions = {}): NotePlayer {
       stop();
       const token = generation;
       if (disposed || documentTarget?.hidden || !Number.isFinite(bpm) || bpm < 40 || bpm > 160) return false;
-      let notes: ResolvedNote[];
+      let moments: PerformanceMoment[];
       try {
-        if (scoreIssues(score).some(issue => issue.code !== 'incomplete')) return false;
-        notes = resolveScore(score);
+        const issues = scoreIssues(score);
+        const partialTuplet = issues.some(issue => issue.code === 'tuplet');
+        if (partCount(score) > 4 || [score, ...(score.parts ?? [])].some(part => part.events.some(event => (event.chord?.length ?? 0) > 3))
+          || issues.some(issue => issue.code === 'out-of-range' || issue.code === 'too-long'
+            || (issue.code === 'overflow' && !partialTuplet))) return false;
+        moments = resolvePerformance(score);
+        if (!moments.length) return false;
       } catch { return false; }
 
       // Construction and resume happen before the first await, inside the user's gesture.
@@ -137,11 +161,13 @@ export function createNotePlayer(options: NotePlayerOptions = {}): NotePlayer {
         master.gain.setValueAtTime(muted ? 0 : volume, context.currentTime);
         const secondsPerBeat = 60 / bpm;
         startTime = context.currentTime + .025;
-        const last = notes[notes.length - 1];
+        const last = moments[moments.length - 1];
         totalSeconds = (last.startBeat + last.durationBeats) * secondsPerBeat;
-        for (const note of notes) {
-          if (note.midi !== null) tones.push(scheduleTone(context, note.midi,
-            startTime + note.startBeat * secondsPerBeat, note.durationBeats * secondsPerBeat, master));
+        const normalization = polyphonyLimit(moments);
+        for (const moment of moments) {
+          for (const pitch of moment.pitches) tones.push(scheduleTone(context, pitch.midi,
+            startTime + moment.startBeat * secondsPerBeat, pitch.durationBeats * secondsPerBeat, master,
+            10 ** (dynamicDecibels[pitch.dynamic] / 20) / normalization));
         }
         active = true;
         const tick = () => {
@@ -155,8 +181,8 @@ export function createNotePlayer(options: NotePlayerOptions = {}): NotePlayer {
             return;
           }
           const beat = elapsed / secondsPerBeat;
-          const note = notes.find(note => beat >= note.startBeat && beat < note.startBeat + note.durationBeats);
-          if (note) options.onPosition?.(note.index, Math.min(1, Math.max(0, (beat - note.startBeat) / note.durationBeats)));
+          const moment = moments.find(moment => beat >= moment.startBeat && beat < moment.startBeat + moment.durationBeats);
+          if (moment) options.onPosition?.(moment.index, Math.min(1, Math.max(0, (beat - moment.startBeat) / moment.durationBeats)));
         };
         ticker = setInterval(tick, 1000 / 30);
         return true;

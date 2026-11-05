@@ -3,7 +3,7 @@ import { completesLesson, EAR_PITCHES as earPool, scoreForMidi as earScore, STUD
 const initialStudio = () => cloneScore(STUDIO_SCORE);
 import { resolveScore, scoreIssues } from '../src/melody/model';
 import { melodyCopy, lessonTitle, lessonExplanation } from '../src/melody/locale';
-import { escapeText as escapeHtml, staffMarkup, staffNoteX } from '../src/melody/notation';
+import { escapeText as escapeHtml, staffMarkup, staffNoteX, staffGeometry } from '../src/melody/notation';
 const scoreSvg = (score: Parameters<typeof staffMarkup>[0], interactive = false) => staffMarkup(score,'en',0,interactive);
 import entry from '../melody.html?raw';
 import config from '../vite.config.ts?raw';
@@ -16,12 +16,12 @@ const storage = () => {
 
 describe('Melody Train curriculum and saved compositions', () => {
   for (const lesson of lessons) {
-    it(`${lesson.id} has complete valid bars and a correctable starting note`, () => {
+    it(`${lesson.id} has complete valid targets and a safely editable challenge`, () => {
       expect(scoreIssues(lesson.target)).toEqual([]);
-      expect(scoreIssues(lesson.initial)).toEqual([]);
+      expect(scoreIssues(lesson.initial).filter(issue => ['out-of-range','too-long'].includes(issue.code))).toEqual([]);
       expect(completesLesson(lesson.target,lesson)).toBe(true);
       expect(completesLesson(lesson.initial,lesson)).toBe(false);
-      expect(lesson.initial.events.slice(1)).toEqual(lesson.target.events.slice(1));
+      expect(lesson.initial).not.toEqual(lesson.target);
       expect(completesLesson({...lesson.target,clef:lesson.target.clef === 'treble' ? 'bass' : 'treble'},lesson)).toBe(false);
     });
   }
@@ -46,7 +46,7 @@ describe('Melody Train curriculum and saved compositions', () => {
     expect(readProgress(store)).toEqual(progress);
   });
   it('rejects malformed JSON, unsafe scores, and unbounded data', () => {
-    for (const value of ['{', 'null','[]','"no"',JSON.stringify({...initialStudio(),events:Array(17).fill(initialStudio().events[0])}),JSON.stringify({...initialStudio(),clef:'fake'}),JSON.stringify({...initialStudio(),events:[{...initialStudio().events[0],octave:Infinity}]})]) {
+    for (const value of ['{', 'null','[]','"no"',JSON.stringify({...initialStudio(),events:Array(65).fill(initialStudio().events[0])}),JSON.stringify({...initialStudio(),clef:'fake'}),JSON.stringify({...initialStudio(),events:[{...initialStudio().events[0],octave:Infinity}]})]) {
       const store = {getItem: () => value};
       expect(readProgress(store).studio).toEqual(STUDIO_SCORE);
       expect(readProgress({getItem: () => JSON.stringify({studio:JSON.parse(value === '{' ? 'null' : value)})}).studio).toEqual(STUDIO_SCORE);
@@ -66,12 +66,12 @@ describe('Melody Train curriculum and saved compositions', () => {
 describe('Real score notation and integrated departure', () => {
   it('draws five staff lines with keyboard-operable named note targets', () => {
     const svg = scoreSvg(initialStudio(),true);
-    expect(svg.match(/<path d="M25 /g)).toHaveLength(5);
+    expect(svg.match(/<path d="M32 (?:60|70|80|90|100) L/g)).toHaveLength(5);
     expect(svg).toContain('role="button" tabindex="0"');
     expect(svg).toContain('id="score-note-0"');
     expect(svg).toContain('class="score-cursor"');
     expect(svg).toContain('261.626 Hz');
-    expect(staffNoteX(initialStudio(),1)).toBe(267);
+    expect(staffNoteX(initialStudio(),1)).toBe(staffGeometry(initialStudio()).notes.find(note => note.index === 1 && note.pitch === 0)!.x);
   });
   it('keeps targets noninteractive and escapes user-facing labels', () => {
     const svg = scoreSvg(lessons[8].target);
@@ -80,13 +80,14 @@ describe('Real score notation and integrated departure', () => {
     expect(escapeHtml('&<>"\'')).toBe('&amp;&lt;&gt;&quot;&#39;');
   });
   it('renders all clefs, dots, rests, ledger lines, and written accidentals', () => {
-    for (const lesson of lessons) expect(scoreSvg(lesson.target)).toContain('class="clef-symbol"');
-    expect(scoreSvg(lessons[2].target)).toContain('Rest');
-    expect(scoreSvg(lessons[8].target)).toContain('♯');
-    expect(scoreSvg(lessons[8].target)).toContain('♮');
-    expect(scoreSvg(lessons[10].target)).toContain('♭');
-    expect(scoreSvg(lessons[11].target)).toContain('r="3"');
-    expect(scoreSvg(initialStudio())).toContain('M168 190 H202');
+    for (const lesson of lessons) expect(scoreSvg(lesson.target)).toContain('class="vf-clef"');
+    expect(scoreSvg(lessons[2].target,true)).toMatch(/rest/i);
+    const head = (svg: string, index: number) => svg.match(new RegExp(`<g class="vf-notehead" id="score-glyph-0-${index}-0">([\\s\\S]*?)</g>`))?.[1] ?? '';
+    expect(head(scoreSvg(lessons[8].target), 0).match(/<path/g)).toHaveLength(2);
+    expect(head(scoreSvg(lessons[8].target), 2).match(/<path/g)).toHaveLength(2);
+    expect(head(scoreSvg(lessons[10].target), 1).match(/<path/g)).toHaveLength(2);
+    expect(head(scoreSvg(lessons[11].target), 0)).toContain('A2 2');
+    expect(scoreSvg(initialStudio())).toMatch(/stroke-width="1.4"/);
   });
   it('has a production entry and an actually playable localized hub link', () => {
     expect(entry).toContain('/src/melody/main.ts');
@@ -94,7 +95,7 @@ describe('Real score notation and integrated departure', () => {
     expect(hub).toContain('id="play-melody"');
     expect(hub).toContain('href="melody.html"');
   });
-  it('provides complete UI and twelve lesson explanations in every supported language', () => {
+  it('provides complete UI and thirty-six lesson explanations in every supported language', () => {
     const english = melodyCopy('en');
     for (const language of ['en','zh-CN','ja','mn-Cyrl-MN','mn-Mong-CN'] as const) {
       const copy = melodyCopy(language);

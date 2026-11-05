@@ -1,4 +1,6 @@
-import { resolveScore, staffStep, type Score, type ResolvedNote, type Clef } from './model';
+import { Accidental, BarlineType, Beam, Dot, Flow, Formatter, Glyph, Stave, StaveConnector, StaveNote, TextDynamics, Tuplet, Voice } from 'vexflow';
+import { measureBeats, resolvePart, type Score, type ResolvedNote, type Clef, type Dynamic } from './model';
+import { NotationContext } from './notation-context';
 import { melodyCopy, durationName } from './locale';
 import type { Language } from '../rush/locale';
 
@@ -9,58 +11,218 @@ export function resolvedLabel(note: ResolvedNote, language: Language): string {
   const difference = note.midi - naturalMidi;
   return `${note.event.letter}${difference === 1 ? '♯' : difference === -1 ? '♭' : ''}${note.event.octave}`;
 }
-const yAt = (step: number) => 170 - step * 10;
-function clefMarkup(clef: Clef): string {
-  if (clef === 'treble') return `<path d="M48 199 C70 205 72 181 63 155 L49 99 C43 76 61 66 65 85 C69 109 38 129 35 149 C32 170 64 181 72 159 C78 140 54 130 46 144 C39 155 52 165 61 157" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>`;
-  if (clef === 'bass') return `<path d="M37 110 C37 90 68 94 68 111 C68 134 48 148 36 151 C55 138 60 126 60 111 C60 97 41 100 41 110" fill="currentColor"/><circle cx="39" cy="110" r="6" fill="currentColor"/><circle cx="78" cy="100" r="3" fill="currentColor"/><circle cx="78" cy="120" r="3" fill="currentColor"/>`;
-  const centre = clef === 'alto' ? 130 : 110;
-  return `<g transform="translate(35 ${centre})"><path d="M0 -40 V40 M8 -40 V40" fill="none" stroke="currentColor" stroke-width="4"/><path d="M12 -40 C47 -43 44 -10 16 0 C44 10 47 43 12 40 L12 34 C32 34 34 14 15 7 L10 0 L15 -7 C34 -14 32 -34 12 -34 Z" fill="currentColor"/></g>`;
+
+export type NotationStyle = 'print' | 'handwritten';
+export type StaffGeometry = {
+  width: number; height: number; spacing: number;
+  notes: { part: number; index: number; pitch: number; x: number; y: number; step: number }[];
+};
+type EngravedEvent = { part: number; resolved: ResolvedNote; note: StaveNote };
+type EngravedMeasure = { staves: Stave[]; voices: Voice[]; formatter: Formatter; events: EngravedEvent[]; beams: Beam[]; tuplets: Tuplet[]; width: number };
+type Engraving = { key: string; geometry: StaffGeometry; artwork: string; parts: ResolvedNote[][] };
+const spacing = 10;
+const cache = new Map<NotationStyle, Engraving>();
+const durationCodes = { whole: 'w', half: 'h', quarter: 'q', eighth: '8', sixteenth: '16' } as const;
+
+function styleName(style: NotationStyle): string {
+  if (style !== 'print' && style !== 'handwritten') throw new RangeError('Unsupported notation style');
+  return style === 'handwritten' ? 'Petaluma' : 'Bravura';
 }
-export function symbolMarkup(note: ResolvedNote, x: number): string {
-  const event = note.event, y = yAt(note.staffStep);
-  if (event.rest) {
-    const dot = event.dotted ? `<circle cx="${x + 18}" cy="130" r="3"/>` : '';
-    if (event.duration === 'whole') return `<g fill="currentColor"><rect x="${x - 9}" y="110" width="18" height="7"/>${dot}</g>`;
-    if (event.duration === 'half') return `<g fill="currentColor"><rect x="${x - 9}" y="123" width="18" height="7"/>${dot}</g>`;
-    if (event.duration === 'quarter') return `<g transform="translate(${x} 130)" fill="currentColor"><path d="M-5 -26 L9 -12 L-1 0 L9 13 C-5 7 -11 20 -1 27 C-19 22 -14 5 0 5 L-9 -7 L1 -18 Z"/>${event.dotted ? '<circle cx="20" cy="0" r="3"/>' : ''}</g>`;
-    return `<g transform="translate(${x} 130)" fill="currentColor"><path d="M8 -19 L-3 27" stroke="currentColor" stroke-width="3"/><circle cx="-2" cy="-14" r="5"/><path d="M-3 -10 Q6 -6 9 -19" fill="none" stroke="currentColor" stroke-width="3"/>${event.duration === 'sixteenth' ? '<circle cx="-6" cy="1" r="5"/><path d="M-6 5 Q2 9 5 -2" fill="none" stroke="currentColor" stroke-width="3"/>' : ''}${event.dotted ? '<circle cx="21" cy="0" r="3"/>' : ''}</g>`;
+function createNote(resolved: ResolvedNote, clef: Clef): StaveNote {
+  const { event } = resolved;
+  const note = new StaveNote({
+    clef, keys: event.rest ? ['r/4'] : resolved.pitches.map(pitch => `${pitch.letter.toLowerCase()}/${pitch.octave}`),
+    duration: `${durationCodes[event.duration]}${event.rest ? 'r' : ''}`,
+    dots: event.dotted ? 1 : 0, auto_stem: true,
+  });
+  if (event.dotted) Dot.buildAndAttach([note], { all: true });
+  if (!event.rest) [event, ...(event.chord ?? [])].forEach((pitch, index) => {
+    if (pitch.accidental !== null) note.addModifier(new Accidental(pitch.accidental === 1 ? '#' : pitch.accidental === -1 ? 'b' : 'n'), index);
+  });
+  return note;
+}
+function addTuplets(events: EngravedEvent[]): Tuplet[] {
+  const tuplets: Tuplet[] = [];
+  for (let i = 0; i < events.length;) {
+    const event = events[i].resolved.event;
+    if (event.tuplet !== 3) { i++; continue; }
+    const notes: StaveNote[] = [];
+    do {
+      notes.push(events[i++].note);
+    } while (notes.length < 3 && i < events.length && events[i].resolved.event.tuplet === 3
+      && events[i].resolved.event.duration === event.duration && events[i].resolved.event.dotted === event.dotted);
+    // Partial draft groups retain their written 3:2 ratio; scoreIssues identifies incompleteness.
+    tuplets.push(new Tuplet(notes, { num_notes: 3, notes_occupied: 2, bracketed: true, ratioed: false }));
   }
-  let ledgers = '';
-  for (let step = -2; step >= note.staffStep; step -= 2) ledgers += `<path d="M${x - 17} ${yAt(step)} H${x + 17}"/>`;
-  for (let step = 10; step <= note.staffStep; step += 2) ledgers += `<path d="M${x - 17} ${yAt(step)} H${x + 17}"/>`;
-  const open = event.duration === 'whole' || event.duration === 'half';
-  const down = note.staffStep >= 4;
-  const stemX = x + (down ? -9 : 9), stemEnd = y + (down ? 35 : -35);
-  const flags = event.duration === 'eighth' || event.duration === 'sixteenth' ? `<path d="M${stemX} ${stemEnd} q${down ? -19 : 19} ${down ? -10 : 10} 0 ${down ? -25 : 25}"/>${event.duration === 'sixteenth' ? `<path d="M${stemX} ${stemEnd + (down ? -9 : 9)} q${down ? -19 : 19} ${down ? -10 : 10} 0 ${down ? -25 : 25}"/>` : ''}` : '';
-  const accidental = event.accidental === null ? '' : `<text x="${x - 30}" y="${y + 8}" class="accidental">${event.accidental === 1 ? '♯' : event.accidental === -1 ? '♭' : '♮'}</text>`;
-  return `<g stroke="currentColor" stroke-width="2" fill="none">${ledgers}<ellipse cx="${x}" cy="${y}" rx="${event.duration === 'whole' ? 12 : 10}" ry="7" transform="rotate(-18 ${x} ${y})" fill="${open ? '#fcfaf4' : 'currentColor'}" stroke-width="${open ? 3 : 1}"/>${event.duration !== 'whole' ? `<path d="M${stemX} ${y} V${stemEnd}"/>${flags}` : ''}</g>${accidental}${event.dotted ? `<circle cx="${x + 20}" cy="${y - (note.staffStep % 2 === 0 ? 10 : 0)}" r="3" fill="currentColor"/>` : ''}`;
+  return tuplets;
 }
-export function staffMarkup(score: Score, language: Language, selected: number, interactive = true): string {
-  const c = melodyCopy(language), notes = resolveScore(score);
-  let cursor = 185;
-  const xs = notes.map(note => { const x = cursor; cursor += Math.max(82, note.durationBeats * 56); return x; });
-  const width = Math.max(710, cursor + 35);
-  const low = Math.min(0, ...notes.filter(n => !n.event.rest).map(n => n.staffStep));
-  const high = Math.max(8, ...notes.filter(n => !n.event.rest).map(n => n.staffStep));
-  const top = Math.min(30, yAt(high) - 45), bottom = Math.max(235, yAt(low) + 55);
-  const height = bottom - top;
-  const keys = score.key === 'G' ? [{ letter: 'F', symbol: '♯' }] : score.key === 'D' ? [{ letter: 'F', symbol: '♯' }, { letter: 'C', symbol: '♯' }] : score.key === 'F' ? [{ letter: 'B', symbol: '♭' }] : score.key === 'Bb' ? [{ letter: 'B', symbol: '♭' }, { letter: 'E', symbol: '♭' }] : [];
-  const keyOctave = score.clef === 'treble' ? { F: 5, C: 5, B: 4, E: 5 } : score.clef === 'bass' ? { F: 3, C: 3, B: 2, E: 3 } : score.clef === 'alto' ? { F: 4, C: 4, B: 3, E: 4 } : { F: 3, C: 4, B: 3, E: 4 };
-  const keyMarks = keys.map((key, index) => `<text class="accidental" x="${95 + index * 17}" y="${yAt(staffStep(key.letter as 'F' | 'C' | 'B' | 'E', keyOctave[key.letter as keyof typeof keyOctave], score.clef)) + 8}">${key.symbol}</text>`).join('');
-  let bars = '';
-  notes.forEach((note, index) => { if (index > 0 && note.measure !== notes[index - 1].measure) bars += `<path d="M${xs[index] - 42} 90 V170"/>`; });
-  return `<svg class="music-staff" viewBox="0 ${top} ${width} ${height}" style="width:${width}px;height:${height}px" ${interactive ? `role="group" aria-label="${escapeText(c.score)}"` : 'aria-hidden="true"'}>
-    <g stroke="#71877e" stroke-width="1.3">${[0, 2, 4, 6, 8].map(step => `<path d="M25 ${yAt(step)} H${width - 20}"/>`).join('')}</g>
-    <g class="clef-symbol">${clefMarkup(score.clef)}${keyMarks}<text x="145" y="125" class="meter-digit">${score.meter.beats}</text><text x="145" y="153" class="meter-digit">${score.meter.unit}</text></g>
-    <g stroke="#526961" stroke-width="2">${bars}<path d="M${width - 26} 90 V170 M${width - 20} 90 V170"/></g>
-    ${notes.map((note, index) => {
-      const label = `${index + 1}. ${resolvedLabel(note, language)} · ${durationName(language, note.event.duration)}${note.event.dotted ? ' · ×1.5' : ''}${note.frequency === null ? '' : ` · ${note.frequency.toFixed(3)} Hz`}`;
-      return `<g class="score-note${selected === index && interactive ? ' selected' : ''}" ${interactive ? `id="score-note-${index}"` : ''} data-index="${index}" ${interactive ? `role="button" tabindex="0" aria-pressed="${selected === index}" aria-label="${escapeText(label)}"` : ''}><rect class="note-hit" x="${xs[index] - 37}" y="${top + 2}" width="74" height="${height - 4}" rx="10"/>${symbolMarkup(note, xs[index])}<text class="note-label" x="${xs[index]}" y="${bottom - 10}" text-anchor="middle">${escapeText(resolvedLabel(note, language))}</text></g>`;
-    }).join('')}
-    <path class="score-cursor" d="M0 ${top + 8} V${bottom - 35}" stroke="#ad4938" stroke-width="3" visibility="hidden"/>
-  </svg>`;
+function drawDynamic(context: NotationContext, dynamic: Dynamic, x: number, y: number): void {
+  context.openGroup(`dynamic dynamic-${dynamic}`);
+  for (const letter of dynamic) {
+    const spec = TextDynamics.GLYPHS[letter];
+    new Glyph(spec.code, Flow.NOTATION_FONT_SCALE, { category: 'textNote' }).render(context, x, y);
+    x += spec.width;
+  }
+  context.closeGroup();
 }
-export function staffNoteX(score: Score, index: number): number {
-  const notes = resolveScore(score);
-  return 185 + notes.slice(0, index).reduce((sum, note) => sum + Math.max(82, note.durationBeats * 56), 0);
+
+function engrave(score: Score, style: NotationStyle): Engraving {
+  const font = styleName(style);
+  const key = JSON.stringify(score);
+  const cached = cache.get(style);
+  if (cached?.key === key) return cached;
+  const previousFont = Flow.getMusicFont();
+  // VexFlow fonts and glyph metrics are global. Finish all drawing/geometry synchronously,
+  // and restore the caller's font stack; cached output never contains live VexFlow objects.
+  Flow.setMusicFont(font);
+  try {
+    const definitions = [{ clef: score.clef, events: score.events }, ...(score.parts ?? [])];
+    const parts = definitions.map((_part, index) => resolvePart(score, index));
+    const bar = measureBeats(score.meter);
+    let bottom = 0;
+    const rows = parts.map(notes => {
+      const steps = notes.flatMap(note => note.pitches.map(pitch => pitch.staffStep));
+      const low = Math.min(0, ...steps), high = Math.max(8, ...steps);
+      const y = bottom + Math.max(20, (high - 8) * spacing / 2 + 20);
+      const staffBottom = y + 8 * spacing;
+      const dynamicY = staffBottom + Math.max(65, -low * spacing / 2 + 65);
+      bottom = dynamicY + 40;
+      return { y, dynamicY };
+    });
+    const context = new NotationContext();
+    const count = Math.max(1, ...parts.flatMap(notes => notes.map(note => note.measure + 1)));
+    const measures: EngravedMeasure[] = [];
+    for (let measure = 0; measure < count; measure++) {
+      const staves = definitions.map((part, index) => {
+        const stave = new Stave(32, rows[index].y, 1000, { spacing_between_lines_px: spacing });
+        stave.setContext(context).setStyle({ fillStyle: 'currentColor', strokeStyle: 'currentColor' });
+        stave.setDefaultLedgerLineStyle({ strokeStyle: 'currentColor', lineWidth: 1.4 });
+        if (measure === 0) stave.addClef(part.clef).addKeySignature(score.key).addTimeSignature(`${score.meter.beats}/${score.meter.unit}`);
+        stave.setBegBarType(measure === 0 ? score.repeat ? BarlineType.REPEAT_BEGIN : BarlineType.SINGLE : BarlineType.NONE);
+        stave.setEndBarType(measure === count - 1 ? score.repeat ? BarlineType.REPEAT_END : BarlineType.END : BarlineType.SINGLE);
+        return stave;
+      });
+      const formatter = new Formatter();
+      const events: EngravedEvent[] = [], voices: Voice[] = [], tuplets: Tuplet[] = [], beams: Beam[] = [];
+      parts.forEach((part, partIndex) => {
+        const entries = part.filter(note => note.measure === measure).map(resolved => {
+          const note = createNote(resolved, definitions[partIndex].clef).setStave(staves[partIndex]).setContext(context);
+          return { part: partIndex, resolved, note };
+        });
+        events.push(...entries);
+        tuplets.push(...addTuplets(entries));
+        if (!entries.length) return;
+        const voice = new Voice({ num_beats: score.meter.beats, beat_value: score.meter.unit }).setMode(Voice.Mode.SOFT);
+        voice.addTickables(entries.map(entry => entry.note)).setStave(staves[partIndex]);
+        voices.push(voice);
+        formatter.joinVoices([voice]);
+        beams.push(...Beam.generateBeams(entries.map(entry => entry.note), {
+          groups: Beam.getDefaultBeamGroups(`${score.meter.beats}/${score.meter.unit}`), beam_rests: false,
+        }));
+      });
+      tuplets.forEach(tuplet => {
+        const notes = tuplet.getNotes() as StaveNote[];
+        tuplet.setBracketed(notes.length !== 3 || !notes.every(note => note.getBeam() === notes[0].getBeam() && note.getBeam()));
+      });
+      Stave.formatBegModifiers(staves);
+      const prefix = Math.max(...staves.map(stave => stave.getNoteStartX())) - 32;
+      const minimum = voices.length ? formatter.preCalculateMinTotalWidth(voices) : 0;
+      const onsets = new Set(events.map(entry => Math.round(entry.resolved.startBeat * 24)));
+      const width = prefix + Math.max(180, minimum + onsets.size * 44, bar * 64) + 36;
+      measures.push({ staves, voices, formatter, events, beams, tuplets, width });
+    }
+    const naturalWidth = measures.reduce((sum, measure) => sum + measure.width, 0) + 64;
+    measures[measures.length - 1].width += Math.max(0, 710 - naturalWidth);
+    let x = 32;
+    const geometry: StaffGeometry = { width: Math.max(710, naturalWidth), height: bottom, spacing, notes: [] };
+    measures.forEach(measure => {
+      measure.staves.forEach(stave => stave.setX(x).setWidth(measure.width));
+      Stave.formatBegModifiers(measure.staves);
+      const start = Math.max(...measure.staves.map(stave => stave.getNoteStartX()));
+      measure.staves.forEach(stave => stave.setNoteStartX(start));
+      const end = Math.min(...measure.staves.map(stave => stave.getNoteEndX()));
+      if (measure.voices.length) measure.formatter.format(measure.voices, end - start - 24, { context });
+      measure.staves.forEach(stave => stave.draw());
+      if (measure.staves.length > 1) {
+        new StaveConnector(measure.staves[0], measure.staves[measure.staves.length - 1]).setType('singleLeft').setContext(context).draw();
+        if (x === 32) new StaveConnector(measure.staves[0], measure.staves[measure.staves.length - 1]).setType('bracket').setContext(context).draw();
+      }
+      measure.events.forEach(entry => {
+        const { note, resolved, part } = entry;
+        context.openGroup(`event event-${part}-${resolved.index} duration-${resolved.event.duration}${resolved.event.dotted ? ' dotted' : ''}`);
+        note.noteHeads.forEach((head, pitch) => head.setAttribute('id', `score-glyph-${part}-${resolved.index}-${pitch}`));
+        note.draw();
+        context.closeGroup();
+        const staffBottom = measure.staves[part].getYForLine(4);
+        note.noteHeads.forEach((head, pitch) => {
+          geometry.notes.push({ part, index: resolved.index, pitch,
+            x: head.getAbsoluteX() + head.getWidth() / 2, y: head.getY(),
+            step: resolved.event.rest ? (staffBottom - head.getY()) * 2 / spacing : resolved.pitches[pitch].staffStep });
+        });
+        const dynamic = resolved.event.dynamic ?? (resolved.index === 0 ? score.dynamic : undefined);
+        if (dynamic) drawDynamic(context, dynamic, note.getNoteHeadBeginX(), rows[part].dynamicY);
+      });
+      measure.beams.forEach(beam => beam.setContext(context).draw());
+      measure.tuplets.forEach(tuplet => {
+        context.openGroup(`tuplet${tuplet.getNotes().length === 3 ? '' : ' incomplete-tuplet'}`);
+        tuplet.setContext(context).draw();
+        context.closeGroup();
+      });
+      x += measure.width;
+    });
+    geometry.notes.sort((a, b) => a.part - b.part || a.index - b.index || a.pitch - b.pitch);
+    const engraving = { key, geometry, artwork: context.markup(), parts };
+    cache.set(style, engraving);
+    return engraving;
+  } finally { Flow.setMusicFont(...previousFont); }
+}
+
+/** Full-sized SVG viewBox units: spacing is 10 per staff space, and 5 per diatonic step. */
+export function staffGeometry(score: Score, style: NotationStyle = 'print'): StaffGeometry {
+  const geometry = engrave(score, style).geometry;
+  return { ...geometry, notes: geometry.notes.map(note => ({ ...note })) };
+}
+export function staffNoteX(score: Score, index: number, part = 0, style: NotationStyle = 'print'): number {
+  const engraving = engrave(score, style);
+  return engraving.geometry.notes.find(note => note.part === part && note.index === index && note.pitch === 0)?.x ?? engraving.geometry.width - 32;
+}
+export function staffMarkup(score: Score, language: Language, selected: number, interactive = true,
+  options: { style?: NotationStyle; part?: number; pitch?: number } = {}): string {
+  const style = options.style ?? 'print';
+  const { geometry, artwork, parts } = engrave(score, style);
+  const { width, height } = geometry;
+  const targetAttributes = (target: StaffGeometry['notes'][number]): string => {
+    const note = parts[target.part][target.index];
+    const pitch = note.pitches[target.pitch];
+    const label = `${target.part + 1}.${target.index + 1}.${target.pitch + 1}. ${pitch ? `${pitch.letter}${pitch.accidental === 1 ? '#' : pitch.accidental === -1 ? 'b' : ''}${pitch.octave}` : melodyCopy(language).silent} · ${durationName(language, note.event.duration)}${note.event.dotted ? ' · ×1.5' : ''}${note.event.tuplet ? ' · 3:2' : ''}${pitch ? ` · ${pitch.frequency.toFixed(3)} Hz` : ''}`;
+    const pressed = selected === target.index && (options.part ?? 0) === target.part && (options.pitch ?? 0) === target.pitch;
+    const id = target.part === 0 && target.pitch === 0 ? `score-note-${target.index}` : `score-note-${target.part}-${target.index}-${target.pitch}`;
+    return `class="score-note${pressed ? ' selected' : ''}" id="${id}" data-index="${target.index}" data-part="${target.part}" data-pitch="${target.pitch}" role="button" tabindex="0" aria-pressed="${pressed}" aria-label="${escapeText(label)}"`;
+  };
+  const targets = !interactive ? '' : geometry.notes.map(target => {
+    // Partition overlapping 44px areas by nearest head. Later targets cannot mask
+    // an earlier chord tone; both hit shapes bubble to exactly one editable group.
+    let polygon = [[-22, -22], [22, -22], [22, 22], [-22, 22]];
+    for (const other of geometry.notes) {
+      if (other === target) continue;
+      const dx = other.x - target.x, dy = other.y - target.y;
+      if (Math.abs(dx) > 44 || Math.abs(dy) > 44 || dx === 0 && dy === 0) continue;
+      const boundary = (dx * dx + dy * dy) / 2;
+      const distance = (point: number[]) => point[0] * dx + point[1] * dy - boundary;
+      polygon = polygon.flatMap((point, index, vertices) => {
+        const next = vertices[(index + 1) % vertices.length];
+        const a = distance(point), b = distance(next);
+        const output = a <= 0 ? [point] : [];
+        if ((a <= 0) !== (b <= 0)) {
+          const fraction = a / (a - b);
+          output.push([point[0] + fraction * (next[0] - point[0]), point[1] + fraction * (next[1] - point[1])]);
+        }
+        return output;
+      });
+    }
+    const clip = `score-hit-${target.part}-${target.index}-${target.pitch}`;
+    const points = polygon.map(point => `${point[0] + target.x},${point[1] + target.y}`).join(' ');
+    return `<g ${targetAttributes(target)}><clipPath id="${clip}" clipPathUnits="userSpaceOnUse"><polygon points="${points}"/></clipPath><rect class="note-hit" x="${target.x - 22}" y="${target.y - 22}" width="44" height="44" rx="6" fill="transparent" stroke="none" clip-path="url(#${clip})" pointer-events="all"/><ellipse class="notehead-target" cx="${target.x}" cy="${target.y}" rx="6" ry="4.5" fill="transparent" stroke="none" pointer-events="all"/></g>`;
+  }).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="music-staff" data-notation-style="${style}" data-music-font="${styleName(style)}" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" style="width:${width}px;min-width:${width}px;max-width:none;height:${height}px;flex:none" ${interactive ? `role="group" aria-label="${escapeText(melodyCopy(language).score)}"` : 'aria-hidden="true"'}><g class="music-engraving" aria-hidden="true" pointer-events="none">${artwork}</g>${targets}<path class="score-cursor" d="M0 16 V${height - 16}" stroke="#ad4938" stroke-width="3" pointer-events="none" visibility="hidden" aria-hidden="true"/></svg>`;
 }

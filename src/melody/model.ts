@@ -2,6 +2,8 @@ export type Letter = 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B';
 export type Clef = 'treble' | 'bass' | 'alto' | 'tenor';
 export type KeySignature = 'C' | 'G' | 'F' | 'D' | 'Bb';
 export type Duration = 'whole' | 'half' | 'quarter' | 'eighth' | 'sixteenth';
+export type Pitch = { letter: Letter; octave: number; accidental: null | -1 | 0 | 1 };
+export type Dynamic = 'pp' | 'p' | 'mp' | 'mf' | 'f' | 'ff';
 export type NoteEvent = {
   letter: Letter;
   octave: number;
@@ -9,12 +11,26 @@ export type NoteEvent = {
   duration: Duration;
   dotted: boolean;
   rest: boolean;
+  chord?: Pitch[];
+  tuplet?: 3;
+  dynamic?: Dynamic;
 };
 export type Score = {
   clef: Clef;
   key: KeySignature;
   meter: { beats: number; unit: 4 | 8 };
   events: NoteEvent[];
+  parts?: { clef: Clef; events: NoteEvent[] }[];
+  dynamic?: Dynamic;
+  repeat?: boolean;
+};
+export type ResolvedPitch = Pitch & { midi: number; frequency: number; staffStep: number };
+export type PerformanceTone = ResolvedPitch & {
+  part: number; eventIndex: number; pitchIndex: number; durationBeats: number; dynamic: Dynamic;
+};
+export type PerformanceMoment = {
+  index: number; startBeat: number; durationBeats: number; pitches: PerformanceTone[];
+  events: { part: number; index: number }[]; rest: boolean; pass: 0 | 1;
 };
 export type ResolvedNote = {
   event: NoteEvent;
@@ -25,8 +41,10 @@ export type ResolvedNote = {
   durationBeats: number;
   measure: number;
   staffStep: number;
+  pitches: ResolvedPitch[];
+  dynamic: Dynamic;
 };
-export type ScoreIssue = { code: 'empty' | 'overflow' | 'incomplete' | 'too-long' | 'out-of-range'; index: number };
+export type ScoreIssue = { code: 'empty' | 'overflow' | 'incomplete' | 'too-long' | 'out-of-range' | 'tuplet' | 'voices'; index: number; part?: number };
 
 const letters: Letter[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 const semitones: Record<Letter, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
@@ -43,17 +61,28 @@ export function midiToFrequency(midi: number): number {
   return 440 * 2 ** ((midi - 69) / 12);
 }
 
+const dynamics: Dynamic[] = ['pp', 'p', 'mp', 'mf', 'f', 'ff'];
+// All supported written/dotted/triplet values are integral at 24 ticks per quarter.
+const ticksPerBeat = 24;
+const ticks = (beats: number) => Math.round(beats * ticksPerBeat);
+
+function validatePitch(pitch: Pitch): void {
+  if (!pitch || !letters.includes(pitch.letter) || !Number.isSafeInteger(pitch.octave)
+    || ![null, -1, 0, 1].includes(pitch.accidental)) throw new RangeError('Malformed pitch');
+}
+
 function validateEvent(event: NoteEvent): void {
-  if (!event || !letters.includes(event.letter) || !Number.isSafeInteger(event.octave)
-    || ![null, -1, 0, 1].includes(event.accidental) || !owns(durations, event.duration)
-    || typeof event.dotted !== 'boolean' || typeof event.rest !== 'boolean') {
-    throw new RangeError('Malformed note event');
-  }
+  validatePitch(event);
+  if (!owns(durations, event.duration) || typeof event.dotted !== 'boolean' || typeof event.rest !== 'boolean'
+    || (event.tuplet !== undefined && event.tuplet !== 3)
+    || (event.dynamic !== undefined && !dynamics.includes(event.dynamic))
+    || (event.chord !== undefined && !Array.isArray(event.chord))) throw new RangeError('Malformed note event');
+  event.chord?.forEach(validatePitch);
 }
 
 export function durationBeats(event: NoteEvent): number {
   validateEvent(event);
-  return durations[event.duration] * (event.dotted ? 1.5 : 1);
+  return durations[event.duration] * (event.dotted ? 1.5 : 1) * (event.tuplet === 3 ? 2 / 3 : 1);
 }
 
 /** Meter numerator must be a positive safe integer; unsupported/malformed meters throw RangeError. */
@@ -78,72 +107,153 @@ export function pitchAtStaffStep(step: number, clef: Clef): { letter: Letter; oc
   return { letter: letters[((pitch % 7) + 7) % 7], octave: Math.floor(pitch / 7) };
 }
 
-/** Malformed structures throw intentional RangeError; musical draft issues are returned by scoreIssues. */
+/** Malformed structures throw RangeError; incomplete musical drafts remain resolvable. */
 function validateScore(score: Score): number {
-  if (!score || !owns(anchors, score.clef) || !owns(keys, score.key) || !Array.isArray(score.events)) throw new RangeError('Malformed score');
+  if (!score || !owns(anchors, score.clef) || !owns(keys, score.key) || !Array.isArray(score.events)
+    || (score.parts !== undefined && !Array.isArray(score.parts))
+    || (score.dynamic !== undefined && !dynamics.includes(score.dynamic))
+    || (score.repeat !== undefined && typeof score.repeat !== 'boolean')) throw new RangeError('Malformed score');
   const bar = measureBeats(score.meter);
-  for (const event of score.events) validateEvent(event);
+  for (const part of [score, ...(score.parts ?? [])]) {
+    if (!part || !owns(anchors, part.clef) || !Array.isArray(part.events)) throw new RangeError('Malformed part');
+    part.events.forEach(validateEvent);
+  }
   return bar;
 }
 
-function walkScore(score: Score): ResolvedNote[] {
-  const bar = validateScore(score);
-  let startBeat = 0;
+export function partCount(score: Score): number {
+  validateScore(score);
+  return 1 + (score.parts?.length ?? 0);
+}
+
+function walkPart(score: Score, part: number): ResolvedNote[] {
+  const barTicks = ticks(validateScore(score));
+  if (!Number.isInteger(part) || part < 0 || part >= 1 + (score.parts?.length ?? 0)) throw new RangeError('Invalid part index');
+  const staff = part === 0 ? score : score.parts![part - 1];
+  let startTick = 0;
   let previousMeasure = -1;
+  let dynamic = score.dynamic ?? 'mf';
   const accidentals = new Map<string, number>();
-  return score.events.map((event, index) => {
-    const measure = Math.floor(startBeat / bar);
+  return staff.events.map((event, index) => {
+    const measure = Math.floor(startTick / barTicks);
     if (measure !== previousMeasure) accidentals.clear();
     previousMeasure = measure;
-    const writtenPitch = `${event.letter}${event.octave}`;
-    let midi: number | null = null;
-    if (!event.rest) {
-      if (event.accidental !== null) accidentals.set(writtenPitch, event.accidental);
-      const accidental = accidentals.get(writtenPitch) ?? keys[score.key][event.letter] ?? 0;
-      midi = (event.octave + 1) * 12 + semitones[event.letter] + accidental;
+    dynamic = event.dynamic ?? dynamic;
+    const written = event.rest ? [] : [event, ...(event.chord ?? [])];
+    // A chord is simultaneous: explicit markings apply consistently to all its tones.
+    for (const pitch of written) {
+      if (pitch.accidental !== null) accidentals.set(`${pitch.letter}${pitch.octave}`, pitch.accidental);
     }
-    const beats = durationBeats(event);
-    const resolved = {
-      event: { ...event }, index, midi,
-      frequency: midi !== null && Number.isInteger(midi) && midi >= 0 && midi <= 127 ? midiToFrequency(midi) : null,
-      startBeat, durationBeats: beats, measure,
-      staffStep: staffStep(event.letter, event.octave, score.clef),
+    const pitches = written.map(pitch => {
+      const accidental = accidentals.get(`${pitch.letter}${pitch.octave}`) ?? keys[score.key][pitch.letter] ?? 0;
+      const midi = (pitch.octave + 1) * 12 + semitones[pitch.letter] + accidental;
+      return { letter: pitch.letter, octave: pitch.octave, accidental: pitch.accidental, midi,
+        frequency: midi >= 0 && midi <= 127 ? midiToFrequency(midi) : NaN,
+        staffStep: staffStep(pitch.letter, pitch.octave, staff.clef) };
+    });
+    const durationTicks = ticks(durationBeats(event));
+    const resolved: ResolvedNote = {
+      event: { ...event, ...(event.chord ? { chord: event.chord.map(pitch => ({ ...pitch })) } : {}) }, index,
+      midi: pitches[0]?.midi ?? null, frequency: pitches[0] && Number.isFinite(pitches[0].frequency) ? pitches[0].frequency : null,
+      startBeat: startTick / ticksPerBeat, durationBeats: durationTicks / ticksPerBeat, measure,
+      staffStep: staffStep(event.letter, event.octave, staff.clef), pitches, dynamic,
     };
-    startBeat += beats;
+    startTick += durationTicks;
     return resolved;
   });
 }
 
 function outOfRange(note: ResolvedNote): boolean {
-  return note.event.octave < 0 || note.event.octave > 8 || (note.midi !== null && (note.midi < 0 || note.midi > 127));
+  return [note.event, ...(note.event.chord ?? [])].some(pitch => pitch.octave < 0 || pitch.octave > 8)
+    || note.pitches.some(pitch => pitch.midi < 0 || pitch.midi > 127);
 }
 
-/** Resolves incomplete/overflow drafts, but rejects pitches outside written octaves 0..8 or MIDI 0..127. */
-export function resolveScore(score: Score): ResolvedNote[] {
-  const notes = walkScore(score);
+/** Each staff owns bar-scoped accidental state and independently persistent dynamics. */
+export function resolvePart(score: Score, part = 0): ResolvedNote[] {
+  const notes = walkPart(score, part);
   if (notes.some(outOfRange)) throw new RangeError('Score pitch is outside supported octave/MIDI range');
   return notes;
 }
 
+export function resolveScore(score: Score): ResolvedNote[] { return resolvePart(score); }
+
+const endTicks = (notes: ResolvedNote[]) => notes.length
+  ? ticks(notes[notes.length - 1].startBeat) + ticks(notes[notes.length - 1].durationBeats) : 0;
+
+export function totalBeats(score: Score): number {
+  return Math.max(...Array.from({ length: partCount(score) }, (_, part) => endTicks(resolvePart(score, part))))
+    / ticksPerBeat * (score.repeat ? 2 : 1);
+}
+
 export function scoreIssues(score: Score): ScoreIssue[] {
-  const notes = walkScore(score);
+  const count = partCount(score);
+  const barTicks = ticks(measureBeats(score.meter));
   const issues: ScoreIssue[] = [];
-  if (!notes.length) return [{ code: 'empty', index: 0 }];
-  if (notes.length > 16) issues.push({ code: 'too-long', index: 16 });
-  const bar = measureBeats(score.meter);
-  for (const note of notes) {
-    if (outOfRange(note)) issues.push({ code: 'out-of-range', index: note.index });
-    if (note.startBeat % bar + note.durationBeats > bar) issues.push({ code: 'overflow', index: note.index });
+  const lengths: number[] = [];
+  if (count > 4) issues.push({ code: 'voices', index: 0 });
+  for (let part = 0; part < count; part++) {
+    const notes = walkPart(score, part);
+    const add = (code: ScoreIssue['code'], index: number) => issues.push({ code, index, ...(part ? { part } : {}) });
+    lengths.push(endTicks(notes));
+    if (!notes.length) { add('empty', 0); continue; }
+    if (notes.length > 64) add('too-long', 64);
+    for (const note of notes) {
+      if (outOfRange(note)) add('out-of-range', note.index);
+      if ((note.event.chord?.length ?? 0) > 3) add('voices', note.index);
+      if (ticks(note.startBeat) % barTicks + ticks(note.durationBeats) > barTicks) add('overflow', note.index);
+    }
+    for (let i = 0; i < notes.length;) {
+      const first = notes[i];
+      if (!first.event.tuplet) { i++; continue; }
+      const group = notes.slice(i, i + 3);
+      const valid = group.length === 3 && group.every(note => note.event.tuplet === 3
+        && note.event.duration === first.event.duration && note.event.dotted === first.event.dotted)
+        && ticks(first.startBeat) % barTicks + group.reduce((sum, note) => sum + ticks(note.durationBeats), 0) <= barTicks;
+      if (!valid) add('tuplet', i);
+      i += valid ? 3 : 1;
+    }
+    if (endTicks(notes) % barTicks !== 0) add('incomplete', notes.length - 1);
   }
-  const last = notes[notes.length - 1];
-  if ((last.startBeat + last.durationBeats) % bar !== 0) issues.push({ code: 'incomplete', index: last.index });
+  if (lengths.some(length => length !== lengths[0])) issues.push({ code: 'voices', index: 0 });
   return issues;
 }
 
-/** Compares sounding pitches/rests and timing only, not notation, clef, key, or meter. */
+/** Groups new attacks (not sustained tones) and rest onsets on the shared score clock. */
+export function resolvePerformance(score: Score): PerformanceMoment[] {
+  const parts = Array.from({ length: partCount(score) }, (_, part) => resolvePart(score, part));
+  const passTicks = Math.max(...parts.map(endTicks));
+  const moments = new Map<number, PerformanceMoment>();
+  for (let pass = 0; pass < (score.repeat ? 2 : 1); pass++) {
+    parts.forEach((notes, part) => notes.forEach(note => {
+      const onset = ticks(note.startBeat) + pass * passTicks;
+      let moment = moments.get(onset);
+      if (!moment) {
+        moment = { index: 0, startBeat: onset / ticksPerBeat, durationBeats: 0, pitches: [], events: [], rest: true, pass: pass as 0 | 1 };
+        moments.set(onset, moment);
+      }
+      moment.events.push({ part, index: note.index });
+      moment.pitches.push(...note.pitches.map((pitch, pitchIndex) => ({ ...pitch, part, eventIndex: note.index,
+        pitchIndex, durationBeats: note.durationBeats, dynamic: note.dynamic })));
+      moment.rest = moment.pitches.length === 0;
+    }));
+  }
+  const result = [...moments.values()].sort((a, b) => a.startBeat - b.startBeat);
+  const totalTicks = passTicks * (score.repeat ? 2 : 1);
+  result.forEach((moment, index) => {
+    moment.index = index;
+    moment.durationBeats = ((result[index + 1] ? ticks(result[index + 1].startBeat) : totalTicks)
+      - ticks(moment.startBeat)) / ticksPerBeat;
+  });
+  return result;
+}
+
+/** Compares full sounding performance, including dynamics and repeat semantics, not clefs/keys. */
 export function sameMelody(actual: Score, target: Score): boolean {
-  const a = resolveScore(actual);
-  const b = resolveScore(target);
-  return a.length === b.length && a.every((note, i) => note.midi === b[i].midi
-    && note.startBeat === b[i].startBeat && note.durationBeats === b[i].durationBeats);
+  if (Boolean(actual.repeat) !== Boolean(target.repeat)) return false;
+  const a = resolvePerformance(actual);
+  const b = resolvePerformance(target);
+  const tones = (moment: PerformanceMoment) => moment.pitches.map(pitch => `${pitch.midi}:${ticks(pitch.durationBeats)}:${pitch.dynamic}`).sort();
+  return a.length === b.length && a.every((moment, i) => ticks(moment.startBeat) === ticks(b[i].startBeat)
+    && ticks(moment.durationBeats) === ticks(b[i].durationBeats) && moment.rest === b[i].rest
+    && JSON.stringify(tones(moment)) === JSON.stringify(tones(b[i])));
 }

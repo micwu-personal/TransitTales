@@ -3,7 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": {"dev": "vite --host 0.0.0.0", "build": "tsc --noEmit && vite build", "test": "vitest run"},
-  "dependencies": {"@babylonjs/core": "^8.26.0"},
-  "devDependencies": {"typescript": "^5.9.3", "vite": "^7.1.0", "vitest": "^3.2.4"}
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^8.26.0",
+    "vexflow": "^4.2.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.1.0",
+    "vitest": "^3.2.4"
+  }
 }
