@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "styleApproved": true,
+  "notice": "Voice style was approved after listening. This is not approval of every recording's pronunciation. Japanese and Mongolian profiles are adjusted stock voices, not dedicated child voices. Both Mongolian writing systems share Mongolia Mongolian spoken recordings.",
+  "profiles": {
+    "zh": {
+      "boy": { "voice": "zh-CN-YunxiaNeural", "rate": "-4%", "pitch": "+0Hz" },
+      "girl": { "voice": "zh-CN-XiaoyiNeural", "rate": "-8%", "pitch": "+0Hz" }
+    },
+    "en": {
+      "boy": { "voice": "en-GB-ThomasNeural", "rate": "+6%", "pitch": "+14Hz" },
+      "girl": { "voice": "en-US-AnaNeural", "rate": "+2%", "pitch": "+0Hz" }
+    },
+    "ja": {
+      "boy": { "voice": "ja-JP-KeitaNeural", "rate": "+6%", "pitch": "+24Hz" },
+      "girl": { "voice": "ja-JP-NanamiNeural", "rate": "+6%", "pitch": "+18Hz" }
+    },
+    "mn": {
+      "boy": { "voice": "mn-MN-BataaNeural", "rate": "+4%", "pitch": "+24Hz" },
+      "girl": { "voice": "mn-MN-YesuiNeural", "rate": "+4%", "pitch": "+18Hz" }
+    }
+  }
+}

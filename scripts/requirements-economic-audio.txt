@@ -1,0 +1,2 @@
+# Approved economic game profiles; pin the working upstream speech API revision.
+edge-tts @ https://github.com/rany2/edge-tts/archive/360fa8e1de354e1dda74c09bd695887d6a44df74.zip
