@@ -39,7 +39,11 @@ const { webkit, devices } = require('playwright');
     }
     const open = async (page, view = '2d') => {
       await page.goto(`${url}${url.includes('?') ? '&' : '?'}view=${view}`, { waitUntil: 'domcontentloaded' });
-      await page.locator(`#universe[data-ready="true"][data-renderer="${view === '3d' ? '3d' : '2d'}-ready"]`).waitFor({ timeout: 20000 });
+      await page.locator('#universe[data-ready="true"][data-renderer="2d-ready"]').waitFor({ timeout: 20000 });
+      if (view === '3d') {
+        await page.locator('#view3d').tap();
+        await page.locator('#universe[data-renderer="3d-ready"]').waitFor({ timeout: 20000 });
+      }
       await page.locator('.cosmic-scene').scrollIntoViewIfNeeded();
     };
     const action = (page, body) => page.evaluate(body);

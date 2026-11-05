@@ -95,9 +95,9 @@ function debris(comet: boolean, id: string): string {
   const random = cosmicRandom(42), oort = /oort/i.test(id), kuiper = /kuiper/i.test(id);
   return `<g data-art="${comet ? 'comet' : oort ? 'oort-cloud' : kuiper ? 'kuiper-belt' : 'asteroid-belt'}">${comet ? '<path d="M540 343Q382 297 160 114Q241 298 530 359Z" fill="url(#u-tail)"/><path d="M542 344Q381 188 185 177" fill="none" stroke="#83ceea" stroke-width="7" opacity=".17"/>' + sphere(552, 353, 23, 'moon', craters(552, 353, 23)) : Array.from({ length: oort ? 80 : 55 }, () => { const a = random() * Math.PI * 2, d = 170 + random() * 230; const x = 500 + Math.cos(a) * d, y = 310 + Math.sin(a) * d * (oort ? .7 : .32); return `<path d="M${n(x)} ${n(y)}l${n(3 + random() * 6)} -3 4 4 -4 5Z" fill="${kuiper || oort ? '#afc7cc' : '#a79e92'}" opacity="${n(.2 + random() * .5)}"/>`; }).join('')}</g>`;
 }
-function spiral(x: number, y: number, size: number, seed: number, tilt = -.35): string {
+function spiral(x: number, y: number, size: number, seed: number, tilt = -.35, count = 680): string {
   const random = cosmicRandom(seed);
-  return `<g data-art="spiral-galaxy" transform="translate(${n(x)} ${n(y)}) rotate(${n(tilt * 57.3)}) scale(1 .57)">${circle(0, 0, size * .5, 'url(#u-galaxy-core)', .8)}${Array.from({ length: 680 }, (_, i) => { const d = Math.sqrt(random()) * size; const a = (i % 4) * Math.PI / 2 + d / size * 5.5 + (random() - .5) * .42; return circle(Math.cos(a) * d, Math.sin(a) * d, .6 + random() * 2.1, i % 8 === 0 ? '#da9f8b' : i % 3 === 0 ? '#bdddeb' : '#fbebc1', .15 + random() * .65); }).join('')}${circle(0, 0, size * .16, 'url(#u-halo)')}</g>`;
+  return `<g data-art="spiral-galaxy" transform="translate(${n(x)} ${n(y)}) rotate(${n(tilt * 57.3)}) scale(1 .57)">${circle(0, 0, size * .5, 'url(#u-galaxy-core)', .8)}${Array.from({ length: count }, (_, i) => { const d = Math.sqrt(random()) * size; const a = (i % 4) * Math.PI / 2 + d / size * 5.5 + (random() - .5) * .42; return circle(Math.cos(a) * d, Math.sin(a) * d, .6 + random() * 2.1, i % 8 === 0 ? '#da9f8b' : i % 3 === 0 ? '#bdddeb' : '#fbebc1', .15 + random() * .65); }).join('')}${circle(0, 0, size * .16, 'url(#u-halo)')}</g>`;
 }
 function blackhole(quasar = false): string {
   return `<g data-art="${quasar ? 'quasar-jets' : 'black-hole-lensing'}">${quasar ? '<path d="M489 305L457 38 488 72 513 310 553 571 522 544Z" fill="url(#u-jet)"/><path d="M495 285L478 97M510 337L536 524" stroke="#e4f5ff" stroke-width="4" opacity=".85"/>' : ''}
@@ -188,7 +188,7 @@ function frameKey(frame: FlightFrame, snapshot: UniverseSnapshot): string {
 function coordinateFlight(snapshot: UniverseSnapshot): boolean {
   return (snapshot.travelling || !!snapshot.coordinateView) && !!snapshot.origin && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.destinationId) && Object.prototype.hasOwnProperty.call(formationGyr, snapshot.origin.destinationId);
 }
-function routeBody(object: RouteObject): { art: string; center: [number, number]; radius: number } {
+function routeBody(object: RouteObject, lowPower = false): { art: string; center: [number, number]; radius: number } {
   if (object.kind === 'earth') return { art: earth(false, false), center: [465, 317], radius: 198 };
   if (object.kind === 'moon') return { art: sphere(490, 312, 188, 'moon', craters(490, 312, 188)), center: [490, 312], radius: 188 };
   if (['rock', 'gas', 'ring', 'ice', 'sun'].includes(object.kind)) return { art: planet(object.kind, object.id), center: object.kind === 'sun' ? [480, 310] : [490, 312], radius: object.kind === 'sun' ? object.id === 'betelgeuse' ? 223 : 184 : 176 };
@@ -197,9 +197,9 @@ function routeBody(object: RouteObject): { art: string; center: [number, number]
   if (object.kind === 'neutron') return { art: `<g data-effect="pulsar">${scenery('neutron', { destinationId: object.id } as UniverseSnapshot)}</g>`, center: [500, 310], radius: 26 };
   if (object.kind === 'galaxy' && ['m87', 'centaurus-a'].includes(object.id)) {
     const random = cosmicRandom(872);
-    return { art: `<g data-art="elliptical-active-galaxy">${circle(500, 310, 190, 'url(#u-galaxy-core)', .7)}${Array.from({ length: 350 }, () => { const angle = random() * Math.PI * 2, radius = Math.sqrt(random()) * 200; return circle(500 + Math.cos(angle) * radius, 310 + Math.sin(angle) * radius * .75, .7 + random(), '#eed9be', .2 + random() * .4); }).join('')}${object.id === 'centaurus-a' ? '<path data-art="dust-lane" d="M314 208L680 383L655 419L305 242Z" fill="#182335" opacity=".8"/>' : ''}<path data-art="active-galaxy-jet" d="M500 310L276 91M500 310L706 509" fill="none" stroke="#a1d7f4" stroke-width="7" opacity=".28"/><g transform="translate(500 310) scale(.11) translate(-500 -310)">${blackhole(true)}</g></g>`, center: [500, 310], radius: 200 };
+    return { art: `<g data-art="elliptical-active-galaxy">${circle(500, 310, 190, 'url(#u-galaxy-core)', .7)}${Array.from({ length: lowPower ? 120 : 350 }, () => { const angle = random() * Math.PI * 2, radius = Math.sqrt(random()) * 200; return circle(500 + Math.cos(angle) * radius, 310 + Math.sin(angle) * radius * .75, .7 + random(), '#eed9be', .2 + random() * .4); }).join('')}${object.id === 'centaurus-a' ? '<path data-art="dust-lane" d="M314 208L680 383L655 419L305 242Z" fill="#182335" opacity=".8"/>' : ''}<path data-art="active-galaxy-jet" d="M500 310L276 91M500 310L706 509" fill="none" stroke="#a1d7f4" stroke-width="7" opacity=".28"/><g transform="translate(500 310) scale(.11) translate(-500 -310)">${blackhole(true)}</g></g>`, center: [500, 310], radius: 200 };
   }
-  if (object.kind === 'galaxy' || object.kind === 'group') return { art: spiral(500, 310, 200, 781), center: [500, 310], radius: 200 };
+  if (object.kind === 'galaxy' || object.kind === 'group') return { art: spiral(500, 310, 200, 781, -.35, lowPower ? 160 : 680), center: [500, 310], radius: 200 };
   if (object.kind === 'nebula') return { art: `<g data-art="stellar-nursery" data-illustration="compressed star formation">${clouds(24, 67, ['#b07175', '#638ea5', '#d5ad8b'], .35)}${Array.from({ length: 8 }, (_, i) => `<circle data-newborn="${i}" cx="${420 + (i * 47) % 160}" cy="${235 + (i * 31) % 160}" r="${5 + i % 3}" fill="url(#u-halo)" opacity=".4"/>`).join('')}</g>`, center: [500, 310], radius: 200 };
   // Region markers are translucent diagrams, not invented individually located debris.
   return { art: `<g data-art="region-outline"><ellipse cx="500" cy="310" rx="176" ry="${object.kind === 'belt' && object.id !== 'oort' ? 40 : 176}" fill="none" stroke="${object.color}" stroke-width="2" stroke-dasharray="4 9"/></g>`, center: [500, 310], radius: 176 };
@@ -214,15 +214,16 @@ function routeTint(object: RouteObject, frame: RouteFrame): string {
   if (object.id === 'sun') { tint[1] *= 1 - .4 * future; tint[2] *= 1 - .7 * future; }
   return `${tint[0]} 0 0 0 0 0 ${tint[1]} 0 0 0 0 0 ${tint[2]} 0 0 0 0 0 1 0`;
 }
-function routeTransform(object: RouteObject, frame: RouteFrame): string {
-  const point = projectDirection(object.direction), body = routeBodyCenter(object);
+function routeTransform(object: RouteObject, frame: RouteFrame, lowPower = false): string {
+  const point = projectDirection(object.direction), body = routeBodyCenter(object, lowPower);
   const radius = Math.min(1000, 850 * Math.tan(object.angularRadius) / Math.max(.03, object.direction[2])) * (object.id === 'sun' ? 1 + .7 * futureFraction(frame) : 1);
   return `translate(${n(point.x)} ${n(point.y)}) scale(${Math.max(.00001, radius / body.radius).toFixed(6)}) translate(${-body.center[0]} ${-body.center[1]})`;
 }
 // Avoid generating the procedural surface again on every animation frame.
 const routeArt = new Map<string, ReturnType<typeof routeBody>>();
-function routeBodyCenter(object: RouteObject): ReturnType<typeof routeBody> {
-  let art = routeArt.get(object.id); if (!art) { art = routeBody(object); routeArt.set(object.id, art); } return art;
+function routeBodyCenter(object: RouteObject, lowPower = false): ReturnType<typeof routeBody> {
+  const key = `${object.id}|${lowPower}`;
+  let art = routeArt.get(key); if (!art) { art = routeBody(object, lowPower); routeArt.set(key, art); } return art;
 }
 function thermalColor(frame: RouteFrame): string {
   const hot = Math.max(0, Math.min(1, (Math.log10(Math.max(2.7, frame.temperatureK)) - 2) / 2));
@@ -232,17 +233,30 @@ function knotTransform(point: readonly [number, number, number], frame: RouteFra
   const expanded = cosmicKnot(point, frame), z = Math.max(.3, expanded[2] + 18);
   return `translate(${n(500 + expanded[0] * 700 / z)} ${n(310 - expanded[1] * 700 / z)}) scale(${n(Math.max(.04, 18 / z))})`;
 }
-function routeMarkup(snapshot: UniverseSnapshot): string {
-  const frame = routeFrame(snapshot);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true" data-scene="coordinate-transit" data-camera-au="${frame.cameraAU.join(',')}" data-age-gyr="${frame.ageGyr}" data-route-leg="${frame.leg}" data-motion="${snapshot.paused || snapshot.reducedMotion ? 'frozen' : 'active'}" style="display:block;width:100%;height:100%;touch-action:none;background:#101d30">
-    ${definitions}<defs>${frame.objects.map(object => `<filter id="u-tint-${object.id}" color-interpolation-filters="sRGB"><feColorMatrix data-route-tint="${object.id}" type="matrix" values="${routeTint(object,frame)}"/></filter>`).join('')}</defs><rect data-route-background="" width="1000" height="620" fill="${thermalColor(frame)}"/>
+function resolvedBody(object: RouteObject): boolean {
+  return object.formed > 0 && object.angularRadius >= .001 && projectDirection(object.direction).visible;
+}
+function resolvedBodies(frame: RouteFrame): Set<string> {
+  const priority = (object: RouteObject) => frame.itinerary.includes(object.id) ? 1 : 0;
+  return new Set(frame.objects.filter(resolvedBody).sort((a, b) => priority(b) - priority(a) || b.angularRadius - a.angularRadius).slice(0, 4).map(object => object.id));
+}
+function lowPowerShift(object: RouteObject): { color: string; opacity: number } {
+  return { color: `rgb(${dopplerTint(object.factor).map(v => Math.round(v * 245)).join(',')})`, opacity: Math.min(.4, Math.abs(Math.log(Math.max(.001, object.factor))) * .2) };
+}
+function routeMarkup(snapshot: UniverseSnapshot, lowPower: boolean): string {
+  const frame = routeFrame(snapshot), resolved = resolvedBodies(frame);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true" data-render-budget="${lowPower ? 'safe' : 'full'}" data-scene="coordinate-transit" data-camera-au="${frame.cameraAU.join(',')}" data-age-gyr="${frame.ageGyr}" data-route-leg="${frame.leg}" data-motion="${snapshot.paused || snapshot.reducedMotion ? 'frozen' : 'active'}" style="display:block;width:100%;height:100%;touch-action:none;background:#101d30">
+    ${definitions}${lowPower ? '' : `<defs>${frame.objects.map(object => `<filter id="u-tint-${object.id}" color-interpolation-filters="sRGB"><feColorMatrix data-route-tint="${object.id}" type="matrix" values="${routeTint(object,frame)}"/></filter>`).join('')}</defs>`}<rect data-route-background="" width="1000" height="620" fill="${thermalColor(frame)}"/>
     <g data-object="comoving-illustration" opacity="${n(frame.structure)}">${COSMIC_KNOTS.map((point, i) => `<g data-knot="${i}" transform="${knotTransform(point, frame)}">${circle(0, 0, 1.2 + i % 3, '#b9cbdc', .5)}${i % 4 === 0 ? '<path d="M0 0l12 -8" stroke="#6e8aa3" opacity=".3"/>' : ''}</g>`).join('')}</g>
-    <g data-object="scene">${frame.objects.map(object => `<g data-route-body="${object.id}" data-evidence="${object.evidence}" data-distance-au="${object.distanceAU}" transform="${routeTransform(object,frame)}" filter="url(#u-tint-${object.id})" opacity="${n(object.formed)}" visibility="${projectDirection(object.direction).visible ? 'visible' : 'hidden'}">${routeBodyCenter(object).art}</g>`).join('')}</g>
-    <g data-object="catalogue-points">${frame.objects.map(object => { const point = projectDirection(object.direction), color = dopplerTint(object.factor).map(v => Math.round(v * 245)); return `<circle data-route-point="${object.id}" cx="${n(point.x)}" cy="${n(point.y)}" r="${n(Math.min(2.5, object.brightness))}" fill="rgb(${color.join(',')})" opacity="${n(object.formed * stellarFade(frame))}" visibility="${point.visible && object.angularRadius < .001 ? 'visible' : 'hidden'}"/>`; }).join('')}</g>
+    <g data-object="scene">${frame.objects.map(object => {
+      const shown = !lowPower || resolved.has(object.id), body = shown ? routeBodyCenter(object, lowPower) : null, shift = lowPowerShift(object);
+      return `<g data-route-body="${object.id}" data-evidence="${object.evidence}" data-distance-au="${object.distanceAU}" transform="${shown ? routeTransform(object,frame,lowPower) : 'translate(0 0)'}"${lowPower ? '' : ` filter="url(#u-tint-${object.id})"`} opacity="${n(object.formed)}" visibility="${shown && projectDirection(object.direction).visible ? 'visible' : 'hidden'}">${body?.art ?? ''}${lowPower && body ? `<circle data-route-shift="${object.id}" cx="${body.center[0]}" cy="${body.center[1]}" r="${body.radius}" fill="${shift.color}" opacity="${n(shift.opacity)}"/>` : ''}</g>`;
+    }).join('')}</g>
+    <g data-object="catalogue-points">${frame.objects.map(object => { const point = projectDirection(object.direction), color = dopplerTint(object.factor).map(v => Math.round(v * 245)); return `<circle data-route-point="${object.id}" cx="${n(point.x)}" cy="${n(point.y)}" r="${n(Math.min(2.5, object.brightness))}" fill="rgb(${color.join(',')})" opacity="${n(object.formed * stellarFade(frame))}" visibility="${point.visible && (object.angularRadius < .001 || lowPower && !resolved.has(object.id)) ? 'visible' : 'hidden'}"/>`; }).join('')}</g>
   </svg>`;
 }
-export function universeMarkup(snapshot: UniverseSnapshot): string {
-  if (coordinateFlight(snapshot)) return routeMarkup(snapshot);
+export function universeMarkup(snapshot: UniverseSnapshot, lowPower = false): string {
+  if (coordinateFlight(snapshot)) return routeMarkup(snapshot, lowPower);
   const frame = flightFrame(snapshot);
   const represented = frame.layers.reduce<FlightLayer | undefined>((best, layer) => !best || layer.opacity > best.opacity ? layer : best, undefined);
   const kind = represented ? layerScene(represented, snapshot) : 'transit';
@@ -256,17 +270,19 @@ export function universeMarkup(snapshot: UniverseSnapshot): string {
   </svg>`;
 }
 
-export function createUniverseRenderer(): UniverseRenderer {
+export function createUniverseRenderer({ lowPower = false }: { lowPower?: boolean } = {}): UniverseRenderer {
   let host: HTMLElement | null = null, svg: SVGSVGElement | null = null, key = '', latest: UniverseSnapshot | null = null;
-  let zoomLevel = 1, panX = 0, panY = 0, serial = 0, lastSnapshotKey = '';
+  let zoomLevel = 1, panX = 0, panY = 0, serial = 0, lastSnapshotKey = '', lastViewBox = '';
+  let lastRoute: RouteFrame | null = null, lastMotion = '';
   const pointers = new Map<number, { x: number; y: number }>();
   const cleanup: (() => void)[] = [];
   const viewBox = () => {
     const pose = latest?.inspection, localZoom = zoomLevel * Math.exp(-(pose?.offset[2] ?? 0) * .12);
-    svg?.setAttribute('viewBox', `${n(500 - 500 / localZoom + panX + (pose?.yaw ?? 0) * 850 + (pose?.offset[0] ?? 0) * 40)} ${n(310 - 310 / localZoom + panY - (pose?.pitch ?? 0) * 850 + (pose?.offset[1] ?? 0) * 40)} ${n(1000 / localZoom)} ${n(620 / localZoom)}`);
+    const value = `${n(500 - 500 / localZoom + panX + (pose?.yaw ?? 0) * 850 + (pose?.offset[0] ?? 0) * 40)} ${n(310 - 310 / localZoom + panY - (pose?.pitch ?? 0) * 850 + (pose?.offset[1] ?? 0) * 40)} ${n(1000 / localZoom)} ${n(620 / localZoom)}`;
+    if (svg && value !== lastViewBox) { svg.setAttribute('viewBox', value); lastViewBox = value; }
   };
   const zoom = (direction: number) => { if (!Number.isFinite(direction)) return; zoomLevel = Math.max(.65, Math.min(4, zoomLevel * Math.pow(1.18, Math.sign(direction)))); viewBox(); };
-  const dispose = () => { cleanup.splice(0).forEach(fn => fn()); pointers.clear(); svg?.remove(); host = null; svg = null; key = ''; lastSnapshotKey = ''; };
+  const dispose = () => { cleanup.splice(0).forEach(fn => fn()); pointers.clear(); svg?.remove(); host = null; svg = null; key = ''; lastSnapshotKey = ''; lastViewBox = ''; lastRoute = null; };
   const render = (snapshot: UniverseSnapshot) => {
     latest = freezeSnapshot(snapshot);
     if (!host) return;
@@ -274,11 +290,14 @@ export function createUniverseRenderer(): UniverseRenderer {
     if (snapshotKey === lastSnapshotKey && svg) return;
     lastSnapshotKey = snapshotKey;
     const frame = flightFrame(latest), routing = coordinateFlight(latest);
-    const nextKey = routing ? `route:${latest.origin!.destinationId}:${latest.destinationId}` : frameKey(frame, latest);
+    const route = routing ? routeFrame(latest) : null;
+    const resolved = route ? resolvedBodies(route) : new Set<string>();
+    const nextKey = routing ? `route:${latest.origin!.destinationId}:${latest.destinationId}:${lowPower ? [...resolved].sort().join(',') : ''}` : frameKey(frame, latest);
     if (!svg || key !== nextKey) {
       key = nextKey;
       const container = document.createElement('div');
-      container.innerHTML = universeMarkup(latest).replace(/u-/g, `cosmos-${serial}-`);
+      container.innerHTML = universeMarkup(latest, lowPower).replace(/u-/g, `cosmos-${serial}-`);
+      lastRoute = null; lastViewBox = ''; lastMotion = '';
       const replacement = container.querySelector('svg')!;
       if (svg) svg.replaceWith(replacement); else host.prepend(replacement);
       svg = replacement; viewBox();
@@ -297,21 +316,30 @@ export function createUniverseRenderer(): UniverseRenderer {
       svg.querySelectorAll<SVGElement>('[data-newborn]').forEach(node => node.setAttribute('opacity', n(.35 + .3 * Math.sin(time * .45 + Number(node.dataset.newborn)))));
       svg.querySelectorAll<SVGElement>('[data-outburst]').forEach(node => { const phase = (time * .045) % 1; node.setAttribute('r', n(225 + phase * 90)); node.setAttribute('opacity', n(.18 * Math.sin(Math.PI * phase))); });
     }
-    if (routing) {
-      const route = routeFrame(latest);
+    if (route) {
+      const motionState = latest.paused || latest.reducedMotion || document.hidden ? 'frozen' : 'active';
+      if (motionState !== lastMotion) { svg.setAttribute('data-motion', motionState); lastMotion = motionState; }
+      // Ambient clocks and inspection do not change astronomical geometry or its tint.
+      if (route === lastRoute) return;
+      const cosmicChanged = !lastRoute || route.expansion !== lastRoute.expansion || route.structure !== lastRoute.structure || route.temperatureK !== lastRoute.temperatureK;
+      lastRoute = route;
       svg.setAttribute('data-camera-au', route.cameraAU.join(',')); svg.setAttribute('data-age-gyr', String(route.ageGyr)); svg.setAttribute('data-route-leg', String(route.leg));
-      svg.setAttribute('data-motion', latest.paused || latest.reducedMotion || document.hidden ? 'frozen' : 'active');
-      svg.querySelector('[data-route-background]')?.setAttribute('fill', thermalColor(route));
-      svg.querySelector('[data-object="comoving-illustration"]')?.setAttribute('opacity', n(route.structure));
-      COSMIC_KNOTS.forEach((point, i) => svg?.querySelector(`[data-knot="${i}"]`)?.setAttribute('transform', knotTransform(point, route)));
+      if (cosmicChanged) {
+        svg.querySelector('[data-route-background]')?.setAttribute('fill', thermalColor(route));
+        svg.querySelector('[data-object="comoving-illustration"]')?.setAttribute('opacity', n(route.structure));
+        COSMIC_KNOTS.forEach((point, i) => svg?.querySelector(`[data-knot="${i}"]`)?.setAttribute('transform', knotTransform(point, route)));
+      }
       route.objects.forEach(object => {
         const node = svg?.querySelector(`[data-route-body="${object.id}"]`), point = projectDirection(object.direction);
-        node?.setAttribute('transform', routeTransform(object,route)); node?.setAttribute('opacity', n(object.formed));
+        const shown = !lowPower || resolved.has(object.id);
+        node?.setAttribute('transform', shown ? routeTransform(object,route,lowPower) : 'translate(0 0)'); node?.setAttribute('opacity', n(object.formed));
         svg?.querySelector(`[data-route-tint="${object.id}"]`)?.setAttribute('values', routeTint(object,route));
-        node?.setAttribute('visibility', point.visible ? 'visible' : 'hidden'); node?.setAttribute('data-distance-au', String(object.distanceAU));
+        const shift = lowPowerShift(object), overlay = svg?.querySelector(`[data-route-shift="${object.id}"]`);
+        overlay?.setAttribute('fill', shift.color); overlay?.setAttribute('opacity', n(shift.opacity));
+        node?.setAttribute('visibility', shown && point.visible ? 'visible' : 'hidden'); node?.setAttribute('data-distance-au', String(object.distanceAU));
         const dot = svg?.querySelector(`[data-route-point="${object.id}"]`);
         dot?.setAttribute('cx', n(point.x)); dot?.setAttribute('cy', n(point.y)); dot?.setAttribute('opacity', n(object.formed * stellarFade(route)));
-        dot?.setAttribute('visibility', point.visible && object.angularRadius < .001 ? 'visible' : 'hidden');
+        dot?.setAttribute('visibility', point.visible && (object.angularRadius < .001 || !shown) ? 'visible' : 'hidden');
         dot?.setAttribute('fill', `rgb(${dopplerTint(object.factor).map(v => Math.round(v * 245)).join(',')})`);
         dot?.setAttribute('r', n(Math.min(2.5, object.brightness)));
       });

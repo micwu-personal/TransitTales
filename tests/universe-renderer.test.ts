@@ -106,17 +106,45 @@ describe('original procedural universe art', () => {
   });
 });
 
+describe('bounded touch-device coordinate art', () => {
+  it.each(DESTINATIONS)('keeps $id reachable without SVG filter surfaces', destination => {
+    const view = snapshot({ destinationId: destination.id, kind: destination.kind, coordinateView: true, origin: { destinationId: destination.id, kind: destination.kind, color: destination.color, epoch: 'present' } });
+    const markup = universeMarkup(view, true);
+    expect(markup).toContain('data-render-budget="safe"');
+    expect(markup).not.toMatch(/<filter|feColorMatrix|filter=|NaN|Infinity/);
+    expect(markup.match(/data-route-body=/g)).toHaveLength(40);
+    expect(markup.match(/data-route-point=/g)).toHaveLength(40);
+    expect(markup.match(/data-route-shift=/g)?.length ?? 0).toBeLessThanOrEqual(4);
+    expect(markup.length).toBeLessThan(210_000);
+  });
+  it.each(EPOCHS)('bounds safe art throughout the $id era', epoch => {
+    for (const destination of DESTINATIONS) {
+      const markup = universeMarkup(snapshot({ destinationId: destination.id, kind: destination.kind, epoch: epoch.id, coordinateView: true, origin: { destinationId: 'earth', kind: 'earth', color: '#77a9bc', epoch: 'present' } }), true);
+      expect(markup).not.toMatch(/<filter|feColorMatrix|filter=|NaN|Infinity/);
+      expect(markup.match(/data-route-shift=/g)?.length ?? 0).toBeLessThanOrEqual(4);
+      expect(markup.match(/<[a-z][^>]*>/g)?.length ?? 0).toBeLessThan(1500);
+    }
+  });
+  it('preserves the Sun and spectral cues in the lightweight illustration', () => {
+    const view = snapshot({ destinationId: 'sun', kind: 'sun', coordinateView: true, origin: { destinationId: 'sun', kind: 'sun', color: '#ffc765', epoch: 'present' } });
+    expect(universeMarkup(view, true)).toContain('data-art="solar-wind"');
+    expect(universeMarkup(view, true)).toContain('data-route-shift="sun"');
+    expect(universeMarkup(view, false)).toContain('feColorMatrix');
+    expect(universeMarkup(view, true).length).toBeLessThan(universeMarkup(view, false).length);
+  });
+});
+
 class NodeStub {
   attributes = new Map<string, string>();
   listeners = new Map<string, EventListener>();
   parts = new Map<string, NodeStub>();
-  markup = ''; writes = 0; removed = false; parent: NodeStub | null = null;
+  markup = ''; writes = 0; attributeWrites = 0; removed = false; parent: NodeStub | null = null;
   set innerHTML(value: string) { this.markup = value; this.writes++; const svg = new NodeStub(); svg.markup = value; this.parts.set('svg', svg); }
   prepend(node: NodeStub) { node.parent = this; this.parts.set('svg', node); this.markup = node.markup; this.writes++; }
   replaceWith(node: NodeStub) { if (this.parent) this.parent.prepend(node); this.removed = true; }
   querySelectorAll() { return []; }
   get innerHTML() { return this.markup; }
-  setAttribute(key: string, value: string) { this.attributes.set(key, value); }
+  setAttribute(key: string, value: string) { this.attributes.set(key, value); this.attributeWrites++; }
   querySelector(selector: string): NodeStub { if (!this.parts.has(selector)) this.parts.set(selector, new NodeStub()); return this.parts.get(selector)!; }
   addEventListener(type: string, listener: EventListener) { this.listeners.set(type, listener); }
   removeEventListener(type: string) { this.listeners.delete(type); }
@@ -124,6 +152,20 @@ class NodeStub {
   remove() { this.removed = true; }
 }
 describe('SVG renderer lifecycle and display-only controls', () => {
+  it('does not rewrite static route geometry for ambient clocks or inspection', () => {
+    vi.stubGlobal('document', { hidden: false, createElement: () => new NodeStub() });
+    const renderer = createUniverseRenderer({ lowPower: true }), host = new NodeStub();
+    const view = snapshot({ coordinateView: true, origin: { destinationId: 'earth', kind: 'earth', color: '#77a9bc', epoch: 'present' } });
+    renderer.mount(host as unknown as HTMLElement); renderer.render(view);
+    const svg = host.querySelector('svg'), body = svg.querySelector('[data-route-body="earth"]'), initial = body.attributeWrites, svgWrites = svg.attributeWrites;
+    renderer.render({ ...view, effectTime: 2 });
+    expect(body.attributeWrites).toBe(initial); expect(svg.attributeWrites).toBe(svgWrites);
+    renderer.render({ ...view, effectTime: 3, inspection: { yaw: .1, pitch: .2, roll: 0, offset: [0, 0, 0] } });
+    expect(body.attributeWrites).toBe(initial); expect(svg.attributeWrites).toBe(svgWrites + 1);
+    renderer.render({ ...view, beta: .9, travelling: true, progress: .3 });
+    expect(host.querySelector('svg').querySelector('[data-route-body="earth"]').attributeWrites).toBeGreaterThan(0);
+    renderer.dispose();
+  });
   it('holds snapshots before mounting, caches geometry, updates optics, and cleans up', () => {
     vi.stubGlobal('document', { hidden: false, createElement: () => new NodeStub() });
     const renderer = createUniverseRenderer(), host = new NodeStub();

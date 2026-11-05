@@ -48,6 +48,15 @@ const copies: Record<Language, Copy> = {
 };
 export const instrumentCopy = (language: Language) => copies[language];
 
+const safeRenderingNotes: Record<Language, string> = {
+  en: 'Touch devices start in lightweight 2D. Optional 3D uses more resources; switch back to 2D if needed. Power saving holds ambient effects still, but journeys remain animated.',
+  'zh-CN': '触屏设备默认使用轻量 2D。3D 可主动开启，但会增加资源消耗；如有卡顿，请切回 2D。省电模式暂停环境特效，旅行过程仍有连续动画。',
+  ja: 'タッチ端末は軽量な 2D で開始します。3D は任意で、負荷が増えます。問題があれば 2D に戻してください。省電力では背景効果を止めますが、旅行は動きます。',
+  'mn-Cyrl-MN': 'Мэдрэгчтэй төхөөрөмж хөнгөн 2D дүрслэлээр эхэлнэ. 3D нь нэмэлт сонголт бөгөөд илүү их нөөц хэрэглэнэ; шаардлагатай бол 2D рүү буцна уу. Хэмнэх горим орчны эффектийг зогсоох боловч аяллын хөдөлгөөн хэвээр.',
+  'mn-Mong-CN': 'ᠬᠦᠷᠦᠯᠴᠡᠬᠦ ᠳᠡᠯᠭᠡᠴᠡ ᠲᠡᠢ ᠲᠥᠭᠥᠭᠡᠷᠦᠮᠵᠢ 2D ᠪᠠᠷ ᠡᠬᠢᠯᠡᠨ᠎ᠡ᠃ 3D ᠨᠢ ᠢᠯᠡᠭᠦᠦ ᠡᠷᠴᠢᠮ ᠬᠦᠴᠦ ᠬᠡᠷᠡᠭᠯᠡᠨ᠎ᠡ᠃ ᠠᠰᠠᠭᠤᠳᠠᠯ ᠭᠠᠷᠪᠠᠯ 2D ᠳᠤ ᠪᠤᠴᠠᠭᠠᠷᠠᠢ᠃ ᠠᠶᠠᠯᠠᠯ ᠤᠨ ᠬᠥᠳᠡᠯᠭᠡᠭᠡᠨ ᠦᠷᠭᠦᠯᠵᠢᠯᠡᠨ᠎ᠡ᠃',
+};
+export const safeRenderingNote = (language: Language) => safeRenderingNotes[language];
+
 export function updateInstruments(host: HTMLElement, snapshot: UniverseSnapshot, language: Language, format: (value: number, digits?: number) => string) {
   const copy = instrumentCopy(language), frame = routeFrame(snapshot), estimate = routeTravelEstimate(snapshot, frame);
   const anchor = frame.objects.find(object => object.id === frame.itinerary[Math.min(frame.leg + 1, frame.itinerary.length - 1)]);

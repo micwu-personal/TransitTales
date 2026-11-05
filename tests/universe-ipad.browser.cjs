@@ -46,7 +46,12 @@ const { webkit, devices } = require('playwright');
     ]) {
       await check(`${name}: production layout and touch controls`, null, async page => {
         await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-        await page.locator('#universe[data-renderer="3d-ready"]').waitFor({ timeout: 15000 });
+        await page.locator(`#universe[data-renderer="${options.hasTouch ? '2d' : '3d'}-ready"]`).waitFor({ timeout: 15000 });
+        if (options.hasTouch) {
+          assert.equal(await page.locator('.cosmic-scene>canvas').count(), 0);
+          assert.equal(await page.locator('.cosmic-scene>svg filter').count(), 0);
+          assert.equal(await page.locator('#universe').getAttribute('data-safe-startup'), 'true');
+        }
         assert.equal(await page.locator('#universe-startup').isVisible(), false);
         assert.equal(await page.locator('#map-scope>option').count(), 9);
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
@@ -57,6 +62,72 @@ const { webkit, devices } = require('playwright');
         await page.locator('#pause')[options.hasTouch ? 'tap' : 'click']();
         assert.equal(await page.locator('#pause').textContent(), '继续');
       }, options);
+    }
+    for (const [name, userAgent] of [
+      ['iPadOS 26.6', 'Mozilla/5.0 (iPad; CPU OS 26_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1'],
+      ['iPad desktop-site mode', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15'],
+    ]) {
+      await check(`${name}: safe Sun refresh, all destinations and zero idle rendering`, async (_page, context) => {
+        await context.addInitScript(() => {
+          window.__gpuContexts = 0; window.__appFrames = 0;
+          const getContext = HTMLCanvasElement.prototype.getContext;
+          HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
+            if (/webgl/i.test(kind)) window.__gpuContexts++;
+            return getContext.call(this, kind, ...args);
+          };
+          const raf = window.requestAnimationFrame;
+          window.requestAnimationFrame = callback => { window.__appFrames++; return raf(callback); };
+          if (!localStorage.getItem('universe-journey-v1')) localStorage.setItem('universe-journey-v1', JSON.stringify({ version: 1, state: {
+            destinationId: 'sun', epochId: 'present', departureDestinationId: 'earth', departureEpochId: 'present', beta: .65,
+            phase: 'encounter', progress: 1, paused: false, shield: 100, energy: 86, research: 0, friendship: 0,
+            visited: ['sun'], completed: [], choiceId: null, outcome: null, elapsed: 7, properElapsed: 5.32,
+          } }));
+        });
+      }, async page => {
+        const optionalRequests = [];
+        page.on('request', request => { if (/renderer3d[-.]/.test(request.url())) optionalRequests.push(request.url()); });
+        await page.goto(address('view=3d'), { waitUntil: 'domcontentloaded' });
+        for (let refresh = 0; refresh < 3; refresh++) {
+          if (refresh) await page.reload({ waitUntil: 'domcontentloaded' });
+          await ready(page);
+          assert.equal(await page.locator('#universe').getAttribute('data-renderer'), '2d-ready');
+          assert.equal(await page.locator('#navigation-title').textContent(), '太阳');
+          assert.equal(await page.locator('.cosmic-scene>svg').getAttribute('data-render-budget'), 'safe');
+          assert.equal(await page.locator('.cosmic-scene>svg filter').count(), 0);
+          assert.ok(await page.locator('.cosmic-scene>svg *').count() < 1500);
+          assert.equal(await page.evaluate(() => window.__gpuContexts), 0);
+        }
+        if (artifactDirectory) await page.locator('.window').screenshot({ path: path.join(artifactDirectory, `${name.replace(/ /g, '-')}-sun.png`) });
+        assert.deepEqual(optionalRequests, [], 'No optional GPU module loads on touch-device startup, even with a 3D URL');
+        assert.equal(await page.locator('.atlas-list').isVisible(), false);
+        const options = await page.locator('#destination option').evaluateAll(nodes => nodes.map(node => ({ id: node.value, label: node.textContent })));
+        assert.equal(options.length, 40);
+        for (const option of options) {
+          await page.locator('#destination').selectOption(option.id);
+          assert.equal(await page.locator('#navigation-title').textContent(), option.label);
+        }
+        await page.locator('#destination').selectOption('sun');
+        await page.locator('.cosmic-scene').scrollIntoViewIfNeeded(); await page.waitForTimeout(1100);
+        await page.evaluate(() => {
+          window.__appFrames = 0; window.__sceneWrites = 0;
+          const observer = new MutationObserver(records => window.__sceneWrites += records.length);
+          for (const node of document.querySelectorAll('.cosmic-scene, #navigation-map')) observer.observe(node, { subtree: true, childList: true, attributes: true });
+        });
+        await page.waitForTimeout(800);
+        assert.deepEqual(await page.evaluate(() => [window.__appFrames, window.__sceneWrites]), [0, 0], 'Eco Sun stops drawing once its map settles');
+        await page.locator('#destination').selectOption('moon'); await page.locator('#depart').tap();
+        await page.waitForFunction(() => document.querySelector('#progress').value > .15);
+        await page.locator('#pause').tap();
+        await page.evaluate(() => {
+          const saved = JSON.parse(localStorage.getItem('universe-journey-v1')); saved.state.paused = false;
+          localStorage.setItem('universe-journey-v1', JSON.stringify(saved));
+        });
+        await page.reload({ waitUntil: 'domcontentloaded' }); await ready(page);
+        assert.equal(await page.locator('#pause').textContent(), '继续', 'Saved travel always reloads paused');
+        assert.ok(Number(await page.locator('#progress').getAttribute('value')) > .15);
+        await page.locator('#pause').tap();
+        await page.waitForFunction(() => document.querySelector('#progress').value > .3);
+      }, { ...devices['iPad Pro 11'], userAgent });
     }
     await check('older Safari APIs: startup, flight, map, pause and saved language', async (_page, context) => {
       await context.addInitScript(() => {
@@ -94,18 +165,20 @@ const { webkit, devices } = require('playwright');
       await page.route('**/renderer3d-*.js', route => route.abort());
     }, async page => {
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-      await page.waitForFunction(() => document.querySelector('#view2d')?.getAttribute('aria-pressed') === 'true');
-      assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
-      await page.locator('#destination').selectOption('mars'); await page.locator('#depart').tap();
+            await page.locator('#view3d').tap();
+            await page.waitForFunction(() => document.querySelector('#view2d')?.getAttribute('aria-pressed') === 'true');
+            assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
+            await page.locator('#destination').selectOption('mars'); await page.locator('#depart').tap();
       assert.equal(await page.locator('#depart').isDisabled(), true);
     });
     await check('delayed optional 3D: preview upgrades without resetting selection', async page => {
       await page.route('**/renderer3d-*.js', async route => { await delay(1800); await route.continue(); });
     }, async page => {
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-      assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
-      await page.locator('#destination').selectOption('moon');
-      await page.locator('#universe[data-renderer="3d-ready"]').waitFor();
+            await page.locator('#view3d').tap();
+            assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
+            await page.locator('#destination').selectOption('moon');
+            await page.locator('#universe[data-renderer="3d-ready"]').waitFor();
       assert.equal(await page.locator('#navigation-title').textContent(), '月球');
     });
     let releaseShaders;
@@ -114,7 +187,8 @@ const { webkit, devices } = require('playwright');
       await page.route(/\/(?:default|pbr)\.(?:vertex|fragment)-[^/]+\.js$/, async route => { await held; await route.continue(); });
     }, async page => {
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-      await page.locator('.cosmic-scene>canvas').waitFor({ state: 'attached' });
+            await page.locator('#view3d').tap();
+            await page.locator('.cosmic-scene>canvas').waitFor({ state: 'attached' });
       assert.equal(await page.locator('#universe').getAttribute('data-renderer'), '3d-warming');
       assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
       await page.evaluate(() => {
@@ -135,7 +209,8 @@ const { webkit, devices } = require('playwright');
       await page.route(/\/(?:default|pbr)\.(?:vertex|fragment)-[^/]+\.js$/, route => route.abort());
     }, async page => {
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-      await page.locator('#universe[data-renderer="2d-ready"]').waitFor({ timeout: 12000 });
+            await page.locator('#view3d').tap();
+            await page.locator('#universe[data-renderer="2d-ready"]').waitFor({ timeout: 12000 });
       assert.equal(await page.locator('.cosmic-scene>canvas').count(), 0);
       assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
       await page.locator('#universe-diagnostics>summary').tap();
@@ -154,8 +229,9 @@ const { webkit, devices } = require('playwright');
       await page.route('**/renderer3d-*.js', async route => { await delay(10500); await route.continue(); });
     }, async page => {
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-      assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
-      await page.waitForFunction(() => document.querySelector('#view2d')?.getAttribute('aria-pressed') === 'true', null, { timeout: 12000 });
+            await page.locator('#view3d').tap();
+            assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
+            await page.waitForFunction(() => document.querySelector('#view2d')?.getAttribute('aria-pressed') === 'true', null, { timeout: 12000 });
       await page.waitForTimeout(3500);
       assert.equal(await page.locator('.cosmic-scene>canvas').count(), 0);
       assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
@@ -166,7 +242,8 @@ const { webkit, devices } = require('playwright');
       await page.route('**/renderer3d-*.js', async route => { await delay(1800); await route.continue(); });
     }, async page => {
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-      await page.locator('#view2d').tap(); await page.waitForTimeout(2500);
+            await page.locator('#view3d').tap();
+            await page.locator('#view2d').tap(); await page.waitForTimeout(2500);
       assert.equal(await page.locator('.cosmic-scene>canvas').count(), 0);
       assert.equal(await page.locator('#view2d').getAttribute('aria-pressed'), 'true');
     });
@@ -177,9 +254,10 @@ const { webkit, devices } = require('playwright');
       });
     }, async page => {
       await page.goto(address(''), { waitUntil: 'domcontentloaded' }); await ready(page);
-      await page.waitForFunction(() => document.querySelector('#view2d')?.getAttribute('aria-pressed') === 'true');
-      assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
-      await page.locator('#destination').selectOption('moon');
+            await page.locator('#view3d').tap();
+            await page.waitForFunction(() => document.querySelector('#view2d')?.getAttribute('aria-pressed') === 'true');
+            assert.equal(await page.locator('.cosmic-scene>svg').count(), 1);
+            await page.locator('#destination').selectOption('moon');
       assert.equal(await page.locator('#navigation-title').textContent(), '月球');
     });
     await check('restricted storage and optional voice API do not block startup', async (_page, context) => {
