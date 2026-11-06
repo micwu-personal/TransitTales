@@ -1,4 +1,5 @@
 import { common, itemText, legacyLevel, legacyOffer, legacyResult } from './legacy-localization';
+import { itemUnit } from './item-quantity';
 import { advanceLife, CAMPAIGN_COUNT, LIFE_LEVELS, LIFE_START, lifeActions, lifeAct, lifeProgress, lifeWorth, type LifeState } from './life';
 export type Text = { zh: string; en: string; ja?: string; mn?: string; 'mn-Mong'?: string };
 export type Lang = 'zh' | 'en' | 'ja' | 'mn' | 'mn-Mong';
@@ -193,7 +194,7 @@ function actions(s: GameState): Action[] {
       set(t, 'spent', f(t, 'spent') + cost);
       if (item === 'markdown') { set(t, 'markdownBought'); set(t, 'breadDay', t.day); }
       if (s.level === 5) { set(t, 'giftSpent', f(t, 'giftSpent') + cost); }
-      return text(`付了${money(cost)}${unitZh}，钱少了，背包多了${amount}份。店长说：我的价签没有偷偷换！`, `Paid ${unitEn}${money(cost)}: less money, ${amount} more in your bag. The price tag did not sneak away!`);
+      return text(`付了${money(cost)}${unitZh}，背包里多了${amount}${itemUnit(item)}${itemText(item).zh}。店长说：我的价签没有偷偷换！`, `Paid ${unitEn}${money(cost)}; your bag now has ${amount} more ${itemText(item).en}. The price tag did not sneak away!`);
     }, !allowed ? need : p.stock < amount ? done : available < cost ? funds : text('超过本关的小预算；玩具会挤掉需要的东西。可从检查点重试。', 'Over this mission’s budget; a toy crowds out needs. Retry the checkpoint if needed.'));
     list[list.length-1].facts=[{id:'quantity',value:amount},{id:'unit-price',value:p.price,money:foreign?'foreign':'home'},{id:'total',value:cost,money:foreign?'foreign':'home'},{id:'stock-count',value:p.stock},...(Number.isFinite(budget)?[{id:'budget',value:Math.max(0,budget-f(s,'spent')),money:'home' as const}]:[])];
   };

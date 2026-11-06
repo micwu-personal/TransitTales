@@ -1966,10 +1966,10 @@
     {
       "id": "ui.pocket",
       "text": {
-        "zh": "现在，自己的口袋里有：",
-        "en": "In your own pocket now:",
-        "ja": "今、自分の財布にあるのは、",
-        "mn": "Одоо өөрийн түрийвчинд байгаа нь:"
+        "zh": "口袋里的零钱：",
+        "en": "Pocket cash:",
+        "ja": "お財布の現金：",
+        "mn": "Түрийвчний бэлэн мөнгө:"
       }
     },
     {
@@ -1984,10 +1984,10 @@
     {
       "id": "ui.owed",
       "text": {
-        "zh": "还要还的钱是：",
-        "en": "The money still owed is:",
-        "ja": "まだ返すお金は、",
-        "mn": "Буцааж төлөх мөнгө нь:"
+        "zh": "还没还清的欠款：",
+        "en": "Money still owed:",
+        "ja": "まだ返していないお金：",
+        "mn": "Төлж дуусаагүй өр:"
       }
     },
     {
@@ -5912,6 +5912,546 @@
         "en": "The bank has set aside settlement money that unlocks in a few days. If repayment comes first, it can sell pledged bonds, invite new shareholder cash, or wait for the money to unlock.",
         "ja": "銀行は決済のお金を数日間取り分けています。返済に間に合わなければ、担保の債券を売る、新しい株主に出資してもらう、決済のお金が使えるまで待つ方法があります。",
         "mn": "Банк тооцоо хийх мөнгийг хэдэн хоног тусад нь хадгална. Төлөх өдөр мөнгө хүрэхгүй бол барьцаалсан бондоо зарж, шинэ хувьцаа эзэмшигчээс хөрөнгө авч, эсвэл мөнгө чөлөөлөгдөхийг хүлээж болно."
+      }
+    },
+    {
+      "id": "ui.jiao",
+      "text": {
+        "zh": "角。",
+        "en": "tenths of a yuan.",
+        "ja": "角。",
+        "mn": "жяо."
+      }
+    },
+    {
+      "id": "ui.money-ending",
+      "text": {
+        "zh": "钱。",
+        "en": "money.",
+        "ja": "お金。",
+        "mn": "мөнгө."
+      }
+    },
+    {
+      "id": "ui.bag-item",
+      "text": {
+        "zh": "背包里的",
+        "en": "In your bag,",
+        "ja": "かばんの中の",
+        "mn": "Цүнхэнд байгаа"
+      }
+    },
+    {
+      "id": "ui.item-unit.item",
+      "text": {
+        "zh": "个。",
+        "en": "item.",
+        "ja": "個。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-unit.book",
+      "text": {
+        "zh": "本。",
+        "en": "book.",
+        "ja": "冊。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-unit.cup",
+      "text": {
+        "zh": "杯。",
+        "en": "cup.",
+        "ja": "杯。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-unit.handle",
+      "text": {
+        "zh": "把。",
+        "en": "umbrella.",
+        "ja": "本。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-unit.garment",
+      "text": {
+        "zh": "件。",
+        "en": "garment.",
+        "ja": "着。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-unit.sheet",
+      "text": {
+        "zh": "张。",
+        "en": "ticket or sticker.",
+        "ja": "枚。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-unit.set",
+      "text": {
+        "zh": "套。",
+        "en": "set.",
+        "ja": "組。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-unit.portion",
+      "text": {
+        "zh": "份。",
+        "en": "portion.",
+        "ja": "人分。",
+        "mn": "ширхэг."
+      }
+    },
+    {
+      "id": "money.home.0",
+      "text": {
+        "zh": "零元钱。",
+        "en": "zero yuan.",
+        "ja": "零元。",
+        "mn": "тэг юань."
+      }
+    },
+    {
+      "id": "money.home.1",
+      "text": {
+        "zh": "一分钱。",
+        "en": "one cent.",
+        "ja": "一分。",
+        "mn": "нэг фэнь."
+      }
+    },
+    {
+      "id": "money.home.2",
+      "text": {
+        "zh": "二分钱。",
+        "en": "two cents.",
+        "ja": "二分。",
+        "mn": "хоёр фэнь."
+      }
+    },
+    {
+      "id": "money.home.5",
+      "text": {
+        "zh": "五分钱。",
+        "en": "five cents.",
+        "ja": "五分。",
+        "mn": "тав фэнь."
+      }
+    },
+    {
+      "id": "money.home.10",
+      "text": {
+        "zh": "一角钱。",
+        "en": "ten cents.",
+        "ja": "十分。",
+        "mn": "арав фэнь."
+      }
+    },
+    {
+      "id": "money.home.20",
+      "text": {
+        "zh": "两角钱。",
+        "en": "twenty cents.",
+        "ja": "二十分。",
+        "mn": "хорь фэнь."
+      }
+    },
+    {
+      "id": "money.home.30",
+      "text": {
+        "zh": "三角钱。",
+        "en": "thirty cents.",
+        "ja": "三十分。",
+        "mn": "гуч фэнь."
+      }
+    },
+    {
+      "id": "money.home.50",
+      "text": {
+        "zh": "五角钱。",
+        "en": "fifty cents.",
+        "ja": "五十分。",
+        "mn": "тавь фэнь."
+      }
+    },
+    {
+      "id": "money.home.60",
+      "text": {
+        "zh": "六角钱。",
+        "en": "sixty cents.",
+        "ja": "六十分。",
+        "mn": "жар фэнь."
+      }
+    },
+    {
+      "id": "money.home.80",
+      "text": {
+        "zh": "八角钱。",
+        "en": "eighty cents.",
+        "ja": "八十分。",
+        "mn": "ная фэнь."
+      }
+    },
+    {
+      "id": "money.home.100",
+      "text": {
+        "zh": "一元钱。",
+        "en": "one yuan.",
+        "ja": "一元。",
+        "mn": "нэг юань."
+      }
+    },
+    {
+      "id": "money.home.105",
+      "text": {
+        "zh": "一元零五分钱。",
+        "en": "one yuan and five cents.",
+        "ja": "一元五分。",
+        "mn": "нэг юань тав фэнь."
+      }
+    },
+    {
+      "id": "money.home.110",
+      "text": {
+        "zh": "一元一角钱。",
+        "en": "one yuan and ten cents.",
+        "ja": "一元十分。",
+        "mn": "нэг юань арав фэнь."
+      }
+    },
+    {
+      "id": "money.home.120",
+      "text": {
+        "zh": "一元两角钱。",
+        "en": "one yuan and twenty cents.",
+        "ja": "一元二十分。",
+        "mn": "нэг юань хорь фэнь."
+      }
+    },
+    {
+      "id": "money.home.150",
+      "text": {
+        "zh": "一元五角钱。",
+        "en": "one yuan and fifty cents.",
+        "ja": "一元五十分。",
+        "mn": "нэг юань тавь фэнь."
+      }
+    },
+    {
+      "id": "money.home.160",
+      "text": {
+        "zh": "一元六角钱。",
+        "en": "one yuan and sixty cents.",
+        "ja": "一元六十分。",
+        "mn": "нэг юань жар фэнь."
+      }
+    },
+    {
+      "id": "money.home.180",
+      "text": {
+        "zh": "一元八角钱。",
+        "en": "one yuan and eighty cents.",
+        "ja": "一元八十分。",
+        "mn": "нэг юань ная фэнь."
+      }
+    },
+    {
+      "id": "money.home.200",
+      "text": {
+        "zh": "两元钱。",
+        "en": "two yuan.",
+        "ja": "二元。",
+        "mn": "хоёр юань."
+      }
+    },
+    {
+      "id": "money.home.220",
+      "text": {
+        "zh": "两元两角钱。",
+        "en": "two yuan and twenty cents.",
+        "ja": "二元二十分。",
+        "mn": "хоёр юань хорь фэнь."
+      }
+    },
+    {
+      "id": "money.home.240",
+      "text": {
+        "zh": "两元四角钱。",
+        "en": "two yuan and forty cents.",
+        "ja": "二元四十分。",
+        "mn": "хоёр юань дөч фэнь."
+      }
+    },
+    {
+      "id": "money.home.250",
+      "text": {
+        "zh": "两元五角钱。",
+        "en": "two yuan and fifty cents.",
+        "ja": "二元五十分。",
+        "mn": "хоёр юань тавь фэнь."
+      }
+    },
+    {
+      "id": "money.home.260",
+      "text": {
+        "zh": "两元六角钱。",
+        "en": "two yuan and sixty cents.",
+        "ja": "二元六十分。",
+        "mn": "хоёр юань жар фэнь."
+      }
+    },
+    {
+      "id": "money.home.300",
+      "text": {
+        "zh": "三元钱。",
+        "en": "three yuan.",
+        "ja": "三元。",
+        "mn": "гурав юань."
+      }
+    },
+    {
+      "id": "money.home.350",
+      "text": {
+        "zh": "三元五角钱。",
+        "en": "three yuan and fifty cents.",
+        "ja": "三元五十分。",
+        "mn": "гурав юань тавь фэнь."
+      }
+    },
+    {
+      "id": "money.home.360",
+      "text": {
+        "zh": "三元六角钱。",
+        "en": "three yuan and sixty cents.",
+        "ja": "三元六十分。",
+        "mn": "гурав юань жар фэнь."
+      }
+    },
+    {
+      "id": "money.home.400",
+      "text": {
+        "zh": "四元钱。",
+        "en": "four yuan.",
+        "ja": "四元。",
+        "mn": "дөрөв юань."
+      }
+    },
+    {
+      "id": "money.home.450",
+      "text": {
+        "zh": "四元五角钱。",
+        "en": "four yuan and fifty cents.",
+        "ja": "四元五十分。",
+        "mn": "дөрөв юань тавь фэнь."
+      }
+    },
+    {
+      "id": "money.home.500",
+      "text": {
+        "zh": "五元钱。",
+        "en": "five yuan.",
+        "ja": "五元。",
+        "mn": "тав юань."
+      }
+    },
+    {
+      "id": "money.home.540",
+      "text": {
+        "zh": "五元四角钱。",
+        "en": "five yuan and forty cents.",
+        "ja": "五元四十分。",
+        "mn": "тав юань дөч фэнь."
+      }
+    },
+    {
+      "id": "money.home.600",
+      "text": {
+        "zh": "六元钱。",
+        "en": "six yuan.",
+        "ja": "六元。",
+        "mn": "зургаа юань."
+      }
+    },
+    {
+      "id": "money.home.660",
+      "text": {
+        "zh": "六元六角钱。",
+        "en": "six yuan and sixty cents.",
+        "ja": "六元六十分。",
+        "mn": "зургаа юань жар фэнь."
+      }
+    },
+    {
+      "id": "money.home.900",
+      "text": {
+        "zh": "九元钱。",
+        "en": "nine yuan.",
+        "ja": "九元。",
+        "mn": "ес юань."
+      }
+    },
+    {
+      "id": "money.home.1000",
+      "text": {
+        "zh": "十元钱。",
+        "en": "ten yuan.",
+        "ja": "十元。",
+        "mn": "арав юань."
+      }
+    },
+    {
+      "id": "ui.item-count.item.1",
+      "text": {
+        "zh": "一个。",
+        "en": "one item.",
+        "ja": "一個。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.item.2",
+      "text": {
+        "zh": "两个。",
+        "en": "two items.",
+        "ja": "二個。",
+        "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.book.1",
+      "text": {
+        "zh": "一本。",
+        "en": "one book.",
+        "ja": "一冊。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.book.2",
+      "text": {
+        "zh": "两本。",
+        "en": "two books.",
+        "ja": "二冊。",
+        "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.cup.1",
+      "text": {
+        "zh": "一杯。",
+        "en": "one cup.",
+        "ja": "一杯。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.cup.2",
+      "text": {
+        "zh": "两杯。",
+        "en": "two cups.",
+        "ja": "二杯。",
+        "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.handle.1",
+      "text": {
+        "zh": "一把。",
+        "en": "one umbrella.",
+        "ja": "一本。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.handle.2",
+      "text": {
+        "zh": "两把。",
+        "en": "two umbrellas.",
+        "ja": "二本。",
+        "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.garment.1",
+      "text": {
+        "zh": "一件。",
+        "en": "one garment.",
+        "ja": "一着。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.garment.2",
+      "text": {
+        "zh": "两件。",
+        "en": "two garments.",
+        "ja": "二着。",
+        "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.sheet.1",
+      "text": {
+        "zh": "一张。",
+        "en": "one ticket or sticker.",
+        "ja": "一枚。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.sheet.2",
+      "text": {
+        "zh": "两张。",
+        "en": "two tickets or stickers.",
+        "ja": "二枚。",
+        "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.set.1",
+      "text": {
+        "zh": "一套。",
+        "en": "one set.",
+        "ja": "一組。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.set.2",
+      "text": {
+        "zh": "两套。",
+        "en": "two sets.",
+        "ja": "二組。",
+        "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.portion.1",
+      "text": {
+        "zh": "一份。",
+        "en": "one portion.",
+        "ja": "一人分。",
+        "mn": "нэг ширхэг."
+      }
+    },
+    {
+      "id": "ui.item-count.portion.2",
+      "text": {
+        "zh": "两份。",
+        "en": "two portions.",
+        "ja": "二人分。",
+        "mn": "хоёр ширхэг."
       }
     }
   ]

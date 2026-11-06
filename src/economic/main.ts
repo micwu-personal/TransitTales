@@ -1,4 +1,4 @@
-import { balanceNarration, choiceNarration, priceNarration, outcomeNarration, outcomeChanges } from './narration-guidance';
+import { balanceNarration, choiceNarration, priceNarration, outcomeNarration, outcomeChanges, outcomeChangeText } from './narration-guidance';
 import { common, itemText, ledgerText, accountText } from './legacy-localization';
 import './style.css';
 import { act, advance, createGame, getActions, getLevel, getPrices, getProgress, getWeather, CAMPAIGN_LEVELS as LEVELS, CAMPAIGN_COUNT as LEVEL_COUNT, netWorth, type Family, type GameState, type Lang, type Place, type Text } from './model';
@@ -120,7 +120,7 @@ function conversation(location: Place): string {
   const npc = location === 'bank' ? 'banker' : location === 'home' ? 'parent' : 'friend';
   const greeting = location === level.place ? level.intro : common('visit');
   return `<section class="conversation ${state.completed ? 'conversation-done' : ''}" aria-label="${c.speak}">
-    <div class="speaker">${portrait(npc)}<div><h2>${location === level.place ? t(level.person) : c.locations[location]}</h2><p class="spoken ${feedback && !feedbackOk ? 'choice-error' : ''}">${feedback ? t(feedback) : t(greeting)}</p>${feedback&&changes.length?`<p class="choice-outcome">${t(common('changes'))} ${changes.map(row=>`${t(row.label)} · ${t(common(row.value<0?'change-down':'change-up'))} ${row.money?amount(Math.abs(row.value),row.money==='foreign'):Math.abs(row.value)}`).join(' · ')}</p>`:''}</div></div>
+    <div class="speaker">${portrait(npc)}<div><h2>${location === level.place ? t(level.person) : c.locations[location]}</h2><p class="spoken ${feedback && !feedbackOk ? 'choice-error' : ''}">${feedback ? t(feedback) : t(greeting)}</p>${feedback&&changes.length?`<p class="choice-outcome">${t(common('changes'))} ${changes.map(row=>esc(outcomeChangeText(row,lang))).join('<br>')}</p>`:''}</div></div>
     ${location === 'shop' && !state.completed ? priceTags() : ''}
     ${state.completed ? `<div class="completion-actions"><span>${icon('check')}${c.done}</span><button id="next" data-ui="next" class="primary">${c.next}${icon('arrow')}</button></div>` : `<div class="choices">${offers.map((offer, index) => `<div class="choice-pair"><button id="action-${esc(offer.id)}" data-action="${esc(offer.id)}" class="choice ${index === 0 ? 'suggested-choice' : ''}" ${offer.disabled ? `disabled aria-describedby="why-${esc(offer.id)}"` : ''}>${icon(offer.icon)}<span><b>${t(offer.label)}</b><small>${t(offer.detail)}</small>${offer.disabled?`<em id="why-${esc(offer.id)}">${t(offer.disabled)}</em>`:''}</span>${icon('arrow')}</button><button id="listen-${esc(offer.id)}" data-listen="${esc(offer.id)}" class="choice-listen" aria-label="${t(lifeText('ui.listen-choice'))}: ${t(offer.label)}">${icon('sound')}<span>${t(lifeText('ui.listen-choice'))}</span></button></div>`).join('')}${offers.length === 0 ? `<button id="find-story" data-place="${level.place}" class="choice">${icon('arrow')}<span><b>${c.travel} · ${c.locations[level.place]}</b><small>${t(level.goal)}</small></span></button>` : ''}</div>`}
   </section>`;
@@ -258,7 +258,7 @@ document.addEventListener('keydown', event => {
 });
 window.addEventListener('resize', sizeWorld);
 document.addEventListener('visibilitychange', () => { if (document.hidden) {narrator.stop();void audio?.suspend().catch(() => {});} });
-window.addEventListener('pagehide', () => { narrator.stop();void audio?.close().catch(() => {}); audio = undefined; });
+window.addEventListener('pagehide', () => { narrator.dispose();void audio?.close().catch(() => {}); audio = undefined; });
 render();
 if (panel === 'setup') host.querySelector<HTMLButtonElement>('#choose-boy')?.focus({ preventScroll: true });
 

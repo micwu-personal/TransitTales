@@ -80,7 +80,7 @@ describe('economic life campaign',()=>{
     if(balance(s.life!,'house.cash')<1000)s=choose(s,'life-retirement-work');s=choose(s,'life-contribute');
     const before=structuredClone(s);s=choose(s,'life-fulfill-orders');expect(balance(s.life!,'company.cash')).toBe(balance(before.life!,'company.cash')-300);
     expect(s.life!.goods.prepaidOrders).toBe(0);expect(s.life!.goods.ordersDelivered).toBe(5);expect(balance(s.life!,'company.orderLiability')).toBe(0);expect(balance(s.life!,'external.orderClaim')).toBe(0);expect(s.life!.ownership).toBe(80);
-    expect(outcomeChanges(before,s).some(row=>row.value===5)).toBe(true);expect(outcomeNarration(before,s,common('complete'),'zh')).toContain('legacy.common.delivered');
+    expect(outcomeChanges(before,s).some(row=>row.value===5)).toBe(true);expect(outcomeNarration(before,s,common('complete'),'zh').flat()).toContain('legacy.common.delivered');
     expect(saveGame(memory(),{state:s,checkpoint:albumCheckpoint,lang:'mn-Mong'})).toBe(true);expect(getActions(s,getLevel(s).place).some(o=>o.id==='life-fulfill-orders')).toBe(false);
     s=choose(s,'life-observe');expect(s.completed).toBe(true);
   });
@@ -164,7 +164,7 @@ describe('economic life campaign',()=>{
   it('covers every reachable childhood/life offer, outcome and price in all five written locales and exact spoken IDs',()=>{
     const langs=['zh','en','ja','mn','mn-Mong'] as const,known=new Set(catalog.scripts.map(row=>row.id));
     const checkText=(value:import('../src/economic/model').Text)=>{for(const lang of langs){const prose=text(value,lang);expect(prose.trim()).not.toBe('');if(lang==='mn-Mong')expect(prose).not.toMatch(/[A-Za-z\u0400-\u04ff]/);}for(const id of scriptIds([value]))expect(known.has(id),id).toBe(true);};
-    const inspect=(s:GameState)=>{const level=getLevel(s);for(const value of [level.title,level.goal,level.intro])checkText(value);for(const place of ['home','shop','school','bank','park'] as const)for(const offer of getActions(s,place)){checkText(offer.label);checkText(offer.detail);if(offer.disabled)checkText(offer.disabled);for(const lang of langs)for(const id of choiceNarration(s,offer,lang))expect(known.has(id),id).toBe(true);}for(const lang of langs)for(const id of balanceNarration(s,lang))expect(known.has(id),id).toBe(true);};
+    const inspect=(s:GameState)=>{const level=getLevel(s);for(const value of [level.title,level.goal,level.intro])checkText(value);for(const place of ['home','shop','school','bank','park'] as const)for(const offer of getActions(s,place)){checkText(offer.label);checkText(offer.detail);if(offer.disabled)checkText(offer.disabled);for(const lang of langs)for(const id of choiceNarration(s,offer,lang).flat())expect(known.has(id),id).toBe(true);}for(const lang of langs)for(const id of balanceNarration(s,lang).flat())expect(known.has(id),id).toBe(true);};
     for(const lang of langs){const ui=copy(lang);for(const [key,value] of Object.entries(ui)){if(typeof value==='string'){if(!['day','dayEnd'].includes(key))expect(value.trim(),key).not.toBe('');if(lang==='mn-Mong')expect(value).not.toMatch(/[A-Za-z\u0400-\u04ff]/);}}}
     let s=createGame({children:3,gender:'girl'});for(const sequence of sequences){for(const id of sequence){inspect(s);const r=act(s,id);checkText(r.message);s=r.state;}s=advance(s);}
     for(let level=24;level<CAMPAIGN_COUNT;level++){inspect(s);s=chapter(s,false);inspect(s);const r=act(s,'life-observe');checkText(r.message);s=advance(r.state);}
