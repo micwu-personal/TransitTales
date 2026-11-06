@@ -3487,7 +3487,7 @@
     {
       "id": "legacy.school-list.body",
       "text": {
-        "zh": "小熊文具店长说：玩具恐龙也想进书包，但午饭不能变成恐龙。 给每个孩子买苹果和面包，购物单预算是每人二元五十分。",
+        "zh": "小熊文具店长说：玩具恐龙也想进书包，但午饭不能变成恐龙。 给每个孩子买苹果和面包，购物单预算是每人两元五角。",
         "en": "Bear the shopkeeper says: a toy dinosaur wants in, but lunch cannot be a dinosaur. Pack an apple and bread for each child within two yuan and fifty cents each.",
         "ja": "一人二元五十分でリンゴとパンをそろえよう。クマ店長：恐竜のおもちゃもかばんに入りたいけれど、お昼ごはんは恐竜にできないね！",
         "mn": "Хүүхэд бүрд хоёр юань тавин фэниэр алим, талх бэлдье. Баавгай дэлгүүрийн эзэн: тоглоомон үлэг гүрвэл цүнхэнд орохыг хүсэвч өдрийн хоолыг орлож чадахгүй!"
@@ -3505,7 +3505,7 @@
     {
       "id": "legacy.change.body",
       "text": {
-        "zh": "面包阿姨忙得把计算器当电话了。你可以帮她检查找零！ 用五元付款买一元二十分的面包，拿回正确找零，交给同学。",
+        "zh": "面包阿姨忙得把计算器当电话了。你可以帮她检查找零！ 用五元付款买一元两角的面包，拿回正确找零，交给同学。",
         "en": "Baker Bee tried calling her calculator. Help check your change! Pay five yuan for one yuan and twenty cents bread, collect the right change, and deliver it.",
         "ja": "一元二十分のパンに五元を渡し、正しいおつり三元八十分を受け取って友達に届けよう。パン屋さんが計算機を電話にしちゃった！おつりを一緒に確かめよう。",
         "mn": "Нэг юань хорин фэний талханд таван юань өгөөд гурван юань наян фэнь хариулт авъя. Талхаа найздаа хүргэе. Талхчин тооны машинаа утас гэж андуурчээ! Хариултыг хамт шалгая."
@@ -3811,7 +3811,7 @@
     {
       "id": "legacy.foreign-exchange.body",
       "text": {
-        "zh": "鹦鹉兑换员：一贝币＝二元，兑换一次收零元二十分。扫码也能只是花自己的钱，不等于借款！ 看清虚构汇率和费用，兑换五贝币，再用预付钱包支付孩子们的巴士票。",
+        "zh": "鹦鹉兑换员：一贝币＝二元，兑换一次收两角。扫码也能只是花自己的钱，不等于借款！ 看清虚构汇率和费用，兑换五贝币，再用预付钱包支付孩子们的巴士票。",
         "en": "Parrot Teller: one shell = two yuan, with zero yuan and twenty cents per exchange. A QR payment can spend your own money, not borrow! Read fictional rates and fees, exchange for five shell coins, then pay children’s bus fares from the prepaid wallet.",
         "ja": "架空の相場と手数料を見て五貝コインに替え、前払い財布から子どものバス代を払おう。一貝コインは二元、両替一回零元二十分。コード決済でも自分のお金なら借金じゃないよ！",
         "mn": "Зохиомол ханш, шимтгэлийг үзээд таван хясаан зоос авч, урьдчилан цэнэглэсэн түрийвчээр хүүхдийн автобусыг төлъе. Нэг хясаа хоёр юань, солих бүр хорин фэнь. Код уншуулах нь заавал зээл гэсэн үг биш!"
@@ -3829,7 +3829,7 @@
     {
       "id": "legacy.travel-prices.body",
       "text": {
-        "zh": "海螺店长：国内同款二元六十分，岛上一贝币；兑换整笔还有零元二十分费用。这只是今天的虚构价格，不保证哪里永远便宜。 把同款纪念品的国内价和贝币价换算比较，给每个孩子选一份。",
+        "zh": "海螺店长：国内同款两元六角，岛上一贝币；兑换整笔还有两角费用。这只是今天的虚构价格，不保证哪里永远便宜。 把同款纪念品的国内价和贝币价换算比较，给每个孩子选一份。",
         "en": "Shell Seller: the same item is two yuan and sixty cents at home, one shell here; the exchange has a zero yuan and twenty cents fee. Fictional prices today, not a universal bargain rule. Convert home and shell prices for the same souvenir; choose one for each child.",
         "ja": "同じお土産の国内価格と貝コイン価格を換算して、一人一つ選ぼう。国内は二元六十分、島は一貝コイン。両替全体に零元二十分かかる。今日の架空の値段で、いつもどこかが安いわけではないよ。",
         "mn": "Адил дурсгалын дотоод үнэ, хясаан үнийг хөрвүүлж хүүхэд бүрд нэгийг сонгоё. Дотоодод хоёр юань жаран фэнь, аралд нэг хясаа. Бүх солилцоонд хорин фэний шимтгэл бий. Өнөөдрийн зохиомол үнэ, үргэлж нэг газар хямд гэсэн үг биш."
@@ -3847,7 +3847,7 @@
     {
       "id": "legacy.toy-customs.body",
       "text": {
-        "zh": "螃蟹关员：这是游戏规则，不是现实海关政策。国外买的礼物换算超过四元，这个信封收零元六十分；主动申报，别装成袜子！ 查看虚构海关规则，如实申报纪念品，支付显示的费用，拿到通行章。",
+        "zh": "螃蟹关员：这是游戏规则，不是现实海关政策。国外买的礼物换算超过四元，这个信封收六角；主动申报，别装成袜子！ 查看虚构海关规则，如实申报纪念品，支付显示的费用，拿到通行章。",
         "en": "Crab Officer: toy rules, not real customs policy. Overseas gifts above four yuan cost this envelope zero yuan and sixty cents. Declare them; do not disguise them as socks! Read fictional customs rules, declare souvenirs, pay the displayed charge and obtain a stamp.",
         "ja": "架空の税関ルールを確認し、本当の品物を申告して、表示された費用を払いハンコをもらおう。海外の品物が四元を超すと零元六十分。現実の制度ではないよ。カニ係員：靴下に見せかけないでね！",
         "mn": "Зохиомол гаалийн дүрмийг үзэж, бараагаа үнэн мэдүүлээд төлбөрөө төлж тамга авъя. Гадаад бэлэг дөрвөн юаниас давбал жаран фэнь төлнө. Бодит журам биш. Хавч байцаагч: оймс гэж бүү нуух!"
@@ -6452,6 +6452,2778 @@
         "en": "two portions.",
         "ja": "二人分。",
         "mn": "хоёр ширхэг."
+      }
+    },
+    {
+      "id": "family.first-snack.goal.1",
+      "text": {
+        "zh": "买一个苹果，最多花一元，再回家吃点心。",
+        "en": "Buy one apple for at most one yuan, then go home for a snack.",
+        "ja": "自分にリンゴを一つ。予算は全部で一元。買ったら家でおやつにしよう。",
+        "mn": "өөртөө нэг алим авъя. Нийт нэг юаниас хэтрүүлэхгүй. Дараа нь гэртээ идье."
+      }
+    },
+    {
+      "id": "family.school-list.goal.1",
+      "text": {
+        "zh": "买一个苹果和一份面包，最多花两元五角，再装好午饭。",
+        "en": "Buy an apple and bread for at most two yuan fifty cents, then pack your school lunch.",
+        "ja": "自分にリンゴとパン。一人二元五十分以内で買い、かばんにお昼ごはんを入れよう。",
+        "mn": "өөртөө алим, талх бэлдье. Нэг хүнд хоёр юань тавин фэнь хүртэл зарцуулж, өдрийн хоолоо цүнхэнд хийе."
+      }
+    },
+    {
+      "id": "family.chores.goal.1",
+      "text": {
+        "zh": "和家长约定家务，整理和打扫都完成，再领一次报酬。",
+        "en": "Agree on chores with a parent, sort and sweep, then collect the one-time payment.",
+        "ja": "自分で片付けと掃除を終えて、約束のお給料を一度受け取ろう。",
+        "mn": "өөртөө гэрийн ажлаа тохиръё. Эмхэлж, цэвэрлээд тохирсон хөлсөө нэг удаа авъя."
+      }
+    },
+    {
+      "id": "family.supply.goal.1",
+      "text": {
+        "zh": "看苹果价签，选择现在买或等补货，给你准备一个苹果。",
+        "en": "Check apple prices, buy now or wait for delivery, and get one apple for you.",
+        "ja": "値札を見て今買うか入荷を待とう。自分にリンゴを一つ用意しよう。",
+        "mn": "Алимны үнийг хараад одоо авах уу, хүргэлт хүлээх үү гэдгээ шийдье. өөртөө нэг алим бэлдье."
+      }
+    },
+    {
+      "id": "family.demand.goal.1",
+      "text": {
+        "zh": "比较果汁价格，给你买一杯，再带到操场喝。",
+        "en": "Compare juice prices, buy one cup for you, then take it to the school field.",
+        "ja": "ジュースの値段を比べ、自分に一杯買って、校庭で飲もう。",
+        "mn": "Шүүсний үнийг харьцуулж, өөртөө нэг аяга аваад сургуулийн талбайд ууя."
+      }
+    },
+    {
+      "id": "family.markdown.goal.1",
+      "text": {
+        "zh": "比较面包价格和保质期，给你准备一份能吃的点心。",
+        "en": "Compare bread prices and freshness, then prepare one edible snack for you.",
+        "ja": "パンの値段と賞味期限を比べ、自分に食べられるおやつを用意しよう。",
+        "mn": "Талхны үнэ, хадгалах хугацааг харьцуулж, өөртөө идэж болох зууш бэлдье."
+      }
+    },
+    {
+      "id": "family.barter.goal.1",
+      "text": {
+        "zh": "整理两张贴纸，换一个苹果，再买一个苹果；你和同学一起吃，留一张贴纸。",
+        "en": "Trade one of two stickers for an apple, then buy one more apple. Share with your classmate; keep one sticker.",
+        "ja": "シール二枚のうち一枚をリンゴと交換。さらにリンゴ一つを買い、友達と一緒に食べよう。シール一枚は残そう。",
+        "mn": "Хоёр наалтынхаа нэгийг алимаар сольж, дахин нэг алим авъя. Найзтайгаа хамт идэж, нэг наалтаа үлдээе."
+      }
+    },
+    {
+      "id": "family.picnic.goal.1",
+      "text": {
+        "zh": "准备野餐，取出可用存款，给你买苹果、面包和果汁，不留欠款。",
+        "en": "Prepare the picnic, withdraw available savings and buy apple, bread and juice for you, leaving no debt.",
+        "ja": "ピクニックの準備をして使える預金を引き出し、自分にリンゴ、パン、ジュースを買おう。借金は残さないよ。",
+        "mn": "Зугаалгаа бэлдэж, хадгаламжаа аваад өөртөө алим, талх, шүүс авъя. Өр үлдээхгүй."
+      }
+    },
+    {
+      "id": "family.travel-budget.goal.1",
+      "text": {
+        "zh": "和家长安排你的旅行信封，买车票和住宿份额，再留出下一程经费。",
+        "en": "With a parent, budget travel for you, buy transport and room shares, and reserve next-leg funds.",
+        "ja": "保護者と自分の旅行費を計画し、乗車券と宿泊分を買い、次の旅の費用を残そう。",
+        "mn": "Аав ээжтэйгээ өөртөө аяллын төсөв гаргаж, унаа, байрны хувиа төлөөд дараагийн зардлаа үлдээе."
+      }
+    },
+    {
+      "id": "family.foreign-exchange.goal.1",
+      "text": {
+        "zh": "看清虚构汇率和费用，换五贝币，再用预付钱包买你的一张巴士票。",
+        "en": "Read fictional rates and fees, exchange for five shell coins, then buy one bus tickets for you from the prepaid wallet.",
+        "ja": "架空の相場と手数料を見て五貝コインに替え、前払い財布から自分のバス券を買おう。",
+        "mn": "Зохиомол ханш, шимтгэлийг харж таван бэй зоос солиод өөртөө автобусны тасалбарыг урьдчилсан түрийвчнээс төлцгөөе."
+      }
+    },
+    {
+      "id": "family.travel-prices.goal.1",
+      "text": {
+        "zh": "换算比较同款纪念品的两地价格，给你选一份。",
+        "en": "Convert and compare the same souvenir's prices, then choose one for you.",
+        "ja": "同じお土産の価格を換算して比べ、自分に一つ選ぼう。",
+        "mn": "Ижил бэлэг дурсгалын үнийг хөрвүүлж харьцуулаад өөртөө нэг ширхэг сонгоё."
+      }
+    },
+    {
+      "id": "family.parent-card.goal.1",
+      "text": {
+        "zh": "和家长用模拟信用卡买你的一份外币点心，回家核对本币账单。",
+        "en": "With a parent, use the simulated credit card for one foreign snacks for you, then review the home-currency bill.",
+        "ja": "保護者の練習クレジットカードで自分の外貨のおやつを買い、帰宅して元の請求額を確かめよう。",
+        "mn": "Аав ээжтэйгээ туршилтын кредит картаар өөртөө гадаад мөнгөөр зууш аваад гэртээ үндсэн мөнгөний тооцоог шалгая."
+      }
+    },
+    {
+      "id": "family.travel-finale.goal.1",
+      "text": {
+        "zh": "换回余下贝币，还清家长模拟卡，保留你的一份纪念品。",
+        "en": "Convert remaining shells back, settle the parent's simulated card, and keep one souvenir for you.",
+        "ja": "残りの貝コインを元に戻し、保護者の練習カードを完済して、自分のお土産を残そう。",
+        "mn": "Үлдсэн бэй зоосоо солиод аав ээжийн туршилтын картыг төлж, өөртөө нэг дурсгал үлдээе."
+      }
+    },
+    {
+      "id": "family.chores.intro.1",
+      "text": {
+        "zh": "家长说：袜子怪兽占领了沙发！你负责整理和打扫，我来验收。",
+        "en": "Parent: the sock monster took the sofa! You sort and sweep; I will check your work.",
+        "ja": "保護者：くつした怪獣がソファを占領！自分で片付けと掃除をして、見てもらおう。",
+        "mn": "Аав ээж: оймсны мангас буйданг эзэлжээ! Чи эмхэлж цэвэрлэ, би шалгая."
+      }
+    },
+    {
+      "id": "family.picnic.intro.1",
+      "text": {
+        "zh": "全家出发！家长付自己的餐费，你的小钱包负责你的点心。",
+        "en": "Family outing! Parents pay for their own meals; your pocket covers snacks for you.",
+        "ja": "家族で出発！保護者は自分の食事代を出し、小さなお財布は自分のおやつを担当するよ。",
+        "mn": "Гэр бүлээрээ гаръя! Аав ээж хоолоо өөрсдөө төлнө. Чиний түрийвч өөртөө зууш бэлдэнэ."
+      }
+    },
+    {
+      "id": "family.travel-budget.intro.1",
+      "text": {
+        "zh": "家长说：去虚构的贝壳岛！这个信封只管你的旅行费用，大人另付。",
+        "en": "Parent: let's visit fictional Shell Island! This envelope covers you; adults pay separately.",
+        "ja": "保護者：架空の貝の島へ行こう！この封筒は自分の旅費。大人の分は別だよ。",
+        "mn": "Аав ээж: зохиомол Бэй аралд очъё! Энэ дугтуй өөртөө аяллын зардал. Томчууд тусдаа төлнө."
+      }
+    },
+    {
+      "id": "family.action.read-tags.1",
+      "text": {
+        "zh": "看价签，最多花一元。",
+        "en": "Check tags; spend at most one yuan.",
+        "ja": "値札を見よう。自分の予算は全部で一元。",
+        "mn": "Үнийн шошгыг харъя. өөртөө нийт нэг юаний төсөвтэй."
+      }
+    },
+    {
+      "id": "family.action.assign-chores.1",
+      "text": {
+        "zh": "和家长约定整理和打扫，报酬总共六元，只领一次。",
+        "en": "Agree on sorting and sweeping for you; six yuan total, paid once.",
+        "ja": "自分の片付けと掃除を決めよう。お給料は全部で六元、一度だけ。",
+        "mn": "Эмхлэх, цэвэрлэх ажлаа тохиръё. Нийт зургаан юаний хөлсийг нэг удаа авна. өөртөө."
+      }
+    },
+    {
+      "id": "family.action.sort-socks.1",
+      "text": {
+        "zh": "整理自己的袜子和书本。",
+        "en": "Sort your socks and books.",
+        "ja": "自分のくつしたと本を片付けよう。",
+        "mn": "Өөрийн оймс, номоо эмхэлье."
+      }
+    },
+    {
+      "id": "family.action.sweep-room.1",
+      "text": {
+        "zh": "按约定打扫房间。",
+        "en": "Sweep the room as agreed.",
+        "ja": "自分で部屋を掃除しよう。",
+        "mn": "Тохирсноор өрөөгөө цэвэрлэе."
+      }
+    },
+    {
+      "id": "family.action.assign-picnic.1",
+      "text": {
+        "zh": "安排你的野餐准备：洗水果、装面包、带水杯。家长付自己的餐费。",
+        "en": "Plan picnic jobs for you: wash fruit, pack bread and bring cups. Parents pay for their own meals.",
+        "ja": "自分で果物を洗い、パンとコップを用意しよう。保護者の食事代は別だよ。",
+        "mn": "өөртөө зугаалгын ажлаа тохиръё: жимсээ угааж, талх, аягаа бэлдэнэ. Аав ээж хоолоо өөрсдөө төлнө."
+      }
+    },
+    {
+      "id": "family.action.travel-envelope.1",
+      "text": {
+        "zh": "领取家长给你的旅行信封。",
+        "en": "Receive the parent-provided travel envelope for you.",
+        "ja": "自分の旅費の封筒を保護者から受け取ろう。",
+        "mn": "өөртөө аяллын дугтуйг аав ээжээсээ авъя."
+      }
+    },
+    {
+      "id": "family.first-snack.goal.2",
+      "text": {
+        "zh": "给你和兄弟姐妹两个人买两个苹果，最多花二元，再回家一起吃点心。",
+        "en": "Buy two apples for you and your siblings, two of you in all, spend at most two yuan, then eat at home together.",
+        "ja": "自分ときょうだい、合わせて二人にリンゴを二つ。予算は全部で二元。買ったら家でおやつにしよう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд хоёр алим авъя. Нийт хоёр юаниас хэтрүүлэхгүй. Дараа нь гэртээ идье."
+      }
+    },
+    {
+      "id": "family.school-list.goal.2",
+      "text": {
+        "zh": "给你和兄弟姐妹两个人准备苹果和面包，每人最多花两元五角，再把午饭装进书包。",
+        "en": "Pack an apple and bread for you and your siblings, two of you in all, at most two yuan fifty cents each, then pack lunch for school.",
+        "ja": "自分ときょうだい、合わせて二人にリンゴとパン。一人二元五十分以内で買い、かばんにお昼ごはんを入れよう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд алим, талх бэлдье. Нэг хүнд хоёр юань тавин фэнь хүртэл зарцуулж, өдрийн хоолоо цүнхэнд хийе."
+      }
+    },
+    {
+      "id": "family.chores.goal.2",
+      "text": {
+        "zh": "你和兄弟姐妹两个人一起分工，完成整理和打扫，再领一次约定报酬。",
+        "en": "Share chores between you and your siblings, two of you in all. Finish sorting and sweeping, then collect the one-time payment.",
+        "ja": "自分ときょうだい、合わせて二人で片付けと掃除を終えて、約束のお給料を一度受け取ろう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд гэрийн ажлаа тохиръё. Эмхэлж, цэвэрлээд тохирсон хөлсөө нэг удаа авъя."
+      }
+    },
+    {
+      "id": "family.supply.goal.2",
+      "text": {
+        "zh": "看苹果价签，选择现在买或等补货，给你和兄弟姐妹两个人准备两个苹果。",
+        "en": "Check apple prices, buy now or wait for delivery, and get two apples for you and your siblings, two of you in all.",
+        "ja": "値札を見て今買うか入荷を待とう。自分ときょうだい、合わせて二人にリンゴを二つ用意しよう。",
+        "mn": "Алимны үнийг хараад одоо авах уу, хүргэлт хүлээх үү гэдгээ шийдье. өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд хоёр алим бэлдье."
+      }
+    },
+    {
+      "id": "family.demand.goal.2",
+      "text": {
+        "zh": "比较果汁价格，给你和兄弟姐妹两个人买两杯，再带到操场喝。",
+        "en": "Compare juice prices, buy two cups for you and your siblings, two of you in all, then take them to the school field.",
+        "ja": "ジュースの値段を比べ、自分ときょうだい、合わせて二人に二杯買って、校庭で飲もう。",
+        "mn": "Шүүсний үнийг харьцуулж, өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд хоёр аяга аваад сургуулийн талбайд ууя."
+      }
+    },
+    {
+      "id": "family.markdown.goal.2",
+      "text": {
+        "zh": "比较面包价格和保质期，给你和兄弟姐妹两个人准备两份能吃的点心。",
+        "en": "Compare bread prices and freshness, then prepare two edible snacks for you and your siblings, two of you in all.",
+        "ja": "パンの値段と賞味期限を比べ、自分ときょうだい、合わせて二人に食べられるおやつを用意しよう。",
+        "mn": "Талхны үнэ, хадгалах хугацааг харьцуулж, өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд идэж болох зууш бэлдье."
+      }
+    },
+    {
+      "id": "family.barter.goal.2",
+      "text": {
+        "zh": "整理两张贴纸，换一个苹果，再买两个苹果；你和兄弟姐妹、同学一起吃，留一张贴纸。",
+        "en": "Trade one of two stickers for an apple, then buy two more apples. Share with your siblings and classmate; keep one sticker.",
+        "ja": "シール二枚のうち一枚をリンゴと交換。さらにリンゴ二つを買い、きょうだいと友達と一緒に食べよう。シール一枚は残そう。",
+        "mn": "Хоёр наалтынхаа нэгийг алимаар сольж, дахин хоёр алим авъя. Ах дүү, найзтайгаа хамт идэж, нэг наалтаа үлдээе."
+      }
+    },
+    {
+      "id": "family.picnic.goal.2",
+      "text": {
+        "zh": "准备野餐，取出可用存款，给你和兄弟姐妹两个人买苹果、面包和果汁，不留欠款。",
+        "en": "Prepare the picnic, withdraw available savings and buy apple, bread and juice for you and your siblings, two of you in all, leaving no debt.",
+        "ja": "ピクニックの準備をして使える預金を引き出し、自分ときょうだい、合わせて二人にリンゴ、パン、ジュースを買おう。借金は残さないよ。",
+        "mn": "Зугаалгаа бэлдэж, хадгаламжаа аваад өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд алим, талх, шүүс авъя. Өр үлдээхгүй."
+      }
+    },
+    {
+      "id": "family.travel-budget.goal.2",
+      "text": {
+        "zh": "和家长安排你和兄弟姐妹两个人的旅行信封，买车票和住宿份额，再留出下一程经费。",
+        "en": "With a parent, budget travel for you and your siblings, two of you in all, buy transport and room shares, and reserve next-leg funds.",
+        "ja": "保護者と自分ときょうだい、合わせて二人の旅行費を計画し、乗車券と宿泊分を買い、次の旅の費用を残そう。",
+        "mn": "Аав ээжтэйгээ өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд аяллын төсөв гаргаж, унаа, байрны хувиа төлөөд дараагийн зардлаа үлдээе."
+      }
+    },
+    {
+      "id": "family.foreign-exchange.goal.2",
+      "text": {
+        "zh": "看清虚构汇率和费用，换五贝币，再用预付钱包买你和兄弟姐妹两个人的两张巴士票。",
+        "en": "Read fictional rates and fees, exchange for five shell coins, then buy two bus tickets for you and your siblings, two of you in all from the prepaid wallet.",
+        "ja": "架空の相場と手数料を見て五貝コインに替え、前払い財布から自分ときょうだい、合わせて二人のバス券を買おう。",
+        "mn": "Зохиомол ханш, шимтгэлийг харж таван бэй зоос солиод өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд автобусны тасалбарыг урьдчилсан түрийвчнээс төлцгөөе."
+      }
+    },
+    {
+      "id": "family.travel-prices.goal.2",
+      "text": {
+        "zh": "换算比较同款纪念品的两地价格，给你和兄弟姐妹两个人选两份。",
+        "en": "Convert and compare the same souvenir's prices, then choose two for you and your siblings, two of you in all.",
+        "ja": "同じお土産の価格を換算して比べ、自分ときょうだい、合わせて二人に二つ選ぼう。",
+        "mn": "Ижил бэлэг дурсгалын үнийг хөрвүүлж харьцуулаад өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд хоёр ширхэг сонгоё."
+      }
+    },
+    {
+      "id": "family.parent-card.goal.2",
+      "text": {
+        "zh": "和家长用模拟信用卡买你和兄弟姐妹两个人的两份外币点心，回家核对本币账单。",
+        "en": "With a parent, use the simulated credit card for two foreign snacks for you and your siblings, two of you in all, then review the home-currency bill.",
+        "ja": "保護者の練習クレジットカードで自分ときょうだい、合わせて二人の外貨のおやつを買い、帰宅して元の請求額を確かめよう。",
+        "mn": "Аав ээжтэйгээ туршилтын кредит картаар өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд гадаад мөнгөөр зууш аваад гэртээ үндсэн мөнгөний тооцоог шалгая."
+      }
+    },
+    {
+      "id": "family.travel-finale.goal.2",
+      "text": {
+        "zh": "换回余下贝币，还清家长模拟卡，保留你和兄弟姐妹两个人的两份纪念品。",
+        "en": "Convert remaining shells back, settle the parent's simulated card, and keep two souvenirs for you and your siblings, two of you in all.",
+        "ja": "残りの貝コインを元に戻し、保護者の練習カードを完済して、自分ときょうだい、合わせて二人のお土産を残そう。",
+        "mn": "Үлдсэн бэй зоосоо солиод аав ээжийн туршилтын картыг төлж, өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд хоёр дурсгал үлдээе."
+      }
+    },
+    {
+      "id": "family.chores.intro.2",
+      "text": {
+        "zh": "家长说：袜子怪兽占领了沙发！你和兄弟姐妹两个人分工合作，不抢彼此的任务。",
+        "en": "Parent: the sock monster took the sofa! you and your siblings, two of you in all can share the jobs and the credit.",
+        "ja": "保護者：くつした怪獣がソファを占領！自分ときょうだい、合わせて二人で仕事と手柄を分けよう。",
+        "mn": "Аав ээж: оймсны мангас буйданг эзэлжээ! Нийт хоёр хүүхэд ажлаа хувааж, бие биеийнхээ ажлыг булаахгүй."
+      }
+    },
+    {
+      "id": "family.picnic.intro.2",
+      "text": {
+        "zh": "全家出发！家长付自己的餐费，你的小钱包负责你和兄弟姐妹两个人的点心。",
+        "en": "Family outing! Parents pay for their own meals; your pocket covers snacks for you and your siblings, two of you in all.",
+        "ja": "家族で出発！保護者は自分の食事代を出し、小さなお財布は自分ときょうだい、合わせて二人のおやつを担当するよ。",
+        "mn": "Гэр бүлээрээ гаръя! Аав ээж хоолоо өөрсдөө төлнө. Чиний түрийвч өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд зууш бэлдэнэ."
+      }
+    },
+    {
+      "id": "family.travel-budget.intro.2",
+      "text": {
+        "zh": "家长说：去虚构的贝壳岛！这个信封只管你和兄弟姐妹两个人的旅行费用，大人另付。",
+        "en": "Parent: let's visit fictional Shell Island! This envelope covers you and your siblings, two of you in all; adults pay separately.",
+        "ja": "保護者：架空の貝の島へ行こう！この封筒は自分ときょうだい、合わせて二人の旅費。大人の分は別だよ。",
+        "mn": "Аав ээж: зохиомол Бэй аралд очъё! Энэ дугтуй өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд аяллын зардал. Томчууд тусдаа төлнө."
+      }
+    },
+    {
+      "id": "family.action.read-tags.2",
+      "text": {
+        "zh": "看价签，你和兄弟姐妹两个人合计最多花二元。",
+        "en": "Check tags; at most two yuan for you and your siblings, two of you in all.",
+        "ja": "値札を見よう。自分ときょうだい、合わせて二人の予算は全部で二元。",
+        "mn": "Үнийн шошгыг харъя. өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд нийт хоёр юаний төсөвтэй."
+      }
+    },
+    {
+      "id": "family.action.assign-chores.2",
+      "text": {
+        "zh": "你和兄弟姐妹两个人分配整理和打扫的任务，报酬总共六元，只领一次。",
+        "en": "Agree on sorting and sweeping for all two children, including you; six yuan total, paid once.",
+        "ja": "自分ときょうだい、合わせて二人の片付けと掃除を決めよう。お給料は全部で六元、一度だけ。",
+        "mn": "Эмхлэх, цэвэрлэх ажлаа тохиръё. Нийт зургаан юаний хөлсийг нэг удаа авна. өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд."
+      }
+    },
+    {
+      "id": "family.action.sort-socks.2",
+      "text": {
+        "zh": "你和兄弟姐妹两个人整理袜子和书本，各自完成约定的小任务。",
+        "en": "you and your siblings, two of you in all sort socks and books, each doing the agreed job.",
+        "ja": "自分ときょうだい、合わせて二人でくつしたと本を片付け、自分の仕事をしよう。",
+        "mn": "Нийт хоёр хүүхэд оймс, номоо эмхэлж, тохирсон ажлаа хийнэ."
+      }
+    },
+    {
+      "id": "family.action.sweep-room.2",
+      "text": {
+        "zh": "你和兄弟姐妹两个人一起打扫房间。",
+        "en": "you and your siblings, two of you in all sweep the room together.",
+        "ja": "自分ときょうだい、合わせて二人で部屋を掃除しよう。",
+        "mn": "Нийт хоёр хүүхэд өрөөгөө хамт цэвэрлэе."
+      }
+    },
+    {
+      "id": "family.action.assign-picnic.2",
+      "text": {
+        "zh": "安排你和兄弟姐妹两个人的野餐准备：洗水果、装面包、带水杯。家长付自己的餐费。",
+        "en": "Plan picnic jobs for you and your siblings, two of you in all: wash fruit, pack bread and bring cups. Parents pay for their own meals.",
+        "ja": "自分ときょうだい、合わせて二人で果物を洗い、パンとコップを用意しよう。保護者の食事代は別だよ。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд зугаалгын ажлаа тохиръё: жимсээ угааж, талх, аягаа бэлдэнэ. Аав ээж хоолоо өөрсдөө төлнө."
+      }
+    },
+    {
+      "id": "family.action.travel-envelope.2",
+      "text": {
+        "zh": "领取家长给你和兄弟姐妹两个人的旅行信封。",
+        "en": "Receive the parent-provided travel envelope for you and your siblings, two of you in all.",
+        "ja": "自分ときょうだい、合わせて二人の旅費の封筒を保護者から受け取ろう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт хоёр хүүхдэд аяллын дугтуйг аав ээжээсээ авъя."
+      }
+    },
+    {
+      "id": "family.first-snack.goal.3",
+      "text": {
+        "zh": "给你和兄弟姐妹三个人买三个苹果，最多花三元，再回家一起吃点心。",
+        "en": "Buy three apples for you and your siblings, three of you in all, spend at most three yuan, then eat at home together.",
+        "ja": "自分ときょうだい、合わせて三人にリンゴを三つ。予算は全部で三元。買ったら家でおやつにしよう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд гурван алим авъя. Нийт гурван юаниас хэтрүүлэхгүй. Дараа нь гэртээ идье."
+      }
+    },
+    {
+      "id": "family.school-list.goal.3",
+      "text": {
+        "zh": "给你和兄弟姐妹三个人准备苹果和面包，每人最多花两元五角，再把午饭装进书包。",
+        "en": "Pack an apple and bread for you and your siblings, three of you in all, at most two yuan fifty cents each, then pack lunch for school.",
+        "ja": "自分ときょうだい、合わせて三人にリンゴとパン。一人二元五十分以内で買い、かばんにお昼ごはんを入れよう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд алим, талх бэлдье. Нэг хүнд хоёр юань тавин фэнь хүртэл зарцуулж, өдрийн хоолоо цүнхэнд хийе."
+      }
+    },
+    {
+      "id": "family.chores.goal.3",
+      "text": {
+        "zh": "你和兄弟姐妹三个人一起分工，完成整理和打扫，再领一次约定报酬。",
+        "en": "Share chores between you and your siblings, three of you in all. Finish sorting and sweeping, then collect the one-time payment.",
+        "ja": "自分ときょうだい、合わせて三人で片付けと掃除を終えて、約束のお給料を一度受け取ろう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд гэрийн ажлаа тохиръё. Эмхэлж, цэвэрлээд тохирсон хөлсөө нэг удаа авъя."
+      }
+    },
+    {
+      "id": "family.supply.goal.3",
+      "text": {
+        "zh": "看苹果价签，选择现在买或等补货，给你和兄弟姐妹三个人准备三个苹果。",
+        "en": "Check apple prices, buy now or wait for delivery, and get three apples for you and your siblings, three of you in all.",
+        "ja": "値札を見て今買うか入荷を待とう。自分ときょうだい、合わせて三人にリンゴを三つ用意しよう。",
+        "mn": "Алимны үнийг хараад одоо авах уу, хүргэлт хүлээх үү гэдгээ шийдье. өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд гурван алим бэлдье."
+      }
+    },
+    {
+      "id": "family.demand.goal.3",
+      "text": {
+        "zh": "比较果汁价格，给你和兄弟姐妹三个人买三杯，再带到操场喝。",
+        "en": "Compare juice prices, buy three cups for you and your siblings, three of you in all, then take them to the school field.",
+        "ja": "ジュースの値段を比べ、自分ときょうだい、合わせて三人に三杯買って、校庭で飲もう。",
+        "mn": "Шүүсний үнийг харьцуулж, өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд гурван аяга аваад сургуулийн талбайд ууя."
+      }
+    },
+    {
+      "id": "family.markdown.goal.3",
+      "text": {
+        "zh": "比较面包价格和保质期，给你和兄弟姐妹三个人准备三份能吃的点心。",
+        "en": "Compare bread prices and freshness, then prepare three edible snacks for you and your siblings, three of you in all.",
+        "ja": "パンの値段と賞味期限を比べ、自分ときょうだい、合わせて三人に食べられるおやつを用意しよう。",
+        "mn": "Талхны үнэ, хадгалах хугацааг харьцуулж, өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд идэж болох зууш бэлдье."
+      }
+    },
+    {
+      "id": "family.barter.goal.3",
+      "text": {
+        "zh": "整理两张贴纸，换一个苹果，再买三个苹果；你和兄弟姐妹、同学一起吃，留一张贴纸。",
+        "en": "Trade one of two stickers for an apple, then buy three more apples. Share with your siblings and classmate; keep one sticker.",
+        "ja": "シール二枚のうち一枚をリンゴと交換。さらにリンゴ三つを買い、きょうだいと友達と一緒に食べよう。シール一枚は残そう。",
+        "mn": "Хоёр наалтынхаа нэгийг алимаар сольж, дахин гурван алим авъя. Ах дүү, найзтайгаа хамт идэж, нэг наалтаа үлдээе."
+      }
+    },
+    {
+      "id": "family.picnic.goal.3",
+      "text": {
+        "zh": "准备野餐，取出可用存款，给你和兄弟姐妹三个人买苹果、面包和果汁，不留欠款。",
+        "en": "Prepare the picnic, withdraw available savings and buy apple, bread and juice for you and your siblings, three of you in all, leaving no debt.",
+        "ja": "ピクニックの準備をして使える預金を引き出し、自分ときょうだい、合わせて三人にリンゴ、パン、ジュースを買おう。借金は残さないよ。",
+        "mn": "Зугаалгаа бэлдэж, хадгаламжаа аваад өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд алим, талх, шүүс авъя. Өр үлдээхгүй."
+      }
+    },
+    {
+      "id": "family.travel-budget.goal.3",
+      "text": {
+        "zh": "和家长安排你和兄弟姐妹三个人的旅行信封，买车票和住宿份额，再留出下一程经费。",
+        "en": "With a parent, budget travel for you and your siblings, three of you in all, buy transport and room shares, and reserve next-leg funds.",
+        "ja": "保護者と自分ときょうだい、合わせて三人の旅行費を計画し、乗車券と宿泊分を買い、次の旅の費用を残そう。",
+        "mn": "Аав ээжтэйгээ өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд аяллын төсөв гаргаж, унаа, байрны хувиа төлөөд дараагийн зардлаа үлдээе."
+      }
+    },
+    {
+      "id": "family.foreign-exchange.goal.3",
+      "text": {
+        "zh": "看清虚构汇率和费用，换五贝币，再用预付钱包买你和兄弟姐妹三个人的三张巴士票。",
+        "en": "Read fictional rates and fees, exchange for five shell coins, then buy three bus tickets for you and your siblings, three of you in all from the prepaid wallet.",
+        "ja": "架空の相場と手数料を見て五貝コインに替え、前払い財布から自分ときょうだい、合わせて三人のバス券を買おう。",
+        "mn": "Зохиомол ханш, шимтгэлийг харж таван бэй зоос солиод өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд автобусны тасалбарыг урьдчилсан түрийвчнээс төлцгөөе."
+      }
+    },
+    {
+      "id": "family.travel-prices.goal.3",
+      "text": {
+        "zh": "换算比较同款纪念品的两地价格，给你和兄弟姐妹三个人选三份。",
+        "en": "Convert and compare the same souvenir's prices, then choose three for you and your siblings, three of you in all.",
+        "ja": "同じお土産の価格を換算して比べ、自分ときょうだい、合わせて三人に三つ選ぼう。",
+        "mn": "Ижил бэлэг дурсгалын үнийг хөрвүүлж харьцуулаад өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд гурван ширхэг сонгоё."
+      }
+    },
+    {
+      "id": "family.parent-card.goal.3",
+      "text": {
+        "zh": "和家长用模拟信用卡买你和兄弟姐妹三个人的三份外币点心，回家核对本币账单。",
+        "en": "With a parent, use the simulated credit card for three foreign snacks for you and your siblings, three of you in all, then review the home-currency bill.",
+        "ja": "保護者の練習クレジットカードで自分ときょうだい、合わせて三人の外貨のおやつを買い、帰宅して元の請求額を確かめよう。",
+        "mn": "Аав ээжтэйгээ туршилтын кредит картаар өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд гадаад мөнгөөр зууш аваад гэртээ үндсэн мөнгөний тооцоог шалгая."
+      }
+    },
+    {
+      "id": "family.travel-finale.goal.3",
+      "text": {
+        "zh": "换回余下贝币，还清家长模拟卡，保留你和兄弟姐妹三个人的三份纪念品。",
+        "en": "Convert remaining shells back, settle the parent's simulated card, and keep three souvenirs for you and your siblings, three of you in all.",
+        "ja": "残りの貝コインを元に戻し、保護者の練習カードを完済して、自分ときょうだい、合わせて三人のお土産を残そう。",
+        "mn": "Үлдсэн бэй зоосоо солиод аав ээжийн туршилтын картыг төлж, өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд гурван дурсгал үлдээе."
+      }
+    },
+    {
+      "id": "family.chores.intro.3",
+      "text": {
+        "zh": "家长说：袜子怪兽占领了沙发！你和兄弟姐妹三个人分工合作，不抢彼此的任务。",
+        "en": "Parent: the sock monster took the sofa! you and your siblings, three of you in all can share the jobs and the credit.",
+        "ja": "保護者：くつした怪獣がソファを占領！自分ときょうだい、合わせて三人で仕事と手柄を分けよう。",
+        "mn": "Аав ээж: оймсны мангас буйданг эзэлжээ! Нийт гурван хүүхэд ажлаа хувааж, бие биеийнхээ ажлыг булаахгүй."
+      }
+    },
+    {
+      "id": "family.picnic.intro.3",
+      "text": {
+        "zh": "全家出发！家长付自己的餐费，你的小钱包负责你和兄弟姐妹三个人的点心。",
+        "en": "Family outing! Parents pay for their own meals; your pocket covers snacks for you and your siblings, three of you in all.",
+        "ja": "家族で出発！保護者は自分の食事代を出し、小さなお財布は自分ときょうだい、合わせて三人のおやつを担当するよ。",
+        "mn": "Гэр бүлээрээ гаръя! Аав ээж хоолоо өөрсдөө төлнө. Чиний түрийвч өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд зууш бэлдэнэ."
+      }
+    },
+    {
+      "id": "family.travel-budget.intro.3",
+      "text": {
+        "zh": "家长说：去虚构的贝壳岛！这个信封只管你和兄弟姐妹三个人的旅行费用，大人另付。",
+        "en": "Parent: let's visit fictional Shell Island! This envelope covers you and your siblings, three of you in all; adults pay separately.",
+        "ja": "保護者：架空の貝の島へ行こう！この封筒は自分ときょうだい、合わせて三人の旅費。大人の分は別だよ。",
+        "mn": "Аав ээж: зохиомол Бэй аралд очъё! Энэ дугтуй өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд аяллын зардал. Томчууд тусдаа төлнө."
+      }
+    },
+    {
+      "id": "family.action.read-tags.3",
+      "text": {
+        "zh": "看价签，你和兄弟姐妹三个人合计最多花三元。",
+        "en": "Check tags; at most three yuan for you and your siblings, three of you in all.",
+        "ja": "値札を見よう。自分ときょうだい、合わせて三人の予算は全部で三元。",
+        "mn": "Үнийн шошгыг харъя. өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд нийт гурван юаний төсөвтэй."
+      }
+    },
+    {
+      "id": "family.action.assign-chores.3",
+      "text": {
+        "zh": "你和兄弟姐妹三个人分配整理和打扫的任务，报酬总共六元，只领一次。",
+        "en": "Agree on sorting and sweeping for all three children, including you; six yuan total, paid once.",
+        "ja": "自分ときょうだい、合わせて三人の片付けと掃除を決めよう。お給料は全部で六元、一度だけ。",
+        "mn": "Эмхлэх, цэвэрлэх ажлаа тохиръё. Нийт зургаан юаний хөлсийг нэг удаа авна. өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд."
+      }
+    },
+    {
+      "id": "family.action.sort-socks.3",
+      "text": {
+        "zh": "你和兄弟姐妹三个人整理袜子和书本，各自完成约定的小任务。",
+        "en": "you and your siblings, three of you in all sort socks and books, each doing the agreed job.",
+        "ja": "自分ときょうだい、合わせて三人でくつしたと本を片付け、自分の仕事をしよう。",
+        "mn": "Нийт гурван хүүхэд оймс, номоо эмхэлж, тохирсон ажлаа хийнэ."
+      }
+    },
+    {
+      "id": "family.action.sweep-room.3",
+      "text": {
+        "zh": "你和兄弟姐妹三个人一起打扫房间。",
+        "en": "you and your siblings, three of you in all sweep the room together.",
+        "ja": "自分ときょうだい、合わせて三人で部屋を掃除しよう。",
+        "mn": "Нийт гурван хүүхэд өрөөгөө хамт цэвэрлэе."
+      }
+    },
+    {
+      "id": "family.action.assign-picnic.3",
+      "text": {
+        "zh": "安排你和兄弟姐妹三个人的野餐准备：洗水果、装面包、带水杯。家长付自己的餐费。",
+        "en": "Plan picnic jobs for you and your siblings, three of you in all: wash fruit, pack bread and bring cups. Parents pay for their own meals.",
+        "ja": "自分ときょうだい、合わせて三人で果物を洗い、パンとコップを用意しよう。保護者の食事代は別だよ。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд зугаалгын ажлаа тохиръё: жимсээ угааж, талх, аягаа бэлдэнэ. Аав ээж хоолоо өөрсдөө төлнө."
+      }
+    },
+    {
+      "id": "family.action.travel-envelope.3",
+      "text": {
+        "zh": "领取家长给你和兄弟姐妹三个人的旅行信封。",
+        "en": "Receive the parent-provided travel envelope for you and your siblings, three of you in all.",
+        "ja": "自分ときょうだい、合わせて三人の旅費の封筒を保護者から受け取ろう。",
+        "mn": "өөртөө болон ах дүү нартаа, нийт гурван хүүхдэд аяллын дугтуйг аав ээжээсээ авъя."
+      }
+    },
+    {
+      "id": "family.change.goal",
+      "text": {
+        "zh": "付五元买一元两角的面包，拿齐找零，再送给同学。",
+        "en": "Pay five yuan for bread costing one yuan twenty cents, collect all change and deliver it to a classmate.",
+        "ja": "五元で一元二十分のパンを買い、おつりを全部受け取って友達に届けよう。",
+        "mn": "Таван юаниар нэг юань хорин фэний талх авч, хариултаа бүрэн аваад найздаа хүргэе."
+      }
+    },
+    {
+      "id": "family.allowance.goal",
+      "text": {
+        "zh": "领取六元，留出二元，买二元的书，再检查计划。",
+        "en": "Collect six yuan, reserve two, buy a two-yuan book and check your plan.",
+        "ja": "六元を受け取り、二元を残して二元の本を買い、計画を確かめよう。",
+        "mn": "Зургаан юань авч, хоёрыг үлдээн хоёр юаний ном аваад төлөвлөгөөгөө шалгая."
+      }
+    },
+    {
+      "id": "family.birthday.goal",
+      "text": {
+        "zh": "领取四元礼金，买礼物，至少留一元给未来。",
+        "en": "Receive four yuan, buy a gift and keep at least one yuan for later.",
+        "ja": "四元のお祝いを受け取り、贈り物を買って、一元以上残そう。",
+        "mn": "Дөрвөн юаний бэлэг авч, бэлэг худалдаж аваад нэгээс доошгүй юань үлдээе."
+      }
+    },
+    {
+      "id": "family.weather.goal",
+      "text": {
+        "zh": "看预报，买雨具，再按天气准备去公园。",
+        "en": "Read the forecast, buy rain gear and prepare for the park.",
+        "ja": "予報を見て雨具を買い、天気に合わせて公園へ行こう。",
+        "mn": "Цаг агаарын мэдээ харж, борооны хэрэгсэл аваад цэцэрлэгт бэлдье."
+      }
+    },
+    {
+      "id": "family.currency.goal",
+      "text": {
+        "zh": "换硬币，和家长转入数字钱包，付一元，再把余款转回。",
+        "en": "Change coins, load the digital wallet with a parent, pay one yuan and return the rest to cash.",
+        "ja": "硬貨に替え、保護者とデジタル財布へ移し、一元払い、残りを現金へ戻そう。",
+        "mn": "Зоос солиод аав ээжтэйгээ цахим түрийвчинд хийж, нэг юань төлөөд үлдсэнийг бэлнээр авъя."
+      }
+    },
+    {
+      "id": "family.borrow.goal",
+      "text": {
+        "zh": "借二元买合用的书，做小工作，明天还本金。",
+        "en": "Borrow two yuan for a shared book, do a job and repay the principal tomorrow.",
+        "ja": "二元を借りて共同の本を買い、仕事をして明日元本を返そう。",
+        "mn": "Хоёр юань зээлж хамтын ном аваад ажил хийж, маргааш үндсэн мөнгөө төлцгөөе."
+      }
+    },
+    {
+      "id": "family.due-date.goal",
+      "text": {
+        "zh": "借三元买用品，做工作，按日期还款；晚还后也能修复信任。",
+        "en": "Borrow three yuan for supplies, work and repay on time; repair trust if late.",
+        "ja": "三元を借りて用品を買い、働いて期日までに返そう。遅れても信頼を修復できるよ。",
+        "mn": "Гурван юань зээлж хэрэгсэл аваад ажил хийж хугацаанд нь төлцгөөе. Хоцорсон ч итгэлийг сэргээж болно."
+      }
+    },
+    {
+      "id": "family.loan-interest.goal",
+      "text": {
+        "zh": "看约定，借四元买工具，做工作，过一天还本金和利息。",
+        "en": "Read terms, borrow four yuan for tools, work, then repay principal and interest after one game-day.",
+        "ja": "約束を読み、四元を借りて道具を買い、働いてゲーム一日後に元本と利息を返そう。",
+        "mn": "Нөхцөлөө уншаад дөрвөн юань зээлж багаж авъя. Ажиллаад нэг тоглоомын өдрийн дараа үндсэн мөнгө, хүүгээ төлцгөөе."
+      }
+    },
+    {
+      "id": "family.bank-term.goal",
+      "text": {
+        "zh": "和家长存三元，等两天，取回本金和六分利息，再买用品。",
+        "en": "Deposit three yuan with a parent, wait two game-days, withdraw principal and six cents interest, then buy supplies.",
+        "ja": "保護者と三元を預け、ゲーム二日待って元本と六分の利息を受け取り、用品を買おう。",
+        "mn": "Аав ээжтэйгээ гурван юань хадгалж, хоёр тоглоомын өдөр хүлээн үндсэн мөнгө, зургаан фэний хүүгээ аваад хэрэгсэл авъя."
+      }
+    },
+    {
+      "id": "family.bank-plan.goal",
+      "text": {
+        "zh": "领取六元，存二元，买二元书，等一天准备野餐。",
+        "en": "Collect six yuan, deposit two, buy a two-yuan book and wait one game-day for the picnic.",
+        "ja": "六元を受け取り、二元を預けて二元の本を買い、ゲーム一日待ってピクニックへ。",
+        "mn": "Зургаан юань авч, хоёрыг хадгалж, хоёр юаний ном аваад нэг тоглоомын өдөр хүлээн зугаалгад бэлдье."
+      }
+    },
+    {
+      "id": "family.toy-customs.goal",
+      "text": {
+        "zh": "看虚构海关规则，如实申报，确认费用，再领取通行章。",
+        "en": "Read toy customs rules, declare honestly, confirm the charge and collect your passage stamp.",
+        "ja": "架空の税関ルールを見て正直に申告し、費用を確認して通行ハンコをもらおう。",
+        "mn": "Зохиомол гаалийн дүрмийг хараад үнэн зөв мэдүүлж, төлбөрөө батлаад нэвтрэх тамгаа авъя."
+      }
+    },
+    {
+      "id": "family.first-snack.intro",
+      "text": {
+        "zh": "苹果叔把苹果摆成毛毛虫：先看价签，再决定买什么！",
+        "en": "Apple Uncle made a fruit caterpillar: check the tags before choosing!",
+        "ja": "リンゴおじさんが果物で毛虫を作ったよ。まず値札を見よう！",
+        "mn": "Алимны ах жимсээр авгалдай өржээ. Эхлээд үнийг харъя!"
+      }
+    },
+    {
+      "id": "family.school-list.intro",
+      "text": {
+        "zh": "小熊店长说：玩具恐龙想进书包，可它不能当午饭！",
+        "en": "Bear says: the toy dinosaur wants in your bag, but it cannot be lunch!",
+        "ja": "クマ店長：恐竜のおもちゃはかばんに入りたいけど、お昼ごはんにはならないよ！",
+        "mn": "Баавгай: тоглоомон үлэг гүрвэл цүнхэнд орохыг хүсэвч өдрийн хоол биш шүү!"
+      }
+    },
+    {
+      "id": "family.supply.intro",
+      "text": {
+        "zh": "苹果叔说：鸭子堵住送货车，货架空了，价签也变了！",
+        "en": "Apple Uncle: ducks blocked the truck! Empty shelves changed the price.",
+        "ja": "リンゴおじさん：アヒルが配達の車を止めた！品物が減って値段も変わったよ。",
+        "mn": "Алимны ах: нугаснууд хүргэлтийг хаажээ! Лангуу хоосорч үнэ өөрчлөгдлөө."
+      }
+    },
+    {
+      "id": "family.demand.intro",
+      "text": {
+        "zh": "果汁姐姐说：比赛结束，大家都渴了！现在买，还是等人少？",
+        "en": "Juice Jo: everyone is thirsty after the race! Buy now or wait for a shorter queue?",
+        "ja": "ジュースのお姉さん：試合の後はみんな喉が渇いたね！今買う？空くまで待つ？",
+        "mn": "Шүүсний эгч: тэмцээний дараа бүгд цангалаа! Одоо авах уу, дараалал багасахыг хүлээх үү?"
+      }
+    },
+    {
+      "id": "family.markdown.intro",
+      "text": {
+        "zh": "面包阿姨说：今日折价面包今天香，明天可就不能吃啦。",
+        "en": "Baker Bee: same-day markdown bread is tasty today, not edible tomorrow.",
+        "ja": "パン屋さん：今日の割引パンは今日おいしい。明日は食べられないよ。",
+        "mn": "Талхчин: өнөөдрийн хямдарсан талх өнөөдөр амттай, маргааш идэж болохгүй."
+      }
+    },
+    {
+      "id": "family.barter.intro",
+      "text": {
+        "zh": "小乐有苹果，你有重复贴纸。交换要双方都愿意。",
+        "en": "Le has apples; you have duplicate stickers. A swap needs two happy yeses.",
+        "ja": "友達にはリンゴ、自分には重なったシール。交換は二人とも賛成してからだよ。",
+        "mn": "Найзад алим, чамд давхардсан наалт бий. Солилцоонд хоёулаа зөвшөөрнө."
+      }
+    },
+    {
+      "id": "family.foreign-exchange.intro",
+      "text": {
+        "zh": "鹦鹉说：一贝币等于两元，兑换收两角。这是自己的预付钱，不是借款。",
+        "en": "Parrot: one shell equals two yuan, with a twenty-cent exchange fee. Prepaid money is your own, not a loan.",
+        "ja": "オウム：一貝コインは二元、両替料は二十分。前払いは自分のお金で、借金ではないよ。",
+        "mn": "Тоть: нэг бэй зоос хоёр юань, солих шимтгэл хорин фэнь. Урьдчилсан мөнгө өөрийнх, зээл биш."
+      }
+    },
+    {
+      "id": "family.travel-prices.intro",
+      "text": {
+        "zh": "海螺店长说：国内两元六角，岛上一贝币，整笔兑换另收两角。只比较今天的价格。",
+        "en": "Shell Seller: two yuan sixty cents at home, one shell here, plus a twenty-cent exchange fee. Compare today, not forever.",
+        "ja": "貝のお店：国内は二元六十分、島は一貝コイン、両替料は二十分。今日の価格を比べるよ。",
+        "mn": "Дэлгүүр: дотоодод хоёр юань жаран фэнь, аралд нэг бэй зоос. Солиход хорин фэнь. Зөвхөн өнөөдрийн үнэ."
+      }
+    },
+    {
+      "id": "family.parent-card.intro",
+      "text": {
+        "zh": "家长说：这是我的模拟信用卡，不是儿童账户。信用支付是借款，要看资金来源。",
+        "en": "Parent: this is my simulated credit card, not a child account. Credit borrows; check where the money comes from.",
+        "ja": "保護者：これは私の練習カードで、子どもの口座ではないよ。信用払いは借金。資金源を確かめよう。",
+        "mn": "Аав ээж: энэ миний туршилтын карт, хүүхдийн данс биш. Кредит төлбөр зээл тул мөнгөний эх үүсвэрийг харъя."
+      }
+    },
+    {
+      "id": "family.travel-finale.intro",
+      "text": {
+        "zh": "鹦鹉邮差说：回家后用元还款，别把贝币欠条丢掉！",
+        "en": "Parrot Post: repay in yuan at home; do not throw away shell IOUs!",
+        "ja": "オウム郵便：帰ったら元で返済。貝コインの借用書を捨てないで！",
+        "mn": "Тоть шуудан: гэртээ юаниар төлөөрэй. Бэй зоосны өрийн бичгийг бүү хая!"
+      }
+    },
+    {
+      "id": "family.next.home-snack",
+      "text": {
+        "zh": "苹果买好了，回家吃点心吧。",
+        "en": "Apples are ready. Go home for your snack.",
+        "ja": "リンゴは買えたよ。家でおやつにしよう。",
+        "mn": "Алим бэлэн боллоо. Гэртээ очиж идье."
+      }
+    },
+    {
+      "id": "family.next.school-lunch",
+      "text": {
+        "zh": "苹果和面包齐了，去学校把午饭装好。",
+        "en": "Apple and bread are ready. Go to school and pack lunch.",
+        "ja": "リンゴとパンはそろったよ。学校でお昼ごはんをかばんに入れよう。",
+        "mn": "Алим, талх бэлэн. Сургуульдаа очоод өдрийн хоолоо цүнхэнд хийе."
+      }
+    },
+    {
+      "id": "family.next.school-bread",
+      "text": {
+        "zh": "找零拿齐了，去学校把面包送给同学。",
+        "en": "All change collected. Take the bread to your classmate at school.",
+        "ja": "おつりは全部受け取ったよ。学校の友達にパンを届けよう。",
+        "mn": "Хариулт бүрэн. Талхаа сургуулийн найздаа хүргэе."
+      }
+    },
+    {
+      "id": "family.next.school-juice",
+      "text": {
+        "zh": "果汁买好了，去操场喝吧。",
+        "en": "Juice is ready. Take it to the school field.",
+        "ja": "ジュースは買えたよ。校庭で飲もう。",
+        "mn": "Шүүс бэлэн. Сургуулийн талбайд ууя."
+      }
+    },
+    {
+      "id": "family.next.home-bread",
+      "text": {
+        "zh": "点心还能吃，回家今天就吃吧。",
+        "en": "The snacks are edible. Go home and eat them today.",
+        "ja": "おやつは食べられるよ。家で今日のうちに食べよう。",
+        "mn": "Зууш идэж болно. Гэртээ өнөөдөр идье."
+      }
+    },
+    {
+      "id": "family.next.school-swap",
+      "text": {
+        "zh": "苹果齐了，去学校分享点心，留好贴纸。",
+        "en": "Apples are ready. Share your snack at school and keep your sticker.",
+        "ja": "リンゴはそろったよ。学校で分けて食べ、シールは残そう。",
+        "mn": "Алим бэлэн. Сургуульдаа хувааж идээд наалтаа үлдээе."
+      }
+    },
+    {
+      "id": "family.next.park-picnic",
+      "text": {
+        "zh": "野餐准备齐了，去公园一起享用吧。",
+        "en": "Picnic preparations are ready. Enjoy them at the park.",
+        "ja": "ピクニックの準備ができたよ。公園で楽しもう。",
+        "mn": "Зугаалгын бэлтгэл бэлэн. Цэцэрлэгтээ хамт идье."
+      }
+    },
+    {
+      "id": "family.next.shop-apple",
+      "text": {
+        "zh": "先去商店看价签，买需要的苹果。",
+        "en": "Go to the shop, check tags and buy the apples you need.",
+        "ja": "お店で値札を見て、必要なリンゴを買おう。",
+        "mn": "Дэлгүүрт үнийг хараад хэрэгтэй алимаа авъя."
+      }
+    },
+    {
+      "id": "family.next.home-list",
+      "text": {
+        "zh": "先回家写购物单：苹果和面包。",
+        "en": "First write your apple-and-bread list at home.",
+        "ja": "まず家でリンゴとパンの買い物メモを書こう。",
+        "mn": "Эхлээд гэртээ алим, талхны жагсаалтаа бичье."
+      }
+    },
+    {
+      "id": "family.next.shop-bread",
+      "text": {
+        "zh": "去商店买购物单上的面包。",
+        "en": "Go to the shop for the bread on your list.",
+        "ja": "お店で買い物メモのパンを買おう。",
+        "mn": "Дэлгүүрээс жагсаалтынхаа талхыг авъя."
+      }
+    },
+    {
+      "id": "family.next.complete",
+      "text": {
+        "zh": "这关完成了，按继续开始下一关。",
+        "en": "This mission is complete. Continue to the next one.",
+        "ja": "このお話は完了。続けるボタンで次へ行こう。",
+        "mn": "Энэ үе дууслаа. Үргэлжлүүлэх товчоор дараагийн үе рүү оръё."
+      }
+    },
+    {
+      "id": "family.next.checkpoint",
+      "text": {
+        "zh": "先检查预算和准备条件，需要时重试本关检查点。",
+        "en": "Check your budget and prerequisites; retry this checkpoint if needed.",
+        "ja": "予算と準備を確かめよう。必要ならチェックポイントからやり直せるよ。",
+        "mn": "Төсөв, бэлтгэлээ шалгая. Хэрэгтэй бол энэ үеийн хадгалсан цэгээс дахин оролдоорой."
+      }
+    },
+    {
+      "id": "family.next.home",
+      "text": {
+        "zh": "回家完成下一项准备。",
+        "en": "Go home for the next preparation step.",
+        "ja": "家で次の準備をしよう。",
+        "mn": "Гэртээ дараагийн бэлтгэлээ хийе."
+      }
+    },
+    {
+      "id": "family.next.shop",
+      "text": {
+        "zh": "去商店完成下一步，付款前先看价签。",
+        "en": "Go to the shop for the next step; check tags before paying.",
+        "ja": "お店で次の手順へ。払う前に値札を見よう。",
+        "mn": "Дэлгүүрт дараагийн алхмаа хийе. Төлөхөөсөө өмнө үнийг харъя."
+      }
+    },
+    {
+      "id": "family.next.school",
+      "text": {
+        "zh": "去学校完成下一步。",
+        "en": "Go to school for the next step.",
+        "ja": "学校で次の手順へ進もう。",
+        "mn": "Сургуульдаа дараагийн алхмаа хийе."
+      }
+    },
+    {
+      "id": "family.next.bank",
+      "text": {
+        "zh": "和家长去银行，先看约定和日期。",
+        "en": "Go to the bank with a parent; check terms and dates.",
+        "ja": "保護者と銀行へ行き、約束と日付を確かめよう。",
+        "mn": "Аав ээжтэйгээ банканд очиж нөхцөл, огноог харъя."
+      }
+    },
+    {
+      "id": "family.next.park",
+      "text": {
+        "zh": "去公园完成下一步。",
+        "en": "Go to the park for the next step.",
+        "ja": "公園で次の手順へ進もう。",
+        "mn": "Цэцэрлэгт дараагийн алхмаа хийе."
+      }
+    },
+    {
+      "id": "family.action.share-apples.1",
+      "text": {
+        "zh": "回家吃苹果点心。",
+        "en": "Eat your apple snack at home.",
+        "ja": "家でリンゴのおやつを食べよう。",
+        "mn": "Гэртээ алимаа идье."
+      }
+    },
+    {
+      "id": "family.action.pack-lunch.1",
+      "text": {
+        "zh": "把自己的午饭装进书包。",
+        "en": "Pack lunch for yourself.",
+        "ja": "自分のお昼ごはんをかばんに入れよう。",
+        "mn": "өөрийн өдрийн хоолыг цүнхэнд хийе."
+      }
+    },
+    {
+      "id": "family.action.deliver-juice.1",
+      "text": {
+        "zh": "带一杯果汁去操场，自己喝。",
+        "en": "Take one cup of juice to the field for yourself.",
+        "ja": "校庭へジュース一杯を持っていこう。自分だよ。",
+        "mn": "Сургуулийн талбайд нэг аяга шүүс авч очъё. өөрийн шүүс."
+      }
+    },
+    {
+      "id": "family.action.serve-bread.1",
+      "text": {
+        "zh": "准备好自己今天吃的一份面包。",
+        "en": "Serve one edible bread snack today for yourself.",
+        "ja": "自分のパンのおやつを今日食べよう。",
+        "mn": "өөрийн нэг талхан зуушийг өнөөдөр идье."
+      }
+    },
+    {
+      "id": "family.action.ride-island-bus.1",
+      "text": {
+        "zh": "和家长坐岛上巴士，收好自己的车票。",
+        "en": "Ride the island bus with a parent; keep your ticket.",
+        "ja": "保護者と島のバスに乗ろう。自分の切符を持ってね。",
+        "mn": "Аав ээжтэйгээ арлын автобусанд сууя. өөрийн тасалбарыг авъя."
+      }
+    },
+    {
+      "id": "family.action.pack-souvenirs.1",
+      "text": {
+        "zh": "装好自己的一份纪念品。",
+        "en": "Pack one souvenir for yourself.",
+        "ja": "自分のお土産をしまおう。",
+        "mn": "өөрийн нэг дурсгалыг баглая."
+      }
+    },
+    {
+      "id": "family.action.share-apples.2",
+      "text": {
+        "zh": "回家和兄弟姐妹一起吃两个苹果。",
+        "en": "Eat two apples at home with your siblings.",
+        "ja": "家できょうだいとリンゴ二つを食べよう。",
+        "mn": "Гэртээ ах дүүтэйгээ хоёр алим идье."
+      }
+    },
+    {
+      "id": "family.action.pack-lunch.2",
+      "text": {
+        "zh": "把自己和兄弟姐妹两个人的午饭装进书包。",
+        "en": "Pack lunch for yourself and your siblings, two of you.",
+        "ja": "自分ときょうだい、二人分のお昼ごはんをかばんに入れよう。",
+        "mn": "өөрийн болон ах дүүгийн, нийт хоёр хүүхдийн өдрийн хоолыг цүнхэнд хийе."
+      }
+    },
+    {
+      "id": "family.action.deliver-juice.2",
+      "text": {
+        "zh": "带两杯果汁去操场，和兄弟姐妹一起喝。",
+        "en": "Take two cups of juice to the field for yourself and your siblings, two of you.",
+        "ja": "校庭へジュース二杯を持っていこう。自分ときょうだい、二人分だよ。",
+        "mn": "Сургуулийн талбайд хоёр аяга шүүс авч очъё. өөрийн болон ах дүүгийн, нийт хоёр хүүхдийн шүүс."
+      }
+    },
+    {
+      "id": "family.action.serve-bread.2",
+      "text": {
+        "zh": "准备好自己和兄弟姐妹两个人今天吃的两份面包。",
+        "en": "Serve two edible bread snacks today for yourself and your siblings, two of you.",
+        "ja": "自分ときょうだい、二人分のパンのおやつを今日食べよう。",
+        "mn": "өөрийн болон ах дүүгийн, нийт хоёр хүүхдийн хоёр талхан зуушийг өнөөдөр идье."
+      }
+    },
+    {
+      "id": "family.action.ride-island-bus.2",
+      "text": {
+        "zh": "和家长坐岛上巴士，收好自己和兄弟姐妹两个人的车票。",
+        "en": "Ride the island bus with a parent; keep the tickets for yourself and your siblings, two of you.",
+        "ja": "保護者と島のバスに乗ろう。自分ときょうだい、二人分の切符を持ってね。",
+        "mn": "Аав ээжтэйгээ арлын автобусанд сууя. өөрийн болон ах дүүгийн, нийт хоёр хүүхдийн тасалбарыг авъя."
+      }
+    },
+    {
+      "id": "family.action.pack-souvenirs.2",
+      "text": {
+        "zh": "装好自己和兄弟姐妹两个人的两份纪念品。",
+        "en": "Pack two souvenirs for yourself and your siblings, two of you.",
+        "ja": "自分ときょうだい、二人分のお土産をしまおう。",
+        "mn": "өөрийн болон ах дүүгийн, нийт хоёр хүүхдийн хоёр дурсгалыг баглая."
+      }
+    },
+    {
+      "id": "family.action.share-apples.3",
+      "text": {
+        "zh": "回家和兄弟姐妹一起吃三个苹果。",
+        "en": "Eat three apples at home with your siblings.",
+        "ja": "家できょうだいとリンゴ三つを食べよう。",
+        "mn": "Гэртээ ах дүүтэйгээ гурван алим идье."
+      }
+    },
+    {
+      "id": "family.action.pack-lunch.3",
+      "text": {
+        "zh": "把自己和兄弟姐妹三个人的午饭装进书包。",
+        "en": "Pack lunch for yourself and your siblings, three of you.",
+        "ja": "自分ときょうだい、三人分のお昼ごはんをかばんに入れよう。",
+        "mn": "өөрийн болон ах дүүгийн, нийт гурван хүүхдийн өдрийн хоолыг цүнхэнд хийе."
+      }
+    },
+    {
+      "id": "family.action.deliver-juice.3",
+      "text": {
+        "zh": "带三杯果汁去操场，和兄弟姐妹一起喝。",
+        "en": "Take three cups of juice to the field for yourself and your siblings, three of you.",
+        "ja": "校庭へジュース三杯を持っていこう。自分ときょうだい、三人分だよ。",
+        "mn": "Сургуулийн талбайд гурван аяга шүүс авч очъё. өөрийн болон ах дүүгийн, нийт гурван хүүхдийн шүүс."
+      }
+    },
+    {
+      "id": "family.action.serve-bread.3",
+      "text": {
+        "zh": "准备好自己和兄弟姐妹三个人今天吃的三份面包。",
+        "en": "Serve three edible bread snacks today for yourself and your siblings, three of you.",
+        "ja": "自分ときょうだい、三人分のパンのおやつを今日食べよう。",
+        "mn": "өөрийн болон ах дүүгийн, нийт гурван хүүхдийн гурван талхан зуушийг өнөөдөр идье."
+      }
+    },
+    {
+      "id": "family.action.ride-island-bus.3",
+      "text": {
+        "zh": "和家长坐岛上巴士，收好自己和兄弟姐妹三个人的车票。",
+        "en": "Ride the island bus with a parent; keep the tickets for yourself and your siblings, three of you.",
+        "ja": "保護者と島のバスに乗ろう。自分ときょうだい、三人分の切符を持ってね。",
+        "mn": "Аав ээжтэйгээ арлын автобусанд сууя. өөрийн болон ах дүүгийн, нийт гурван хүүхдийн тасалбарыг авъя."
+      }
+    },
+    {
+      "id": "family.action.pack-souvenirs.3",
+      "text": {
+        "zh": "装好自己和兄弟姐妹三个人的三份纪念品。",
+        "en": "Pack three souvenirs for yourself and your siblings, three of you.",
+        "ja": "自分ときょうだい、三人分のお土産をしまおう。",
+        "mn": "өөрийн болон ах дүүгийн, нийт гурван хүүхдийн гурван дурсгалыг баглая."
+      }
+    },
+    {
+      "id": "childhood.market.title",
+      "text": {
+        "zh": "周末集市小冒险",
+        "en": "Our weekend market",
+        "ja": "週末の市場",
+        "mn": "Амралтын зах"
+      }
+    },
+    {
+      "id": "childhood.market.goal",
+      "text": {
+        "zh": "家长陪你逛摊位。先看价，再选水果、修理或二手玩具。",
+        "en": "With a parent, compare fruit, repairs and used toys.",
+        "ja": "保護者と果物、修理、中古おもちゃを比べよう。",
+        "mn": "Аав ээжтэйгээ жимс, засвар, хуучин тоглоом харьцуулъя."
+      }
+    },
+    {
+      "id": "childhood.family.title",
+      "text": {
+        "zh": "袜子小队开工啦",
+        "en": "The sock team",
+        "ja": "くつ下チーム",
+        "mn": "Оймсны баг"
+      }
+    },
+    {
+      "id": "childhood.family.goal",
+      "text": {
+        "zh": "先约定分工和报酬，再一起把家收拾好。",
+        "en": "Agree on jobs and rewards, then tidy together.",
+        "ja": "仕事と報酬を決めて、一緒に片づけよう。",
+        "mn": "Ажил, хөлсөө тохироод хамт цэгцэлье."
+      }
+    },
+    {
+      "id": "childhood.wishes.title",
+      "text": {
+        "zh": "压岁钱愿望墙",
+        "en": "Gift-money wishes",
+        "ja": "お年玉の願い",
+        "mn": "Бэлгийн мөнгөний хүсэл"
+      }
+    },
+    {
+      "id": "childhood.wishes.goal",
+      "text": {
+        "zh": "玩具、应急钱、给爷爷的礼物、捐书，都是好愿望。",
+        "en": "Toys, emergency savings, Grandpa’s gift and book donations are all valid wishes.",
+        "ja": "おもちゃ、備え、祖父への贈り物、寄付はどれも大切。",
+        "mn": "Тоглоом, нөөц, өвөөд бэлэг, ном хандивлах бүгд сайн хүсэл."
+      }
+    },
+    {
+      "id": "childhood.money.title",
+      "text": {
+        "zh": "钱的旅行箱",
+        "en": "Money’s suitcase",
+        "ja": "お金の旅",
+        "mn": "Мөнгөний аялал"
+      }
+    },
+    {
+      "id": "childhood.money.goal",
+      "text": {
+        "zh": "从交换到数字钱包，看看大家怎样一起接受付款工具。",
+        "en": "Explore barter and accepted payment tools, ending with a funded digital wallet.",
+        "ja": "物々交換から、みんなが使える支払い道具を探そう。",
+        "mn": "Солилцооноос цахим хэтэвч хүртэл төлбөрийн хэрэгсэл туршъя."
+      }
+    },
+    {
+      "id": "childhood.insurance.title",
+      "text": {
+        "zh": "雨天互助小盒子",
+        "en": "The rainy-day pool",
+        "ja": "雨の日の助け合い",
+        "mn": "Борооны өдрийн сан"
+      }
+    },
+    {
+      "id": "childhood.insurance.goal",
+      "text": {
+        "zh": "家长陪你看保障，再一起修好淋湿的东西。这是游戏规则。",
+        "en": "Read toy cover with a parent, then restore wet belongings. These are game rules.",
+        "ja": "保護者とゲームの保障を読み、ぬれた物を直そう。",
+        "mn": "Аав ээжтэйгээ тоглоомын хамгаалалт үзээд норсон эдээ сэргээе."
+      }
+    },
+    {
+      "id": "childhood.travel.title",
+      "text": {
+        "zh": "两座想象中的岛",
+        "en": "Two imaginary islands",
+        "ja": "二つの空想の島",
+        "mn": "Хоёр төсөөллийн арал"
+      }
+    },
+    {
+      "id": "childhood.travel.goal",
+      "text": {
+        "zh": "家长陪你比价、留备用金、查退款和结算。这里没有真实交易。",
+        "en": "Compare prices, reserve funds, refunds and settlement with a parent. No real transactions.",
+        "ja": "保護者と価格、予備費、返金、決済を確認。実際の取引ではないよ。",
+        "mn": "Аав ээжтэйгээ үнэ, нөөц, буцаалт, тооцоогоо шалгая. Бодит гүйлгээ биш."
+      }
+    },
+    {
+      "id": "childhood.speaker.boy",
+      "text": {
+        "zh": "男孩和家长",
+        "en": "Boy and parent",
+        "ja": "男の子と保護者",
+        "mn": "Хүү ба аав ээж"
+      }
+    },
+    {
+      "id": "childhood.speaker.girl",
+      "text": {
+        "zh": "女孩和家长",
+        "en": "Girl and parent",
+        "ja": "女の子と保護者",
+        "mn": "Охин ба аав ээж"
+      }
+    },
+    {
+      "id": "childhood.market.line",
+      "text": {
+        "zh": "同一个小信封，可以逛不同的摊。看清品质、保修、路费和时间。",
+        "en": "One envelope, different stalls. Check quality, warranty, fares and time.",
+        "ja": "同じ予算でも行き先は自由。品質、保証、交通費、時間を見よう。",
+        "mn": "Нэг төсөвтэй ч өөр лангуу сонгож болно. Чанар, баталгаа, зам, хугацааг харъя."
+      }
+    },
+    {
+      "id": "childhood.change.line",
+      "text": {
+        "zh": "摊主递来的找零少了一点。先和价签对一对吧。",
+        "en": "The offered change is a little short. Check it against the price.",
+        "ja": "おつりが少し足りない。値札と確認しよう。",
+        "mn": "Хариулт бага байна. Үнэтэй нь тулгая."
+      }
+    },
+    {
+      "id": "childhood.short.line",
+      "text": {
+        "zh": "发现少找钱也不晚。家长陪你拿着收据去问清楚。",
+        "en": "It is not too late. Take the receipt back with a parent.",
+        "ja": "今からでも大丈夫。保護者とレシートを持って聞こう。",
+        "mn": "Оройтоогүй. Аав ээжтэй баримтаа аваад асууя."
+      }
+    },
+    {
+      "id": "childhood.aftercare.line",
+      "text": {
+        "zh": "先检查再决定。东西的钱能退，已经花掉的路费不退。保修只管约定的问题。",
+        "en": "Inspect before deciding. Purchase prices are refundable, fares are not; warranty covers agreed defects.",
+        "ja": "確認してから決めよう。商品代は返金、交通費は返金なし。保証は約束した不具合だけ。",
+        "mn": "Шалгаад шийдье. Барааны үнэ буцна, замын зардал буцахгүй. Баталгаа тохирсон гэмтэлд үйлчилнэ."
+      }
+    },
+    {
+      "id": "childhood.family.1",
+      "text": {
+        "zh": "你来整理袜子、洗水果。家长在旁边帮忙，不用一个人扛。",
+        "en": "Sort socks and wash fruit with a parent’s help.",
+        "ja": "くつ下と果物を担当。保護者が手伝うから一人で抱えなくていいよ。",
+        "mn": "Оймс цэгцэлж, жимс угаа. Аав ээж тусална."
+      }
+    },
+    {
+      "id": "childhood.family.2",
+      "text": {
+        "zh": "你整理袜子，另一个孩子洗水果。一起约定怎么分钱。",
+        "en": "You sort socks; your sibling washes fruit. Agree on sharing.",
+        "ja": "自分はくつ下、きょうだいは果物。分け方を決めよう。",
+        "mn": "Чи оймс цэгцэлж, нөгөө хүүхэд жимс угаана. Хөлсөө тохиръё."
+      }
+    },
+    {
+      "id": "childhood.family.3",
+      "text": {
+        "zh": "你整理袜子，一个孩子洗水果，另一个装野餐袋。家长帮忙，不抢活。",
+        "en": "You sort socks; siblings wash fruit and pack. A parent helps, without taking over.",
+        "ja": "自分はくつ下、きょうだいは果物と荷づめ。保護者も手伝うよ。",
+        "mn": "Чи оймс, бусад нь жимс, цүнх хариуцна. Аав ээж тусална."
+      }
+    },
+    {
+      "id": "childhood.work.line",
+      "text": {
+        "zh": "每项工作都要做完，谁需要帮忙就说一声。",
+        "en": "Finish every agreed job; ask for help whenever needed.",
+        "ja": "約束した仕事を終えよう。助けが必要なら言ってね。",
+        "mn": "Тохирсон ажлаа дуусгая. Тусламж хэрэгтэй бол хэлээрэй."
+      }
+    },
+    {
+      "id": "childhood.share.line",
+      "text": {
+        "zh": "报酬按刚才的约定分。兄弟姐妹的钱不是你的钱。",
+        "en": "Share the reward as agreed. Siblings’ money is not yours.",
+        "ja": "約束どおりに分けよう。きょうだいのお金は自分のお金ではないよ。",
+        "mn": "Хөлсөө тохирсноор хуваая. Бусдын мөнгө чинийх биш."
+      }
+    },
+    {
+      "id": "childhood.wishes.line",
+      "text": {
+        "zh": "把喜欢的愿望贴上去。不必全选，也没有唯一的好答案。",
+        "en": "Choose wishes you care about. You need not choose everything; there is no single right answer.",
+        "ja": "好きな願いを選ぼう。全部選ばなくても、正解は一つじゃないよ。",
+        "mn": "Дуртай хүслээ сонго. Бүгдийг сонгох албагүй, ганц зөв хариу байхгүй."
+      }
+    },
+    {
+      "id": "childhood.money.start",
+      "text": {
+        "zh": "重复贴纸换苹果，要两个人都点头。贝壳是下一站的练习道具，不是奖励钱。",
+        "en": "Both people must agree to swap a spare sticker for an apple. Shells are next-stop props, not reward money.",
+        "ja": "交換は二人の同意が必要。貝は次の練習道具で、ごほうびのお金ではないよ。",
+        "mn": "Наалтаа алимаар солиход хоёулаа зөвшөөрнө. Хясаа бол дараагийн дасгалын хэрэгсэл."
+      }
+    },
+    {
+      "id": "childhood.money.shells",
+      "text": {
+        "zh": "这几个摊主都愿意收贝壳。别的集市不一定收，也可以继续交换。",
+        "en": "These stalls accept shells. Other markets may not; barter is still possible.",
+        "ja": "この店では貝が使える。他では使えないかも。交換も続けられるよ。",
+        "mn": "Эдгээр лангуу хясаа авна. Өөр зах авахгүй байж болно. Солилцоо ч боломжтой."
+      }
+    },
+    {
+      "id": "childhood.money.metal",
+      "text": {
+        "zh": "这只篮子的铜、银、金报价只在今天这个摊有效。重量不同，不是永远固定兑换。",
+        "en": "Copper, silver and gold offers for this basket are local to this stall today. Weights differ; there is no universal fixed exchange.",
+        "ja": "銅、銀、金の見積りは今日この店だけ。重さも違い、固定の交換比率ではないよ。",
+        "mn": "Энэ сагсны зэс, мөнгө, алтны үнэ зөвхөн өнөөдрийн энэ лангууных. Жин өөр, тогтмол ханш биш."
+      }
+    },
+    {
+      "id": "childhood.money.check",
+      "text": {
+        "zh": "硬币可能磨损或是假道具。称一称、看标记，摊主免费换好，再交易。",
+        "en": "Coins may be worn or imitation props. Weigh and inspect; the stall replaces bad props before trading.",
+        "ja": "すり減りや偽物を確認。重さと印を調べて、店が無料交換してから払おう。",
+        "mn": "Зоос элэгдсэн эсвэл дуураймал байж болно. Жин, тэмдгийг шалгаж, үнэгүй солиулаад төлнө."
+      }
+    },
+    {
+      "id": "childhood.money.paper",
+      "text": {
+        "zh": "纸币轻一点，也要辨认和找零。这是新的练习信封，不承诺换黄金。",
+        "en": "Paper is lighter, but needs checking and change. This is a new practice envelope, with no promise to redeem gold.",
+        "ja": "紙は軽いけど確認とおつりが必要。新しい練習用の予算で、金との交換約束はないよ。",
+        "mn": "Цаас хөнгөн ч шалгаж, хариулт авна. Шинэ дасгалын төсөв бөгөөд алтаар солих амлалтгүй."
+      }
+    },
+    {
+      "id": "childhood.money.digital",
+      "text": {
+        "zh": "家长把剩下的纸币转进练习钱包。数字余额来自自己的钱，不会凭空变多。",
+        "en": "A parent loads the remaining paper into the practice wallet. Digital balances come from your money, not magic.",
+        "ja": "残りのお金を保護者と財布へ。数字の残高も自分のお金で、勝手に増えないよ。",
+        "mn": "Үлдсэн цаасан мөнгөө аав ээжтэй цахим хэтэвчид хийе. Мөнгө өөрөө нэмэгдэхгүй."
+      }
+    },
+    {
+      "id": "childhood.insurance.line",
+      "text": {
+        "zh": "邻居的保费放在同一个盒子里。可以不买，也可以只保书，或保书和玩具。",
+        "en": "Neighbors share one pool. Choose no cover, books only, or books and toys.",
+        "ja": "みんなの保険料を同じ箱へ。なし、本だけ、本とおもちゃから選べるよ。",
+        "mn": "Хөршүүд нэг санд мөнгө хийнэ. Даатгахгүй, ном, эсвэл ном ба тоглоом сонгож болно."
+      }
+    },
+    {
+      "id": "childhood.pack.line",
+      "text": {
+        "zh": "保护东西也重要。防水袋能减少损失，但不能让雨消失。",
+        "en": "Protection matters too. A dry bag reduces loss, not rain.",
+        "ja": "物を守るのも大事。防水袋は損を減らすけど雨は止めないよ。",
+        "mn": "Эдээ хамгаалах нь чухал. Усны хамгаалалт хохирлыг бууруулна, бороог зогсоохгүй."
+      }
+    },
+    {
+      "id": "childhood.rain.line",
+      "text": {
+        "zh": "哎呀，下雨了！书和玩具湿了。家长陪你查约定，都能修好。",
+        "en": "Rain! The book and toy are wet. Check the agreement with a parent; both are recoverable.",
+        "ja": "雨で本とおもちゃがぬれた。保護者と約束を確認。どちらも直せるよ。",
+        "mn": "Бороо орлоо! Ном, тоглоом норжээ. Аав ээжтэй нөхцөлөө үзье, хоёул сэргээнэ."
+      }
+    },
+    {
+      "id": "childhood.sun.line",
+      "text": {
+        "zh": "今天没下雨。保费留在共同盒子里，帮大家分担别的雨天。",
+        "en": "No rain today. Premiums stay in the shared pool for other rainy days.",
+        "ja": "今日は晴れ。保険料は別の雨の日を支える箱に残るよ。",
+        "mn": "Өнөөдөр бороогүй. Хураамж бусдын бороотой өдөрт зориулан санд үлдэнэ."
+      }
+    },
+    {
+      "id": "childhood.travel.line",
+      "text": {
+        "zh": "贝壳岛和灯笼岛都在故事里。只管这个旅行信封，大人的花费另算。",
+        "en": "Shell and Lantern Islands are fictional. This envelope is separate from adult expenses.",
+        "ja": "貝の島と灯籠の島は架空。大人の費用とは別の予算だよ。",
+        "mn": "Хясаа, Дэнлүүний арлууд зохиомол. Энэ төсөв томчуудын зардлаас тусдаа."
+      }
+    },
+    {
+      "id": "childhood.travel.compare",
+      "text": {
+        "zh": "比的是同一本防水封面故事书，页数也相同。境外价还要加税、运费和换钱费用。",
+        "en": "Compare the identical waterproof-cover storybook, with the same pages. Add toy tax, shipping and exchange costs.",
+        "ja": "防水表紙もページ数も同じ本を比較。海外価格にゲームの税、送料、両替費を加えよう。",
+        "mn": "Ижил усны хамгаалалттай хавтас, хуудастай ном харьцуулна. Татвар, хүргэлт, солих зардлыг нэмнэ."
+      }
+    },
+    {
+      "id": "childhood.travel.funding",
+      "text": {
+        "zh": "先问钱从哪里来。现金、借记卡、预付钱包花自己的钱，家长模拟信用卡是借款。",
+        "en": "Ask where funds come from. Cash, debit and prepaid spend owned funds; a parent’s simulated credit card borrows.",
+        "ja": "資金の出所を確認。現金、デビット、前払いは自分のお金。保護者の模擬クレジットは借金。",
+        "mn": "Мөнгө хаанаас гарахыг асуу. Бэлэн, дебит, урьдчилсан нь өөрийн мөнгө; эцэг эхийн загвар кредит зээл."
+      }
+    },
+    {
+      "id": "childhood.travel.conversion",
+      "text": {
+        "zh": "商家可以报本币总价，也可以留外币让发卡方换算。信用卡到结算日才定账单，不只看今天汇率。",
+        "en": "The merchant can quote home currency, or the issuer can convert foreign currency. Credit posts at settlement, not just today’s rate.",
+        "ja": "店の自国通貨価格か発行側の換算かを選ぼう。クレジットの請求は決済日に決まるよ。",
+        "mn": "Худалдаачны дотоод мөнгөний үнэ эсвэл карт гаргагчийн хөрвүүлэлт сонгоно. Кредитийн дүн тооцооны өдөр тогтоно."
+      }
+    },
+    {
+      "id": "childhood.travel.receipt",
+      "text": {
+        "zh": "收据在这里。退书会退约定的钱，运费和汇兑费不退。账单和外币处理好再回家。",
+        "en": "Here is the receipt. Returns refund agreed amounts, not shipping or exchange fees. Clear bills and foreign cash before finishing.",
+        "ja": "レシートを確認。約束した額は返金、送料や両替費は戻らない。請求と外貨を整理して帰ろう。",
+        "mn": "Баримтаа харъя. Тохирсон мөнгө буцна, хүргэлт ба солих хураамж буцахгүй. Өр, гадаад мөнгөө цэгцэлнэ."
+      }
+    },
+    {
+      "id": "childhood.done",
+      "text": {
+        "zh": "这一页完成啦！故事信封留在这里，不会变成主线的钱。",
+        "en": "This page is complete! Its envelope stays here, separate from campaign money.",
+        "ja": "このページは完了。予算はここに残り、本編のお金にはならないよ。",
+        "mn": "Энэ хуудас дууслаа! Төсөв энд үлдэж, гол түүхийн мөнгө болохгүй."
+      }
+    },
+    {
+      "id": "childhood.next",
+      "text": {
+        "zh": "看好报价，和家长一起选下一步。",
+        "en": "Read the quotes and choose with a parent.",
+        "ja": "見積りを見て、保護者と次を選ぼう。",
+        "mn": "Үнээ хараад аав ээжтэй дараагийн алхмаа сонго."
+      }
+    },
+    {
+      "id": "childhood.choice.detail",
+      "text": {
+        "zh": "按报价做这一步，变化会记在故事账本里。",
+        "en": "Follow the quote; changes enter the story ledger.",
+        "ja": "見積りに沿って進むと、変化が帳簿に残るよ。",
+        "mn": "Үнийн дагуу хийж, өөрчлөлтийг түүхийн дэвтэрт бичнэ."
+      }
+    },
+    {
+      "id": "childhood.shortage",
+      "text": {
+        "zh": "暂时不能选。先保留这个愿望，或处理已有的账单。",
+        "en": "Not available yet. Keep the wish or handle existing bills first.",
+        "ja": "今は選べない。願いを残すか、今の請求を整理しよう。",
+        "mn": "Одоо боломжгүй. Хүслээ хадгалж эсвэл байгаа тооцоогоо дуусга."
+      }
+    },
+    {
+      "id": "childhood.unavailable",
+      "text": {
+        "zh": "这一步已经做过，或现在还不能做。",
+        "en": "Already done, or not available at this step.",
+        "ja": "もう済んだか、今はできないよ。",
+        "mn": "Хийсэн эсвэл энэ алхамд боломжгүй."
+      }
+    },
+    {
+      "id": "childhood.envelope",
+      "text": {
+        "zh": "独立故事信封",
+        "en": "Separate story envelope",
+        "ja": "独立した物語の予算",
+        "mn": "Тусдаа түүхийн төсөв"
+      }
+    },
+    {
+      "id": "childhood.neighbors",
+      "text": {
+        "zh": "邻居们的共同保费",
+        "en": "Neighbors’ shared premiums",
+        "ja": "近所の共同保険料",
+        "mn": "Хөршүүдийн хамтын хураамж"
+      }
+    },
+    {
+      "id": "childhood.fruit-fresh",
+      "text": {
+        "zh": "新鲜苹果篮",
+        "en": "Fresh apple basket",
+        "ja": "新鮮なりんごかご",
+        "mn": "Шинэ алимны сагс"
+      }
+    },
+    {
+      "id": "childhood.fruit-ripe",
+      "text": {
+        "zh": "今天吃的熟苹果篮",
+        "en": "Ripe apples for today",
+        "ja": "今日食べる熟したりんご",
+        "mn": "Өнөөдөр идэх болсон алим"
+      }
+    },
+    {
+      "id": "childhood.repair-near",
+      "text": {
+        "zh": "近处修理，带保修",
+        "en": "Nearby repair with warranty",
+        "ja": "近くの保証つき修理",
+        "mn": "Ойрын баталгаатай засвар"
+      }
+    },
+    {
+      "id": "childhood.repair-far",
+      "text": {
+        "zh": "远处简易修理",
+        "en": "Distant basic repair",
+        "ja": "遠くの簡単な修理",
+        "mn": "Холын энгийн засвар"
+      }
+    },
+    {
+      "id": "childhood.toy-warranty",
+      "text": {
+        "zh": "检修好的二手玩具，带保修",
+        "en": "Serviced used toy with warranty",
+        "ja": "整備済み保証つき中古おもちゃ",
+        "mn": "Баталгаатай зассан хуучин тоглоом"
+      }
+    },
+    {
+      "id": "childhood.toy-inspected",
+      "text": {
+        "zh": "自己检查的旧玩具",
+        "en": "Inspect a basic used toy",
+        "ja": "自分で確認する中古おもちゃ",
+        "mn": "Өөрөө шалгах хуучин тоглоом"
+      }
+    },
+    {
+      "id": "childhood.fare",
+      "text": {
+        "zh": "来回路费",
+        "en": "Return fare",
+        "ja": "往復交通費",
+        "mn": "Ирж очих зардал"
+      }
+    },
+    {
+      "id": "childhood.time",
+      "text": {
+        "zh": "出门到拿到物品的时间",
+        "en": "Time until the item is ready",
+        "ja": "受け取るまでの日数",
+        "mn": "Бараа авах хүртэлх хугацаа"
+      }
+    },
+    {
+      "id": "childhood.quality",
+      "text": {
+        "zh": "品质档：普通或更好",
+        "en": "Quality tier: basic or better",
+        "ja": "品質：普通か良いもの",
+        "mn": "Чанар: энгийн эсвэл сайн"
+      }
+    },
+    {
+      "id": "childhood.warranty",
+      "text": {
+        "zh": "保修游戏日数",
+        "en": "Warranty game-days",
+        "ja": "保証のゲーム日数",
+        "mn": "Баталгааны тоглоомын өдөр"
+      }
+    },
+    {
+      "id": "childhood.eat.today",
+      "text": {
+        "zh": "熟苹果今天就和大家一起吃。",
+        "en": "Share ripe apples today.",
+        "ja": "熟したりんごは今日みんなで食べよう。",
+        "mn": "Болсон алимаа өнөөдөр хувааж ид."
+      }
+    },
+    {
+      "id": "childhood.warranty.detail",
+      "text": {
+        "zh": "在保修期内，约定的故障免费修。退货要先凭收据检查。",
+        "en": "Agreed defects get free warranty repair; returns need receipt inspection.",
+        "ja": "保証内の不具合は無料修理。返品はレシートで確認。",
+        "mn": "Тохирсон гэмтлийг баталгаагаар үнэгүй засна. Буцаахад баримт шалгана."
+      }
+    },
+    {
+      "id": "childhood.inspection.detail",
+      "text": {
+        "zh": "品质普通，没有保修。拿到就检查，不满意可凭收据退货。",
+        "en": "Basic quality, no warranty. Inspect on arrival; receipt returns are allowed.",
+        "ja": "普通の品質、保証なし。受け取り時に確認し、レシートで返品できる。",
+        "mn": "Энгийн чанартай, баталгаагүй. Авахдаа шалгаад баримтаар буцааж болно."
+      }
+    },
+    {
+      "id": "childhood.tender",
+      "text": {
+        "zh": "交给摊主的钱",
+        "en": "Cash tendered",
+        "ja": "渡す現金",
+        "mn": "Өгсөн мөнгө"
+      }
+    },
+    {
+      "id": "childhood.leave",
+      "text": {
+        "zh": "今天只逛逛，保留预算",
+        "en": "Browse and keep the budget",
+        "ja": "今日は見て予算を残す",
+        "mn": "Өнөөдөр үзээд төсвөө хадгалъя"
+      }
+    },
+    {
+      "id": "childhood.change",
+      "text": {
+        "zh": "应找的钱",
+        "en": "Correct change",
+        "ja": "正しいおつり",
+        "mn": "Зөв хариулт"
+      }
+    },
+    {
+      "id": "childhood.offered.change",
+      "text": {
+        "zh": "摊主递来的找零",
+        "en": "Offered change",
+        "ja": "渡されたおつり",
+        "mn": "Өгсөн хариулт"
+      }
+    },
+    {
+      "id": "childhood.check-change",
+      "text": {
+        "zh": "对收据，拿齐找零",
+        "en": "Check and collect all change",
+        "ja": "確認して全部受け取る",
+        "mn": "Шалгаад хариултаа бүрэн авъя"
+      }
+    },
+    {
+      "id": "childhood.accept-short",
+      "text": {
+        "zh": "先收下，再去核对",
+        "en": "Take it, then double-check",
+        "ja": "受け取ってから確認する",
+        "mn": "Аваад дараа шалгая"
+      }
+    },
+    {
+      "id": "childhood.refund",
+      "text": {
+        "zh": "凭收据退货",
+        "en": "Return with the receipt",
+        "ja": "レシートで返品",
+        "mn": "Баримтаар буцаах"
+      }
+    },
+    {
+      "id": "childhood.fare.nonrefund",
+      "text": {
+        "zh": "已花路费，不退",
+        "en": "Spent fares are not refunded",
+        "ja": "交通費は返金なし",
+        "mn": "Замын зардал буцахгүй"
+      }
+    },
+    {
+      "id": "childhood.keep",
+      "text": {
+        "zh": "留下物品，分享或安排修理",
+        "en": "Keep, share or plan repair",
+        "ja": "残して分けるか修理を計画",
+        "mn": "Үлдээж хуваах эсвэл засах"
+      }
+    },
+    {
+      "id": "childhood.warranty-repair",
+      "text": {
+        "zh": "按保修免费修好",
+        "en": "Free warranty repair",
+        "ja": "保証で無料修理",
+        "mn": "Баталгаагаар үнэгүй засах"
+      }
+    },
+    {
+      "id": "childhood.parent-repair",
+      "text": {
+        "zh": "和家长一起修好",
+        "en": "Repair together with a parent",
+        "ja": "保護者と一緒に直す",
+        "mn": "Аав ээжтэй хамт засах"
+      }
+    },
+    {
+      "id": "childhood.parent-repair.detail",
+      "text": {
+        "zh": "不用再付钱，花一个游戏日，家长帮你换小零件。",
+        "en": "Spend a game-day, not more money; a parent helps replace small parts.",
+        "ja": "追加費用なし。一日かけて保護者と部品を交換。",
+        "mn": "Нэмэлт мөнгөгүй, нэг тоглоомын өдөрт аав ээжтэй эд анги солино."
+      }
+    },
+    {
+      "id": "childhood.reward",
+      "text": {
+        "zh": "全家的约定报酬",
+        "en": "Agreed family reward",
+        "ja": "家族の約束した報酬",
+        "mn": "Гэр бүлийн тохирсон хөлс"
+      }
+    },
+    {
+      "id": "childhood.equal",
+      "text": {
+        "zh": "大家平均分",
+        "en": "Share equally",
+        "ja": "均等に分ける",
+        "mn": "Тэнцүү хуваах"
+      }
+    },
+    {
+      "id": "childhood.effort",
+      "text": {
+        "zh": "整理工作多一份权重",
+        "en": "Give sorting extra weight",
+        "ja": "片づけの重みを増やす",
+        "mn": "Цэгцлэх ажилд илүү жин өгөх"
+      }
+    },
+    {
+      "id": "childhood.sort",
+      "text": {
+        "zh": "整理袜子",
+        "en": "Sort socks",
+        "ja": "くつ下を整理",
+        "mn": "Оймс цэгцлэх"
+      }
+    },
+    {
+      "id": "childhood.wash",
+      "text": {
+        "zh": "洗好水果",
+        "en": "Wash fruit",
+        "ja": "果物を洗う",
+        "mn": "Жимс угаах"
+      }
+    },
+    {
+      "id": "childhood.pack",
+      "text": {
+        "zh": "装好野餐袋",
+        "en": "Pack the picnic bag",
+        "ja": "ピクニック袋に詰める",
+        "mn": "Зугаалгын цүнх бэлдэх"
+      }
+    },
+    {
+      "id": "childhood.parent.help",
+      "text": {
+        "zh": "你动手，家长帮忙。",
+        "en": "You work; a parent helps.",
+        "ja": "自分がやり、保護者が手伝う。",
+        "mn": "Чи хийж, аав ээж тусална."
+      }
+    },
+    {
+      "id": "childhood.protagonist.job",
+      "text": {
+        "zh": "这是你约定的工作，也可以请人帮忙。",
+        "en": "Your agreed job; help is welcome.",
+        "ja": "自分の仕事。手伝いを頼んでいいよ。",
+        "mn": "Чиний тохирсон ажил, тусламж авч болно."
+      }
+    },
+    {
+      "id": "childhood.sibling.job",
+      "text": {
+        "zh": "另一个孩子来洗，你可以帮忙。",
+        "en": "Your sibling washes; you can help.",
+        "ja": "きょうだいが洗う。手伝ってもいいよ。",
+        "mn": "Нөгөө хүүхэд угаана, чи тусалж болно."
+      }
+    },
+    {
+      "id": "childhood.youngest.job",
+      "text": {
+        "zh": "第三个孩子装袋，家长帮着检查。",
+        "en": "The third child packs with a parent’s help.",
+        "ja": "三人目が荷づめし、保護者が確認。",
+        "mn": "Гурав дахь хүүхэд цүнх бэлдэж, аав ээж шалгана."
+      }
+    },
+    {
+      "id": "childhood.your.share",
+      "text": {
+        "zh": "你的那份",
+        "en": "Your share",
+        "ja": "自分の取り分",
+        "mn": "Чиний хувь"
+      }
+    },
+    {
+      "id": "childhood.sibling.share",
+      "text": {
+        "zh": "兄弟姐妹的那份",
+        "en": "Sibling’s share",
+        "ja": "きょうだいの取り分",
+        "mn": "Нөгөө хүүхдийн хувь"
+      }
+    },
+    {
+      "id": "childhood.collect",
+      "text": {
+        "zh": "按约定领一次报酬",
+        "en": "Collect the agreed reward once",
+        "ja": "約束の報酬を一度受け取る",
+        "mn": "Тохирсон хөлсөө нэг удаа авах"
+      }
+    },
+    {
+      "id": "childhood.wish-toy",
+      "text": {
+        "zh": "买心爱的玩具",
+        "en": "Buy a favorite toy",
+        "ja": "好きなおもちゃを買う",
+        "mn": "Дуртай тоглоом авах"
+      }
+    },
+    {
+      "id": "childhood.wish-reserve",
+      "text": {
+        "zh": "留一份应急钱",
+        "en": "Keep an emergency reserve",
+        "ja": "緊急用に残す",
+        "mn": "Яаралтай хэрэгцээний нөөц"
+      }
+    },
+    {
+      "id": "childhood.wish-gift",
+      "text": {
+        "zh": "给爷爷买小礼物",
+        "en": "Buy Grandpa a little gift",
+        "ja": "祖父に小さな贈り物",
+        "mn": "Өвөөд жижиг бэлэг авах"
+      }
+    },
+    {
+      "id": "childhood.wish-book",
+      "text": {
+        "zh": "捐一本书给阅读角",
+        "en": "Donate a book to the reading corner",
+        "ja": "読書コーナーに本を寄付",
+        "mn": "Уншлагын буланд ном хандивлах"
+      }
+    },
+    {
+      "id": "childhood.finish",
+      "text": {
+        "zh": "把这一页收进故事书",
+        "en": "Finish this storybook page",
+        "ja": "このページをしまう",
+        "mn": "Энэ хуудсыг дуусгах"
+      }
+    },
+    {
+      "id": "childhood.swap",
+      "text": {
+        "zh": "同意贴纸换苹果",
+        "en": "Agree to swap for an apple",
+        "ja": "りんごとの交換に同意",
+        "mn": "Алимаар солихыг зөвшөөрөх"
+      }
+    },
+    {
+      "id": "childhood.counteroffer",
+      "text": {
+        "zh": "先商量，再同意交换",
+        "en": "Negotiate, then agree",
+        "ja": "相談してから交換",
+        "mn": "Ярилцаад солих"
+      }
+    },
+    {
+      "id": "childhood.shell.price",
+      "text": {
+        "zh": "苹果的贝壳价",
+        "en": "Apple price in shells",
+        "ja": "貝でのりんごの値段",
+        "mn": "Алимны хясаан үнэ"
+      }
+    },
+    {
+      "id": "childhood.shell-buy",
+      "text": {
+        "zh": "在收贝壳的摊买苹果",
+        "en": "Buy at a shell-accepting stall",
+        "ja": "貝の使える店で買う",
+        "mn": "Хясаа авдаг лангуунаас авах"
+      }
+    },
+    {
+      "id": "childhood.shell-barter",
+      "text": {
+        "zh": "用剩下的贴纸再换苹果",
+        "en": "Barter the spare sticker",
+        "ja": "残りのシールで交換",
+        "mn": "Үлдсэн наалтаар солих"
+      }
+    },
+    {
+      "id": "childhood.copper",
+      "text": {
+        "zh": "铜币方案",
+        "en": "Copper offer",
+        "ja": "銅貨の案",
+        "mn": "Зэс зоосны санал"
+      }
+    },
+    {
+      "id": "childhood.silver",
+      "text": {
+        "zh": "银币方案",
+        "en": "Silver offer",
+        "ja": "銀貨の案",
+        "mn": "Мөнгөн зоосны санал"
+      }
+    },
+    {
+      "id": "childhood.gold",
+      "text": {
+        "zh": "金币方案",
+        "en": "Gold offer",
+        "ja": "金貨の案",
+        "mn": "Алтан зоосны санал"
+      }
+    },
+    {
+      "id": "childhood.weight",
+      "text": {
+        "zh": "这袋钱的重量",
+        "en": "Bag weight",
+        "ja": "袋の重さ",
+        "mn": "Уутны жин"
+      }
+    },
+    {
+      "id": "childhood.inspect",
+      "text": {
+        "zh": "称重、辨认，再付钱",
+        "en": "Weigh, verify and pay",
+        "ja": "重さと本物か確認して払う",
+        "mn": "Жин, жинхэнэ эсэхийг шалгаад төлөх"
+      }
+    },
+    {
+      "id": "childhood.replace-worn",
+      "text": {
+        "zh": "换好磨损的道具，再付款",
+        "en": "Replace worn props, then pay",
+        "ja": "すり減った道具を交換して払う",
+        "mn": "Элэгдсэн хэрэгслийг солиод төлөх"
+      }
+    },
+    {
+      "id": "childhood.metal.props",
+      "text": {
+        "zh": "本地商定的金属练习道具",
+        "en": "Locally agreed metal props",
+        "ja": "この店の金属練習道具",
+        "mn": "Орон нутагт тохирсон металл хэрэгсэл"
+      }
+    },
+    {
+      "id": "childhood.paper.props",
+      "text": {
+        "zh": "另一个纸币练习信封",
+        "en": "A separate paper practice envelope",
+        "ja": "別の紙幣練習用予算",
+        "mn": "Тусдаа цаасан дасгалын төсөв"
+      }
+    },
+    {
+      "id": "childhood.paper.price",
+      "text": {
+        "zh": "纸币车票价",
+        "en": "Paper ticket price",
+        "ja": "紙幣での切符代",
+        "mn": "Цаасан мөнгөний тасалбарын үнэ"
+      }
+    },
+    {
+      "id": "childhood.paper.tender",
+      "text": {
+        "zh": "拿出的纸币",
+        "en": "Paper tendered",
+        "ja": "渡す紙幣",
+        "mn": "Өгөх цаасан мөнгө"
+      }
+    },
+    {
+      "id": "childhood.paper-buy",
+      "text": {
+        "zh": "辨认纸币，买票并找零",
+        "en": "Verify, buy and collect change",
+        "ja": "紙幣を確認し買っておつりを受け取る",
+        "mn": "Шалгаад тасалбар авч хариулт авах"
+      }
+    },
+    {
+      "id": "childhood.paper-replace",
+      "text": {
+        "zh": "换好破损纸币，再买票",
+        "en": "Replace damaged paper before buying",
+        "ja": "破れた紙幣を交換して買う",
+        "mn": "Гэмтсэн цаасыг солиод авах"
+      }
+    },
+    {
+      "id": "childhood.digital.price",
+      "text": {
+        "zh": "数字钱包车票价",
+        "en": "Digital ticket price",
+        "ja": "電子財布の切符代",
+        "mn": "Цахим тасалбарын үнэ"
+      }
+    },
+    {
+      "id": "childhood.digital-buy",
+      "text": {
+        "zh": "用已充值的钱包买票",
+        "en": "Pay from the funded wallet",
+        "ja": "入金済みの財布で買う",
+        "mn": "Цэнэглэсэн хэтэвчээр авах"
+      }
+    },
+    {
+      "id": "childhood.prepaid.balance",
+      "text": {
+        "zh": "预付钱包自己的余额",
+        "en": "Owned prepaid balance",
+        "ja": "前払いの自分の残高",
+        "mn": "Урьдчилсан хэтэвчийн үлдэгдэл"
+      }
+    },
+    {
+      "id": "childhood.none",
+      "text": {
+        "zh": "不买保障，自己留钱修",
+        "en": "No cover; keep repair funds",
+        "ja": "保障なし、修理費を残す",
+        "mn": "Даатгалгүй, засварын мөнгө үлдээх"
+      }
+    },
+    {
+      "id": "childhood.book",
+      "text": {
+        "zh": "只保书",
+        "en": "Cover the book only",
+        "ja": "本だけ保障",
+        "mn": "Зөвхөн ном хамгаалах"
+      }
+    },
+    {
+      "id": "childhood.all",
+      "text": {
+        "zh": "保障书和玩具",
+        "en": "Cover book and toy",
+        "ja": "本とおもちゃを保障",
+        "mn": "Ном, тоглоом хамгаалах"
+      }
+    },
+    {
+      "id": "childhood.policy.detail",
+      "text": {
+        "zh": "先自己承担免赔额。盒子只在保障和限额内赔，不会保证全部损失。",
+        "en": "You bear the deductible. Pool payouts stay within cover and limit, not all loss.",
+        "ja": "免責分は自分が負担。保障と上限内だけ払い、損全部を保証しない。",
+        "mn": "Суутгалыг өөрөө төлнө. Сан зөвхөн хамгаалалт, хязгаарын дотор төлнө."
+      }
+    },
+    {
+      "id": "childhood.deductible",
+      "text": {
+        "zh": "自己先承担的免赔额",
+        "en": "Deductible you bear",
+        "ja": "自分が負担する免責額",
+        "mn": "Өөрөө даах суутгал"
+      }
+    },
+    {
+      "id": "childhood.limit",
+      "text": {
+        "zh": "最高赔付",
+        "en": "Payout limit",
+        "ja": "支払い上限",
+        "mn": "Төлөх дээд хэмжээ"
+      }
+    },
+    {
+      "id": "childhood.pool",
+      "text": {
+        "zh": "大家的共同盒子余额",
+        "en": "Shared pool balance",
+        "ja": "共同の箱の残高",
+        "mn": "Хамтын сангийн үлдэгдэл"
+      }
+    },
+    {
+      "id": "childhood.dry-bag",
+      "text": {
+        "zh": "买防水袋，减少损失",
+        "en": "Buy a dry bag to reduce loss",
+        "ja": "防水袋で損を減らす",
+        "mn": "Хамгаалах уут авч хохирол бууруулах"
+      }
+    },
+    {
+      "id": "childhood.ordinary-bag",
+      "text": {
+        "zh": "用现有袋子",
+        "en": "Use the existing bag",
+        "ja": "今の袋を使う",
+        "mn": "Байгаа уутаа хэрэглэх"
+      }
+    },
+    {
+      "id": "childhood.loss",
+      "text": {
+        "zh": "可修复的损失总额",
+        "en": "Recoverable loss total",
+        "ja": "直せる損の合計",
+        "mn": "Сэргээх хохирлын нийт дүн"
+      }
+    },
+    {
+      "id": "childhood.claim",
+      "text": {
+        "zh": "按约定申请赔付",
+        "en": "Claim under the agreement",
+        "ja": "約束に沿って請求",
+        "mn": "Тохиролцоогоор нөхөн төлбөр хүсэх"
+      }
+    },
+    {
+      "id": "childhood.repair.cost",
+      "text": {
+        "zh": "修复需要的钱",
+        "en": "Restoration cost",
+        "ja": "直す費用",
+        "mn": "Сэргээх зардал"
+      }
+    },
+    {
+      "id": "childhood.claim.paid",
+      "text": {
+        "zh": "共同盒子已赔付",
+        "en": "Pool payout received",
+        "ja": "箱から受け取った額",
+        "mn": "Сангаас авсан төлбөр"
+      }
+    },
+    {
+      "id": "childhood.restore",
+      "text": {
+        "zh": "和家长一起修好书和玩具",
+        "en": "Restore book and toy with a parent",
+        "ja": "保護者と本とおもちゃを直す",
+        "mn": "Аав ээжтэй ном, тоглоомоо сэргээх"
+      }
+    },
+    {
+      "id": "childhood.shell",
+      "text": {
+        "zh": "去想象中的贝壳岛",
+        "en": "Visit fictional Shell Island",
+        "ja": "架空の貝の島へ",
+        "mn": "Зохиомол Хясаа аралд очих"
+      }
+    },
+    {
+      "id": "childhood.lantern",
+      "text": {
+        "zh": "去想象中的灯笼岛",
+        "en": "Visit fictional Lantern Island",
+        "ja": "架空の灯籠の島へ",
+        "mn": "Зохиомол Дэнлүүний аралд очих"
+      }
+    },
+    {
+      "id": "childhood.shell.rate",
+      "text": {
+        "zh": "贝壳岛本币分与外币分的比率",
+        "en": "Shell Island home-to-foreign cent ratio",
+        "ja": "貝の島の通貨比率",
+        "mn": "Хясаа арлын дотоод ба гадаад мөнгөний харьцаа"
+      }
+    },
+    {
+      "id": "childhood.lantern.rate",
+      "text": {
+        "zh": "灯笼岛本币分与外币分的比率",
+        "en": "Lantern Island home-to-foreign cent ratio",
+        "ja": "灯籠の島の通貨比率",
+        "mn": "Дэнлүүний арлын мөнгөний харьцаа"
+      }
+    },
+    {
+      "id": "childhood.fx.fee",
+      "text": {
+        "zh": "这笔汇兑费用",
+        "en": "Exchange fee for this transaction",
+        "ja": "今回の両替費",
+        "mn": "Энэ солилцооны хураамж"
+      }
+    },
+    {
+      "id": "childhood.reserve",
+      "text": {
+        "zh": "旅行备用金",
+        "en": "Travel reserve",
+        "ja": "旅行の予備費",
+        "mn": "Аяллын нөөц"
+      }
+    },
+    {
+      "id": "childhood.local.price",
+      "text": {
+        "zh": "同款书本地总价",
+        "en": "Identical book, home total",
+        "ja": "同じ本の国内総額",
+        "mn": "Ижил номын дотоод нийт үнэ"
+      }
+    },
+    {
+      "id": "childhood.foreign.price",
+      "text": {
+        "zh": "同款书外币标价",
+        "en": "Identical book, foreign sticker price",
+        "ja": "同じ本の外貨価格",
+        "mn": "Ижил номын гадаад үнэ"
+      }
+    },
+    {
+      "id": "childhood.rate",
+      "text": {
+        "zh": "今日换算比率，按百分单位",
+        "en": "Today’s conversion ratio, per hundred",
+        "ja": "今日の換算比率、百単位",
+        "mn": "Өнөөдрийн хөрвүүлэлт, зуугаар"
+      }
+    },
+    {
+      "id": "childhood.tax",
+      "text": {
+        "zh": "虚构申报税费",
+        "en": "Fictional declaration tax",
+        "ja": "架空の申告税",
+        "mn": "Зохиомол мэдүүлгийн татвар"
+      }
+    },
+    {
+      "id": "childhood.shipping",
+      "text": {
+        "zh": "运费",
+        "en": "Shipping",
+        "ja": "送料",
+        "mn": "Хүргэлт"
+      }
+    },
+    {
+      "id": "childhood.landed",
+      "text": {
+        "zh": "换算后加齐费用的到手价",
+        "en": "Converted landed total",
+        "ja": "換算後の費用込み総額",
+        "mn": "Хөрвүүлсэн бүх зардалтай нийт үнэ"
+      }
+    },
+    {
+      "id": "childhood.local",
+      "text": {
+        "zh": "选本地同款书",
+        "en": "Choose the identical home book",
+        "ja": "国内の同じ本を選ぶ",
+        "mn": "Дотоод ижил ном сонгох"
+      }
+    },
+    {
+      "id": "childhood.foreign",
+      "text": {
+        "zh": "选境外同款书并申报",
+        "en": "Choose and declare the identical foreign book",
+        "ja": "海外の同じ本を選び申告",
+        "mn": "Гадаад ижил ном авч мэдүүлэх"
+      }
+    },
+    {
+      "id": "childhood.same.spec",
+      "text": {
+        "zh": "同样的防水封面和页数，不拿不同商品比价。",
+        "en": "Same waterproof cover and page count, not different products.",
+        "ja": "防水表紙とページ数が同じ。違う品とは比べない。",
+        "mn": "Ижил хамгаалалттай хавтас, хуудас; өөр бараа биш."
+      }
+    },
+    {
+      "id": "childhood.declare.detail",
+      "text": {
+        "zh": "家长陪同申报，报价中的税和通行章只是假想规则。",
+        "en": "Declare with a parent; quoted tax and the travel stamp are fictional rules.",
+        "ja": "保護者と申告。税と通行印は架空のルール。",
+        "mn": "Аав ээжтэй мэдүүлнэ. Татвар, нэвтрэх тэмдэг зохиомол."
+      }
+    },
+    {
+      "id": "childhood.cash",
+      "text": {
+        "zh": "用现金",
+        "en": "Pay cash",
+        "ja": "現金で払う",
+        "mn": "Бэлнээр төлөх"
+      }
+    },
+    {
+      "id": "childhood.cash.detail",
+      "text": {
+        "zh": "先用自己的钱兑换，外币现金花掉就少了。",
+        "en": "Exchange owned funds first; foreign cash falls when spent.",
+        "ja": "自分のお金を両替。使うと外貨現金は減る。",
+        "mn": "Өөрийн мөнгөө солино. Гадаад бэлэн мөнгө зарцуулахад буурна."
+      }
+    },
+    {
+      "id": "childhood.debit",
+      "text": {
+        "zh": "用模拟借记卡",
+        "en": "Use simulated debit",
+        "ja": "模擬デビット",
+        "mn": "Загвар дебит хэрэглэх"
+      }
+    },
+    {
+      "id": "childhood.debit.detail",
+      "text": {
+        "zh": "把自己的钱放进模拟账户，再从余额付款，不是借钱。",
+        "en": "Load owned funds into the toy account, then pay its balance; no borrowing.",
+        "ja": "模擬口座に自分のお金を入れて払う。借金ではない。",
+        "mn": "Өөрийн мөнгийг загвар дансанд хийгээд төлнө. Зээл биш."
+      }
+    },
+    {
+      "id": "childhood.prepaid",
+      "text": {
+        "zh": "用已充值的模拟钱包",
+        "en": "Use a funded toy wallet",
+        "ja": "入金済み模擬財布",
+        "mn": "Цэнэглэсэн загвар хэтэвч"
+      }
+    },
+    {
+      "id": "childhood.prepaid.detail",
+      "text": {
+        "zh": "移动钱包先充值自己的钱，只能花已有余额。",
+        "en": "A mobile wallet is loaded with your own funds and spends its balance.",
+        "ja": "自分のお金で入金し、残高だけ使う。",
+        "mn": "Гар утасны хэтэвчид өөрийн мөнгөө хийж үлдэгдлээ зарцуулна."
+      }
+    },
+    {
+      "id": "childhood.credit",
+      "text": {
+        "zh": "用家长模拟信用卡",
+        "en": "Use a parent’s simulated credit",
+        "ja": "保護者の模擬クレジット",
+        "mn": "Эцэг эхийн загвар кредит"
+      }
+    },
+    {
+      "id": "childhood.credit.detail",
+      "text": {
+        "zh": "这是家长的模拟卡。先记待结算借款，到期用本币还。",
+        "en": "A parent’s toy card records a pending loan; repay in home currency by the due day.",
+        "ja": "保護者の模擬カード。借入予定を記録し、期日に自国通貨で返す。",
+        "mn": "Эцэг эхийн загвар карт. Хүлээгдэж буй зээлээ бүртгэж, хугацаанд дотоод мөнгөөр төлнө."
+      }
+    },
+    {
+      "id": "childhood.settlement.day",
+      "text": {
+        "zh": "模拟卡组织结算游戏日",
+        "en": "Toy card-network settlement game-day",
+        "ja": "模擬カード網の決済日",
+        "mn": "Загвар картын сүлжээний тооцооны өдөр"
+      }
+    },
+    {
+      "id": "childhood.due.day",
+      "text": {
+        "zh": "本币还款游戏日",
+        "en": "Home-currency repayment day",
+        "ja": "自国通貨で返す日",
+        "mn": "Дотоод мөнгөөр төлөх өдөр"
+      }
+    },
+    {
+      "id": "childhood.issuer.price",
+      "text": {
+        "zh": "发卡方今日估价总额",
+        "en": "Issuer’s estimated total today",
+        "ja": "発行側の今日の見積り",
+        "mn": "Карт гаргагчийн өнөөдрийн тооцоолсон нийт дүн"
+      }
+    },
+    {
+      "id": "childhood.merchant.price",
+      "text": {
+        "zh": "商家本币转换总价",
+        "en": "Merchant home-conversion total",
+        "ja": "店の自国通貨換算総額",
+        "mn": "Худалдаачны дотоод мөнгөнд хөрвүүлсэн нийт үнэ"
+      }
+    },
+    {
+      "id": "childhood.settlement.rate",
+      "text": {
+        "zh": "结算日的虚构换算比率",
+        "en": "Fictional settlement-day ratio",
+        "ja": "架空の決済日の比率",
+        "mn": "Зохиомол тооцооны өдрийн ханш"
+      }
+    },
+    {
+      "id": "childhood.issuer",
+      "text": {
+        "zh": "保留外币，按资金来源换算",
+        "en": "Keep foreign currency for issuer conversion",
+        "ja": "外貨のまま発行側が換算",
+        "mn": "Гадаад мөнгөөр үлдээж гаргагч хөрвүүлэх"
+      }
+    },
+    {
+      "id": "childhood.issuer.detail",
+      "text": {
+        "zh": "现金和自己的余额今天换算；信用卡在显示的结算日换算。",
+        "en": "Cash and owned balances convert today; credit converts on the displayed settlement day.",
+        "ja": "現金と残高は今日、クレジットは表示の決済日に換算。",
+        "mn": "Бэлэн ба өөрийн үлдэгдэл өнөөдөр, кредит заасан тооцооны өдөр хөрвөнө."
+      }
+    },
+    {
+      "id": "childhood.merchant",
+      "text": {
+        "zh": "接受商家本币总价",
+        "en": "Accept merchant’s home total",
+        "ja": "店の自国通貨総額を受け入れる",
+        "mn": "Худалдаачны дотоод нийт үнийг зөвшөөрөх"
+      }
+    },
+    {
+      "id": "childhood.merchant.detail",
+      "text": {
+        "zh": "本币金额现在确定，转换成本含在报价里，不保证更便宜。",
+        "en": "Home amount is fixed now, conversion costs included; not guaranteed cheaper.",
+        "ja": "自国通貨額は今確定。換算費込みで、安いとは限らない。",
+        "mn": "Дотоод дүн одоо тогтоно, хөрвүүлэх зардал багтсан. Хямд гэсэн баталгаа байхгүй."
+      }
+    },
+    {
+      "id": "childhood.paid.price",
+      "text": {
+        "zh": "已付或待结算的金额",
+        "en": "Paid or pending amount",
+        "ja": "支払済みか決済予定の額",
+        "mn": "Төлсөн эсвэл хүлээгдэж буй дүн"
+      }
+    },
+    {
+      "id": "childhood.nonrefund",
+      "text": {
+        "zh": "不退的运费和汇兑费",
+        "en": "Nonrefundable shipping and exchange fees",
+        "ja": "返金されない送料と両替費",
+        "mn": "Буцахгүй хүргэлт, солих хураамж"
+      }
+    },
+    {
+      "id": "childhood.return.rate",
+      "text": {
+        "zh": "剩余外币换回比率",
+        "en": "Leftover foreign return ratio",
+        "ja": "残り外貨を戻す比率",
+        "mn": "Үлдсэн гадаад мөнгө буцаах ханш"
+      }
+    },
+    {
+      "id": "childhood.settle",
+      "text": {
+        "zh": "到结算日，核对实际账单",
+        "en": "Reach settlement and inspect the bill",
+        "ja": "決済日に請求を確認",
+        "mn": "Тооцооны өдөр бодит дүн шалгах"
+      }
+    },
+    {
+      "id": "childhood.bill",
+      "text": {
+        "zh": "当前本币账单",
+        "en": "Current home-currency bill",
+        "ja": "今の自国通貨請求額",
+        "mn": "Одоогийн дотоод мөнгөний өр"
+      }
+    },
+    {
+      "id": "childhood.repay",
+      "text": {
+        "zh": "按日期用本币还清",
+        "en": "Repay in home currency on time",
+        "ja": "期日に自国通貨で完済",
+        "mn": "Хугацаанд дотоод мөнгөөр төлөх"
+      }
+    },
+    {
+      "id": "childhood.refund.detail",
+      "text": {
+        "zh": "凭收据退回原资金来源。信用退款先减欠款；现金外币退回后还要换回。",
+        "en": "Receipt refunds go to their funding source. Credit reduces debt first; foreign cash still needs exchanging.",
+        "ja": "元の資金へ返金。クレジットは借金を先に減らし、外貨現金は両替が必要。",
+        "mn": "Баримтаар анхны эх үүсвэрт буцаана. Кредит өрийг бууруулна; гадаад бэлэн мөнгийг солих хэрэгтэй."
+      }
+    },
+    {
+      "id": "childhood.exchange-back",
+      "text": {
+        "zh": "把剩余外币换回本币",
+        "en": "Exchange leftover foreign cash home",
+        "ja": "残りの外貨を戻す",
+        "mn": "Үлдсэн гадаад мөнгийг буцааж солих"
+      }
+    },
+    {
+      "id": "childhood.use-reserve",
+      "text": {
+        "zh": "动用旅行备用金补账单",
+        "en": "Use reserve to cover the bill",
+        "ja": "予備費を請求に使う",
+        "mn": "Нөөцөөр тооцоогоо төлөх"
+      }
+    },
+    {
+      "id": "childhood.credit.purchase",
+      "text": {
+        "zh": "模拟信用购买，先记待结算借款",
+        "en": "Toy credit purchase, pending loan",
+        "ja": "模擬クレジット購入、決済前借入",
+        "mn": "Загвар кредит худалдан авалт, хүлээгдэх зээл"
+      }
+    },
+    {
+      "id": "childhood.exchange",
+      "text": {
+        "zh": "用自己的本币兑换外币",
+        "en": "Exchange owned home funds",
+        "ja": "自分の通貨を両替",
+        "mn": "Өөрийн дотоод мөнгийг солих"
+      }
+    },
+    {
+      "id": "childhood.purchase",
+      "text": {
+        "zh": "按收据买下同款书",
+        "en": "Purchase the identical book",
+        "ja": "同じ本をレシートの額で買う",
+        "mn": "Баримтаар ижил ном авах"
+      }
+    },
+    {
+      "id": "childhood.debit.load",
+      "text": {
+        "zh": "自己的钱转入模拟账户",
+        "en": "Move owned money to the toy account",
+        "ja": "模擬口座へ自分のお金を移す",
+        "mn": "Өөрийн мөнгийг загвар дансанд хийх"
+      }
+    },
+    {
+      "id": "childhood.prepaid.load",
+      "text": {
+        "zh": "自己的钱充进练习钱包",
+        "en": "Load owned funds into the practice wallet",
+        "ja": "練習財布に自分のお金を入れる",
+        "mn": "Өөрийн мөнгөөр дасгалын хэтэвч цэнэглэх"
+      }
+    },
+    {
+      "id": "childhood.cash.balance",
+      "text": {
+        "zh": "故事信封的可用现金",
+        "en": "Available story cash",
+        "ja": "物語の使える現金",
+        "mn": "Түүхийн бэлэн мөнгө"
+      }
+    },
+    {
+      "id": "childhood.story.reserve",
+      "text": {
+        "zh": "故事信封的备用金",
+        "en": "Story envelope reserve",
+        "ja": "物語の予備費",
+        "mn": "Түүхийн нөөц мөнгө"
+      }
+    },
+    {
+      "id": "childhood.defect.line",
+      "text": {
+        "zh": "检查到一个小故障。保修内免费修；没有保修也能和家长一起修好。",
+        "en": "A small defect appeared. Warranty repairs are free; without cover, repair together with a parent.",
+        "ja": "小さな不具合。保証内なら無料、保証なしでも保護者と直せるよ。",
+        "mn": "Жижиг гэмтэл байна. Баталгаатай бол үнэгүй, үгүй бол аав ээжтэй засна."
+      }
+    },
+    {
+      "id": "childhood.save-snack",
+      "text": {
+        "zh": "把新鲜苹果留到明天分享",
+        "en": "Keep fresh apples to share tomorrow",
+        "ja": "新鮮なりんごを明日分ける",
+        "mn": "Шинэ алимаа маргааш хуваах"
+      }
+    },
+    {
+      "id": "childhood.shell.entry",
+      "text": {
+        "zh": "贝壳岛用家庭邀请页通行，路费已包含办理。这只是故事规则。",
+        "en": "Shell Island uses a family invitation; entry processing is included in the fare. Fictional rules only.",
+        "ja": "貝の島は家族の招待状で入場。手続きは交通費込み。架空のルールだよ。",
+        "mn": "Хясаа арал гэр бүлийн урилга хэрэглэнэ. Нэвтрэх зардал замын үнэд багтсан, зохиомол дүрэм."
+      }
+    },
+    {
+      "id": "childhood.lantern.entry",
+      "text": {
+        "zh": "灯笼岛由家长帮办访客许可，路费已包含办理。这只是故事规则。",
+        "en": "A parent helps arrange Lantern Island visitor permission, included in the fare. Fictional rules only.",
+        "ja": "灯籠の島は保護者が訪問許可を手伝う。交通費に手続き込み。架空のルール。",
+        "mn": "Дэнлүүний арлын зочны зөвшөөрөлд аав ээж тусална. Замын үнэд багтсан, зохиомол дүрэм."
+      }
+    },
+    {
+      "id": "childhood.foreign.refund",
+      "text": {
+        "zh": "退回的外币现金",
+        "en": "Returned foreign cash",
+        "ja": "戻る外貨現金",
+        "mn": "Буцах гадаад бэлэн мөнгө"
+      }
+    },
+    {
+      "id": "childhood.tax.refund",
+      "text": {
+        "zh": "退回的本币游戏税费",
+        "en": "Returned home-currency toy tax",
+        "ja": "戻る自国通貨のゲーム税",
+        "mn": "Буцах дотоод мөнгөний тоглоомын татвар"
+      }
+    },
+    {
+      "id": "childhood.accepted.shells",
+      "text": {
+        "zh": "大家接受的贝壳练习道具",
+        "en": "Shell props accepted by these stalls",
+        "ja": "この市場が受け入れる練習の貝",
+        "mn": "Лангуунуудын зөвшөөрсөн хясаан хэрэгсэл"
+      }
+    },
+    {
+      "id": "childhood.counterfeit.replaced",
+      "text": {
+        "zh": "辨出假道具，换成可用的硬币",
+        "en": "Reject imitation props and replace with accepted coins",
+        "ja": "偽物を見分けて使える硬貨に交換",
+        "mn": "Дуураймал хэрэгслийг таньж зөв зоосоор солих"
+      }
+    },
+    {
+      "id": "childhood.extra.reserve",
+      "text": {
+        "zh": "可额外留作备用的钱",
+        "en": "Optional extra reserve",
+        "ja": "追加できる予備費",
+        "mn": "Нэмж үлдээх нөөц"
+      }
+    },
+    {
+      "id": "childhood.reserve-more",
+      "text": {
+        "zh": "多留备用金，再检查购物预算",
+        "en": "Reserve more, then check spending funds",
+        "ja": "予備費を増やし買い物の予算を確認",
+        "mn": "Нөөцөө нэмээд авах төсвөө шалгах"
+      }
+    },
+    {
+      "id": "childhood.purchase.total",
+      "text": {
+        "zh": "这一步需要的本币总额",
+        "en": "Home total needed for this step",
+        "ja": "この手順に必要な自国通貨総額",
+        "mn": "Энэ алхамд хэрэгтэй дотоод нийт мөнгө"
+      }
+    },
+    {
+      "id": "childhood.reserve.release",
+      "text": {
+        "zh": "本次从备用金拿出的金额",
+        "en": "Reserve released this time",
+        "ja": "今回取り出す予備費",
+        "mn": "Энэ удаа нөөцөөс авах дүн"
+      }
+    },
+    {
+      "id": "ui.gameplay.childhood",
+      "text": {
+        "zh": "童年的生活小故事",
+        "en": "Childhood side stories",
+        "ja": "子ども時代の小さなお話",
+        "mn": "Бага насны жижиг түүхүүд"
+      }
+    },
+    {
+      "id": "ui.gameplay.envelopeNote",
+      "text": {
+        "zh": "这是额外故事的小信封，不会动主线的零钱、欠条或年龄。",
+        "en": "This extra story has its own envelope. Your main-story money, promises and age stay unchanged.",
+        "ja": "このお話には専用のお財布があるよ。本編のお金、約束、年齢は変わらない。",
+        "mn": "Энэ нэмэлт түүх өөрийн дугтуйтай. Үндсэн түүхийн мөнгө, өр, нас өөрчлөгдөхгүй."
       }
     }
   ]

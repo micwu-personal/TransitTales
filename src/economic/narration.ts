@@ -40,6 +40,7 @@ export class Narrator {
   private player?: HTMLAudioElement;
   private generation=0;
   private loadGeneration=0;
+  private loading?:Promise<boolean>;
   private cancel?:()=>void;
   private muted=false;
   private current: NarrationCue[]=[];
@@ -47,9 +48,13 @@ export class Narrator {
   private language: SpeechLanguage='zh';
   private gender:'boy'|'girl'='girl';
   constructor(private base: string,private unavailable:()=>void,private makeAudio:()=>HTMLAudioElement=()=>new Audio(),private makeSpeech:()=>RecordedSpeech=()=>new RecordedSpeech()){}
-  async load(fetcher:typeof fetch=fetch):Promise<boolean>{
+  load(fetcher:typeof fetch=fetch):Promise<boolean>{
     const revision=++this.loadGeneration;this.stop();this.manifest=undefined;
-    try {const response=await fetcher(`${this.base}audio/economic/manifest.json`,{credentials:'same-origin'});if(!response.ok)return false;const data:unknown=await response.json();if(revision!==this.loadGeneration||!validManifest(data))return false;this.manifest=data;return true;}catch{return false;}
+    this.loading=(async()=>{
+      try {const response=await fetcher(`${this.base}audio/economic/manifest.json`,{credentials:'same-origin'});if(!response.ok)return false;const data:unknown=await response.json();if(revision!==this.loadGeneration||!validManifest(data))return false;this.manifest=data;return true;}catch{return false;}
+      finally {if(revision===this.loadGeneration)this.loading=undefined;}
+    })();
+    return this.loading;
   }
   context(lang:Lang,gender:'boy'|'girl'):void {const language=spokenLanguage(lang);if(language!==this.language||gender!==this.gender)this.stop();this.language=language;this.gender=gender;}
   mute(value:boolean):void {this.muted=value;if(value)this.stop();}
@@ -58,7 +63,10 @@ export class Narrator {
   replay():Promise<void>{return this.play([...this.current]);}
   async play(ids:NarrationCue[]):Promise<void>{
     this.stop();this.current=ids.map(cue=>typeof cue==='string'?cue:[...cue]);if(this.muted)return;
-    const token=this.generation,queue=this.language==='zh'?ids:ids.flat();
+    const token=this.generation;
+    if(this.loading)await this.loading;
+    if(token!==this.generation||this.muted)return;
+    const queue=this.language==='zh'?ids:ids.flat();
     const recordings:{ids:readonly string[];urls:string[]}[]=[];
     for(const cue of queue){
       const cueIDs=typeof cue==='string'?[cue]:cue,urls:string[]=[];

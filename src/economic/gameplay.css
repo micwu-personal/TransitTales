@@ -1,0 +1,58 @@
+.wish-help{display:grid;place-items:center;min-width:40px;min-height:40px;border:0;background:#e9edd6;border-radius:12px;flex:none;margin:-5px -5px 0 0}.wish-help>svg{width:25px;height:25px}.wish-help:hover{background:#dce8bd}
+.game-footer{position:absolute;z-index:30;left:16px;right:16px;bottom:max(10px,env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:12px;pointer-events:none}
+.game-footer[hidden],.game-footer .location-strip[hidden]{display:none}
+.game-footer .game-tools,.game-footer .location-strip{position:static;transform:none;max-width:100%;pointer-events:auto;margin:0}
+.game-footer .game-tools{grid-column:1;grid-row:1;align-items:center;gap:6px}
+.game-footer .location-strip{grid-column:2;grid-row:1;justify-self:center}
+.voice-toggle{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:7px 10px;border:2px solid #fffcdd;border-radius:13px;background:#f8f7e8;font-size:11px;box-shadow:0 4px 0 #576c413b}
+.voice-toggle span{padding:3px 7px;background:#d8e8bf;border-radius:7px;font-size:10px;white-space:nowrap}
+.voice-toggle[aria-pressed="false"] span{background:#eee2d3;color:#795139}
+.economy-game :is(.conversation,.town-complete,.town-hint,.picnic-ending){bottom:calc(var(--footer-height,100px) + 24px)}
+.economy-game .conversation{max-height:calc(100% - var(--header-height,86px) - var(--footer-height,100px) - 45px)}
+.economy-game .paper-panel:not(.protected-panel){top:calc(var(--header-height,86px) + 10px);bottom:calc(var(--footer-height,100px) + 24px)}
+.economy-game .wish-note{top:calc(var(--header-height,86px) + 12px)}
+.economy-game .save-status{bottom:calc(var(--footer-height,100px) + 7px);right:16px;max-width:min(260px,calc(100% - 32px));z-index:31}
+.economy-game .narration-status{bottom:calc(var(--footer-height,100px) + 29px);right:16px;max-width:min(290px,calc(100% - 32px));z-index:31}
+.next-step{display:flex;align-items:center;gap:10px;margin:13px 0 0;padding:11px 13px;background:#e6f0d2;border:1px solid #bdceaa;border-radius:12px}
+.next-step>svg{width:27px;height:27px;flex:none}.next-step>div{flex:1;min-width:0}.next-step b{display:block;font-size:11px;color:#517240}.next-step p{font-size:13px;line-height:1.65;margin:4px 0}.next-step .secondary{flex:none;font-size:11px;padding:8px 11px}
+.help-hint{padding:14px;background:#eef2d9;border-radius:14px}.help-hint .choice{width:100%;margin-top:10px}.hint-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.hint-actions .secondary{flex:1}
+.completion-keepsake{position:relative;flex:none;display:grid;place-items:center;width:66px;height:66px;margin:auto;color:#5e7d48}
+.completion-keepsake>svg{width:45px;height:45px;padding:7px;background:#f5d981;border:3px solid #fff1b8;border-radius:50%;position:relative;z-index:1;box-shadow:0 3px 0 #aa815738}
+.completion-keepsake:before,.completion-keepsake:after{content:"";position:absolute;top:13px;width:15px;height:36px;background:#9abc7b;border-radius:70% 10% 70% 10%;transform:rotate(-35deg);left:4px}
+.completion-keepsake:after{left:auto;right:4px;transform:rotate(35deg) scaleX(-1)}
+.completion-actions .completion-keepsake{margin:0;width:64px;height:64px}.completion-actions>span:has(.completion-keepsake){gap:8px}
+.round-celebration .completion-keepsake{animation:keepsake-arrives .85s cubic-bezier(.22,1,.36,1)}
+.round-celebration .wish-done{animation:wish-reward .8s ease-out}
+.action-moment{position:absolute;z-index:35;left:calc(50% - 30px);top:38%;width:60px;height:60px;pointer-events:none;animation:little-delivery 1.3s ease-in-out forwards}
+.action-moment>svg{width:60px;height:60px;filter:drop-shadow(0 5px 0 #8c78522b)}
+.action-moment:before,.action-moment:after{content:"";position:absolute;width:8px;height:8px;border:2px solid #eabf66;border-radius:50%;left:-12px;top:15px;animation:little-spark 1.3s ease-out forwards}
+.action-moment:after{left:auto;right:-12px;top:29px;border-color:#729a69;animation-delay:.07s}
+@keyframes little-delivery{0%{opacity:0;transform:translateY(15px) scale(.55) rotate(-10deg)}25%{opacity:1;transform:translateY(-14px) scale(1.06) rotate(6deg)}55%{opacity:1;transform:translateY(-12px) scale(1) rotate(-3deg)}100%{opacity:0;transform:translate(45px,-80px) scale(.4)}}
+@keyframes little-spark{0%,15%{opacity:0;transform:scale(.5)}35%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:translateY(-28px) scale(.3)}}
+@keyframes keepsake-arrives{0%{transform:scale(.5) rotate(-15deg);opacity:0}65%{transform:scale(1.13) rotate(7deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+@keyframes wish-reward{0%,100%{transform:rotate(-1.2deg)}40%{transform:rotate(1deg) translateY(-5px)}}
+@media(max-width:1100px){.game-footer{grid-template-columns:1fr;gap:9px}.game-footer .location-strip{grid-column:1;grid-row:1}.game-footer .game-tools{grid-column:1;grid-row:2;justify-content:center;justify-self:center}.economy-game .conversation{max-height:calc(100% - var(--wish-bottom,220px) - var(--footer-height,125px) - 36px)}}
+@media(max-width:650px){.game-footer{left:12px;right:12px;gap:8px}.game-footer .game-tools{gap:4px}.game-footer .tool{width:44px;min-width:44px;height:44px}.voice-toggle{padding:6px 8px}.game-footer .location-strip button{width:clamp(44px,12vw,50px)}.next-step{align-items:flex-start;flex-wrap:wrap;padding:10px}.next-step>div{flex-basis:calc(100% - 42px)}.next-step>.secondary{margin-left:37px}.economy-game .save-status{font-size:9px;max-width:calc(100% - 24px)}.economy-game .picnic-ending{max-height:calc(100% - var(--header-height,86px) - var(--footer-height,125px) - 48px)}}
+@media(max-width:380px){.game-footer #town{display:none}.game-footer .game-tools{max-width:310px}.voice-toggle{min-height:40px}.game-footer .tool{min-width:42px;width:42px}.game-footer .tool>svg{width:24px}.voice-toggle b{font-size:10px}.voice-toggle span{font-size:9px;padding:3px 5px}}
+@media(max-height:620px) and (min-width:651px){.game-footer{grid-template-columns:minmax(0,1fr) auto;gap:10px}.game-footer .game-tools{grid-column:1;grid-row:1;justify-self:start;justify-content:flex-start}.game-footer .location-strip{grid-column:2;grid-row:1}.economy-game .conversation{max-height:calc(100% - var(--header-height,70px) - var(--footer-height,100px) - 43px)}}
+html[data-economic-lang="mn-Mong"] .game-name{display:flex;align-items:center;gap:6px;min-width:0}
+html[data-economic-lang="mn-Mong"] .game-name h1{writing-mode:vertical-lr;height:72px;max-height:72px;max-width:90px;overflow:auto;font-weight:400;min-width:0}
+html[data-economic-lang="mn-Mong"] .game-name>span{writing-mode:vertical-lr;height:72px;max-height:72px;max-width:30px;overflow:auto;margin:0;flex:none}
+html[data-economic-lang="mn-Mong"] .game-footer .location-strip{position:static;transform:none}
+html[data-economic-lang="mn-Mong"] .economy-game :is(.conversation,.town-complete,.town-hint,.picnic-ending){bottom:calc(var(--footer-height,170px) + 24px)}
+html[data-economic-lang="mn-Mong"] .economy-game .conversation{max-height:calc(100% - var(--header-height,110px) - var(--footer-height,170px) - 45px)}
+html[data-economic-lang="mn-Mong"] .wish-note{display:flex;align-items:flex-start;gap:14px;max-width:calc(100% - 30px)}
+html[data-economic-lang="mn-Mong"] .wish-top{flex:none;gap:5px}html[data-economic-lang="mn-Mong"] .wish-top h2{height:110px;max-height:110px;max-width:85px;overflow:auto}
+html[data-economic-lang="mn-Mong"] .wish-note>p{height:110px;max-height:110px;max-width:160px;overflow:auto;margin:0}
+html[data-economic-lang="mn-Mong"] .wish-progress{max-width:82px;min-width:42px;align-self:stretch}.wish-progress>small{overflow-wrap:anywhere}
+html[data-economic-lang="mn-Mong"] .wish-progress>small{writing-mode:vertical-lr;max-height:100px;overflow:auto}
+html[data-economic-lang="mn-Mong"] .go-story{writing-mode:vertical-lr;max-height:125px;max-width:75px;margin:0;padding:8px;flex:none}
+html[data-economic-lang="mn-Mong"] :is(.next-step p,.next-step b,.help-hint p,.voice-toggle b,.completion-actions>span,.town-complete p,.picnic-ending h2,.sound-setting>span,.paper-panel>header h2){writing-mode:vertical-lr;font-family:"Noto Sans Mongolian",sans-serif;font-weight:400;max-inline-size:130px;overflow-wrap:anywhere}
+html[data-economic-lang="mn-Mong"] .next-step>div{display:flex;gap:8px;max-width:100%;overflow:auto}html[data-economic-lang="mn-Mong"] .next-step p{height:110px;margin:0}html[data-economic-lang="mn-Mong"] .next-step{align-items:flex-start}
+html[data-economic-lang="mn-Mong"] .voice-toggle{gap:4px;padding:6px 8px}html[data-economic-lang="mn-Mong"] .voice-toggle b{max-height:36px}
+html[data-economic-lang="mn-Mong"] .town-complete{display:flex;align-items:center;gap:12px;width:auto;max-width:calc(100% - 30px)}html[data-economic-lang="mn-Mong"] .town-complete p{height:100px;margin:0;max-width:160px;overflow:auto}html[data-economic-lang="mn-Mong"] .town-complete .primary{writing-mode:vertical-lr;height:110px;max-width:85px}
+@media(max-width:1100px){html[data-economic-lang="mn-Mong"] .economy-game .conversation{max-height:calc(100% - var(--wish-bottom,255px) - var(--footer-height,170px) - 36px)}}
+@media(max-height:620px) and (min-width:651px){html[data-economic-lang="mn-Mong"] .economy-game .conversation{max-height:calc(100% - var(--header-height,75px) - var(--footer-height,120px) - 43px)}}
+@media(max-width:380px){html:not([data-economic-lang="mn-Mong"]) .economy-game .town-complete{display:grid;grid-template-columns:52px 1fr;align-items:center;gap:6px;padding:12px;max-height:calc(100% - var(--wish-bottom,250px) - var(--footer-height,125px) - 40px);overflow:auto}html:not([data-economic-lang="mn-Mong"]) .town-complete .completion-keepsake{width:52px;height:52px}html:not([data-economic-lang="mn-Mong"]) .town-complete p{margin:0}html:not([data-economic-lang="mn-Mong"]) .town-complete .primary{grid-column:1/-1}}
+@media(max-height:620px) and (min-width:651px){.economy-game .town-complete,html[data-economic-lang="mn-Mong"] .economy-game .town-complete{left:auto;right:16px;transform:none;width:calc(50% - 32px)}html[data-economic-lang="mn-Mong"] .wish-note{max-width:calc(50% - 32px);overflow:auto}}
+@media(prefers-reduced-motion:reduce){.action-moment{display:none}}

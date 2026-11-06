@@ -1,0 +1,2213 @@
+{
+  "version": 1,
+  "scripts": [
+    {
+      "id": "childhood.market.title",
+      "text": {
+        "zh": "周末集市小冒险",
+        "en": "Our weekend market",
+        "ja": "週末の市場",
+        "mn": "Амралтын зах"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠮᠠᠷᠠᠯᠲᠠ ᠶᠢᠨ ᠵᠠᠬ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.market.goal",
+      "text": {
+        "zh": "家长陪你逛摊位。先看价，再选水果、修理或二手玩具。",
+        "en": "With a parent, compare fruit, repairs and used toys.",
+        "ja": "保護者と果物、修理、中古おもちゃを比べよう。",
+        "mn": "Аав ээжтэйгээ жимс, засвар, хуучин тоглоом харьцуулъя."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠴᠢᠭᠡ ᠡᠬᠡ ᠲᠡᠢ ᠪᠡᠨ ᠵᠠᠬ᠎ᠠ ᠦᠵᠡᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.family.title",
+      "text": {
+        "zh": "袜子小队开工啦",
+        "en": "The sock team",
+        "ja": "くつ下チーム",
+        "mn": "Оймсны баг"
+      },
+      "writing": {
+        "mn-Mong": "ᠣᠶᠢᠮᠣᠰᠣ ᠨᠤ ᠪᠠᠭ"
+      }
+    },
+    {
+      "id": "childhood.family.goal",
+      "text": {
+        "zh": "先约定分工和报酬，再一起把家收拾好。",
+        "en": "Agree on jobs and rewards, then tidy together.",
+        "ja": "仕事と報酬を決めて、一緒に片づけよう。",
+        "mn": "Ажил, хөлсөө тохироод хамт цэгцэлье."
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠵᠢᠯ ᠬᠥᠯᠥᠰᠦ ᠪᠡᠨ ᠲᠣᠬᠢᠷᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.wishes.title",
+      "text": {
+        "zh": "压岁钱愿望墙",
+        "en": "Gift-money wishes",
+        "ja": "お年玉の願い",
+        "mn": "Бэлгийн мөнгөний хүсэл"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠡᠯᠡᠭ ᠦᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.wishes.goal",
+      "text": {
+        "zh": "玩具、应急钱、给爷爷的礼物、捐书，都是好愿望。",
+        "en": "Toys, emergency savings, Grandpa’s gift and book donations are all valid wishes.",
+        "ja": "おもちゃ、備え、祖父への贈り物、寄付はどれも大切。",
+        "mn": "Тоглоом, нөөц, өвөөд бэлэг, ном хандивлах бүгд сайн хүсэл."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠦᠰᠡᠯ ᠪᠦᠷᠢ ᠴᠢᠬᠤᠯᠠ"
+      }
+    },
+    {
+      "id": "childhood.money.title",
+      "text": {
+        "zh": "钱的旅行箱",
+        "en": "Money’s suitcase",
+        "ja": "お金の旅",
+        "mn": "Мөнгөний аялал"
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠥᠨ ᠦ ᠠᠶᠠᠯᠠᠯ"
+      }
+    },
+    {
+      "id": "childhood.money.goal",
+      "text": {
+        "zh": "从交换到数字钱包，看看大家怎样一起接受付款工具。",
+        "en": "Explore barter and accepted payment tools, ending with a funded digital wallet.",
+        "ja": "物々交換から、みんなが使える支払い道具を探そう。",
+        "mn": "Солилцооноос цахим хэтэвч хүртэл төлбөрийн хэрэгсэл туршъя."
+      },
+      "writing": {
+        "mn-Mong": "ᠰᠣᠯᠢᠯᠴᠠᠭ᠎ᠠ ᠪᠠ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.insurance.title",
+      "text": {
+        "zh": "雨天互助小盒子",
+        "en": "The rainy-day pool",
+        "ja": "雨の日の助け合い",
+        "mn": "Борооны өдрийн сан"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠣᠷᠣᠭᠠᠨ ᠤ ᠥᠳᠥᠷ ᠦᠨ ᠰᠠᠩ"
+      }
+    },
+    {
+      "id": "childhood.insurance.goal",
+      "text": {
+        "zh": "家长陪你看保障，再一起修好淋湿的东西。这是游戏规则。",
+        "en": "Read toy cover with a parent, then restore wet belongings. These are game rules.",
+        "ja": "保護者とゲームの保障を読み、ぬれた物を直そう。",
+        "mn": "Аав ээжтэйгээ тоглоомын хамгаалалт үзээд норсон эдээ сэргээе."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠳ᠋ ᠢᠶᠡᠨ ᠰᠡᠷᠭᠦᠭᠡᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.travel.title",
+      "text": {
+        "zh": "两座想象中的岛",
+        "en": "Two imaginary islands",
+        "ja": "二つの空想の島",
+        "mn": "Хоёр төсөөллийн арал"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠣᠶᠠᠷ ᠠᠷᠠᠯ"
+      }
+    },
+    {
+      "id": "childhood.travel.goal",
+      "text": {
+        "zh": "家长陪你比价、留备用金、查退款和结算。这里没有真实交易。",
+        "en": "Compare prices, reserve funds, refunds and settlement with a parent. No real transactions.",
+        "ja": "保護者と価格、予備費、返金、決済を確認。実際の取引ではないよ。",
+        "mn": "Аав ээжтэйгээ үнэ, нөөц, буцаалт, тооцоогоо шалгая. Бодит гүйлгээ биш."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠴᠢᠭᠡ ᠡᠬᠡ ᠲᠡᠢ ᠪᠡᠨ ᠠᠶᠠᠯᠠᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.speaker.boy",
+      "text": {
+        "zh": "男孩和家长",
+        "en": "Boy and parent",
+        "ja": "男の子と保護者",
+        "mn": "Хүү ба аав ээж"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠥᠪᠡᠭᠦᠨ ᠪᠠ ᠡᠴᠢᠭᠡ ᠡᠬᠡ"
+      }
+    },
+    {
+      "id": "childhood.speaker.girl",
+      "text": {
+        "zh": "女孩和家长",
+        "en": "Girl and parent",
+        "ja": "女の子と保護者",
+        "mn": "Охин ба аав ээж"
+      },
+      "writing": {
+        "mn-Mong": "ᠣᠬᠢᠨ ᠪᠠ ᠡᠴᠢᠭᠡ ᠡᠬᠡ"
+      }
+    },
+    {
+      "id": "childhood.market.line",
+      "text": {
+        "zh": "同一个小信封，可以逛不同的摊。看清品质、保修、路费和时间。",
+        "en": "One envelope, different stalls. Check quality, warranty, fares and time.",
+        "ja": "同じ予算でも行き先は自由。品質、保証、交通費、時間を見よう。",
+        "mn": "Нэг төсөвтэй ч өөр лангуу сонгож болно. Чанар, баталгаа, зам, хугацааг харъя."
+      },
+      "writing": {
+        "mn-Mong": "ᠦᠨ᠎ᠡ ᠪᠠ ᠴᠢᠨᠠᠷ ᠢ ᠬᠠᠷᠢᠴᠠᠭᠤᠯᠤᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.change.line",
+      "text": {
+        "zh": "摊主递来的找零少了一点。先和价签对一对吧。",
+        "en": "The offered change is a little short. Check it against the price.",
+        "ja": "おつりが少し足りない。値札と確認しよう。",
+        "mn": "Хариулт бага байна. Үнэтэй нь тулгая."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠷᠢᠭᠤᠯᠲᠠ ᠪᠠᠨ ᠰᠢᠯᠭᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.short.line",
+      "text": {
+        "zh": "发现少找钱也不晚。家长陪你拿着收据去问清楚。",
+        "en": "It is not too late. Take the receipt back with a parent.",
+        "ja": "今からでも大丈夫。保護者とレシートを持って聞こう。",
+        "mn": "Оройтоогүй. Аав ээжтэй баримтаа аваад асууя."
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠷᠢᠮᠲᠠ ᠪᠠᠨ ᠠᠪᠴᠤ ᠠᠰᠠᠭᠤᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.aftercare.line",
+      "text": {
+        "zh": "先检查再决定。东西的钱能退，已经花掉的路费不退。保修只管约定的问题。",
+        "en": "Inspect before deciding. Purchase prices are refundable, fares are not; warranty covers agreed defects.",
+        "ja": "確認してから決めよう。商品代は返金、交通費は返金なし。保証は約束した不具合だけ。",
+        "mn": "Шалгаад шийдье. Барааны үнэ буцна, замын зардал буцахгүй. Баталгаа тохирсон гэмтэлд үйлчилнэ."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠳ᠋ ᠢᠶᠡᠨ ᠰᠢᠯᠭᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.family.1",
+      "text": {
+        "zh": "你来整理袜子、洗水果。家长在旁边帮忙，不用一个人扛。",
+        "en": "Sort socks and wash fruit with a parent’s help.",
+        "ja": "くつ下と果物を担当。保護者が手伝うから一人で抱えなくていいよ。",
+        "mn": "Оймс цэгцэлж, жимс угаа. Аав ээж тусална."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠴᠢᠭᠡ ᠡᠬᠡ ᠲᠤᠰᠠᠯᠠᠨ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.family.2",
+      "text": {
+        "zh": "你整理袜子，另一个孩子洗水果。一起约定怎么分钱。",
+        "en": "You sort socks; your sibling washes fruit. Agree on sharing.",
+        "ja": "自分はくつ下、きょうだいは果物。分け方を決めよう。",
+        "mn": "Чи оймс цэгцэлж, нөгөө хүүхэд жимс угаана. Хөлсөө тохиръё."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠮᠲᠤ ᠠᠵᠢᠯᠯᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.family.3",
+      "text": {
+        "zh": "你整理袜子，一个孩子洗水果，另一个装野餐袋。家长帮忙，不抢活。",
+        "en": "You sort socks; siblings wash fruit and pack. A parent helps, without taking over.",
+        "ja": "自分はくつ下、きょうだいは果物と荷づめ。保護者も手伝うよ。",
+        "mn": "Чи оймс, бусад нь жимс, цүнх хариуцна. Аав ээж тусална."
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠵᠢᠯ ᠢᠶᠠᠨ ᠬᠤᠪᠢᠶᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.work.line",
+      "text": {
+        "zh": "每项工作都要做完，谁需要帮忙就说一声。",
+        "en": "Finish every agreed job; ask for help whenever needed.",
+        "ja": "約束した仕事を終えよう。助けが必要なら言ってね。",
+        "mn": "Тохирсон ажлаа дуусгая. Тусламж хэрэгтэй бол хэлээрэй."
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠤᠰᠠᠯᠠᠮᠵᠢ ᠬᠦᠰᠡᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.share.line",
+      "text": {
+        "zh": "报酬按刚才的约定分。兄弟姐妹的钱不是你的钱。",
+        "en": "Share the reward as agreed. Siblings’ money is not yours.",
+        "ja": "約束どおりに分けよう。きょうだいのお金は自分のお金ではないよ。",
+        "mn": "Хөлсөө тохирсноор хуваая. Бусдын мөнгө чинийх биш."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠥᠯᠥᠰᠦ ᠪᠡᠨ ᠬᠤᠪᠢᠶᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.wishes.line",
+      "text": {
+        "zh": "把喜欢的愿望贴上去。不必全选，也没有唯一的好答案。",
+        "en": "Choose wishes you care about. You need not choose everything; there is no single right answer.",
+        "ja": "好きな願いを選ぼう。全部選ばなくても、正解は一つじゃないよ。",
+        "mn": "Дуртай хүслээ сонго. Бүгдийг сонгох албагүй, ганц зөв хариу байхгүй."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠦᠰᠡᠯ ᠢᠶᠡᠨ ᠰᠣᠩᠭᠣᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.money.start",
+      "text": {
+        "zh": "重复贴纸换苹果，要两个人都点头。贝壳是下一站的练习道具，不是奖励钱。",
+        "en": "Both people must agree to swap a spare sticker for an apple. Shells are next-stop props, not reward money.",
+        "ja": "交換は二人の同意が必要。貝は次の練習道具で、ごほうびのお金ではないよ。",
+        "mn": "Наалтаа алимаар солиход хоёулаа зөвшөөрнө. Хясаа бол дараагийн дасгалын хэрэгсэл."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠣᠶᠠᠭᠤᠯᠠ ᠵᠥᠪᠰᠢᠶᠡᠷᠡᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.money.shells",
+      "text": {
+        "zh": "这几个摊主都愿意收贝壳。别的集市不一定收，也可以继续交换。",
+        "en": "These stalls accept shells. Other markets may not; barter is still possible.",
+        "ja": "この店では貝が使える。他では使えないかも。交換も続けられるよ。",
+        "mn": "Эдгээр лангуу хясаа авна. Өөр зах авахгүй байж болно. Солилцоо ч боломжтой."
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠠᠬ᠎ᠠ ᠪᠦᠷᠢ ᠠᠳᠠᠯᠢ ᠪᠢᠰᠢ"
+      }
+    },
+    {
+      "id": "childhood.money.metal",
+      "text": {
+        "zh": "这只篮子的铜、银、金报价只在今天这个摊有效。重量不同，不是永远固定兑换。",
+        "en": "Copper, silver and gold offers for this basket are local to this stall today. Weights differ; there is no universal fixed exchange.",
+        "ja": "銅、銀、金の見積りは今日この店だけ。重さも違い、固定の交換比率ではないよ。",
+        "mn": "Энэ сагсны зэс, мөнгө, алтны үнэ зөвхөн өнөөдрийн энэ лангууных. Жин өөр, тогтмол ханш биш."
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠢᠩ ᠪᠠ ᠦᠨ᠎ᠡ ᠠᠳᠠᠯᠢ ᠪᠢᠰᠢ"
+      }
+    },
+    {
+      "id": "childhood.money.check",
+      "text": {
+        "zh": "硬币可能磨损或是假道具。称一称、看标记，摊主免费换好，再交易。",
+        "en": "Coins may be worn or imitation props. Weigh and inspect; the stall replaces bad props before trading.",
+        "ja": "すり減りや偽物を確認。重さと印を調べて、店が無料交換してから払おう。",
+        "mn": "Зоос элэгдсэн эсвэл дуураймал байж болно. Жин, тэмдгийг шалгаж, үнэгүй солиулаад төлнө."
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠣᠭᠣᠰ ᠢᠶᠠᠨ ᠰᠢᠯᠭᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.money.paper",
+      "text": {
+        "zh": "纸币轻一点，也要辨认和找零。这是新的练习信封，不承诺换黄金。",
+        "en": "Paper is lighter, but needs checking and change. This is a new practice envelope, with no promise to redeem gold.",
+        "ja": "紙は軽いけど確認とおつりが必要。新しい練習用の予算で、金との交換約束はないよ。",
+        "mn": "Цаас хөнгөн ч шалгаж, хариулт авна. Шинэ дасгалын төсөв бөгөөд алтаар солих амлалтгүй."
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠠᠭᠠᠰᠤᠨ ᠮᠥᠩᠭᠥ ᠪᠡᠨ ᠰᠢᠯᠭᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.money.digital",
+      "text": {
+        "zh": "家长把剩下的纸币转进练习钱包。数字余额来自自己的钱，不会凭空变多。",
+        "en": "A parent loads the remaining paper into the practice wallet. Digital balances come from your money, not magic.",
+        "ja": "残りのお金を保護者と財布へ。数字の残高も自分のお金で、勝手に増えないよ。",
+        "mn": "Үлдсэн цаасан мөнгөө аав ээжтэй цахим хэтэвчид хийе. Мөнгө өөрөө нэмэгдэхгүй."
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠥ ᠥᠪᠡᠷ ᠢᠶᠡᠨ ᠨᠡᠮᠡᠭᠳᠡᠬᠦ ᠦᠭᠡᠢ"
+      }
+    },
+    {
+      "id": "childhood.insurance.line",
+      "text": {
+        "zh": "邻居的保费放在同一个盒子里。可以不买，也可以只保书，或保书和玩具。",
+        "en": "Neighbors share one pool. Choose no cover, books only, or books and toys.",
+        "ja": "みんなの保険料を同じ箱へ。なし、本だけ、本とおもちゃから選べるよ。",
+        "mn": "Хөршүүд нэг санд мөнгө хийнэ. Даатгахгүй, ном, эсвэл ном ба тоглоом сонгож болно."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠮᠲᠤ ᠶᠢᠨ ᠰᠠᠩ"
+      }
+    },
+    {
+      "id": "childhood.pack.line",
+      "text": {
+        "zh": "保护东西也重要。防水袋能减少损失，但不能让雨消失。",
+        "en": "Protection matters too. A dry bag reduces loss, not rain.",
+        "ja": "物を守るのも大事。防水袋は損を減らすけど雨は止めないよ。",
+        "mn": "Эдээ хамгаалах нь чухал. Усны хамгаалалт хохирлыг бууруулна, бороог зогсоохгүй."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠳ᠋ ᠢᠶᠡᠨ ᠬᠠᠮᠠᠭᠠᠯᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.rain.line",
+      "text": {
+        "zh": "哎呀，下雨了！书和玩具湿了。家长陪你查约定，都能修好。",
+        "en": "Rain! The book and toy are wet. Check the agreement with a parent; both are recoverable.",
+        "ja": "雨で本とおもちゃがぬれた。保護者と約束を確認。どちらも直せるよ。",
+        "mn": "Бороо орлоо! Ном, тоглоом норжээ. Аав ээжтэй нөхцөлөө үзье, хоёул сэргээнэ."
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠣᠷᠣᠭ᠎ᠠ ᠣᠷᠣᠯ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.sun.line",
+      "text": {
+        "zh": "今天没下雨。保费留在共同盒子里，帮大家分担别的雨天。",
+        "en": "No rain today. Premiums stay in the shared pool for other rainy days.",
+        "ja": "今日は晴れ。保険料は別の雨の日を支える箱に残るよ。",
+        "mn": "Өнөөдөр бороогүй. Хураамж бусдын бороотой өдөрт зориулан санд үлдэнэ."
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠨᠥᠳᠥᠷ ᠪᠣᠷᠣᠭ᠎ᠠ ᠦᠭᠡᠢ"
+      }
+    },
+    {
+      "id": "childhood.travel.line",
+      "text": {
+        "zh": "贝壳岛和灯笼岛都在故事里。只管这个旅行信封，大人的花费另算。",
+        "en": "Shell and Lantern Islands are fictional. This envelope is separate from adult expenses.",
+        "ja": "貝の島と灯籠の島は架空。大人の費用とは別の予算だよ。",
+        "mn": "Хясаа, Дэнлүүний арлууд зохиомол. Энэ төсөв томчуудын зардлаас тусдаа."
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠶᠠᠯᠠᠯ ᠤᠨ ᠲᠤᠰᠠᠭᠠᠷ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.travel.compare",
+      "text": {
+        "zh": "比的是同一本防水封面故事书，页数也相同。境外价还要加税、运费和换钱费用。",
+        "en": "Compare the identical waterproof-cover storybook, with the same pages. Add toy tax, shipping and exchange costs.",
+        "ja": "防水表紙もページ数も同じ本を比較。海外価格にゲームの税、送料、両替費を加えよう。",
+        "mn": "Ижил усны хамгаалалттай хавтас, хуудастай ном харьцуулна. Татвар, хүргэлт, солих зардлыг нэмнэ."
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠳᠠᠯᠢ ᠨᠣᠮ ᠤᠨ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.travel.funding",
+      "text": {
+        "zh": "先问钱从哪里来。现金、借记卡、预付钱包花自己的钱，家长模拟信用卡是借款。",
+        "en": "Ask where funds come from. Cash, debit and prepaid spend owned funds; a parent’s simulated credit card borrows.",
+        "ja": "資金の出所を確認。現金、デビット、前払いは自分のお金。保護者の模擬クレジットは借金。",
+        "mn": "Мөнгө хаанаас гарахыг асуу. Бэлэн, дебит, урьдчилсан нь өөрийн мөнгө; эцэг эхийн загвар кредит зээл."
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠥ ᠬᠠᠭᠠᠨ᠎ᠠ ᠠᠴᠠ ᠢᠷᠡᠬᠦ ᠪᠤᠢ"
+      }
+    },
+    {
+      "id": "childhood.travel.conversion",
+      "text": {
+        "zh": "商家可以报本币总价，也可以留外币让发卡方换算。信用卡到结算日才定账单，不只看今天汇率。",
+        "en": "The merchant can quote home currency, or the issuer can convert foreign currency. Credit posts at settlement, not just today’s rate.",
+        "ja": "店の自国通貨価格か発行側の換算かを選ぼう。クレジットの請求は決済日に決まるよ。",
+        "mn": "Худалдаачны дотоод мөнгөний үнэ эсвэл карт гаргагчийн хөрвүүлэлт сонгоно. Кредитийн дүн тооцооны өдөр тогтоно."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠨᠰᠢ ᠪᠠ ᠲᠣᠭᠠᠴᠠᠭ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.travel.receipt",
+      "text": {
+        "zh": "收据在这里。退书会退约定的钱，运费和汇兑费不退。账单和外币处理好再回家。",
+        "en": "Here is the receipt. Returns refund agreed amounts, not shipping or exchange fees. Clear bills and foreign cash before finishing.",
+        "ja": "レシートを確認。約束した額は返金、送料や両替費は戻らない。請求と外貨を整理して帰ろう。",
+        "mn": "Баримтаа харъя. Тохирсон мөнгө буцна, хүргэлт ба солих хураамж буцахгүй. Өр, гадаад мөнгөө цэгцэлнэ."
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠷᠢᠮᠲᠠ ᠪᠠ ᠥᠷᠢ"
+      }
+    },
+    {
+      "id": "childhood.done",
+      "text": {
+        "zh": "这一页完成啦！故事信封留在这里，不会变成主线的钱。",
+        "en": "This page is complete! Its envelope stays here, separate from campaign money.",
+        "ja": "このページは完了。予算はここに残り、本編のお金にはならないよ。",
+        "mn": "Энэ хуудас дууслаа! Төсөв энд үлдэж, гол түүхийн мөнгө болохгүй."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠨᠡ ᠬᠠᠭᠤᠳᠠᠰᠤ ᠳᠠᠭᠤᠰᠤᠯ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.next",
+      "text": {
+        "zh": "看好报价，和家长一起选下一步。",
+        "en": "Read the quotes and choose with a parent.",
+        "ja": "見積りを見て、保護者と次を選ぼう。",
+        "mn": "Үнээ хараад аав ээжтэй дараагийн алхмаа сонго."
+      },
+      "writing": {
+        "mn-Mong": "ᠳᠠᠷᠠᠭᠠᠬᠢ ᠠᠯᠬᠤᠮ ᠢᠶᠠᠨ ᠰᠣᠩᠭᠣ"
+      }
+    },
+    {
+      "id": "childhood.choice.detail",
+      "text": {
+        "zh": "按报价做这一步，变化会记在故事账本里。",
+        "en": "Follow the quote; changes enter the story ledger.",
+        "ja": "見積りに沿って進むと、変化が帳簿に残るよ。",
+        "mn": "Үнийн дагуу хийж, өөрчлөлтийг түүхийн дэвтэрт бичнэ."
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠣᠭᠠᠴᠠᠭᠠᠨ ᠳᠤ ᠪᠢᠴᠢᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.shortage",
+      "text": {
+        "zh": "暂时不能选。先保留这个愿望，或处理已有的账单。",
+        "en": "Not available yet. Keep the wish or handle existing bills first.",
+        "ja": "今は選べない。願いを残すか、今の請求を整理しよう。",
+        "mn": "Одоо боломжгүй. Хүслээ хадгалж эсвэл байгаа тооцоогоо дуусга."
+      },
+      "writing": {
+        "mn-Mong": "ᠣᠳᠣ ᠪᠣᠯᠣᠮᠵᠢ ᠦᠭᠡᠢ"
+      }
+    },
+    {
+      "id": "childhood.unavailable",
+      "text": {
+        "zh": "这一步已经做过，或现在还不能做。",
+        "en": "Already done, or not available at this step.",
+        "ja": "もう済んだか、今はできないよ。",
+        "mn": "Хийсэн эсвэл энэ алхамд боломжгүй."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠨᠡ ᠠᠯᠬᠤᠮ ᠪᠣᠯᠣᠮᠵᠢ ᠦᠭᠡᠢ"
+      }
+    },
+    {
+      "id": "childhood.envelope",
+      "text": {
+        "zh": "独立故事信封",
+        "en": "Separate story envelope",
+        "ja": "独立した物語の予算",
+        "mn": "Тусдаа түүхийн төсөв"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠤᠰᠠᠭᠠᠷ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.neighbors",
+      "text": {
+        "zh": "邻居们的共同保费",
+        "en": "Neighbors’ shared premiums",
+        "ja": "近所の共同保険料",
+        "mn": "Хөршүүдийн хамтын хураамж"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠮᠲᠤ ᠶᠢᠨ ᠬᠤᠷᠢᠶᠠᠮᠵᠢ"
+      }
+    },
+    {
+      "id": "childhood.fruit-fresh",
+      "text": {
+        "zh": "新鲜苹果篮",
+        "en": "Fresh apple basket",
+        "ja": "新鮮なりんごかご",
+        "mn": "Шинэ алимны сагс"
+      },
+      "writing": {
+        "mn-Mong": "ᠰᠢᠨ᠎ᠡ ᠠᠯᠢᠮ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.fruit-ripe",
+      "text": {
+        "zh": "今天吃的熟苹果篮",
+        "en": "Ripe apples for today",
+        "ja": "今日食べる熟したりんご",
+        "mn": "Өнөөдөр идэх болсон алим"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠣᠯᠣᠭᠰᠠᠨ ᠠᠯᠢᠮ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.repair-near",
+      "text": {
+        "zh": "近处修理，带保修",
+        "en": "Nearby repair with warranty",
+        "ja": "近くの保証つき修理",
+        "mn": "Ойрын баталгаатай засвар"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠲᠤᠯᠠᠭ᠎ᠠ ᠲᠠᠢ ᠵᠠᠰᠠᠪᠤᠷᠢ"
+      }
+    },
+    {
+      "id": "childhood.repair-far",
+      "text": {
+        "zh": "远处简易修理",
+        "en": "Distant basic repair",
+        "ja": "遠くの簡単な修理",
+        "mn": "Холын энгийн засвар"
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠩ ᠦᠨ ᠵᠠᠰᠠᠪᠤᠷᠢ"
+      }
+    },
+    {
+      "id": "childhood.toy-warranty",
+      "text": {
+        "zh": "检修好的二手玩具，带保修",
+        "en": "Serviced used toy with warranty",
+        "ja": "整備済み保証つき中古おもちゃ",
+        "mn": "Баталгаатай зассан хуучин тоглоом"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠲᠤᠯᠠᠭ᠎ᠠ ᠲᠠᠢ ᠲᠣᠭᠯᠠᠭᠤᠷ"
+      }
+    },
+    {
+      "id": "childhood.toy-inspected",
+      "text": {
+        "zh": "自己检查的旧玩具",
+        "en": "Inspect a basic used toy",
+        "ja": "自分で確認する中古おもちゃ",
+        "mn": "Өөрөө шалгах хуучин тоглоом"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠭᠤᠴᠢᠨ ᠲᠣᠭᠯᠠᠭᠤᠷ"
+      }
+    },
+    {
+      "id": "childhood.fare",
+      "text": {
+        "zh": "来回路费",
+        "en": "Return fare",
+        "ja": "往復交通費",
+        "mn": "Ирж очих зардал"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠠᠮ ᠤᠨ ᠵᠠᠷᠤᠳᠠᠯ"
+      }
+    },
+    {
+      "id": "childhood.time",
+      "text": {
+        "zh": "出门到拿到物品的时间",
+        "en": "Time until the item is ready",
+        "ja": "受け取るまでの日数",
+        "mn": "Бараа авах хүртэлх хугацаа"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠤᠭᠤᠴᠠᠭ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.quality",
+      "text": {
+        "zh": "品质档：普通或更好",
+        "en": "Quality tier: basic or better",
+        "ja": "品質：普通か良いもの",
+        "mn": "Чанар: энгийн эсвэл сайн"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠢᠨᠠᠷ"
+      }
+    },
+    {
+      "id": "childhood.warranty",
+      "text": {
+        "zh": "保修游戏日数",
+        "en": "Warranty game-days",
+        "ja": "保証のゲーム日数",
+        "mn": "Баталгааны тоглоомын өдөр"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠲᠤᠯᠠᠭᠠᠨ ᠤ ᠥᠳᠥᠷ"
+      }
+    },
+    {
+      "id": "childhood.eat.today",
+      "text": {
+        "zh": "熟苹果今天就和大家一起吃。",
+        "en": "Share ripe apples today.",
+        "ja": "熟したりんごは今日みんなで食べよう。",
+        "mn": "Болсон алимаа өнөөдөр хувааж ид."
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠨᠥᠳᠥᠷ ᠬᠤᠪᠢᠶᠠᠵᠤ ᠢᠳᠡᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.warranty.detail",
+      "text": {
+        "zh": "在保修期内，约定的故障免费修。退货要先凭收据检查。",
+        "en": "Agreed defects get free warranty repair; returns need receipt inspection.",
+        "ja": "保証内の不具合は無料修理。返品はレシートで確認。",
+        "mn": "Тохирсон гэмтлийг баталгаагаар үнэгүй засна. Буцаахад баримт шалгана."
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠷᠢᠮᠲᠠ ᠪᠠᠨ ᠬᠠᠳᠠᠭᠠᠯᠠ"
+      }
+    },
+    {
+      "id": "childhood.inspection.detail",
+      "text": {
+        "zh": "品质普通，没有保修。拿到就检查，不满意可凭收据退货。",
+        "en": "Basic quality, no warranty. Inspect on arrival; receipt returns are allowed.",
+        "ja": "普通の品質、保証なし。受け取り時に確認し、レシートで返品できる。",
+        "mn": "Энгийн чанартай, баталгаагүй. Авахдаа шалгаад баримтаар буцааж болно."
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠪᠬᠤ ᠳᠠᠭᠠᠨ ᠰᠢᠯᠭᠠ"
+      }
+    },
+    {
+      "id": "childhood.tender",
+      "text": {
+        "zh": "交给摊主的钱",
+        "en": "Cash tendered",
+        "ja": "渡す現金",
+        "mn": "Өгсөн мөнгө"
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠭᠭᠦᠭᠰᠡᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.leave",
+      "text": {
+        "zh": "今天只逛逛，保留预算",
+        "en": "Browse and keep the budget",
+        "ja": "今日は見て予算を残す",
+        "mn": "Өнөөдөр үзээд төсвөө хадгалъя"
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠥ ᠪᠡᠨ ᠬᠠᠳᠠᠭᠠᠯᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.change",
+      "text": {
+        "zh": "应找的钱",
+        "en": "Correct change",
+        "ja": "正しいおつり",
+        "mn": "Зөв хариулт"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠥᠪ ᠬᠠᠷᠢᠭᠤᠯᠲᠠ"
+      }
+    },
+    {
+      "id": "childhood.offered.change",
+      "text": {
+        "zh": "摊主递来的找零",
+        "en": "Offered change",
+        "ja": "渡されたおつり",
+        "mn": "Өгсөн хариулт"
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠭᠭᠦᠭᠰᠡᠨ ᠬᠠᠷᠢᠭᠤᠯᠲᠠ"
+      }
+    },
+    {
+      "id": "childhood.check-change",
+      "text": {
+        "zh": "对收据，拿齐找零",
+        "en": "Check and collect all change",
+        "ja": "確認して全部受け取る",
+        "mn": "Шалгаад хариултаа бүрэн авъя"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠷᠢᠭᠤᠯᠲᠠ ᠪᠠᠨ ᠠᠪᠤᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.accept-short",
+      "text": {
+        "zh": "先收下，再去核对",
+        "en": "Take it, then double-check",
+        "ja": "受け取ってから確認する",
+        "mn": "Аваад дараа шалгая"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠪᠤᠭᠠᠳ ᠰᠢᠯᠭᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.refund",
+      "text": {
+        "zh": "凭收据退货",
+        "en": "Return with the receipt",
+        "ja": "レシートで返品",
+        "mn": "Баримтаар буцаах"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠷᠢᠮᠲᠠ ᠪᠠᠷ ᠪᠤᠴᠠᠭᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.fare.nonrefund",
+      "text": {
+        "zh": "已花路费，不退",
+        "en": "Spent fares are not refunded",
+        "ja": "交通費は返金なし",
+        "mn": "Замын зардал буцахгүй"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠠᠮ ᠤᠨ ᠵᠠᠷᠤᠳᠠᠯ ᠪᠤᠴᠠᠬᠤ ᠦᠭᠡᠢ"
+      }
+    },
+    {
+      "id": "childhood.keep",
+      "text": {
+        "zh": "留下物品，分享或安排修理",
+        "en": "Keep, share or plan repair",
+        "ja": "残して分けるか修理を計画",
+        "mn": "Үлдээж хуваах эсвэл засах"
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠳ᠋ ᠢᠶᠡᠨ ᠦᠯᠡᠳᠡᠭᠡᠶ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.warranty-repair",
+      "text": {
+        "zh": "按保修免费修好",
+        "en": "Free warranty repair",
+        "ja": "保証で無料修理",
+        "mn": "Баталгаагаар үнэгүй засах"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠲᠤᠯᠠᠭ᠎ᠠ ᠪᠠᠷ ᠵᠠᠰᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.parent-repair",
+      "text": {
+        "zh": "和家长一起修好",
+        "en": "Repair together with a parent",
+        "ja": "保護者と一緒に直す",
+        "mn": "Аав ээжтэй хамт засах"
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠴᠢᠭᠡ ᠡᠬᠡ ᠲᠡᠢ ᠵᠠᠰᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.parent-repair.detail",
+      "text": {
+        "zh": "不用再付钱，花一个游戏日，家长帮你换小零件。",
+        "en": "Spend a game-day, not more money; a parent helps replace small parts.",
+        "ja": "追加費用なし。一日かけて保護者と部品を交換。",
+        "mn": "Нэмэлт мөнгөгүй, нэг тоглоомын өдөрт аав ээжтэй эд анги солино."
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠥ ᠨᠡᠮᠡᠬᠦ ᠦᠭᠡᠢ"
+      }
+    },
+    {
+      "id": "childhood.reward",
+      "text": {
+        "zh": "全家的约定报酬",
+        "en": "Agreed family reward",
+        "ja": "家族の約束した報酬",
+        "mn": "Гэр бүлийн тохирсон хөлс"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠣᠬᠢᠷᠠᠭᠰᠠᠨ ᠬᠥᠯᠥᠰᠦ"
+      }
+    },
+    {
+      "id": "childhood.equal",
+      "text": {
+        "zh": "大家平均分",
+        "en": "Share equally",
+        "ja": "均等に分ける",
+        "mn": "Тэнцүү хуваах"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠡᠩᠴᠡᠭᠦ ᠬᠤᠪᠢᠶᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.effort",
+      "text": {
+        "zh": "整理工作多一份权重",
+        "en": "Give sorting extra weight",
+        "ja": "片づけの重みを増やす",
+        "mn": "Цэгцлэх ажилд илүү жин өгөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠵᠢᠯ ᠢᠶᠠᠷ ᠬᠤᠪᠢᠶᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.sort",
+      "text": {
+        "zh": "整理袜子",
+        "en": "Sort socks",
+        "ja": "くつ下を整理",
+        "mn": "Оймс цэгцлэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠣᠶᠢᠮᠣᠰᠣ ᠴᠡᠭᠴᠡᠯᠡᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.wash",
+      "text": {
+        "zh": "洗好水果",
+        "en": "Wash fruit",
+        "ja": "果物を洗う",
+        "mn": "Жимс угаах"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠢᠮᠢᠰ ᠤᠭᠢᠶᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.pack",
+      "text": {
+        "zh": "装好野餐袋",
+        "en": "Pack the picnic bag",
+        "ja": "ピクニック袋に詰める",
+        "mn": "Зугаалгын цүнх бэлдэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠦᠩᠬᠡ ᠪᠡᠯᠡᠳᠬᠡᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.parent.help",
+      "text": {
+        "zh": "你动手，家长帮忙。",
+        "en": "You work; a parent helps.",
+        "ja": "自分がやり、保護者が手伝う。",
+        "mn": "Чи хийж, аав ээж тусална."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠴᠢᠭᠡ ᠡᠬᠡ ᠲᠤᠰᠠᠯᠠᠨ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.protagonist.job",
+      "text": {
+        "zh": "这是你约定的工作，也可以请人帮忙。",
+        "en": "Your agreed job; help is welcome.",
+        "ja": "自分の仕事。手伝いを頼んでいいよ。",
+        "mn": "Чиний тохирсон ажил, тусламж авч болно."
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠢᠨᠤ ᠠᠵᠢᠯ"
+      }
+    },
+    {
+      "id": "childhood.sibling.job",
+      "text": {
+        "zh": "另一个孩子来洗，你可以帮忙。",
+        "en": "Your sibling washes; you can help.",
+        "ja": "きょうだいが洗う。手伝ってもいいよ。",
+        "mn": "Нөгөө хүүхэд угаана, чи тусалж болно."
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠥᠭᠥᠭᠡ ᠬᠡᠦᠬᠡᠳ ᠦᠨ ᠠᠵᠢᠯ"
+      }
+    },
+    {
+      "id": "childhood.youngest.job",
+      "text": {
+        "zh": "第三个孩子装袋，家长帮着检查。",
+        "en": "The third child packs with a parent’s help.",
+        "ja": "三人目が荷づめし、保護者が確認。",
+        "mn": "Гурав дахь хүүхэд цүнх бэлдэж, аав ээж шалгана."
+      },
+      "writing": {
+        "mn-Mong": "ᠭᠤᠷᠪᠠᠳᠠᠬᠢ ᠬᠡᠦᠬᠡᠳ ᠦᠨ ᠠᠵᠢᠯ"
+      }
+    },
+    {
+      "id": "childhood.your.share",
+      "text": {
+        "zh": "你的那份",
+        "en": "Your share",
+        "ja": "自分の取り分",
+        "mn": "Чиний хувь"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠢᠨᠤ ᠬᠤᠪᠢ"
+      }
+    },
+    {
+      "id": "childhood.sibling.share",
+      "text": {
+        "zh": "兄弟姐妹的那份",
+        "en": "Sibling’s share",
+        "ja": "きょうだいの取り分",
+        "mn": "Нөгөө хүүхдийн хувь"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠥᠭᠥᠭᠡ ᠬᠡᠦᠬᠡᠳ ᠦᠨ ᠬᠤᠪᠢ"
+      }
+    },
+    {
+      "id": "childhood.collect",
+      "text": {
+        "zh": "按约定领一次报酬",
+        "en": "Collect the agreed reward once",
+        "ja": "約束の報酬を一度受け取る",
+        "mn": "Тохирсон хөлсөө нэг удаа авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠥᠯᠥᠰᠦ ᠪᠡᠨ ᠠᠪᠤᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.wish-toy",
+      "text": {
+        "zh": "买心爱的玩具",
+        "en": "Buy a favorite toy",
+        "ja": "好きなおもちゃを買う",
+        "mn": "Дуртай тоглоом авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠣᠭᠯᠠᠭᠤᠷ ᠠᠪᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.wish-reserve",
+      "text": {
+        "zh": "留一份应急钱",
+        "en": "Keep an emergency reserve",
+        "ja": "緊急用に残す",
+        "mn": "Яаралтай хэрэгцээний нөөц"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠥᠭᠡᠴᠡ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.wish-gift",
+      "text": {
+        "zh": "给爷爷买小礼物",
+        "en": "Buy Grandpa a little gift",
+        "ja": "祖父に小さな贈り物",
+        "mn": "Өвөөд жижиг бэлэг авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠪᠦᠭᠡ ᠳᠦ ᠪᠡᠯᠡᠭ"
+      }
+    },
+    {
+      "id": "childhood.wish-book",
+      "text": {
+        "zh": "捐一本书给阅读角",
+        "en": "Donate a book to the reading corner",
+        "ja": "読書コーナーに本を寄付",
+        "mn": "Уншлагын буланд ном хандивлах"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠣᠮ ᠬᠠᠨᠳᠢᠪᠯᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.finish",
+      "text": {
+        "zh": "把这一页收进故事书",
+        "en": "Finish this storybook page",
+        "ja": "このページをしまう",
+        "mn": "Энэ хуудсыг дуусгах"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠭᠤᠳᠠᠰᠤ ᠪᠠᠨ ᠳᠠᠭᠤᠰᠬᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.swap",
+      "text": {
+        "zh": "同意贴纸换苹果",
+        "en": "Agree to swap for an apple",
+        "ja": "りんごとの交換に同意",
+        "mn": "Алимаар солихыг зөвшөөрөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠯᠢᠮ᠎ᠠ ᠪᠠᠷ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.counteroffer",
+      "text": {
+        "zh": "先商量，再同意交换",
+        "en": "Negotiate, then agree",
+        "ja": "相談してから交換",
+        "mn": "Ярилцаад солих"
+      },
+      "writing": {
+        "mn-Mong": "ᠶᠠᠷᠢᠯᠴᠠᠭᠠᠳ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.shell.price",
+      "text": {
+        "zh": "苹果的贝壳价",
+        "en": "Apple price in shells",
+        "ja": "貝でのりんごの値段",
+        "mn": "Алимны хясаан үнэ"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠯᠢᠮᠠᠨ ᠤ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.shell-buy",
+      "text": {
+        "zh": "在收贝壳的摊买苹果",
+        "en": "Buy at a shell-accepting stall",
+        "ja": "貝の使える店で買う",
+        "mn": "Хясаа авдаг лангуунаас авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠰᠢᠶ᠎ᠠ ᠪᠠᠷ ᠠᠪᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.shell-barter",
+      "text": {
+        "zh": "用剩下的贴纸再换苹果",
+        "en": "Barter the spare sticker",
+        "ja": "残りのシールで交換",
+        "mn": "Үлдсэн наалтаар солих"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠠᠭᠠᠯᠲᠠ ᠪᠠᠷ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.copper",
+      "text": {
+        "zh": "铜币方案",
+        "en": "Copper offer",
+        "ja": "銅貨の案",
+        "mn": "Зэс зоосны санал"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠡᠰ ᠵᠣᠭᠣᠰ"
+      }
+    },
+    {
+      "id": "childhood.silver",
+      "text": {
+        "zh": "银币方案",
+        "en": "Silver offer",
+        "ja": "銀貨の案",
+        "mn": "Мөнгөн зоосны санал"
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠦᠨ ᠵᠣᠭᠣᠰ"
+      }
+    },
+    {
+      "id": "childhood.gold",
+      "text": {
+        "zh": "金币方案",
+        "en": "Gold offer",
+        "ja": "金貨の案",
+        "mn": "Алтан зоосны санал"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠯᠲᠠᠨ ᠵᠣᠭᠣᠰ"
+      }
+    },
+    {
+      "id": "childhood.weight",
+      "text": {
+        "zh": "这袋钱的重量",
+        "en": "Bag weight",
+        "ja": "袋の重さ",
+        "mn": "Уутны жин"
+      },
+      "writing": {
+        "mn-Mong": "ᠤᠭᠤᠲᠠᠨ ᠤ ᠵᠢᠩ"
+      }
+    },
+    {
+      "id": "childhood.inspect",
+      "text": {
+        "zh": "称重、辨认，再付钱",
+        "en": "Weigh, verify and pay",
+        "ja": "重さと本物か確認して払う",
+        "mn": "Жин, жинхэнэ эсэхийг шалгаад төлөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠢᠩᠯᠡᠵᠦ ᠰᠢᠯᠭᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.replace-worn",
+      "text": {
+        "zh": "换好磨损的道具，再付款",
+        "en": "Replace worn props, then pay",
+        "ja": "すり減った道具を交換して払う",
+        "mn": "Элэгдсэн хэрэгслийг солиод төлөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠯᠡᠭᠳᠡᠭᠰᠡᠨ ᠢ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.metal.props",
+      "text": {
+        "zh": "本地商定的金属练习道具",
+        "en": "Locally agreed metal props",
+        "ja": "この店の金属練習道具",
+        "mn": "Орон нутагт тохирсон металл хэрэгсэл"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠣᠬᠢᠷᠠᠭᠰᠠᠨ ᠵᠣᠭᠣᠰ"
+      }
+    },
+    {
+      "id": "childhood.paper.props",
+      "text": {
+        "zh": "另一个纸币练习信封",
+        "en": "A separate paper practice envelope",
+        "ja": "別の紙幣練習用予算",
+        "mn": "Тусдаа цаасан дасгалын төсөв"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠠᠭᠠᠰᠤᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.paper.price",
+      "text": {
+        "zh": "纸币车票价",
+        "en": "Paper ticket price",
+        "ja": "紙幣での切符代",
+        "mn": "Цаасан мөнгөний тасалбарын үнэ"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠠᠰᠠᠯᠪᠤᠷᠢ ᠶᠢᠨ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.paper.tender",
+      "text": {
+        "zh": "拿出的纸币",
+        "en": "Paper tendered",
+        "ja": "渡す紙幣",
+        "mn": "Өгөх цаасан мөнгө"
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠭᠬᠦ ᠴᠠᠭᠠᠰᠤᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.paper-buy",
+      "text": {
+        "zh": "辨认纸币，买票并找零",
+        "en": "Verify, buy and collect change",
+        "ja": "紙幣を確認し買っておつりを受け取る",
+        "mn": "Шалгаад тасалбар авч хариулт авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠰᠢᠯᠭᠠᠭᠠᠳ ᠠᠪᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.paper-replace",
+      "text": {
+        "zh": "换好破损纸币，再买票",
+        "en": "Replace damaged paper before buying",
+        "ja": "破れた紙幣を交換して買う",
+        "mn": "Гэмтсэн цаасыг солиод авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠭᠡᠮᠲᠦᠭᠰᠡᠨ ᠢ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.digital.price",
+      "text": {
+        "zh": "数字钱包车票价",
+        "en": "Digital ticket price",
+        "ja": "電子財布の切符代",
+        "mn": "Цахим тасалбарын үнэ"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠠᠬᠢᠮ ᠲᠠᠰᠠᠯᠪᠤᠷᠢ"
+      }
+    },
+    {
+      "id": "childhood.digital-buy",
+      "text": {
+        "zh": "用已充值的钱包买票",
+        "en": "Pay from the funded wallet",
+        "ja": "入金済みの財布で買う",
+        "mn": "Цэнэглэсэн хэтэвчээр авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠦᠨᠭᠬᠡ ᠪᠡᠷ ᠲᠥᠯᠥᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.prepaid.balance",
+      "text": {
+        "zh": "预付钱包自己的余额",
+        "en": "Owned prepaid balance",
+        "ja": "前払いの自分の残高",
+        "mn": "Урьдчилсан хэтэвчийн үлдэгдэл"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠦᠨᠭᠬᠡᠨ ᠦ ᠦᠯᠡᠳᠡᠭᠳᠡᠯ"
+      }
+    },
+    {
+      "id": "childhood.none",
+      "text": {
+        "zh": "不买保障，自己留钱修",
+        "en": "No cover; keep repair funds",
+        "ja": "保障なし、修理費を残す",
+        "mn": "Даатгалгүй, засварын мөнгө үлдээх"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠠᠰᠠᠪᠤᠷᠢ ᠶᠢᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.book",
+      "text": {
+        "zh": "只保书",
+        "en": "Cover the book only",
+        "ja": "本だけ保障",
+        "mn": "Зөвхөн ном хамгаалах"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠣᠮ ᠬᠠᠮᠠᠭᠠᠯᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.all",
+      "text": {
+        "zh": "保障书和玩具",
+        "en": "Cover book and toy",
+        "ja": "本とおもちゃを保障",
+        "mn": "Ном, тоглоом хамгаалах"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠣᠮ ᠪᠠ ᠲᠣᠭᠯᠠᠭᠤᠷ"
+      }
+    },
+    {
+      "id": "childhood.policy.detail",
+      "text": {
+        "zh": "先自己承担免赔额。盒子只在保障和限额内赔，不会保证全部损失。",
+        "en": "You bear the deductible. Pool payouts stay within cover and limit, not all loss.",
+        "ja": "免責分は自分が負担。保障と上限内だけ払い、損全部を保証しない。",
+        "mn": "Суутгалыг өөрөө төлнө. Сан зөвхөн хамгаалалт, хязгаарын дотор төлнө."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠢᠵᠠᠭᠠᠷ ᠲᠠᠢ ᠬᠠᠮᠠᠭᠠᠯᠠᠯᠲᠠ"
+      }
+    },
+    {
+      "id": "childhood.deductible",
+      "text": {
+        "zh": "自己先承担的免赔额",
+        "en": "Deductible you bear",
+        "ja": "自分が負担する免責額",
+        "mn": "Өөрөө даах суутгал"
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠪᠡᠷ ᠦᠨ ᠬᠠᠷᠢᠭᠤᠴᠠᠬᠤ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.limit",
+      "text": {
+        "zh": "最高赔付",
+        "en": "Payout limit",
+        "ja": "支払い上限",
+        "mn": "Төлөх дээд хэмжээ"
+      },
+      "writing": {
+        "mn-Mong": "ᠳᠡᠭᠡᠳᠦ ᠬᠢᠵᠠᠭᠠᠷ"
+      }
+    },
+    {
+      "id": "childhood.pool",
+      "text": {
+        "zh": "大家的共同盒子余额",
+        "en": "Shared pool balance",
+        "ja": "共同の箱の残高",
+        "mn": "Хамтын сангийн үлдэгдэл"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠮᠲᠤ ᠶᠢᠨ ᠰᠠᠩ ᠤᠨ ᠦᠯᠡᠳᠡᠭᠳᠡᠯ"
+      }
+    },
+    {
+      "id": "childhood.dry-bag",
+      "text": {
+        "zh": "买防水袋，减少损失",
+        "en": "Buy a dry bag to reduce loss",
+        "ja": "防水袋で損を減らす",
+        "mn": "Хамгаалах уут авч хохирол бууруулах"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠮᠠᠭᠠᠯᠠᠬᠤ ᠤᠭᠤᠲᠠ"
+      }
+    },
+    {
+      "id": "childhood.ordinary-bag",
+      "text": {
+        "zh": "用现有袋子",
+        "en": "Use the existing bag",
+        "ja": "今の袋を使う",
+        "mn": "Байгаа уутаа хэрэглэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠠᠶᠢᠭ᠎ᠠ ᠤᠭᠤᠲᠠ"
+      }
+    },
+    {
+      "id": "childhood.loss",
+      "text": {
+        "zh": "可修复的损失总额",
+        "en": "Recoverable loss total",
+        "ja": "直せる損の合計",
+        "mn": "Сэргээх хохирлын нийт дүн"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠣᠬᠢᠷᠠᠯ ᠤᠨ ᠲᠣᠭ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.claim",
+      "text": {
+        "zh": "按约定申请赔付",
+        "en": "Claim under the agreement",
+        "ja": "約束に沿って請求",
+        "mn": "Тохиролцоогоор нөхөн төлбөр хүсэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠥᠬᠥᠨ ᠲᠥᠯᠪᠦᠷᠢ ᠬᠦᠰᠡᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.repair.cost",
+      "text": {
+        "zh": "修复需要的钱",
+        "en": "Restoration cost",
+        "ja": "直す費用",
+        "mn": "Сэргээх зардал"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠠᠰᠠᠪᠤᠷᠢ ᠶᠢᠨ ᠵᠠᠷᠤᠳᠠᠯ"
+      }
+    },
+    {
+      "id": "childhood.claim.paid",
+      "text": {
+        "zh": "共同盒子已赔付",
+        "en": "Pool payout received",
+        "ja": "箱から受け取った額",
+        "mn": "Сангаас авсан төлбөр"
+      },
+      "writing": {
+        "mn-Mong": "ᠰᠠᠩ ᠠᠴᠠ ᠠᠪᠤᠭᠰᠠᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.restore",
+      "text": {
+        "zh": "和家长一起修好书和玩具",
+        "en": "Restore book and toy with a parent",
+        "ja": "保護者と本とおもちゃを直す",
+        "mn": "Аав ээжтэй ном, тоглоомоо сэргээх"
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠳ᠋ ᠢᠶᠡᠨ ᠰᠡᠷᠭᠦᠭᠡᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.shell",
+      "text": {
+        "zh": "去想象中的贝壳岛",
+        "en": "Visit fictional Shell Island",
+        "ja": "架空の貝の島へ",
+        "mn": "Зохиомол Хясаа аралд очих"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠰᠢᠶᠠᠨ ᠤ ᠠᠷᠠᠯ"
+      }
+    },
+    {
+      "id": "childhood.lantern",
+      "text": {
+        "zh": "去想象中的灯笼岛",
+        "en": "Visit fictional Lantern Island",
+        "ja": "架空の灯籠の島へ",
+        "mn": "Зохиомол Дэнлүүний аралд очих"
+      },
+      "writing": {
+        "mn-Mong": "ᠳᠡᠩᠯᠦᠦ ᠶᠢᠨ ᠠᠷᠠᠯ"
+      }
+    },
+    {
+      "id": "childhood.shell.rate",
+      "text": {
+        "zh": "贝壳岛本币分与外币分的比率",
+        "en": "Shell Island home-to-foreign cent ratio",
+        "ja": "貝の島の通貨比率",
+        "mn": "Хясаа арлын дотоод ба гадаад мөнгөний харьцаа"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠰᠢᠶᠠᠨ ᠤ ᠠᠷᠠᠯ ᠤᠨ ᠬᠠᠨᠰᠢ"
+      }
+    },
+    {
+      "id": "childhood.lantern.rate",
+      "text": {
+        "zh": "灯笼岛本币分与外币分的比率",
+        "en": "Lantern Island home-to-foreign cent ratio",
+        "ja": "灯籠の島の通貨比率",
+        "mn": "Дэнлүүний арлын мөнгөний харьцаа"
+      },
+      "writing": {
+        "mn-Mong": "ᠳᠡᠩᠯᠦᠦ ᠶᠢᠨ ᠠᠷᠠᠯ ᠤᠨ ᠬᠠᠨᠰᠢ"
+      }
+    },
+    {
+      "id": "childhood.fx.fee",
+      "text": {
+        "zh": "这笔汇兑费用",
+        "en": "Exchange fee for this transaction",
+        "ja": "今回の両替費",
+        "mn": "Энэ солилцооны хураамж"
+      },
+      "writing": {
+        "mn-Mong": "ᠰᠣᠯᠢᠯᠴᠠᠭᠠᠨ ᠤ ᠬᠤᠷᠢᠶᠠᠮᠵᠢ"
+      }
+    },
+    {
+      "id": "childhood.reserve",
+      "text": {
+        "zh": "旅行备用金",
+        "en": "Travel reserve",
+        "ja": "旅行の予備費",
+        "mn": "Аяллын нөөц"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠶᠠᠯᠠᠯ ᠤᠨ ᠨᠥᠭᠡᠴᠡ"
+      }
+    },
+    {
+      "id": "childhood.local.price",
+      "text": {
+        "zh": "同款书本地总价",
+        "en": "Identical book, home total",
+        "ja": "同じ本の国内総額",
+        "mn": "Ижил номын дотоод нийт үнэ"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠳᠠᠯᠢ ᠨᠣᠮ ᠤᠨ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.foreign.price",
+      "text": {
+        "zh": "同款书外币标价",
+        "en": "Identical book, foreign sticker price",
+        "ja": "同じ本の外貨価格",
+        "mn": "Ижил номын гадаад үнэ"
+      },
+      "writing": {
+        "mn-Mong": "ᠭᠠᠳᠠᠭᠠᠳᠤ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.rate",
+      "text": {
+        "zh": "今日换算比率，按百分单位",
+        "en": "Today’s conversion ratio, per hundred",
+        "ja": "今日の換算比率、百単位",
+        "mn": "Өнөөдрийн хөрвүүлэлт, зуугаар"
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠨᠥᠳᠥᠷ ᠦᠨ ᠬᠠᠨᠰᠢ"
+      }
+    },
+    {
+      "id": "childhood.tax",
+      "text": {
+        "zh": "虚构申报税费",
+        "en": "Fictional declaration tax",
+        "ja": "架空の申告税",
+        "mn": "Зохиомол мэдүүлгийн татвар"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠠᠲᠠᠪᠤᠷᠢ"
+      }
+    },
+    {
+      "id": "childhood.shipping",
+      "text": {
+        "zh": "运费",
+        "en": "Shipping",
+        "ja": "送料",
+        "mn": "Хүргэлт"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠦᠷᠭᠡᠯᠲᠡ"
+      }
+    },
+    {
+      "id": "childhood.landed",
+      "text": {
+        "zh": "换算后加齐费用的到手价",
+        "en": "Converted landed total",
+        "ja": "換算後の費用込み総額",
+        "mn": "Хөрвүүлсэн бүх зардалтай нийт үнэ"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠡᠶᠢᠲᠡ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.local",
+      "text": {
+        "zh": "选本地同款书",
+        "en": "Choose the identical home book",
+        "ja": "国内の同じ本を選ぶ",
+        "mn": "Дотоод ижил ном сонгох"
+      },
+      "writing": {
+        "mn-Mong": "ᠳᠣᠲᠣᠭᠠᠳᠤ ᠨᠣᠮ"
+      }
+    },
+    {
+      "id": "childhood.foreign",
+      "text": {
+        "zh": "选境外同款书并申报",
+        "en": "Choose and declare the identical foreign book",
+        "ja": "海外の同じ本を選び申告",
+        "mn": "Гадаад ижил ном авч мэдүүлэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠭᠠᠳᠠᠭᠠᠳᠤ ᠨᠣᠮ"
+      }
+    },
+    {
+      "id": "childhood.same.spec",
+      "text": {
+        "zh": "同样的防水封面和页数，不拿不同商品比价。",
+        "en": "Same waterproof cover and page count, not different products.",
+        "ja": "防水表紙とページ数が同じ。違う品とは比べない。",
+        "mn": "Ижил хамгаалалттай хавтас, хуудас; өөр бараа биш."
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠳᠠᠯᠢ ᠨᠣᠮ"
+      }
+    },
+    {
+      "id": "childhood.declare.detail",
+      "text": {
+        "zh": "家长陪同申报，报价中的税和通行章只是假想规则。",
+        "en": "Declare with a parent; quoted tax and the travel stamp are fictional rules.",
+        "ja": "保護者と申告。税と通行印は架空のルール。",
+        "mn": "Аав ээжтэй мэдүүлнэ. Татвар, нэвтрэх тэмдэг зохиомол."
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠴᠢᠭᠡ ᠡᠬᠡ ᠲᠡᠢ ᠮᠡᠳᠡᠭᠦᠯᠡᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.cash",
+      "text": {
+        "zh": "用现金",
+        "en": "Pay cash",
+        "ja": "現金で払う",
+        "mn": "Бэлнээр төлөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠡᠯᠡᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.cash.detail",
+      "text": {
+        "zh": "先用自己的钱兑换，外币现金花掉就少了。",
+        "en": "Exchange owned funds first; foreign cash falls when spent.",
+        "ja": "自分のお金を両替。使うと外貨現金は減る。",
+        "mn": "Өөрийн мөнгөө солино. Гадаад бэлэн мөнгө зарцуулахад буурна."
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠪᠡᠷ ᠦᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.debit",
+      "text": {
+        "zh": "用模拟借记卡",
+        "en": "Use simulated debit",
+        "ja": "模擬デビット",
+        "mn": "Загвар дебит хэрэглэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠳ᠋ᠡᠪᠢᠲ ᠺᠠᠷᠲ"
+      }
+    },
+    {
+      "id": "childhood.debit.detail",
+      "text": {
+        "zh": "把自己的钱放进模拟账户，再从余额付款，不是借钱。",
+        "en": "Load owned funds into the toy account, then pay its balance; no borrowing.",
+        "ja": "模擬口座に自分のお金を入れて払う。借金ではない。",
+        "mn": "Өөрийн мөнгийг загвар дансанд хийгээд төлнө. Зээл биш."
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠪᠡᠷ ᠦᠨ ᠳᠠᠩᠰᠠ"
+      }
+    },
+    {
+      "id": "childhood.prepaid",
+      "text": {
+        "zh": "用已充值的模拟钱包",
+        "en": "Use a funded toy wallet",
+        "ja": "入金済み模擬財布",
+        "mn": "Цэнэглэсэн загвар хэтэвч"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠠᠬᠢᠮ ᠴᠦᠨᠭᠬᠡ"
+      }
+    },
+    {
+      "id": "childhood.prepaid.detail",
+      "text": {
+        "zh": "移动钱包先充值自己的钱，只能花已有余额。",
+        "en": "A mobile wallet is loaded with your own funds and spends its balance.",
+        "ja": "自分のお金で入金し、残高だけ使う。",
+        "mn": "Гар утасны хэтэвчид өөрийн мөнгөө хийж үлдэгдлээ зарцуулна."
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠪᠡᠷ ᠦᠨ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.credit",
+      "text": {
+        "zh": "用家长模拟信用卡",
+        "en": "Use a parent’s simulated credit",
+        "ja": "保護者の模擬クレジット",
+        "mn": "Эцэг эхийн загвар кредит"
+      },
+      "writing": {
+        "mn-Mong": "ᠡᠴᠢᠭᠡ ᠡᠬᠡ ᠶᠢᠨ ᠵᠡᠭᠡᠯ"
+      }
+    },
+    {
+      "id": "childhood.credit.detail",
+      "text": {
+        "zh": "这是家长的模拟卡。先记待结算借款，到期用本币还。",
+        "en": "A parent’s toy card records a pending loan; repay in home currency by the due day.",
+        "ja": "保護者の模擬カード。借入予定を記録し、期日に自国通貨で返す。",
+        "mn": "Эцэг эхийн загвар карт. Хүлээгдэж буй зээлээ бүртгэж, хугацаанд дотоод мөнгөөр төлнө."
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠡᠭᠡᠯ ᠢᠶᠡᠨ ᠪᠤᠴᠠᠭᠠᠨ ᠲᠥᠯᠥᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.settlement.day",
+      "text": {
+        "zh": "模拟卡组织结算游戏日",
+        "en": "Toy card-network settlement game-day",
+        "ja": "模擬カード網の決済日",
+        "mn": "Загвар картын сүлжээний тооцооны өдөр"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠣᠭᠠᠴᠠᠭᠠᠨ ᠤ ᠥᠳᠥᠷ"
+      }
+    },
+    {
+      "id": "childhood.due.day",
+      "text": {
+        "zh": "本币还款游戏日",
+        "en": "Home-currency repayment day",
+        "ja": "自国通貨で返す日",
+        "mn": "Дотоод мөнгөөр төлөх өдөр"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠥᠯᠪᠦᠷᠢ ᠶᠢᠨ ᠥᠳᠥᠷ"
+      }
+    },
+    {
+      "id": "childhood.issuer.price",
+      "text": {
+        "zh": "发卡方今日估价总额",
+        "en": "Issuer’s estimated total today",
+        "ja": "発行側の今日の見積り",
+        "mn": "Карт гаргагчийн өнөөдрийн тооцоолсон нийт дүн"
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠨᠥᠳᠥᠷ ᠦᠨ ᠲᠣᠭᠠᠴᠠᠭ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.merchant.price",
+      "text": {
+        "zh": "商家本币转换总价",
+        "en": "Merchant home-conversion total",
+        "ja": "店の自国通貨換算総額",
+        "mn": "Худалдаачны дотоод мөнгөнд хөрвүүлсэн нийт үнэ"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠤᠳᠠᠯᠳᠤᠭᠠᠴᠢᠨ ᠤ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.settlement.rate",
+      "text": {
+        "zh": "结算日的虚构换算比率",
+        "en": "Fictional settlement-day ratio",
+        "ja": "架空の決済日の比率",
+        "mn": "Зохиомол тооцооны өдрийн ханш"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠣᠭᠠᠴᠠᠭᠠᠨ ᠤ ᠬᠠᠨᠰᠢ"
+      }
+    },
+    {
+      "id": "childhood.issuer",
+      "text": {
+        "zh": "保留外币，按资金来源换算",
+        "en": "Keep foreign currency for issuer conversion",
+        "ja": "外貨のまま発行側が換算",
+        "mn": "Гадаад мөнгөөр үлдээж гаргагч хөрвүүлэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠭᠠᠳᠠᠭᠠᠳᠤ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.issuer.detail",
+      "text": {
+        "zh": "现金和自己的余额今天换算；信用卡在显示的结算日换算。",
+        "en": "Cash and owned balances convert today; credit converts on the displayed settlement day.",
+        "ja": "現金と残高は今日、クレジットは表示の決済日に換算。",
+        "mn": "Бэлэн ба өөрийн үлдэгдэл өнөөдөр, кредит заасан тооцооны өдөр хөрвөнө."
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠤᠭᠤᠴᠠᠭ᠎ᠠ ᠶᠢ ᠬᠠᠷᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.merchant",
+      "text": {
+        "zh": "接受商家本币总价",
+        "en": "Accept merchant’s home total",
+        "ja": "店の自国通貨総額を受け入れる",
+        "mn": "Худалдаачны дотоод нийт үнийг зөвшөөрөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠤᠳᠠᠯᠳᠤᠭᠠᠴᠢᠨ ᠤ ᠦᠨ᠎ᠡ"
+      }
+    },
+    {
+      "id": "childhood.merchant.detail",
+      "text": {
+        "zh": "本币金额现在确定，转换成本含在报价里，不保证更便宜。",
+        "en": "Home amount is fixed now, conversion costs included; not guaranteed cheaper.",
+        "ja": "自国通貨額は今確定。換算費込みで、安いとは限らない。",
+        "mn": "Дотоод дүн одоо тогтоно, хөрвүүлэх зардал багтсан. Хямд гэсэн баталгаа байхгүй."
+      },
+      "writing": {
+        "mn-Mong": "ᠦᠨ᠎ᠡ ᠲᠣᠭᠲᠠᠭᠰᠠᠨ"
+      }
+    },
+    {
+      "id": "childhood.paid.price",
+      "text": {
+        "zh": "已付或待结算的金额",
+        "en": "Paid or pending amount",
+        "ja": "支払済みか決済予定の額",
+        "mn": "Төлсөн эсвэл хүлээгдэж буй дүн"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠥᠯᠪᠦᠷᠢ ᠶᠢᠨ ᠲᠣᠭ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.nonrefund",
+      "text": {
+        "zh": "不退的运费和汇兑费",
+        "en": "Nonrefundable shipping and exchange fees",
+        "ja": "返金されない送料と両替費",
+        "mn": "Буцахгүй хүргэлт, солих хураамж"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠤᠴᠠᠬᠤ ᠦᠭᠡᠢ ᠵᠠᠷᠤᠳᠠᠯ"
+      }
+    },
+    {
+      "id": "childhood.return.rate",
+      "text": {
+        "zh": "剩余外币换回比率",
+        "en": "Leftover foreign return ratio",
+        "ja": "残り外貨を戻す比率",
+        "mn": "Үлдсэн гадаад мөнгө буцаах ханш"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠤᠴᠠᠭᠠᠬᠤ ᠬᠠᠨᠰᠢ"
+      }
+    },
+    {
+      "id": "childhood.settle",
+      "text": {
+        "zh": "到结算日，核对实际账单",
+        "en": "Reach settlement and inspect the bill",
+        "ja": "決済日に請求を確認",
+        "mn": "Тооцооны өдөр бодит дүн шалгах"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠣᠭᠠᠴᠠᠭ᠎ᠠ ᠰᠢᠯᠭᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.bill",
+      "text": {
+        "zh": "当前本币账单",
+        "en": "Current home-currency bill",
+        "ja": "今の自国通貨請求額",
+        "mn": "Одоогийн дотоод мөнгөний өр"
+      },
+      "writing": {
+        "mn-Mong": "ᠣᠳᠣᠭᠠᠨ ᠤ ᠥᠷᠢ"
+      }
+    },
+    {
+      "id": "childhood.repay",
+      "text": {
+        "zh": "按日期用本币还清",
+        "en": "Repay in home currency on time",
+        "ja": "期日に自国通貨で完済",
+        "mn": "Хугацаанд дотоод мөнгөөр төлөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠥᠷᠢ ᠪᠡᠨ ᠲᠥᠯᠥᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.refund.detail",
+      "text": {
+        "zh": "凭收据退回原资金来源。信用退款先减欠款；现金外币退回后还要换回。",
+        "en": "Receipt refunds go to their funding source. Credit reduces debt first; foreign cash still needs exchanging.",
+        "ja": "元の資金へ返金。クレジットは借金を先に減らし、外貨現金は両替が必要。",
+        "mn": "Баримтаар анхны эх үүсвэрт буцаана. Кредит өрийг бууруулна; гадаад бэлэн мөнгийг солих хэрэгтэй."
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠩᠬᠠᠨ ᠤ ᠮᠥᠩᠭᠥ ᠳᠦ ᠪᠤᠴᠠᠭᠠᠨ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.exchange-back",
+      "text": {
+        "zh": "把剩余外币换回本币",
+        "en": "Exchange leftover foreign cash home",
+        "ja": "残りの外貨を戻す",
+        "mn": "Үлдсэн гадаад мөнгийг буцааж солих"
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠥ ᠪᠡᠨ ᠪᠤᠴᠠᠭᠠᠵᠤ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.use-reserve",
+      "text": {
+        "zh": "动用旅行备用金补账单",
+        "en": "Use reserve to cover the bill",
+        "ja": "予備費を請求に使う",
+        "mn": "Нөөцөөр тооцоогоо төлөх"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠥᠭᠡᠴᠡ ᠪᠡᠨ ᠬᠡᠷᠡᠭᠯᠡᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.credit.purchase",
+      "text": {
+        "zh": "模拟信用购买，先记待结算借款",
+        "en": "Toy credit purchase, pending loan",
+        "ja": "模擬クレジット購入、決済前借入",
+        "mn": "Загвар кредит худалдан авалт, хүлээгдэх зээл"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠡᠭᠡᠯ ᠢ ᠪᠢᠴᠢᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.exchange",
+      "text": {
+        "zh": "用自己的本币兑换外币",
+        "en": "Exchange owned home funds",
+        "ja": "自分の通貨を両替",
+        "mn": "Өөрийн дотоод мөнгийг солих"
+      },
+      "writing": {
+        "mn-Mong": "ᠮᠥᠩᠭᠥ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.purchase",
+      "text": {
+        "zh": "按收据买下同款书",
+        "en": "Purchase the identical book",
+        "ja": "同じ本をレシートの額で買う",
+        "mn": "Баримтаар ижил ном авах"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠣᠮ ᠠᠪᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.debit.load",
+      "text": {
+        "zh": "自己的钱转入模拟账户",
+        "en": "Move owned money to the toy account",
+        "ja": "模擬口座へ自分のお金を移す",
+        "mn": "Өөрийн мөнгийг загвар дансанд хийх"
+      },
+      "writing": {
+        "mn-Mong": "ᠳᠠᠩᠰᠠ ᠳᠤ ᠮᠥᠩᠭᠥ ᠬᠢᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.prepaid.load",
+      "text": {
+        "zh": "自己的钱充进练习钱包",
+        "en": "Load owned funds into the practice wallet",
+        "ja": "練習財布に自分のお金を入れる",
+        "mn": "Өөрийн мөнгөөр дасгалын хэтэвч цэнэглэх"
+      },
+      "writing": {
+        "mn-Mong": "ᠴᠦᠨᠭᠬᠡ ᠳᠦ ᠮᠥᠩᠭᠥ ᠬᠢᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.cash.balance",
+      "text": {
+        "zh": "故事信封的可用现金",
+        "en": "Available story cash",
+        "ja": "物語の使える現金",
+        "mn": "Түүхийн бэлэн мөнгө"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠡᠯᠡᠨ ᠮᠥᠩᠭᠥᠨ ᠦ ᠦᠯᠡᠳᠡᠭᠳᠡᠯ"
+      }
+    },
+    {
+      "id": "childhood.story.reserve",
+      "text": {
+        "zh": "故事信封的备用金",
+        "en": "Story envelope reserve",
+        "ja": "物語の予備費",
+        "mn": "Түүхийн нөөц мөнгө"
+      },
+      "writing": {
+        "mn-Mong": "ᠲᠦᠦᠬᠡ ᠶᠢᠨ ᠨᠥᠭᠡᠴᠡ"
+      }
+    },
+    {
+      "id": "childhood.defect.line",
+      "text": {
+        "zh": "检查到一个小故障。保修内免费修；没有保修也能和家长一起修好。",
+        "en": "A small defect appeared. Warranty repairs are free; without cover, repair together with a parent.",
+        "ja": "小さな不具合。保証内なら無料、保証なしでも保護者と直せるよ。",
+        "mn": "Жижиг гэмтэл байна. Баталгаатай бол үнэгүй, үгүй бол аав ээжтэй засна."
+      },
+      "writing": {
+        "mn-Mong": "ᠭᠡᠮᠲᠦᠯ ᠢ ᠬᠠᠮᠲᠤ ᠵᠠᠰᠠᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.save-snack",
+      "text": {
+        "zh": "把新鲜苹果留到明天分享",
+        "en": "Keep fresh apples to share tomorrow",
+        "ja": "新鮮なりんごを明日分ける",
+        "mn": "Шинэ алимаа маргааш хуваах"
+      },
+      "writing": {
+        "mn-Mong": "ᠠᠯᠢᠮ᠎ᠠ ᠪᠡᠨ ᠮᠠᠷᠭᠠᠰᠢ ᠬᠤᠪᠢᠶᠠᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.shell.entry",
+      "text": {
+        "zh": "贝壳岛用家庭邀请页通行，路费已包含办理。这只是故事规则。",
+        "en": "Shell Island uses a family invitation; entry processing is included in the fare. Fictional rules only.",
+        "ja": "貝の島は家族の招待状で入場。手続きは交通費込み。架空のルールだよ。",
+        "mn": "Хясаа арал гэр бүлийн урилга хэрэглэнэ. Нэвтрэх зардал замын үнэд багтсан, зохиомол дүрэм."
+      },
+      "writing": {
+        "mn-Mong": "ᠭᠡᠷ ᠪᠦᠯᠢ ᠶᠢᠨ ᠤᠷᠢᠯᠭ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.lantern.entry",
+      "text": {
+        "zh": "灯笼岛由家长帮办访客许可，路费已包含办理。这只是故事规则。",
+        "en": "A parent helps arrange Lantern Island visitor permission, included in the fare. Fictional rules only.",
+        "ja": "灯籠の島は保護者が訪問許可を手伝う。交通費に手続き込み。架空のルール。",
+        "mn": "Дэнлүүний арлын зочны зөвшөөрөлд аав ээж тусална. Замын үнэд багтсан, зохиомол дүрэм."
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠣᠴᠢᠨ ᠤ ᠵᠥᠪᠰᠢᠶᠡᠷᠡᠯ"
+      }
+    },
+    {
+      "id": "childhood.foreign.refund",
+      "text": {
+        "zh": "退回的外币现金",
+        "en": "Returned foreign cash",
+        "ja": "戻る外貨現金",
+        "mn": "Буцах гадаад бэлэн мөнгө"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠤᠴᠠᠬᠤ ᠭᠠᠳᠠᠭᠠᠳᠤ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.tax.refund",
+      "text": {
+        "zh": "退回的本币游戏税费",
+        "en": "Returned home-currency toy tax",
+        "ja": "戻る自国通貨のゲーム税",
+        "mn": "Буцах дотоод мөнгөний тоглоомын татвар"
+      },
+      "writing": {
+        "mn-Mong": "ᠪᠤᠴᠠᠬᠤ ᠲᠠᠲᠠᠪᠤᠷᠢ"
+      }
+    },
+    {
+      "id": "childhood.accepted.shells",
+      "text": {
+        "zh": "大家接受的贝壳练习道具",
+        "en": "Shell props accepted by these stalls",
+        "ja": "この市場が受け入れる練習の貝",
+        "mn": "Лангуунуудын зөвшөөрсөн хясаан хэрэгсэл"
+      },
+      "writing": {
+        "mn-Mong": "ᠵᠥᠪᠰᠢᠶᠡᠷᠡᠭᠰᠡᠨ ᠬᠠᠰᠢᠶ᠎ᠠ"
+      }
+    },
+    {
+      "id": "childhood.counterfeit.replaced",
+      "text": {
+        "zh": "辨出假道具，换成可用的硬币",
+        "en": "Reject imitation props and replace with accepted coins",
+        "ja": "偽物を見分けて使える硬貨に交換",
+        "mn": "Дуураймал хэрэгслийг таньж зөв зоосоор солих"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠠᠭᠤᠷᠮᠠᠭ ᠵᠣᠭᠣᠰ ᠢ ᠰᠣᠯᠢᠬᠤ"
+      }
+    },
+    {
+      "id": "childhood.extra.reserve",
+      "text": {
+        "zh": "可额外留作备用的钱",
+        "en": "Optional extra reserve",
+        "ja": "追加できる予備費",
+        "mn": "Нэмж үлдээх нөөц"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠡᠮᠡᠯᠲᠡ ᠨᠥᠭᠡᠴᠡ"
+      }
+    },
+    {
+      "id": "childhood.reserve-more",
+      "text": {
+        "zh": "多留备用金，再检查购物预算",
+        "en": "Reserve more, then check spending funds",
+        "ja": "予備費を増やし買い物の予算を確認",
+        "mn": "Нөөцөө нэмээд авах төсвөө шалгах"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠥᠭᠡᠴᠡ ᠪᠡᠨ ᠨᠡᠮᠡᠬᠦ"
+      }
+    },
+    {
+      "id": "childhood.purchase.total",
+      "text": {
+        "zh": "这一步需要的本币总额",
+        "en": "Home total needed for this step",
+        "ja": "この手順に必要な自国通貨総額",
+        "mn": "Энэ алхамд хэрэгтэй дотоод нийт мөнгө"
+      },
+      "writing": {
+        "mn-Mong": "ᠬᠡᠷᠡᠭᠲᠡᠢ ᠨᠡᠶᠢᠲᠡ ᠮᠥᠩᠭᠥ"
+      }
+    },
+    {
+      "id": "childhood.reserve.release",
+      "text": {
+        "zh": "本次从备用金拿出的金额",
+        "en": "Reserve released this time",
+        "ja": "今回取り出す予備費",
+        "mn": "Энэ удаа нөөцөөс авах дүн"
+      },
+      "writing": {
+        "mn-Mong": "ᠨᠥᠭᠡᠴᠡ ᠠᠴᠠ ᠠᠪᠬᠤ ᠮᠥᠩᠭᠥ"
+      }
+    }
+  ]
+}

@@ -26,6 +26,23 @@ describe('local prerecorded narration contract',()=>{
   it('loads only the local manifest and does not treat decoding as pronunciation certification',async()=>{
     const fetch=fetcher(manifest),n=new Narrator('/game/',vi.fn());expect(await n.load(fetch)).toBe(true);expect(fetch).toHaveBeenCalledWith('/game/audio/economic/manifest.json',{credentials:'same-origin'});expect(manifest.recordings[Object.keys(manifest.recordings)[0]].contentReview).toBe('pending');
   });
+  it('waits for the manifest and plays only the latest early user request',async()=>{
+    let finish!:(response:Response)=>void;
+    const pending=new Promise<Response>(resolve=>finish=resolve),a=player(),missing=vi.fn(),n=new Narrator('/',missing,()=>a);
+    const load=n.load((()=>pending) as typeof fetch);
+    const stale=n.play([catalog.scripts[0].id]),latest=n.play([catalog.scripts[1].id]);
+    expect(a.play).not.toHaveBeenCalled();expect(missing).not.toHaveBeenCalled();
+    finish({ok:true,json:async()=>manifest} as Response);await load;await stale;await Promise.resolve();
+    expect(a.play).toHaveBeenCalledOnce();expect(a.dataset.narrationScripts).toBe(JSON.stringify([catalog.scripts[1].id]));
+    a.onended?.(new Event('ended'));await latest;expect(missing).not.toHaveBeenCalled();
+  });
+  it.each(['stop','mute','context'] as const)('cancels an early request on %s before the manifest arrives',async(cancel)=>{
+    let finish!:(response:Response)=>void;
+    const pending=new Promise<Response>(resolve=>finish=resolve),a=player(),n=new Narrator('/',vi.fn(),()=>a);
+    const load=n.load((()=>pending) as typeof fetch),queued=n.play([catalog.scripts[0].id]);
+    if(cancel==='mute')n.mute(true);else if(cancel==='context')n.context('ja','boy');else n.stop();
+    finish({ok:true,json:async()=>manifest} as Response);await load;await queued;expect(a.play).not.toHaveBeenCalled();
+  });
   it('plays exact catalog identity and reports missing or mismatched entries honestly',async()=>{
     const a=player(),missing=vi.fn(),n=new Narrator('/',missing,()=>a);await n.load(fetcher(manifest));const playing=n.play([catalog.scripts[0].id]);await Promise.resolve();expect(a.play).toHaveBeenCalledOnce();a.onended?.(new Event('ended'));await playing;expect(missing).not.toHaveBeenCalled();await n.play(['unknown']);expect(missing).toHaveBeenCalledOnce();
     await n.load(fetcher({...manifest,recordings:{[Object.keys(manifest.recordings)[0]]:{...recording,text:'not the catalog'}}}));await n.play([catalog.scripts[0].id]);expect(missing).toHaveBeenCalledTimes(2);

@@ -6,24 +6,31 @@ const clause = (ids: string[], lang: Lang): NarrationCue[] => lang === 'zh' ? [i
 import { balance, lifeText as catalogText } from './life';
 import { getPrices, type GameState, type Lang, type Offer, type Place } from './model';
 export function balanceNarration(state:GameState,lang:Lang):NarrationCue[] {
-  const ids=['ui.pocket',...amountIds(state.life?balance(state.life,'house.cash'):state.cash,lang),'legacy.common.digital',...amountIds(state.life?balance(state.life,'house.digital'):state.digital,lang),'legacy.common.savings',...amountIds(state.life?balance(state.life,'house.savings'):state.savings,lang),'ui.owed',...amountIds(state.life?-balance(state.life,'house.loan')-balance(state.life,'house.loanInterest')-balance(state.life,'house.mortgage')-balance(state.life,'house.mortgageInterest')-balance(state.life,'house.legacyDebt'):state.debt,lang)];
+  const result:NarrationCue[]=[], l=state.life;
+  const add=(id:string,value:number,unit:'home'|'foreign'='home')=>result.push(...clause([id,...amountIds(value,lang,unit)],lang));
+  add('ui.pocket',l?balance(l,'house.cash'):state.cash);
+  const digital=l?balance(l,'house.digital'):state.digital;
+  const savings=l?balance(l,'house.savings'):state.savings;
+  const debt=l?-balance(l,'house.loan')-balance(l,'house.loanInterest')-balance(l,'house.mortgage')-balance(l,'house.mortgageInterest')-balance(l,'house.legacyDebt'):state.debt;
+  if(digital)add('legacy.common.digital',digital);
+  if(savings||state.bankTerm)add('legacy.common.savings',savings);
+  if(debt||state.loan)add('ui.owed',debt);
   const f=state.flags;
-  if(state.level>=18&&!state.life)ids.push('legacy.common.foreign-cash',...amountIds(f.foreignCash??0,lang,'foreign'),'legacy.common.foreign-debt',...amountIds(f.foreignDebt??0,lang,'foreign'),'legacy.common.fx',...amountIds(f.fxRate??200,lang));
-  if(f.pendingChange)ids.push('legacy.common.change-money',...amountIds(f.pendingChange,lang));
-  for(const [id,count] of Object.entries(state.inventory)){if(count>0)ids.push(...scriptIds([itemText(id)]),'legacy.common.quantity',...numberIds(count,lang));}
-  if(state.life){const l=state.life;ids.push('ui.company-cash',...amountIds(balance(l,'company.cash'),lang),'legacy.common.company-debt',...amountIds(-balance(l,'company.loan')-balance(l,'company.loanInterest'),lang),'legacy.common.supplier-debt',...amountIds(-balance(l,'company.supplierDebt'),lang),'legacy.common.foreign-cash',...amountIds(l.foreign,lang,'foreign'),'legacy.common.receivable',...amountIds(l.foreignReceivable,lang,'foreign'),'legacy.common.delivered',...numberIds(l.goods.delivered??0,lang),'legacy.common.damaged',...numberIds(l.goods.lostInTransit??0,lang),'legacy.common.ownership',...numberIds(l.ownership,lang));}
-  if(lang!=='zh')return ids;
-  const clauses:string[][]=[];
-  for(const id of ids){
-    if(!id.startsWith('number.')&&!id.startsWith('money.')&&!['ui.yuan','ui.jiao','ui.cents','ui.money-ending','ui.shells','ui.shell-cents','ui.and','legacy.common.quantity'].includes(id))clauses.push([]);
-    (clauses[clauses.length-1]??(clauses[0]=[])).push(id);
+  if(f.foreignCash&&!l)add('legacy.common.foreign-cash',f.foreignCash,'foreign');
+  if(f.foreignDebt&&!l)add('legacy.common.foreign-debt',f.foreignDebt,'foreign');
+  if(f.pendingChange)add('legacy.common.change-money',f.pendingChange);
+  for(const [id,count] of Object.entries(state.inventory))if(count>0)result.push(...clause([...scriptIds([itemText(id)]),'legacy.common.quantity',...numberIds(count,lang)],lang));
+  if(l){
+    for(const [id,value] of [['ui.company-cash',balance(l,'company.cash')],['legacy.common.company-debt',-balance(l,'company.loan')-balance(l,'company.loanInterest')],['legacy.common.supplier-debt',-balance(l,'company.supplierDebt')]] as const)if(value)add(id,value);
+    if(l.foreign)add('legacy.common.foreign-cash',l.foreign,'foreign');
+    if(l.foreignReceivable)add('legacy.common.receivable',l.foreignReceivable,'foreign');
   }
-  return clauses;
+  return result;
 }
 export function choiceNarration(state:GameState,offer:Offer,lang:Lang):NarrationCue[] {
   const ids:NarrationCue[]=scriptIds([offer.label,offer.detail,...(offer.disabled?[offer.disabled]:[])]);
   for(const fact of offer.facts??[])ids.push(...clause([...scriptIds([common(fact.id as keyof typeof import('./legacy-content.json').common)]),...(fact.money?amountIds(fact.value,lang,fact.money):numberIds(fact.value,lang))],lang));
-  return [...ids,...balanceNarration(state,lang)];
+  return ids;
 }
 export function priceNarration(state:GameState,place:Place,lang:Lang):NarrationCue[] {return (place==='shop'?getPrices(state):[]).flatMap(p=>[...clause([...scriptIds([p.label]),'legacy.common.unit-price',...amountIds(p.price,lang,p.currency==='foreign'?'foreign':'home')],lang),...clause(['legacy.common.stock-count',...numberIds(p.stock,lang)],lang)]);}
 
@@ -53,6 +60,5 @@ export function outcomeNarration(before:GameState,after:GameState,message:import
     const quantity=wholeQuantity?[wholeQuantity]:[...numberIds(value,lang),...(lang==='zh'&&row.item?[unitScript(row.item)]:[])];
     ids.push(...clause([...(lang==='zh'&&row.item?['ui.bag-item']:[]),...scriptIds([row.label]),row.value<0?'legacy.common.change-down':'legacy.common.change-up',...(row.money?amountIds(value,lang,row.money):quantity)],lang));
   }
-  if(before.day!==after.day||before.life?.turn!==after.life?.turn)ids.push(...clause(['legacy.common.current-day',...numberIds(after.life?.turn??after.day,lang)],lang));
-  return [...ids,...balanceNarration(after,lang)];
+  return ids;
 }

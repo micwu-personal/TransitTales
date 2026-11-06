@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { act, advance, createGame, getActions, getLevel, getPrices, getProgress, getWeather, LEVELS, LEVEL_COUNT, netWorth, type Family, type GameState, type Place } from '../src/economic/model';
 import { loadGame, saveGame, SAVE_KEY, type Save } from '../src/economic/storage';
+import { speechFor } from '../src/economic/speech-cues';
 
 export const SOLUTIONS: string[][] = [
   ['read-tags', 'buy-apple', 'share-apples'],
@@ -82,7 +83,21 @@ describe('continuous childhood economy campaign', () => {
       const store = memory();
       for (let i = 0; i < LEVEL_COUNT; i++) {
         const checkpoint = s;
-        expect(getLevel(s)).toBe(LEVELS[i]);
+        const level = getLevel(s);
+        const { goal: _goal, intro: _intro, ...metadata } = level;
+        const { goal: _canonicalGoal, intro: _canonicalIntro, ...canonicalMetadata } = LEVELS[i];
+        expect(metadata).toEqual(canonicalMetadata);
+        expect(getLevel(s)).toEqual(level);
+        const householdGoal = [0, 1, 3, 6, 7, 9, 10, 17, 18, 19, 20, 22, 23].includes(i);
+        expect(speechFor(level.goal)).toEqual([`family.${level.id}.goal${householdGoal ? `.${children}` : ''}`]);
+        const otherHousehold = getLevel({ ...s, family: { ...s.family, children: children === 1 ? 2 : 1 } });
+        for (const locale of ['zh', 'en', 'ja', 'mn', 'mn-Mong'] as const) {
+          expect(level.goal[locale]?.trim().length).toBeGreaterThan(0);
+          expect(level.intro[locale]?.trim().length).toBeGreaterThan(0);
+          if (householdGoal) expect(level.goal[locale]).not.toBe(otherHousehold.goal[locale]);
+          else expect(level.goal[locale]).toBe(otherHousehold.goal[locale]);
+        }
+        if (i === 0) expect(level.goal.zh).toContain(children === 1 ? '买一个苹果' : `你和兄弟姐妹${children === 2 ? '两' : '三'}个人`);
         expect(advance(s)).toBe(s);
         expect(getProgress(s).current).toBeLessThan(getProgress(s).total);
         for (const id of SOLUTIONS[i]) {

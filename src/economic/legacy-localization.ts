@@ -1,4 +1,5 @@
 import content from './legacy-content.json';
+import { familyOffer } from './family-copy';
 import { speechFor } from './speech-cues';
 const scriptCue=(value:Text)=>speechFor(value)??[];
 import { withSpeech } from './speech-cues';
@@ -25,7 +26,8 @@ export function legacyOffer(offer:Offer,state?:GameState,destination?:Place):Off
   const item=offer.id==='buy-loan-item'&&state?['shared-book','supplies','kit'][state.level-12]:offer.id.startsWith('buy-')?offer.id.slice(4):undefined;
   const contextual=item&&item in content.items?itemText(item,offer.label):undefined;
   const payment=offer.facts?.some(f=>f.money==='foreign')?'foreign-purchase':offer.id==='pay-digital'||offer.id==='pay-bus-qr'||offer.id==='pay-sticker-qr'?'prepaid-purchase':'cash-purchase';
-  return {...offer,label:contextual??local(offer.label,true),detail:contextual?common(payment):local(offer.detail),...(disabled?{disabled}:{})};
+  const localized = {...offer,label:contextual??local(offer.label,true),detail:contextual?common(payment):local(offer.detail),...(disabled?{disabled}:{})};
+  return state ? familyOffer(localized, state) : localized;
 }
 export function legacyResult(message:Text,id:string,ok:boolean,completed:boolean):Text {
   let kind:keyof typeof content.common=completed?'complete':!ok?'prepare':'ready';

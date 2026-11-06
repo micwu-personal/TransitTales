@@ -1,5 +1,7 @@
 import { common, itemText, legacyLevel, legacyOffer, legacyResult } from './legacy-localization';
 import { itemUnit } from './item-quantity';
+import { familyLevel } from './family-copy';
+export { getGuidance, getGoalSpeech } from './family-guidance';
 import { advanceLife, CAMPAIGN_COUNT, LIFE_LEVELS, LIFE_START, lifeActions, lifeAct, lifeProgress, lifeWorth, type LifeState } from './life';
 export type Text = { zh: string; en: string; ja?: string; mn?: string; 'mn-Mong'?: string };
 export type Lang = 'zh' | 'en' | 'ja' | 'mn' | 'mn-Mong';
@@ -83,7 +85,7 @@ export function createGame(family: Family, seed = 2026): GameState {
 }
 export { CAMPAIGN_COUNT } from './life';
 export const CAMPAIGN_LEVELS = [...LEVELS, ...LIFE_LEVELS];
-export function getLevel(state: GameState): Level { return CAMPAIGN_LEVELS[state.level]; }
+export function getLevel(state: GameState): Level { return familyLevel(CAMPAIGN_LEVELS[state.level], state); }
 const foreignValue = (s: GameState, foreignCents: number) => Math.floor(foreignCents * f(s, 'fxRate') / 100);
 export function netWorth(state: GameState): number { return state.life ? lifeWorth(state.life) : state.cash + state.savings + state.digital + f(state, 'pendingChange') + foreignValue(state, f(state, 'foreignCash')) - state.debt; }
 export function getWeather(state: GameState): 'sunny' | 'rainy' {
