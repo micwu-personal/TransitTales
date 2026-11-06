@@ -71,6 +71,53 @@ class NarrationToolsTest(unittest.TestCase):
             asyncio.run(generate.run(self.args(**options)))
         return generate.read_json(self.output / "manifest.json") if (self.output / "manifest.json").exists() else None
 
+    def test_atomic_json_retries_transient_reader_lock(self):
+        for module in (generate, verify):
+            with self.subTest(module=module.__name__):
+                path = self.root / "checkpoint.json"
+                path.write_text('{"old":true}', encoding="utf-8")
+                temporary = path.with_name(path.name + ".partial")
+                replace = Path.replace
+                attempts = []
+
+                def locked_once(destination):
+                    attempts.append(destination)
+                    if len(attempts) == 1:
+                        raise PermissionError("Windows reader holds destination")
+                    return replace(temporary, destination)
+
+                with patch.object(Path, "replace", side_effect=locked_once), patch.object(module.time, "sleep") as sleep:
+                    module.write_json_atomic(path, {"complete": True})
+                self.assertEqual(module.read_json(path), {"complete": True})
+                self.assertEqual(len(attempts), 2)
+                sleep.assert_called_once_with(0.1)
+                self.assertFalse(temporary.exists())
+
+    def test_atomic_json_permanent_lock_is_bounded_and_preserves_checkpoint(self):
+        for module in (generate, verify):
+            with self.subTest(module=module.__name__):
+                path = self.root / "checkpoint.json"
+                original = '{"old":true}'
+                path.write_text(original, encoding="utf-8")
+                with patch.object(Path, "replace", side_effect=PermissionError("permanent lock")) as replace, patch.object(module.time, "sleep") as sleep:
+                    with self.assertRaises(PermissionError):
+                        module.write_json_atomic(path, {"complete": True})
+                self.assertEqual(replace.call_count, 5)
+                self.assertEqual(sleep.call_count, 4)
+                self.assertEqual(path.read_text(encoding="utf-8"), original)
+                self.assertFalse(path.with_name(path.name + ".partial").exists())
+
+    def test_atomic_json_does_not_retry_unrelated_io_errors(self):
+        for module in (generate, verify):
+            with self.subTest(module=module.__name__):
+                path = self.root / "checkpoint.json"
+                with patch.object(Path, "replace", side_effect=OSError("disk failure")) as replace, patch.object(module.time, "sleep") as sleep:
+                    with self.assertRaisesRegex(OSError, "disk failure"):
+                        module.write_json_atomic(path, {"complete": True})
+                replace.assert_called_once()
+                sleep.assert_not_called()
+                self.assertFalse(path.with_name(path.name + ".partial").exists())
+
     def test_exact_approved_profiles(self):
         expected = {
             ("zh", "boy"): ("zh-CN-YunxiaNeural", "-4%", "+0Hz"),

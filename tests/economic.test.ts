@@ -104,10 +104,10 @@ describe('continuous childhood economy campaign', () => {
           expect(next.debt).toBe(s.debt);
           expect(next.flags).not.toHaveProperty(SOLUTIONS[i][0]);
           expect(next.rewards).toEqual(s.rewards);
-        } else expect(next).toBe(s);
+        } else {expect(next.level).toBe(24);expect(next.life?.age).toBe(13);expect(next.cash).toBe(s.cash);}
         s = next;
       }
-      expect(s.level).toBe(23);
+      expect(s.level).toBe(24);
       expect(s.debt).toBe(0);
       expect(s.digital).toBe(0);
       expect(s.flags.foreignCash).toBe(0);
@@ -543,7 +543,7 @@ describe('bounded robust persistence', () => {
       expect(saveGame(memory(), bad)).toBe(false);
     };
     for (const level of [-1, 24, 0.5]) mutate(s => { s.state.level = level; });
-    mutate(s => { s.state.version = 2 as 1; });
+    mutate(s => { s.state.version = 3 as 1; });
     mutate(s => { s.state.family.gender = 'cat' as 'girl'; });
     mutate(s => { s.state.family.children = 4 as 3; });
     for (const amount of [-1, 0.5, 100_000_001, Infinity, NaN]) mutate(s => { s.state.cash = amount; });
@@ -566,6 +566,6 @@ describe('bounded robust persistence', () => {
     mutate(s => { s.checkpoint.flags.cheat = 1; });
     mutate(s => { s.lang = 'fr' as 'en'; });
     mutate(s => { (s.state as unknown as Record<string, unknown>).unrecognized = 1; });
-    expect(SAVE_KEY).toBe('transit-tales-economic-v1');
+    expect(SAVE_KEY).toBe('transit-tales-economic-v2');
   });
 });

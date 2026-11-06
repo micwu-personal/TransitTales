@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import time
 import unicodedata
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -91,7 +92,14 @@ def write_json_atomic(path, value):
     temporary = path.with_name(path.name + ".partial")
     try:
         temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        temporary.replace(path)
+        for attempt in range(5):
+            try:
+                temporary.replace(path)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.1 * 2 ** attempt)
     finally:
         temporary.unlink(missing_ok=True)
 

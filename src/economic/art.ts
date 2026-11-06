@@ -14,6 +14,8 @@ export interface ArtOptions {
   stock: number;
   weather: 'sunny' | 'rainy';
   travel?: boolean;
+  lifeScene?: string;
+  offspring?: number[];
 }
 
 // Percent coordinates refer to the complete 1440 × 900 world, not a cropped viewport.
@@ -44,11 +46,11 @@ function safeOptions(o: ArtOptions): ArtOptions {
     place: places.includes(o.place) ? o.place : 'town',
     gender: o.gender === 'girl' ? 'girl' : 'boy',
     children: bound(o.children, 1, 3) as 1 | 2 | 3,
-    age: bound(o.age, 7, 12), day: bound(o.day, 1, 3650),
+    age: bound(o.age, 7, 100), day: bound(o.day, 1, 3650),
     outfit: bound(o.outfit, 0, 99), completed: o.completed === true,
     cash: bound(o.cash, 0, 999999), savings: bound(o.savings, 0, 999999),
     debt: bound(o.debt, 0, 999999), stock: bound(o.stock, 0, 99),
-    weather: o.weather === 'rainy' ? 'rainy' : 'sunny', travel: o.travel === true,
+    weather: o.weather === 'rainy' ? 'rainy' : 'sunny', travel: o.travel === true, lifeScene: typeof o.lifeScene==='string'?o.lifeScene:undefined, offspring:o.offspring?.map(a=>bound(a,0,100)),
   };
 }
 function g(x: number, y: number, scale: number, content: string): string {
@@ -136,7 +138,7 @@ function face(kind: Person, outfit: number): string {
     ${girl ? `${path('M-34-20 l-11-7 v13Z M-34-20 l11-7 v13Z', clothes[outfit % clothes.length])}${circle(-34, -20, 3, c.yellow)}` : ''}`;
 }
 function person(kind: Person, outfit: number, x: number, y: number, scale = 1, pose: Pose = 'wave', age = 8): string {
-  const adult = kind === 'parent' || kind === 'banker';
+  const adult = kind === 'parent' || kind === 'banker' || age >= 18;
   const shirt = adult ? kind === 'banker' ? c.teal : c.apricot : clothes[outfit % clothes.length];
   const headY = adult ? -176 : -145;
   const shoulder = adult ? -132 : -102;
@@ -162,7 +164,7 @@ function person(kind: Person, outfit: number, x: number, y: number, scale = 1, p
 }
 function siblings(o: ArtOptions, x: number, y: number, scale = .85, picnic = false): string {
   return `${o.children >= 2 ? person(o.gender === 'boy' ? 'girl' : 'boy', o.outfit + 1, x, y, scale, picnic ? 'sit' : 'walk', Math.max(7, o.age - 1)) : ''}
-    ${o.children === 3 ? person('boy', o.outfit + 2, x + 105 * scale, y + 10, scale * .85, picnic ? 'sit' : 'wave', 7) : ''}`;
+    ${o.children === 3 ? person('boy', o.outfit + 2, x + 105 * scale, y + 10, scale * .85, picnic ? 'sit' : 'wave', Math.max(7,o.age-3)) : ''}`;
 }
 function dog(x: number, y: number, scale = 1): string {
   return g(x, y, scale, `${shadow(0, 1, 43, 7)}${path('M-29-15 Q-48-14-48-39 Q-34-35-27-26', c.apricot)}
@@ -353,7 +355,7 @@ function town(o: ArtOptions): string {
     ${path('M873 697Q1038 656 1213 665Q1350 665 1440 721V900H873Z', '#7fa96d', 'stroke="none"')}
     ${tree(1351, 755, 1.35, true)}${tree(958, 717, .75, true)}${bench(1230, 702, .8)}
     ${picnicBlanket(1128, 739, .57)}${person('parent', 0, 1187, 733, .48, 'sit')}
-    ${person(o.gender, o.outfit, 715, 661, .98 + (o.age - 7) * .012, 'wave', o.age)}
+    ${person(o.gender, o.outfit, 715, 661, .98 + (Math.min(o.age,18) - 7) * .012, 'wave', o.age)}
     ${siblings(o, 594, 675, .65)}${dog(800, 690, .74)}
     ${plant(89, 664, .85)}${flowers(329, 709, 1.3)}${flowers(914, 690, 1.1)}${flowers(1335, 814, 1.6)}
     ${sprig(68, 744, 1.4)}${sprig(497, 726, 1.3)}${sprig(1220, 809, 1.5)}
@@ -513,7 +515,7 @@ export function sceneArt(options: ArtOptions): string {
     STORY: walk with family, meet classmates, trade at a counter, save with a teller, share a picnic.
     FIRST VIEWPORT: complete 1440 by 900 scenery; the child and gestures lead the middle-lower stage.
     FORM: user-pinned illustrated life scenes, dimensional streets and full-room destination cutaways. -->
-    ${scene}</svg>`;
+    ${scene}${o.lifeScene ? lifeOverlay(o) : ''}</svg>`;
 }
 
 function glyph(name: string): string {
@@ -563,4 +565,19 @@ export function portrait(gender: Person, outfit = 0): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" focusable="false" aria-hidden="true" stroke="${c.ink}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
     ${circle(50, 50, 47, '#f5dfb4', 'stroke="none"')}${path('M15 100V85Q21 68 50 68Q79 68 85 85V100Z', color)}${path('M39 76Q50 88 61 76', c.paper)}
     ${rect(44, 63, 12, 15, c.skin, 4)}${g(50, 42, .72, face(kind, wear))}</svg>`;
+}
+
+function lifeOverlay(o: ArtOptions): string {
+  const id=o.lifeScene??'';
+  const family=(o.offspring??[]).map((age,i)=>age<4
+    ? g(880+i*85,720,.75,`${ellipse(0,-30,28,44,c.paper)}${circle(0,-53,17,c.skin)}${path('M-24-25Q0-4 24-25','none',`stroke="${c.teal}" stroke-width="7"`)}`)
+    : person(i%2?'boy':'girl',i+1,880+i*100,720,age<12?.72:.88,'wave',age)).join('');
+  const grey=o.age>=60?g(721,445,1,`${path('M-28 0Q0-26 28 0','none','stroke="#c1bbb0" stroke-width="12"')}${path('M-20 22h14M6 22h14','none','stroke="#96755a" stroke-width="2"')}`):'';
+  const bakery=o.place==='shop'&&['studio','materials','production','demand','finance','equity','towns'].includes(id)
+    ? g(385,578,1,`${rect(-120,-195,240,195,c.cream,24)}${rect(-97,-160,194,110,c.ink,20)}${path('M-70-70Q-45-130-25-72Q0-145 24-73Q48-124 72-70',c.apricot)}${rect(-100,-34,200,26,c.wood,8)}${circle(-69,-178,7,c.cherry)}${circle(-42,-178,7,c.teal)}${g(115,-90,.65,glyph('bread'))}`):'';
+  const trade=o.place==='shop'&&['sourcing','export','exchange'].includes(id)
+    ? g(1150,560,.85,`${path('M-170 0H150L105 70H-112Z',c.teal)}${rect(-85,-85,84,75,c.apricot,7)}${rect(7,-110,82,100,c.yellow,7)}${path('M-185 88Q-140 74-95 88T-5 88T85 88T170 88','none',`stroke="${c.blue}" stroke-width="9"`)}`):'';
+  const civic=o.place==='school'&&['tax','services','organization'].includes(id)
+    ? g(385,550,1,`${rect(-95,-95,190,95,c.paper,12)}${path('M-108-95L0-150L108-95Z',c.apricot)}${rect(-35,-62,70,61,c.teal,5)}${g(0,-24,.42,glyph('heart'))}${person('banker',1,146,46,.8,'hold',42)}`):'';
+  return `${bakery}${trade}${civic}${o.place==='home'?family:''}${grey}`;
 }

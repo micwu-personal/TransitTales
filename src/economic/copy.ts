@@ -1,3 +1,5 @@
+import { localeUI } from './locale-ui';
+import legacy from './legacy-content.json';
 import type { Lang, Place, Text } from './model';
 
 const zh = {
@@ -9,11 +11,11 @@ const zh = {
   newGame: '开始我的故事', resume: '接着玩', chooseFamily: '这次，你是谁？',
   setupIntro: '今天，家里有一项小任务等着你。挑好角色，就出门吧！',
   boy: '小禾 · 男孩', girl: '小麦 · 女孩', children: '家里有几个孩子？',
-  familySize: ['我是独生子女', '我们有两个孩子', '我们有三个孩子'],
+  familySize: ['我是独生子女', '我家有两个孩子', '我家有三个孩子'],
   familyNote: '每个家庭都很棒。一起吃点心、分担家务时，人数会真的影响你的选择。',
   age: '岁', day: '第', dayEnd: '天', goal: '今天的小愿望', progress: '已经做到',
-  next: '新的小冒险', finale: '把全家的回忆带回家！', finaleBody: '零花钱、承诺、存钱罐，还有贝壳岛的账单：你把它们都照顾好了。下次冒险，再一起出发！',
-  ending: '儿童篇 · 完成', endingNote: '成年篇尚未开放。未来的故事与经济模型计划已写进仓库。',
+  next: '新的小冒险', finale: '把一家的故事放进相册！', finaleBody: '从小时候的小任务，到工作、经营、照顾家人和退休。不同的选择，连起了你的一生。',
+  ending: '一生的故事 · 完成', endingNote: '这是缩小的虚构经济故事，不是收益保证，也不是真实投资建议。',
   retry: '重玩这一关', retryTitle: '从这关出发时重新来？',
   retryBody: '这一关的钱、物品和天数都会回到出发时。以前的关卡不受影响。',
   confirmRetry: '重新试一次', cancel: '还是接着玩', reset: '新的家庭故事',
@@ -25,8 +27,8 @@ const zh = {
   trust: '朋友的信任', trustNote: '钱要还，答应的日子也要记住。',
   wardrobe: '成长小衣橱', outfit: ['舒服的日常装', '新背包与小外套', '野餐日的漂亮衣服'],
   wardrobeNote: '完成一段故事，衣橱就会多一点颜色。不是谁钱多，谁就更好。',
-  settings: '小镇设置', sound: '小音效', soundOn: '开着', soundOff: '关着',
-  soundNote: '原创的短音符，只在你做出选择时响起。',
+  settings: '小镇设置', sound: '录音和小音效', soundOn: '开着', soundOff: '关着',
+  soundNote: '讲故事用本地预录音。不把文字发到网上，也不用浏览器合成声音。录音未就绪时，会如实提示。',
   help: '怎么玩', helpBody: '点亮着小脚印的地方，和那里的人聊聊。选一件事，看看口袋和世界怎么变。遇到难题，随时重玩这一关。没有倒计时。',
   helpBank: '银行里的利息按游戏天计算，是缩小的故事模型，不是真实收益承诺。未成年人由家长陪同。',
   stock: '还剩', price: '今日价签', emptyStock: '今天卖完啦', transaction: '小账本动了一下',
@@ -50,7 +52,7 @@ const en: typeof zh = {
   familyNote: 'Every family belongs here. Sharing snacks and chores really changes with the number of children.',
   age: 'years old', day: 'Day', dayEnd: '', goal: 'My little wish', progress: 'So far',
   next: 'Another little adventure', finale: 'Bringing our memories home!', finaleBody: 'Pocket money, promises, savings and a Shell Island bill: you cared for them all. The next adventure is waiting!',
-  ending: 'Childhood chapter · complete', endingNote: 'Adult chapters are not playable yet. Their story and model roadmap is in the repository.',
+  ending: 'Life story · complete', endingNote: 'A small fictional economic model, not guaranteed returns or real investment advice.',
   retry: 'Try this story again', retryTitle: 'Return to the start of this story?',
   retryBody: 'Money, items and days return to their starting point for this story. Earlier stories stay completed.',
   confirmRetry: 'Try again', cancel: 'Keep playing', reset: 'A new family story',
@@ -74,21 +76,13 @@ const en: typeof zh = {
   locationHint: 'Little footprints point to today’s story. You can visit somewhere else, too.',
   continueHint: 'You made this little wish happen. Let’s see what comes next.',
 };
-export const copy = (lang: Lang) => lang === 'zh' ? zh : en;
-export const text = (value: Text, lang: Lang) => value[lang];
-export const itemNames: Record<string, Text> = {
-  apple: { zh: '苹果', en: 'Apples' }, bread: { zh: '面包', en: 'Bread' }, toy: { zh: '小玩具', en: 'Little toy' },
-  kite: { zh: '风筝', en: 'Kite' }, snack: { zh: '点心', en: 'Snacks' }, picnic: { zh: '野餐篮', en: 'Picnic basket' },
-  sticker: { zh: '贴纸', en: 'Stickers' }, pencil: { zh: '铅笔', en: 'Pencils' }, cookie: { zh: '饼干', en: 'Cookies' },
-  shell: { zh: '贝壳', en: 'Shells' }, coin: { zh: '硬币', en: 'Coins' }, ticket: { zh: '已订孩子车票', en: 'Booked child ticket' },
-  book: { zh: '故事书', en: 'Storybook' }, gift: { zh: '手作小礼物', en: 'Handmade present' }, plush: { zh: '巨大玩偶', en: 'Giant plush' },
-  juice: { zh: '果汁', en: 'Juice' }, umbrella: { zh: '雨伞', en: 'Umbrella' }, coat: { zh: '雨衣', en: 'Raincoat' },
-  fresh: { zh: '新鲜面包', en: 'Fresh bread' }, markdown: { zh: '今日折价面包', en: 'Same-day markdown bread' },
-  'shared-book': { zh: '合资故事书', en: 'Shared storybook' }, supplies: { zh: '用品', en: 'Supplies' }, kit: { zh: '手工工具', en: 'Craft kit' },
-  room: { zh: '已订孩子住宿份额', en: 'Booked child room share' }, bus: { zh: '岛上巴士票', en: 'Island bus ticket' },
-  'home-souvenir': { zh: '国内买的小海螺', en: 'Home-bought shell souvenir' }, 'foreign-souvenir': { zh: '岛上买的小海螺', en: 'Island-bought shell souvenir' },
-  'card-snack': { zh: '家长卡购买的点心', en: 'Parent-card snack' }, 'qr-sticker': { zh: '预付钱包购买的贴纸', en: 'Prepaid-wallet sticker' },
+export const copy = (lang: Lang): typeof zh => lang === 'zh' ? zh : lang === 'en' ? en : {...localeUI[lang],chapterNames:[0,6,12,18].map(i=>legacy.stories[i][lang].title),chapterDescriptions:[0,6,12,18].map(i=>legacy.stories[i][lang].body)};
+export const text = (value: Text, lang: Lang): string => {
+  const localized=value[lang];
+  if(localized===undefined)throw new Error(`Missing written ${lang} text: ${value.en}`);
+  return localized;
 };
+export const itemNames: Record<string, Text> = legacy.items;
 export function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
 }

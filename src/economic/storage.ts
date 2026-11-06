@@ -1,6 +1,9 @@
-import { LEVEL_COUNT, TRAVEL_FINANCE_FLAGS, type GameState, type Lang } from './model';
+import { CAMPAIGN_COUNT, LEVEL_COUNT, TRAVEL_FINANCE_FLAGS, type GameState, type Lang } from './model';
 
-export const SAVE_KEY = 'transit-tales-economic-v1';
+import legacy from './legacy-content.json';
+import { validLife } from './life-storage';
+export const SAVE_KEY = 'transit-tales-economic-v2';
+export const LEGACY_SAVE_KEY = 'transit-tales-economic-v1';
 export type Save = { state: GameState; checkpoint: GameState; lang: Lang };
 const MAX_MONEY = 100_000_000;
 const MAX_DAY = 100_000;
@@ -14,14 +17,15 @@ function numbers(value: unknown, max: number): value is Record<string, number> {
   return object(value) && Object.keys(value).length <= 150 && Object.entries(value).every(([key, n]) => /^[a-zA-Z][a-zA-Z0-9_-]{0,60}$/.test(key) && !['__proto__', 'prototype', 'constructor'].includes(key) && integer(n, 0, max));
 }
 function localized(value: unknown): boolean {
-  return object(value) && knownKeys(value, ['zh', 'en']) && ['zh', 'en'].every(key => typeof value[key] === 'string' && (value[key] as string).length <= 2000);
+  return object(value) && knownKeys(value, ['zh', 'en', 'ja', 'mn', 'mn-Mong']) && ['zh', 'en'].every(key => typeof value[key] === 'string' && (value[key] as string).length <= 2000);
 }
 function validState(value: unknown): value is GameState {
-  if (!object(value) || !knownKeys(value, ['version', 'family', 'level', 'day', 'cash', 'savings', 'digital', 'debt', 'trust', 'inventory', 'flags', 'seed', 'completed', 'ledger', 'rewards', 'bankTerm', 'loan'])) return false;
+  if (!object(value) || !knownKeys(value, ['version', 'family', 'level', 'day', 'cash', 'savings', 'digital', 'debt', 'trust', 'inventory', 'flags', 'seed', 'completed', 'ledger', 'rewards', 'bankTerm', 'loan', 'life'])) return false;
   const v = value;
-  if (v.version !== 1 || !object(v.family) || !knownKeys(v.family, ['gender', 'children']) || !['boy', 'girl'].includes(v.family.gender as string) || ![1, 2, 3].includes(v.family.children as number)) return false;
-  if (!integer(v.level, 0, LEVEL_COUNT - 1) || !integer(v.day, 1, MAX_DAY) || !integer(v.seed, 0, 0xffff_ffff) || !integer(v.trust, 0, 3) || typeof v.completed !== 'boolean') return false;
-  if (!['cash', 'savings', 'digital', 'debt'].every(k => integer(v[k])) || !numbers(v.inventory, 10_000) || !numbers(v.flags, MAX_MONEY)) return false;
+  if (![1, 2].includes(v.version as number) || !object(v.family) || !knownKeys(v.family, ['gender', 'children']) || !['boy', 'girl'].includes(v.family.gender as string) || ![1, 2, 3].includes(v.family.children as number)) return false;
+  if (!integer(v.level, 0, CAMPAIGN_COUNT - 1) || !integer(v.day, 1, MAX_DAY) || !integer(v.seed, 0, 0xffff_ffff) || !integer(v.trust, 0, 3) || typeof v.completed !== 'boolean') return false;
+  if (!['cash', 'savings', 'digital', 'debt'].every(k => integer(v[k])) || !numbers(v.inventory, 10_000) || !Object.keys(v.inventory).every(k=>Object.hasOwn(legacy.items,k)) || !numbers(v.flags, MAX_MONEY)) return false;
+  if ((v.level as number)>=LEVEL_COUNT ? (v.version!==2||!validLife(v.life,v.level as number,v.family.children as number)) : v.life!==undefined) return false;
   if (!integer(v.flags.entryCash) || !integer(v.flags.entryDay, 1, v.day)) return false;
   if (!Array.isArray(v.rewards) || v.rewards.length > 8 || new Set(v.rewards).size !== v.rewards.length || !v.rewards.every(r => typeof r === 'string' && rewards.includes(r) && rewards.indexOf(r) * 3 + 2 <= (v.level as number))) return false;
   if (!Array.isArray(v.ledger) || v.ledger.length === 0 || v.ledger.length > MAX_ENTRIES) return false;
@@ -62,18 +66,22 @@ function validState(value: unknown): value is GameState {
   return true;
 }
 function validSave(value: unknown): value is Save {
-  if (!object(value) || !knownKeys(value, ['state', 'checkpoint', 'lang']) || !['zh', 'en'].includes(value.lang as string) || !validState(value.state) || !validState(value.checkpoint)) return false;
+  if (!object(value) || !knownKeys(value, ['state', 'checkpoint', 'lang']) || !['zh', 'en', 'ja', 'mn', 'mn-Mong'].includes(value.lang as string) || !validState(value.state) || !validState(value.checkpoint)) return false;
   const { state: s, checkpoint: c } = value;
   if (c.completed || s.level !== c.level || s.seed !== c.seed || s.family.gender !== c.family.gender || s.family.children !== c.family.children || c.day > s.day || c.ledger.length > s.ledger.length || s.flags.entryCash !== c.cash || s.flags.entryDay !== c.day) return false;
+  if (s.life && c.life) {
+    if(c.life.journal.length>s.life.journal.length||!c.life.journal.every((entry,i)=>JSON.stringify(entry)===JSON.stringify(s.life!.journal[i])))return false;
+  }
   if (!c.ledger.every((entry, i) => JSON.stringify(entry) === JSON.stringify(s.ledger[i]))) return false;
   return Object.keys(c.flags).every(key => key === 'entryCash' || key === 'entryDay' || (TRAVEL_FINANCE_FLAGS as readonly string[]).includes(key)) && c.flags.entryCash === c.cash && c.flags.entryDay === c.day;
 }
 export function loadGame(storage: Pick<Storage, 'getItem'> | undefined): Save | undefined {
   try {
-    const raw = storage?.getItem(SAVE_KEY);
+    const raw = storage?.getItem(SAVE_KEY) ?? storage?.getItem(LEGACY_SAVE_KEY);
     if (!raw || raw.length > 4_000_000) return undefined;
     const parsed: unknown = JSON.parse(raw);
-    return validSave(parsed) ? parsed : undefined;
+    if (!validSave(parsed)) return undefined;
+    return migrateSave(parsed);
   } catch { return undefined; }
 }
 export function saveGame(storage: Pick<Storage, 'setItem'> | undefined, save: Save): boolean {
@@ -84,4 +92,10 @@ export function saveGame(storage: Pick<Storage, 'setItem'> | undefined, save: Sa
     storage.setItem(SAVE_KEY, raw);
     return true;
   } catch { return false; }
+}
+
+export function migrateSave(save: Save): Save {
+  if(save.state.version===2&&save.checkpoint.version===2)return save;
+  if(save.state.level>=LEVEL_COUNT||save.checkpoint.level>=LEVEL_COUNT)throw new Error('Invalid legacy campaign');
+  return {...save,state:{...save.state,version:2},checkpoint:{...save.checkpoint,version:2}};
 }

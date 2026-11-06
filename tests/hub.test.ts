@@ -29,9 +29,10 @@ describe('Transit Tales collection', () => {
       const entry = economicHubCopy(language);
       expect(Object.keys(entry)).toEqual(Object.keys(economicHubCopy('en')));
       for (const value of Object.values(entry)) expect(value.trim()).not.toBe('');
-      expect(entry.note).toContain('24');
-      expect(entry.note).toContain('English');
-      expect(entry.note).toContain('简体中文');
+      expect(entry.note).toContain('65');
+      if (language === 'mn-Mong-CN') {
+        for (const value of Object.values(entry)) expect(value).not.toMatch(/[A-Za-z\u0400-\u04ff]/);
+      }
     }
     expect(rushEntry).toContain('href="build-world.html"');
     expect(rushEntry).toContain("label('home')");

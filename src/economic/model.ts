@@ -1,19 +1,22 @@
-export type Text = { zh: string; en: string };
-export type Lang = 'zh' | 'en';
+import { common, itemText, legacyLevel, legacyOffer, legacyResult } from './legacy-localization';
+import { advanceLife, CAMPAIGN_COUNT, LIFE_LEVELS, LIFE_START, lifeActions, lifeAct, lifeProgress, lifeWorth, type LifeState } from './life';
+export type Text = { zh: string; en: string; ja?: string; mn?: string; 'mn-Mong'?: string };
+export type Lang = 'zh' | 'en' | 'ja' | 'mn' | 'mn-Mong';
 export type Place = 'home' | 'shop' | 'school' | 'bank' | 'park';
 export type IconName = 'coin' | 'bag' | 'apple' | 'toy' | 'broom' | 'gift' | 'handshake' | 'bank' | 'calendar' | 'heart' | 'book' | 'shirt' | 'bread' | 'wallet' | 'arrow';
 export type Family = { gender: 'boy' | 'girl'; children: 1 | 2 | 3 };
 export type LedgerEntry = { day: number; label: Text; cash: number; savings: number; debt: number; digital?: number };
 export type BankTerm = { principal: number; startDay: number; maturityDay: number; rate: number; settled: boolean };
 export type GameState = {
-  version: 1; family: Family; level: number; day: number; cash: number; savings: number;
+  version: 1 | 2; life?: LifeState; family: Family; level: number; day: number; cash: number; savings: number;
   debt: number; trust: number; inventory: Record<string, number>; flags: Record<string, number>;
   seed: number; completed: boolean; ledger: LedgerEntry[];
   digital: number; rewards: string[]; bankTerm?: BankTerm;
   loan?: { principal: number; startDay: number; dueDay: number; rate: number; lastInterestDay: number; late: boolean };
 };
 export type Level = { id: string; title: Text; goal: Text; intro: Text; person: Text; place: Place; age: number; chapter: number; topic: Text };
-export type Offer = { id: string; label: Text; detail: Text; icon: IconName; disabled?: Text };
+export type SpeechFact = { id: string; value: number; money?: 'home'|'foreign' };
+export type Offer = { facts?: SpeechFact[]; id: string; label: Text; detail: Text; icon: IconName; disabled?: Text };
 export type Price = { id: string; label: Text; price: number; stock: number; currency?: 'home' | 'foreign' };
 export type Progress = { current: number; total: number; description: Text };
 export type Result = { state: GameState; ok: boolean; message: Text };
@@ -48,7 +51,7 @@ rows.push(
   ['parent-card', '家长卡的小账单', 'The parent card’s little bill', '家长陪同用模拟信用卡买外币点心，回家查看汇率变化后的本币账单。', 'With a parent, use a simulated parent credit card for foreign snacks and inspect the home-currency bill after returning.', '家长：这张是我的模拟信用卡，不是儿童开户。信用支付是借款；支付宝或PayPal等名字本身不代表借钱，要看资金来源。', 'Parent: this is my simulated card, not a child credit account. Credit borrows; names like Alipay or PayPal alone do not say whether a payment borrows. Check its funding source.', '家长', 'shop', '外币信用支付与账单换算', 'Foreign credit payments and converted bills'],
   ['travel-finale', '回家，账单也回家', 'Home again, bills too', '把余下贝币换回本币，按当前账单还清家长模拟卡，给每个孩子留一份纪念品。', 'Exchange leftover shells back, settle the parent’s simulated card at the displayed rate, and keep one souvenir per child.', '鹦鹉邮差：回国后用元还款，不是把贝币欠条扔掉！每个孩子都能翻开自己的旅行纪念页。', 'Parrot Post: repay in yuan at home; do not throw away shell IOUs! Every child gets a souvenir page.', '家长与鹦鹉邮差', 'home', '回国结算与无债旅行', 'Home settlement and debt-free travel'],
 );
-export const LEVELS: Level[] = rows.map((r, i) => ({ id: r[0], title: text(r[1], r[2]), goal: text(r[3], r[4]), intro: text(r[5], r[6]), person: text(r[7], ['Apple Uncle', 'Bear', 'Baker Bee', 'Parent', 'Parent', 'Grandma', 'Apple Uncle', 'Juice Jo', 'Cloud', 'Baker Bee', 'Le', 'Captain Coin', 'Le', 'Le', 'Parent and Le', 'Beaver and parent', 'Parent', 'Family', 'Parent', 'Parrot and parent', 'Shell Seller', 'Crab and parent', 'Parent', 'Parent and Parrot'][i]), place: r[8], age: Math.min(12, 7 + Math.floor(i / 3)), chapter: 1 + Math.floor(i / 6), topic: text(r[9], r[10]) }));
+export const LEVELS: Level[] = rows.map((r, i) => legacyLevel({ id: r[0], title: text(r[1], r[2]), goal: text(r[3], r[4]), intro: text(r[5], r[6]), person: text(r[7], ['Apple Uncle', 'Bear', 'Baker Bee', 'Parent', 'Parent', 'Grandma', 'Apple Uncle', 'Juice Jo', 'Cloud', 'Baker Bee', 'Le', 'Captain Coin', 'Le', 'Le', 'Parent and Le', 'Beaver and parent', 'Parent', 'Family', 'Parent', 'Parrot and parent', 'Shell Seller', 'Crab and parent', 'Parent', 'Parent and Parrot'][i]), place: r[8], age: Math.min(12, 7 + Math.floor(i / 3)), chapter: 1 + Math.floor(i / 6), topic: text(r[9], r[10]) },i));
 const f = (s: GameState, key: string) => s.flags[key] ?? 0;
 const count = (s: GameState, key: string) => s.inventory[key] ?? 0;
 const set = (s: GameState, key: string, value = 1) => { s.flags[key] = value; };
@@ -57,7 +60,7 @@ const weatherRain = (s: GameState) => ((s.seed ^ (s.level * 2654435761)) >>> 0) 
 const record = (s: GameState, label: Text, cash = 0, savings = 0, debt = 0, digital = 0) => {
   cash ||= 0; savings ||= 0; debt ||= 0; digital ||= 0;
   s.cash += cash; s.savings += savings; s.debt += debt; s.digital += digital;
-  s.ledger.push({ day: s.day, label, cash, savings, debt, ...(digital ? { digital } : {}) });
+  s.ledger.push({ day: s.day, label: {...common('updated'),zh:label.zh,en:label.en}, cash, savings, debt, ...(digital ? { digital } : {}) });
 };
 function finish(s: GameState) {
   s.completed = true;
@@ -72,14 +75,16 @@ function startLevel(s: GameState) {
 }
 export function createGame(family: Family, seed = 2026): GameState {
   if (!family || !['boy', 'girl'].includes(family.gender) || ![1, 2, 3].includes(family.children)) throw new Error('Invalid family');
-  const s: GameState = { version: 1, family: { ...family }, level: 0, day: 1, cash: 0, savings: 0, digital: 0, debt: 0, trust: 3, inventory: {}, flags: {}, seed: Number.isFinite(seed) ? (seed >>> 0) : 2026, completed: false, ledger: [], rewards: [] };
+  const s: GameState = { version: 2, family: { ...family }, level: 0, day: 1, cash: 0, savings: 0, digital: 0, debt: 0, trust: 3, inventory: {}, flags: {}, seed: Number.isFinite(seed) ? (seed >>> 0) : 2026, completed: false, ledger: [], rewards: [] };
   record(s, text('起始小钱包（不是全家资产）', 'Starting pocket money, not family wealth'), 3000);
   startLevel(s);
   return s;
 }
-export function getLevel(state: GameState): Level { return LEVELS[state.level]; }
+export { CAMPAIGN_COUNT } from './life';
+export const CAMPAIGN_LEVELS = [...LEVELS, ...LIFE_LEVELS];
+export function getLevel(state: GameState): Level { return CAMPAIGN_LEVELS[state.level]; }
 const foreignValue = (s: GameState, foreignCents: number) => Math.floor(foreignCents * f(s, 'fxRate') / 100);
-export function netWorth(state: GameState): number { return state.cash + state.savings + state.digital + f(state, 'pendingChange') + foreignValue(state, f(state, 'foreignCash')) - state.debt; }
+export function netWorth(state: GameState): number { return state.life ? lifeWorth(state.life) : state.cash + state.savings + state.digital + f(state, 'pendingChange') + foreignValue(state, f(state, 'foreignCash')) - state.debt; }
 export function getWeather(state: GameState): 'sunny' | 'rainy' {
   return state.level === 8 && f(state, 'weatherChanged') && weatherRain(state) ? 'rainy' : 'sunny';
 }
@@ -112,17 +117,21 @@ function nextDay(s: GameState, days = 1) {
   }
 }
 export function advance(state: GameState): GameState {
-  if (!state.completed || state.level >= LEVEL_COUNT - 1) return state;
+  if (!state.completed || state.level >= CAMPAIGN_COUNT - 1) return state;
   const s = clone(state);
-  nextDay(s); s.level++; startLevel(s);
+  if (state.level < LIFE_START) nextDay(s);
+  s.level++; startLevel(s);
+  if (s.level >= LIFE_START) { s.version = 2; advanceLife(s); }
   return s;
 }
 function clone(s: GameState): GameState {
+  if (s.life) return JSON.parse(JSON.stringify(s)) as GameState;
   return { ...s, family: { ...s.family }, flags: { ...s.flags }, inventory: { ...s.inventory }, ledger: s.ledger.map(e => ({ ...e, label: { ...e.label } })), rewards: [...s.rewards], ...(s.loan ? { loan: { ...s.loan } } : {}), ...(s.bankTerm ? { bankTerm: { ...s.bankTerm } } : {}) };
 }
 export function getPrices(s: GameState): Price[] {
+  if (s.life) return [];
   const n = s.family.children;
-  const price = (id: string, zh: string, en: string, cost: number, stock: number): Price => ({ id, label: text(zh, en), price: cost, stock: Math.max(0, stock) });
+  const price = (id: string, zh: string, en: string, cost: number, stock: number): Price => ({ id, label: itemText(id,text(zh, en)), price: cost, stock: Math.max(0, stock) });
   const stock = (id: string, total: number = n) => total - f(s, `bought_${id}`);
   switch (s.level) {
     case 0: return [price('apple', '苹果／个', 'Apple / each', 80, stock('apple')), price('toy', '会打嗝的玩具', 'A hiccuping toy', 180, stock('toy', 1))];
@@ -156,7 +165,15 @@ function actions(s: GameState): Action[] {
   const done = text('这件事已经完成，不会重复发钱。', 'Already done; no repeated payments.');
   const funds = text('小钱包不够。可检查其他工作，或从本关检查点重试。', 'Not enough pocket money. Check jobs or retry this level’s checkpoint.');
   const at = (place: Place, id: string, zh: string, en: string, detailZh: string, detailEn: string, icon: IconName, allowed: boolean, run: (s: GameState) => Text, reason = need) => {
-    list.push({ place, id, label: text(zh, en), detail: text(detailZh, detailEn), icon, ...(!allowed ? { disabled: reason } : {}), run });
+    const facts:NonNullable<Offer['facts']>=[];
+    const source=zh+'。'+detailZh;
+    for(const match of source.matchAll(/(\d+(?:\.\d+)?)(元|贝币|角|分|%|天|份|个|游戏日)/g)){
+      const value=Number(match[1]),unit=match[2],prefix=source.slice(Math.max(0,match.index!-12),match.index);
+      const monetary=['元','贝币','角','分'].includes(unit),kind=unit==='%'?'rate':unit==='天'||unit==='游戏日'?(prefix.includes('到期')||prefix.includes('约定')?'due':'day'):monetary?(prefix.includes('费')?'fee':prefix.includes('本金')||prefix.includes('借')?'principal':prefix.includes('汇率')||prefix.includes('贝币＝')?'fx':prefix.includes('预算')||prefix.includes('留')?'budget':'total'):'quantity';
+      const fact={id:kind,value:monetary?Math.round(value*(unit==='分'?1:unit==='角'?10:100)):value,...(monetary?{money:unit==='贝币'?'foreign' as const:'home' as const}:{})};
+      if(!facts.some(f=>f.id===fact.id&&f.value===fact.value&&f.money===fact.money))facts.push(fact);
+    }
+    list.push({ place, id, facts, label: text(zh, en), detail: text(detailZh, detailEn), icon, ...(!allowed ? { disabled: reason } : {}), run });
   };
   const mark = (place: Place, id: string, key: string, zh: string, en: string, detailZh: string, detailEn: string, icon: IconName, allowed = true, outcome = text('准备好了！', 'Ready!')) => at(place, id, zh, en, detailZh, detailEn, icon, allowed && !f(s, key), t => { set(t, key); return outcome; }, f(s, key) ? done : need);
   const buy = (place: Place, id: string, item: string, amount: number, allowed = true, budget = Infinity, digital = false) => {
@@ -178,6 +195,7 @@ function actions(s: GameState): Action[] {
       if (s.level === 5) { set(t, 'giftSpent', f(t, 'giftSpent') + cost); }
       return text(`付了${money(cost)}${unitZh}，钱少了，背包多了${amount}份。店长说：我的价签没有偷偷换！`, `Paid ${unitEn}${money(cost)}: less money, ${amount} more in your bag. The price tag did not sneak away!`);
     }, !allowed ? need : p.stock < amount ? done : available < cost ? funds : text('超过本关的小预算；玩具会挤掉需要的东西。可从检查点重试。', 'Over this mission’s budget; a toy crowds out needs. Retry the checkpoint if needed.'));
+    list[list.length-1].facts=[{id:'quantity',value:amount},{id:'unit-price',value:p.price,money:foreign?'foreign':'home'},{id:'total',value:cost,money:foreign?'foreign':'home'},{id:'stock-count',value:p.stock},...(Number.isFinite(budget)?[{id:'budget',value:Math.max(0,budget-f(s,'spent')),money:'home' as const}]:[])];
   };
   const end = (place: Place, id: string, zh: string, en: string, allowed: boolean, run?: (t: GameState) => void) => at(place, id, zh, en, getLevel(s).goal.zh, getLevel(s).goal.en, 'heart', allowed, t => { run?.(t); finish(t); return text('完成！钱包里的选择变成了生活里的笑容。新徽章会留在衣柜里。', 'Complete! Pocket decisions became real smiles. Earned badges stay in your wardrobe.'); });
   const wait = (place: Place, id: string, days: number, allowed: boolean, zh: string, en: string) => at(place, id, zh, en, '游戏时间前进；价签、到期日和每游戏日利息会先更新，再让你做决定。', 'Game time moves; price tags, due dates and per-game-day interest update before your next decision.', 'calendar', allowed, t => { nextDay(t, days); set(t, id); return text(`过了${days}个游戏日。先看新的价签与日期，不要急着付款！`, `${days} game-day(s) passed. Check updated tags and dates before paying!`); });
@@ -367,9 +385,10 @@ function actions(s: GameState): Action[] {
   return list;
 }
 const places: Place[] = ['home', 'shop', 'school', 'bank', 'park'];
-export function getActions(state: GameState, place: Place): Offer[] {
+function getActionsRaw(state: GameState, place: Place): Offer[] {
   if (!places.includes(place)) return [];
-  if (state.completed) return [{ id: `talk-${place}`, label: text('聊聊今天的选择', 'Talk about today’s choices'), detail: text(state.level === LEVEL_COUNT - 1 ? '童年旅程完成！可以重玩检查点；成年活动还没有开放。' : '本关完成；按“继续”开始下一关。不会跳过未完成的关卡。', state.level === LEVEL_COUNT - 1 ? 'Childhood campaign complete! Replay checkpoints; adult activities are not open yet.' : 'Mission complete; Continue starts the next. Unfinished levels cannot be skipped.'), icon: 'heart' }];
+  if (state.life) return lifeActions(state, place);
+  if (state.completed) return [{ id: `talk-${place}`, label: text('聊聊今天的选择', 'Talk about today’s choices'), detail: text(state.level === LEVEL_COUNT - 1 ? '童年旅程完成！按继续，和家人一起走进长大的故事。' : '本关完成；按“继续”开始下一关。不会跳过未完成的关卡。', state.level === LEVEL_COUNT - 1 ? 'Childhood campaign complete! Continue into growing-up stories with your family.' : 'Mission complete; Continue starts the next. Unfinished levels cannot be skipped.'), icon: 'heart' }];
   const available = actions(state).filter(a => a.place === place).map(({ run: _run, place: _place, ...offer }) => offer);
   if (available.length) return available;
   const targets = [...new Set(actions(state).filter(a => !a.disabled).map(a => a.place))];
@@ -378,7 +397,8 @@ export function getActions(state: GameState, place: Place): Offer[] {
   const targetEn = targets.map(p => names[p].en).join(', ') || 'the level checkpoint';
   return [{ id: `talk-${place}`, label: text('问问下一步去哪', 'Ask where to go next'), detail: text(`这里可以休息。下一步去${targetZh}；家务和准备动作也可能在别处。`, `Rest here. Next try ${targetEn}; preparation and jobs may be elsewhere.`), icon: 'arrow' }];
 }
-export function act(state: GameState, actionId: string): Result {
+function actRaw(state: GameState, actionId: string): Result {
+  if (state.life) return lifeAct(state, actionId);
   if (typeof actionId !== 'string') return { state, ok: false, message: text('没有这个行动。', 'Unknown action.') };
   if (actionId.startsWith('talk-')) {
     const place = actionId.slice(5) as Place;
@@ -403,7 +423,23 @@ const progressKeys = [
   ['travel-envelope', 'tripPlan', 'bought_ticket', 'bought_room', 'complete'], ['exchangeRead', 'exchanged', 'bought_bus', 'complete'], ['fxCompared', 'souvenirChosen', 'complete'], ['customsRead', 'declared', 'customsPaid', 'complete'], ['cardTerms', 'cardBought', 'returnedHome', 'complete'], ['homeBill', 'foreignReturned', 'cardSettled', 'complete'],
 ];
 export function getProgress(state: GameState): Progress {
+  if (state.life) return lifeProgress(state);
   const keys = progressKeys[state.level];
   const complete = (key: string) => key === 'complete' ? state.completed : key === 'protection' ? f(state, 'bought_umbrella') || f(state, 'bought_coat') : key === 'edible' ? count(state, 'markdown') >= state.family.children || f(state, 'bought_fresh') || state.completed : key === 'withdrawn' ? state.savings === 0 : key === 'foreignReturned' ? f(state, 'foreignCash') === 0 : f(state, key);
   return { current: state.completed ? keys.length : keys.filter(complete).length, total: keys.length, description: getLevel(state).goal };
 }
+
+export function getActions(state:GameState,place:Place):Offer[] {
+  const offers=getActionsRaw(state,place);if(state.life)return offers;
+  return offers.map(original=>{
+    const o={...original,facts:[...(original.facts??[])]},add=(id:string,value:number,money?:'home'|'foreign')=>{o.facts=o.facts.filter(f=>f.id!==id);o.facts.push({id,value,...(money?{money}:{})});};
+    if(['read-loan','borrow'].includes(o.id)){add('principal',state.level===12?200:state.level===13?300:400,'home');add('rate',state.level===14?1:0);add('due',state.day+1);}
+    if(o.id==='repay'&&state.loan){add('principal',state.loan.principal,'home');add('interest',state.debt-state.loan.principal,'home');add('total',state.debt,'home');add('rate',state.loan.rate);add('due',state.loan.dueDay);}
+    if(['wait-bank','withdraw'].includes(o.id)&&state.bankTerm){add('principal',state.bankTerm.principal,'home');add('rate',state.bankTerm.rate);add('due',state.bankTerm.maturityDay);add('day',state.day);add('interest',state.bankTerm.settled?state.savings-state.bankTerm.principal:Math.floor(state.bankTerm.principal*(state.bankTerm.maturityDay-state.bankTerm.startDay)*state.bankTerm.rate/100),'home');}
+    if(o.id==='pay-parent-card'||o.id==='parent-card-terms'){add('due',state.day+2);add('fee',20,'home');add('fx',state.flags.fxRate??200,'home');}
+    if(['read-home-bill','settle-parent-card','delay-card'].includes(o.id)){add('due',state.flags.cardDueDay??0);add('day',state.day);add('fee',state.flags.cardLateFee??0,'home');add('total',state.debt,'home');add('foreign-debt',state.flags.foreignDebt??0,'foreign');add('fx',state.flags.fxRate??200,'home');}
+    if(o.id==='deposit'){const principal=state.level===15?300:200,term=state.level===15?2:1;add('principal',principal,'home');add('due',state.day+term);add('rate',1);add('interest',Math.floor(principal*term/100),'home');}
+    return legacyOffer(o,state,getLevel(state).place);
+  });
+}
+export function act(state:GameState,actionId:string):Result {const result=actRaw(state,actionId);return state.life?result:{...result,message:legacyResult(result.message,actionId,result.ok,result.state.completed)};}

@@ -1,8 +1,12 @@
+import { balanceNarration, choiceNarration, priceNarration, outcomeNarration, outcomeChanges } from './narration-guidance';
+import { common, itemText, ledgerText, accountText } from './legacy-localization';
 import './style.css';
-import { act, advance, createGame, getActions, getLevel, getPrices, getProgress, getWeather, LEVELS, LEVEL_COUNT, netWorth, type Family, type GameState, type Lang, type Place, type Text } from './model';
+import { act, advance, createGame, getActions, getLevel, getPrices, getProgress, getWeather, CAMPAIGN_LEVELS as LEVELS, CAMPAIGN_COUNT as LEVEL_COUNT, netWorth, type Family, type GameState, type Lang, type Place, type Text } from './model';
 import { loadGame, saveGame, type Save } from './storage';
 import { icon, portrait, sceneArt, townAnchors } from './art';
-import { copy, escapeHtml as esc, itemNames, money, text } from './copy';
+import { balance, lifeText, LIFE_STORIES } from './life';
+import { Narrator, scriptIds, amountIds } from './narration';
+import { copy, escapeHtml as esc, money, text } from './copy';
 
 const host = document.querySelector<HTMLDivElement>('#economic')!;
 let storage: Storage | undefined;
@@ -17,9 +21,17 @@ type Panel = 'setup' | 'wallet' | 'journal' | 'settings' | 'help' | 'retry' | 'r
 let panel: Panel = restored ? undefined : 'setup';
 let feedback: Text | undefined;
 let feedbackOk = true;
+let changes:ReturnType<typeof outcomeChanges>=[];
 let saved = Boolean(restored);
 let saveAttempted = Boolean(restored);
-let sound = false;
+let sound = true;
+let audioMissing = false;
+const narrator = new Narrator(import.meta.env.BASE_URL, () => { audioMissing=true; host.querySelector<HTMLElement>('.narration-status')?.replaceChildren(document.createTextNode(text(lifeText('ui.audio-missing'),lang))); });
+const languages:Lang[]=['zh','en','ja','mn','mn-Mong'];
+function languageOptions(): string {return [['zh','简体中文'],['en','English'],['ja','日本語'],['mn','Монгол'],['mn-Mong','ᠮᠣᠩᠭᠣᠯ']].map(([value,label])=>`<option value="${value}" ${lang===value?'selected':''}>${label}</option>`).join('');}
+function pocket():number {return state.life?balance(state.life,'house.cash'):state.cash;}
+function debt():number {return state.life?-balance(state.life,'house.loan')-balance(state.life,'house.loanInterest')-balance(state.life,'house.mortgage')-balance(state.life,'house.mortgageInterest')-balance(state.life,'house.legacyDebt'):state.debt;}
+function narrateCurrent():void {narrator.context(lang,panel==='setup'?family.gender:state.family.gender);const level=getLevel(state),currentPlace=place==='town'?level.place:place;void narrator.play(panel==='setup'?['ui.setup']:panel?[`ui.panel-${panel}`,...(panel==='wallet'?balanceNarration(state,lang):[])]: [...scriptIds([level.title,level.goal,level.intro]),...priceNarration(state,currentPlace,lang),...getActions(state,currentPlace).flatMap(o=>choiceNarration(state,o,lang))]);}
 let audio: AudioContext | undefined;
 let focusReturn: string | undefined;
 let outfitChoice: number | undefined;
@@ -27,7 +39,7 @@ const places: Place[] = ['home', 'shop', 'school', 'bank', 'park'];
 const placeIcons = { home: 'home', shop: 'bag', school: 'school', bank: 'bank', park: 'park' };
 function structuredCopy<T>(value: T): T { return JSON.parse(JSON.stringify(value)) as T; }
 function t(value: Text): string { return esc(text(value, lang)); }
-function amount(value: number, foreign = false): string { return `${money(value, lang)} <small>${foreign ? (lang === 'zh' ? '贝币' : 'shells') : copy(lang).yuan}</small>`; }
+function amount(value: number, foreign = false): string { return `${money(value, lang)} <small>${foreign ? text(lifeText('ui.shells'),lang) : copy(lang).yuan}</small>`; }
 function itemIcon(id: string): string {
   if (id.includes('souvenir') || id === 'shell') return 'shell';
   if (id.includes('book')) return 'book';
@@ -41,23 +53,18 @@ function itemIcon(id: string): string {
 }
 function foreignWallet(): string {
   if (!state.flags.fxRate) return '';
-  const foreign = state.flags.foreignCash ?? 0, rate = state.flags.fxRate;
-  return `<div class="foreign-wallet">${icon('shell')}<div><b>${lang === 'zh' ? '旅行钱袋' : 'Travel purse'} · ${amount(foreign, true)}</b><span>1 ${lang === 'zh' ? '贝币' : 'shell'} = ${amount(rate)}${lang === 'zh' ? '（虚构汇率）' : ' (fictional rate)'}</span>${state.flags.foreignDebt ? `<span>${icon('card')}${lang === 'zh' ? '家长的卡 · 外币账单' : 'Parent’s card · foreign bill'} ${amount(state.flags.foreignDebt, true)}</span>` : ''}</div></div>`;
+  return `<div class="foreign-wallet">${icon('shell')}<div><b>${t(common('travel-purse'))} · ${amount(state.flags.foreignCash??0,true)}</b><span>${t(common('fx'))}: 1 ${t(lifeText('ui.shells'))} = ${amount(state.flags.fxRate)}</span>${state.flags.foreignDebt?`<span>${t(common('foreign-debt'))} ${amount(state.flags.foreignDebt,true)}</span>`:''}</div></div>`;
 }
 function walletExtras(): string {
-  const zh = lang === 'zh';
-  const balance = (label: string, value: number, glyph: string, note: string) => `<div class="minor-wallet">${icon(glyph)}<div><b>${label} · ${amount(value)}</b><span>${note}</span></div></div>`;
-  let content = state.digital > 0 ? balance(zh ? '数字钱包（预付）' : 'Digital wallet (prepaid)', state.digital, 'card', zh ? '已经从口袋充值的钱，不是借款。' : 'Money already loaded from your pocket, not a loan.') : '';
-  if (state.flags.pendingChange) content += balance(zh ? '找零等着领' : 'Change waiting for you', state.flags.pendingChange, 'coin', zh ? '这是店主还要给你的钱，也属于你。' : 'The shopkeeper still owes you this money. It is yours, too.');
-  const due = (day: number) => `${zh ? `约定第 ${day} 天` : `Promised day ${day}`} · ${state.day > day ? (zh ? '已经过了约定日' : 'Past the promised day') : state.day === day ? (zh ? '就是今天' : 'That is today') : (zh ? `还有 ${day - state.day} 个游戏天` : `${day - state.day} game days left`)}`;
-  const contracts: string[] = [];
-  if (state.bankTerm) {
-    const term = state.bankTerm;
-    contracts.push(`<p>${icon('bank')}<span><b>${zh ? '存款的小约定' : 'Your savings promise'}</b>${amount(term.principal)} · ${term.rate}% / ${zh ? '游戏天' : 'game day'}<small>${term.settled ? (zh ? '利息已经进入银行钱袋；本金仍在存款里。' : 'Interest is in the bank pouch; the principal is still saved.') : due(term.maturityDay)}</small></span></p>`);
-  }
-  if (state.loan) contracts.push(`<p>${icon('handshake')}<span><b>${zh ? '记得还朋友' : 'Remember your friend'}</b>${due(state.loan.dueDay)}<small>${zh ? '要还的总数已在上面的钱袋里，不重复相加。' : 'The total owed is already in the pouch above, not added twice.'} ${state.loan.rate}% / ${zh ? '游戏天（本金单利）' : 'game day (simple interest)'}</small></span></p>`);
-  if (state.flags.foreignDebt) contracts.push(`<p>${icon('card')}<span><b>${zh ? '家长的卡：回家用元还款' : 'Parent’s card: repay in home yuan'}</b>${due(state.flags.cardDueDay)}<small>${zh ? '按当前虚构汇率结算，要还的元已在上面的钱袋里。' : 'Settled at the current fictional rate. Home yuan owed is in the pouch above.'}${state.flags.cardLateFee ? ` ${zh ? '已包含一次迟还费用' : 'Includes one late fee'} ${amount(state.flags.cardLateFee)}` : ''}</small></span></p>`);
-  return `${content}${contracts.length ? `<div class="contract-notes">${contracts.join('')}</div>` : ''}`;
+  const c=copy(lang),due=(day:number)=>`${t(common('due'))}: ${day} · ${t(common('day'))}: ${state.day}${state.day>day?' · '+t(common('over-due')):''}`;
+  const minor=(label:Text,value:number,glyph:string,note:Text)=>`<div class="minor-wallet">${icon(glyph)}<div><b>${t(label)} · ${amount(value)}</b><span>${t(note)}</span></div></div>`;
+  let result=state.digital?minor(common('digital'),state.digital,'card',common('wallet-result')):'';
+  if(state.flags.pendingChange)result+=minor(common('change-money'),state.flags.pendingChange,'coin',common('change-result'));
+  const contracts:string[]=[];
+  if(state.bankTerm){const term=state.bankTerm;contracts.push(`<p>${icon('bank')}<span><b>${c.savings}</b>${t(common('principal'))}: ${amount(term.principal)} · ${t(common('rate'))}: ${term.rate}%<small>${term.settled?t(common('matured')):due(term.maturityDay)}</small></span></p>`);}
+  if(state.loan)contracts.push(`<p>${icon('handshake')}<span><b>${c.debt}</b>${due(state.loan.dueDay)}<small>${t(common('principal'))}: ${amount(state.loan.principal)} · ${t(common('rate'))}: ${state.loan.rate}% · ${t(common('borrow-result'))}</small></span></p>`);
+  if(state.flags.foreignDebt)contracts.push(`<p>${icon('card')}<span><b>${t(common('foreign-debt'))}</b>${due(state.flags.cardDueDay)}<small>${t(common('total'))}: ${amount(state.debt)} · ${t(common('fee'))}: ${amount(state.flags.cardLateFee??0)}</small></span></p>`);
+  return result+(contracts.length?`<div class="contract-notes">${contracts.join('')}</div>`:'');
 }
 function persist(): void {
   saveAttempted = true;
@@ -68,24 +75,25 @@ function button(action: string, label: string, glyph: string, extra = ''): strin
   return `<button type="button" id="${action}" data-ui="${action}" class="tool" aria-label="${esc(label)}" title="${esc(label)}" ${extra}>${icon(glyph)}<span>${esc(label)}</span></button>`;
 }
 function shortPlace(location: Place): string {
-  return (lang === 'zh' ? { home: '家', shop: '小铺', school: '学校', bank: '银行', park: '公园' } : { home: 'Home', shop: 'Shop', school: 'School', bank: 'Bank', park: 'Park' })[location];
+  return copy(lang).locations[location];
 }
 function render(): void {
   const focused = (document.activeElement as HTMLElement | null)?.id;
   const c = copy(lang), level = getLevel(state), progress = getProgress(state), prices = getPrices(state);
-  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.documentElement.dataset.economicLang=lang;
   document.title = `${c.title} · Transit Tales`;
   const weather = getWeather(state);
   const goalRatio = Math.min(1, Math.max(0, progress.current / Math.max(1, progress.total)));
   const isFinal = state.completed && state.level === LEVEL_COUNT - 1;
   host.innerHTML = `
     <main class="economy-game ${panel === 'setup' ? 'is-setup' : ''}" aria-label="${c.title}">
-      <div class="scenery" aria-hidden="true"><div class="world-stage">${sceneArt({ place: isFinal && !panel ? 'park' : place, gender: state.family.gender, children: state.family.children, age: level.age, day: state.day, outfit: outfit(), completed: isFinal, cash: state.cash, savings: state.savings, debt: state.debt, stock: prices.reduce((sum, price) => sum + price.stock, 0), weather, travel: state.level >= 18 })}</div></div>
+      <div class="scenery" aria-hidden="true"><div class="world-stage">${sceneArt({ place: isFinal && !panel ? 'park' : place, gender: state.family.gender, children: state.family.children, age: level.age, day: state.day, outfit: outfit(), completed: isFinal, cash: pocket(), savings: state.life?balance(state.life,'house.savings'):state.savings, debt: debt(), stock: prices.reduce((sum, price) => sum + price.stock, 0), weather, travel: state.level >= 18&&state.level<24,lifeScene:state.life?LIFE_STORIES[state.level-24][0]:undefined,offspring:state.life?.childrenAges })}</div></div>
       <header class="game-header">
         <a class="home-link" href="index.html" aria-label="${c.homeLink}" title="${c.homeLink}">${icon('home')}</a>
         <div class="game-name"><h1>${c.title}</h1><span>${level.age} ${c.age} <i>·</i> ${c.day} ${state.day} ${c.dayEnd}</span></div>
-        <div class="header-right"><select id="language" aria-label="Language / 语言"><option value="zh" ${lang === 'zh' ? 'selected' : ''}>简体中文</option><option value="en" ${lang === 'en' ? 'selected' : ''}>English</option></select>
-        <button id="wallet" data-ui="wallet" class="pocket" aria-label="${c.wallet}: ${money(state.cash, lang)} ${c.yuan}" aria-expanded="${panel === 'wallet'}">${icon('coin')}<span><small>${c.cash}</small><b>${amount(state.cash)}</b></span></button></div>
+        <div class="header-right"><select id="language" aria-label="Language / 语言">${languageOptions()}</select>
+        <button id="wallet" data-ui="wallet" class="pocket" aria-label="${c.wallet}: ${money(pocket(), lang)} ${c.yuan}" aria-expanded="${panel === 'wallet'}">${icon('coin')}<span><small>${c.cash}</small><b>${amount(pocket())}</b></span></button></div>
       </header>
       <section class="wish-note ${state.completed ? 'wish-done' : ''}" aria-label="${c.goal}">
         <div class="wish-pin" aria-hidden="true"></div><div class="wish-top"><h2>${t(level.title)}</h2><span>${state.level + 1}/${LEVEL_COUNT}</span></div>
@@ -96,7 +104,8 @@ function render(): void {
       ${place !== 'town' && !panel && !isFinal ? conversation(place) : ''}
       ${isFinal && !panel ? `<section class="picnic-ending" aria-labelledby="ending-title"><div class="ending-rosette">${icon('heart')}</div><h2 id="ending-title">${c.finale}</h2><p>${c.finaleBody}</p><span>${c.ending}</span><div class="ending-actions"><button id="ending-wallet" data-ui="wallet" class="primary">${icon('book')}${c.wallet}</button><button id="ending-reset" data-ui="reset" class="secondary">${c.reset}</button></div><small>${c.endingNote}</small></section>` : ''}
       <nav class="location-strip" aria-label="${c.visit}" ${panel === 'setup' || isFinal ? 'hidden' : ''}>${places.map(location => `<button id="visit-${location}" data-place="${location}" ${place === location ? 'aria-current="location"' : ''} class="${level.place === location && !state.completed ? 'has-story' : ''}">${icon(placeIcons[location])}<span>${shortPlace(location)}</span></button>`).join('')}</nav>
-      <nav class="game-tools" aria-label="${c.settings}" ${panel === 'setup' ? 'hidden' : ''}>${place !== 'town' && !isFinal ? button('town', c.map, 'map') : ''}${button('journal', c.chapter, 'book')}${button('help', c.help, 'help')}${button('settings', c.settings, 'sound')}</nav>
+      <nav class="game-tools" aria-label="${c.settings}" ${panel === 'setup' ? 'hidden' : ''}>${place !== 'town' && !isFinal ? button('town', c.map, 'map') : ''}${button('journal', c.chapter, 'book')}${button('help', c.help, 'help')}${button('settings', c.settings, 'sound')}${button('replay',text(lifeText('ui.replay'),lang),'sound')}${button('stop',text(lifeText('ui.stop'),lang),'close')}</nav>
+      <p class="narration-status" role="status">${audioMissing?t(lifeText('ui.audio-missing')):''}</p>
       <p class="save-status ${saveAttempted && !saved ? 'save-warning' : ''}" role="status">${saveAttempted ? (saved ? c.saved : c.unsaved) : c.saveNote}</p>
       ${place === 'town' && !panel && !state.completed ? `<p class="town-hint">${c.locationHint}</p>` : ''}
       ${state.completed && place === 'town' && !panel && !isFinal ? `<section class="town-complete"><p>${c.continueHint}</p><button id="next-town" data-ui="next" class="primary">${c.next}${icon('arrow')}</button></section>` : ''}
@@ -109,14 +118,11 @@ function render(): void {
 function conversation(location: Place): string {
   const c = copy(lang), level = getLevel(state), offers = getActions(state, location);
   const npc = location === 'bank' ? 'banker' : location === 'home' ? 'parent' : 'friend';
-  const greeting = location === level.place ? level.intro : {
-    zh: `${c.locations[location]}就在这里。先看看今天的小愿望；小脚印会指向故事发生的地方。`,
-    en: `Welcome to ${c.locations[location]}. Check your little wish; the footprints point to today’s story.`,
-  };
+  const greeting = location === level.place ? level.intro : common('visit');
   return `<section class="conversation ${state.completed ? 'conversation-done' : ''}" aria-label="${c.speak}">
-    <div class="speaker">${portrait(npc)}<div><h2>${location === level.place ? t(level.person) : c.locations[location]}</h2><p class="spoken ${feedback && !feedbackOk ? 'choice-error' : ''}">${feedback ? t(feedback) : t(greeting)}</p></div></div>
+    <div class="speaker">${portrait(npc)}<div><h2>${location === level.place ? t(level.person) : c.locations[location]}</h2><p class="spoken ${feedback && !feedbackOk ? 'choice-error' : ''}">${feedback ? t(feedback) : t(greeting)}</p>${feedback&&changes.length?`<p class="choice-outcome">${t(common('changes'))} ${changes.map(row=>`${t(row.label)} · ${t(common(row.value<0?'change-down':'change-up'))} ${row.money?amount(Math.abs(row.value),row.money==='foreign'):Math.abs(row.value)}`).join(' · ')}</p>`:''}</div></div>
     ${location === 'shop' && !state.completed ? priceTags() : ''}
-    ${state.completed ? `<div class="completion-actions"><span>${icon('check')}${c.done}</span><button id="next" data-ui="next" class="primary">${c.next}${icon('arrow')}</button></div>` : `<div class="choices">${offers.map((offer, index) => `<button id="action-${esc(offer.id)}" data-action="${esc(offer.id)}" class="choice ${index === 0 ? 'suggested-choice' : ''}" ${offer.disabled ? 'disabled' : ''}>${icon(offer.icon)}<span><b>${t(offer.label)}</b><small>${t(offer.disabled ?? offer.detail)}</small></span>${icon('arrow')}</button>`).join('')}${offers.length === 0 ? `<button id="find-story" data-place="${level.place}" class="choice">${icon('arrow')}<span><b>${c.travel} · ${c.locations[level.place]}</b><small>${t(level.goal)}</small></span></button>` : ''}</div>`}
+    ${state.completed ? `<div class="completion-actions"><span>${icon('check')}${c.done}</span><button id="next" data-ui="next" class="primary">${c.next}${icon('arrow')}</button></div>` : `<div class="choices">${offers.map((offer, index) => `<div class="choice-pair"><button id="action-${esc(offer.id)}" data-action="${esc(offer.id)}" class="choice ${index === 0 ? 'suggested-choice' : ''}" ${offer.disabled ? `disabled aria-describedby="why-${esc(offer.id)}"` : ''}>${icon(offer.icon)}<span><b>${t(offer.label)}</b><small>${t(offer.detail)}</small>${offer.disabled?`<em id="why-${esc(offer.id)}">${t(offer.disabled)}</em>`:''}</span>${icon('arrow')}</button><button id="listen-${esc(offer.id)}" data-listen="${esc(offer.id)}" class="choice-listen" aria-label="${t(lifeText('ui.listen-choice'))}: ${t(offer.label)}">${icon('sound')}<span>${t(lifeText('ui.listen-choice'))}</span></button></div>`).join('')}${offers.length === 0 ? `<button id="find-story" data-place="${level.place}" class="choice">${icon('arrow')}<span><b>${c.travel} · ${c.locations[level.place]}</b><small>${t(level.goal)}</small></span></button>` : ''}</div>`}
   </section>`;
 }
 function priceTags(): string {
@@ -132,10 +138,11 @@ function panelContent(which: Exclude<Panel, undefined>): string {
   } else if (which === 'wallet') {
     title = c.wallet;
     const items = Object.entries(state.inventory).filter(([, count]) => count > 0);
-    content = `<p class="wallet-note">${c.walletNote}</p><div class="money-pouches">${[['cash', 'wallet', state.cash], ['savings', 'bank', state.savings], ['debt', 'handshake', state.debt]].map(([name, glyph, value]) => `<div class="money-pouch pouch-${name}">${icon(glyph as string)}<span>${c[name as 'cash' | 'savings' | 'debt']}</span><b>${amount(value as number)}</b></div>`).join('')}</div>${foreignWallet()}${walletExtras()}<div class="net-worth">${icon('heart')}<span>${c.worth}</span><b>${amount(netWorth(state))}</b></div><div class="trust-line"><span>${c.trust}</span><div aria-label="${c.trust}: ${state.trust}/3">${Array.from({ length: 3 }, (_, index) => `<span class="trust-heart ${index < state.trust ? 'filled' : ''}">${icon('heart')}</span>`).join('')}</div></div><p class="fine-note">${c.trustNote}</p><h3>${c.inventory}</h3><div class="bag-items">${items.length ? items.map(([id, count]) => `<span>${icon(itemIcon(id))}<b>${esc(itemNames[id]?.[lang] ?? id)} × ${count}</b></span>`).join('') : `<p>${c.emptyBag}</p>`}</div><details class="ledger"><summary>${c.history}</summary>${state.ledger.length ? `<ol>${state.ledger.slice(-10).reverse().map(entry => `<li><span>${c.day} ${entry.day} ${c.dayEnd}</span><b>${t(entry.label)}</b><div>${(['cash', 'savings', 'debt'] as const).filter(key => entry[key] !== 0).map(key => `<small>${c[key]} ${entry[key] > 0 ? '+' : ''}${money(entry[key], lang)}</small>`).join('')}</div></li>`).join('')}</ol>` : `<p>${c.noHistory}</p>`}</details><details class="wardrobe"><summary>${c.wardrobe}</summary><p>${c.wardrobeNote}</p><div>${c.outfit.map((label, index) => `<button id="outfit-${index}" data-outfit="${index}" ${index > Math.min(2, Math.floor((state.level + (state.completed ? 1 : 0)) / 6)) ? 'disabled' : ''} aria-pressed="${outfit() === index}">${portrait(state.family.gender, index)}<span>${label}</span></button>`).join('')}</div></details>`;
+    content = `<p class="wallet-note">${c.walletNote}</p><div class="money-pouches">${[['cash', 'wallet', pocket()], ['savings', 'bank', state.life?balance(state.life,'house.savings'):state.savings], ['debt', 'handshake', debt()]].map(([name, glyph, value]) => `<div class="money-pouch pouch-${name}">${icon(glyph as string)}<span>${c[name as 'cash' | 'savings' | 'debt']}</span><b>${amount(value as number)}</b></div>`).join('')}</div>${state.life?lifeWallet():foreignWallet()+walletExtras()}<div class="net-worth">${icon('heart')}<span>${c.worth}</span><b>${amount(netWorth(state))}</b></div><div class="trust-line"><span>${c.trust}</span><div aria-label="${c.trust}: ${state.trust}/3">${Array.from({ length: 3 }, (_, index) => `<span class="trust-heart ${index < state.trust ? 'filled' : ''}">${icon('heart')}</span>`).join('')}</div></div><p class="fine-note">${c.trustNote}</p><h3>${c.inventory}</h3><div class="bag-items">${items.length ? items.map(([id, count]) => `<span>${icon(itemIcon(id))}<b>${t(itemText(id))} × ${count}</b></span>`).join('') : `<p>${c.emptyBag}</p>`}</div><details class="ledger"><summary>${c.history}</summary>${state.ledger.length ? `<ol>${state.ledger.slice(-10).reverse().map(entry => `<li><span>${c.day} ${entry.day} ${c.dayEnd}</span><b>${t(ledgerText(entry.label))}</b><div>${(['cash', 'savings', 'debt'] as const).filter(key => entry[key] !== 0).map(key => `<small>${c[key]} ${entry[key] > 0 ? '+' : ''}${money(entry[key], lang)}</small>`).join('')}</div></li>`).join('')}</ol>` : `<p>${c.noHistory}</p>`}</details><details class="wardrobe"><summary>${c.wardrobe}</summary><p>${c.wardrobeNote}</p><div>${c.outfit.map((label, index) => `<button id="outfit-${index}" data-outfit="${index}" ${index > Math.min(2, Math.floor((state.level + (state.completed ? 1 : 0)) / 6)) ? 'disabled' : ''} aria-pressed="${outfit() === index}">${portrait(state.family.gender, index)}<span>${label}</span></button>`).join('')}</div></details>`;
+    if(state.life) content+=lifeLedger();
   } else if (which === 'journal') {
     title = c.chapter;
-    content = `<div class="storybook">${c.chapterNames.map((name, chapter) => `<section><h3>${icon(chapter === 0 ? 'coin' : chapter === 1 ? 'bag' : chapter === 2 ? 'bank' : 'plane')}${name}</h3><p>${c.chapterDescriptions[chapter]}</p><ol>${LEVELS.slice(chapter * 6, chapter * 6 + 6).map((level, offset) => { const index = chapter * 6 + offset; return `<li class="${index < state.level || index === state.level && state.completed ? 'chapter-done' : index === state.level ? 'chapter-current' : 'chapter-future'}"><span>${index + 1}</span><div><b>${t(level.title)}</b><small>${index < state.level || index === state.level && state.completed ? c.done : index === state.level ? t(level.goal) : c.locked}</small></div>${icon(index < state.level || index === state.level && state.completed ? 'check' : index === state.level ? 'arrow' : 'book')}</li>`; }).join('')}</ol></section>`).join('')}</div><button id="journal-retry" data-ui="retry" class="secondary">${icon('reset')}${c.retry}</button><p class="fine-note">${c.endingNote}</p>`;
+    content = `<div class="storybook">${[...c.chapterNames,...Array.from({length:7},(_,i)=>text(LEVELS[24+i*6].title,lang))].map((name, chapter) => `<section><h3>${icon(chapter === 0 ? 'coin' : chapter === 1 ? 'bag' : chapter === 2 ? 'bank' : 'plane')}${name}</h3><p>${c.chapterDescriptions[chapter]??''}</p><ol>${LEVELS.slice(chapter * 6, chapter * 6 + 6).map((level, offset) => { const index = chapter * 6 + offset; return `<li class="${index < state.level || index === state.level && state.completed ? 'chapter-done' : index === state.level ? 'chapter-current' : 'chapter-future'}"><span>${index + 1}</span><div><b>${t(level.title)}</b><small>${index < state.level || index === state.level && state.completed ? c.done : index === state.level ? t(level.goal) : c.locked}</small></div>${icon(index < state.level || index === state.level && state.completed ? 'check' : index === state.level ? 'arrow' : 'book')}</li>`; }).join('')}</ol></section>`).join('')}</div><button id="journal-retry" data-ui="retry" class="secondary">${icon('reset')}${c.retry}</button><p class="fine-note">${c.endingNote}</p>`;
   } else if (which === 'help') {
     title = c.help;
     content = `<div class="help-illustration">${portrait(state.family.gender)}${icon('arrow')}${icon('bag')}</div><p>${c.helpBody}</p><p>${c.helpBank}</p><button id="help-go" data-place="${getLevel(state).place}" class="primary">${c.travel}${icon('arrow')}</button><button id="help-retry" data-ui="retry" class="secondary">${icon('reset')}${c.retry}</button>`;
@@ -147,7 +154,7 @@ function panelContent(which: Exclude<Panel, undefined>): string {
     title = reset ? c.resetTitle : c.retryTitle;
     content = `<p>${reset ? c.resetBody : c.retryBody}</p><button id="confirm-${which}" data-ui="confirm-${which}" class="primary">${reset ? c.confirmReset : c.confirmRetry}${icon('arrow')}</button><button id="cancel" data-ui="close" class="secondary">${c.cancel}</button>`;
   }
-  return `${critical ? '<div class="panel-backdrop"></div>' : ''}<section class="paper-panel panel-${which} ${critical ? 'protected-panel' : ''}" role="dialog" aria-modal="${critical}" aria-labelledby="panel-title"><header><h2 id="panel-title">${title}</h2>${which === 'setup' ? `<select id="setup-language" aria-label="Language / 语言"><option value="zh" ${lang === 'zh' ? 'selected' : ''}>简体中文</option><option value="en" ${lang === 'en' ? 'selected' : ''}>English</option></select>` : ''}${which !== 'setup' ? `<button id="close" data-ui="close" class="close-panel" aria-label="${c.close}">${icon('close')}</button>` : ''}</header><div class="panel-content">${content}</div></section>`;
+  return `${critical ? '<div class="panel-backdrop"></div>' : ''}<section class="paper-panel panel-${which} ${critical ? 'protected-panel' : ''}" role="dialog" aria-modal="${critical}" aria-labelledby="panel-title"><header><h2 id="panel-title">${title}</h2>${which === 'setup' ? `<select id="setup-language" aria-label="Language / 语言">${languageOptions()}</select>` : ''}${which !== 'setup' ? `<button id="close" data-ui="close" class="close-panel" aria-label="${c.close}">${icon('close')}</button>` : ''}</header><div class="panel-content">${content}</div></section>`;
 }
 function sizeWorld(): void {
   const game = host.querySelector<HTMLElement>('.economy-game');
@@ -158,13 +165,16 @@ function sizeWorld(): void {
   game.style.setProperty('--world-height', `${worldHeight}px`);
 }
 function openPanel(next: Panel, source?: string): void {
+  narrator.stop();
   focusReturn = source;
   panel = next;
   render();
+  narrator.context(lang,next==='setup'?family.gender:state.family.gender);void narrator.play(next==='setup'?['ui.setup']:[`ui.panel-${next}`,...(next==='wallet'?balanceNarration(state,lang):[])]);
   const target = next === 'setup' ? '#choose-boy' : '#close';
   host.querySelector<HTMLButtonElement>(target)?.focus({ preventScroll: true });
 }
 function closePanel(): void {
+  narrator.stop();
   panel = undefined;
   render();
   if (focusReturn) document.getElementById(focusReturn)?.focus({ preventScroll: true });
@@ -189,51 +199,57 @@ host.addEventListener('click', event => {
   if (!target || target.disabled) return;
   const location = target.dataset.place as Place | undefined;
   if (location && places.includes(location)) {
-    place = location; panel = undefined; feedback = undefined; render();
+    place = location; panel = undefined; feedback = undefined; render(); narrateCurrent();
     host.querySelector<HTMLButtonElement>('.choices button:not(:disabled), #next')?.focus({ preventScroll: true });
     return;
   }
-  if (target.dataset.gender) { family.gender = target.dataset.gender as Family['gender']; render(); return; }
-  if (target.dataset.children) { family.children = Number(target.dataset.children) as Family['children']; render(); return; }
+  if (target.dataset.gender) { family.gender = target.dataset.gender as Family['gender']; render(); narrateCurrent(); return; }
+  if (target.dataset.children) { family.children = Number(target.dataset.children) as Family['children']; render(); narrator.context(lang,family.gender);void narrator.play([family.children===1?'ui.family-one':family.children===2?'ui.family-two':'ui.family-three']);return; }
   if (target.dataset.outfit) { outfitChoice = Number(target.dataset.outfit); render(); return; }
   if (target.dataset.action) {
+    narrator.stop();
+    const before=state;
     const result = act(state, target.dataset.action);
-    state = result.state; feedback = result.message; feedbackOk = result.ok;
+    state = result.state; changes=outcomeChanges(before,state); feedback = result.message; feedbackOk = result.ok;
     if (result.ok) persist();
     chime(result.ok); render();
+    narrator.context(lang,state.family.gender);void narrator.play(outcomeNarration(before,state,result.message,lang));
     const liveGame = host.querySelector('.economy-game');
     liveGame?.classList.add(result.ok ? 'choice-made' : 'choice-reconsider');
     window.setTimeout(() => liveGame?.classList.remove('choice-made', 'choice-reconsider'), 600);
     if (state.completed) host.querySelector<HTMLButtonElement>('#next, #ending-wallet')?.focus({ preventScroll: true });
     return;
   }
-  const action = target.dataset.ui as Panel | 'start' | 'town' | 'next' | 'close' | 'confirm-retry' | 'confirm-reset' | 'toggle-sound';
+  if(target.dataset.listen){const offer=getActions(state,place==='town'?getLevel(state).place:place).find(o=>o.id===target.dataset.listen);if(offer){narrator.context(lang,state.family.gender);void narrator.play(choiceNarration(state,offer,lang));}return;}
+  const action = target.dataset.ui as Panel | 'start' | 'town' | 'next' | 'close' | 'confirm-retry' | 'confirm-reset' | 'toggle-sound' | 'replay' | 'stop';
   if (action === 'start') {
     state = createGame(family); checkpoint = structuredCopy(state); place = getLevel(state).place;
-    panel = undefined; feedback = undefined; outfitChoice = undefined; persist(); render();
+    panel = undefined; feedback = undefined; outfitChoice = undefined; persist(); render(); narrateCurrent();
     host.querySelector<HTMLButtonElement>('.choices button:not(:disabled)')?.focus({ preventScroll: true });
-  } else if (action === 'town') { place = 'town'; feedback = undefined; render(); }
+  } else if (action === 'town') { narrator.stop(); place = 'town'; feedback = undefined; render(); }
   else if (action === 'next') {
     if (!state.completed || state.level >= LEVEL_COUNT - 1) return;
-    state = advance(state); checkpoint = structuredCopy(state); feedback = undefined; place = 'town'; persist(); render();
+    state = advance(state); checkpoint = structuredCopy(state); feedback = undefined; place = 'town'; persist(); render(); narrateCurrent();
     host.querySelector<HTMLButtonElement>('#go-story')?.focus({ preventScroll: true });
   } else if (action === 'confirm-retry') {
-    state = structuredCopy(checkpoint); feedback = undefined; place = getLevel(state).place; panel = undefined; persist(); render();
+    state = structuredCopy(checkpoint); feedback = undefined; place = getLevel(state).place; panel = undefined; persist(); render(); narrateCurrent();
     host.querySelector<HTMLButtonElement>('.choices button:not(:disabled)')?.focus({ preventScroll: true });
   } else if (action === 'confirm-reset') { family = { ...state.family }; openPanel('setup', target.id); }
   else if (action === 'close') closePanel();
-  else if (action === 'toggle-sound') { sound = !sound; if (sound) chime(true); render(); }
+  else if (action === 'replay') {void narrator.replay();}
+  else if (action === 'stop') {narrator.stop();}
+  else if (action === 'toggle-sound') { sound = !sound; narrator.mute(!sound); if (sound) narrateCurrent(); render(); }
   else if (['wallet', 'journal', 'settings', 'help', 'retry', 'reset'].includes(action!)) {
     if (panel === action) closePanel(); else openPanel(action as Panel, target.id);
   }
 });
 host.addEventListener('change', event => {
   const target = event.target as HTMLSelectElement;
-  if ((target.id === 'language' || target.id === 'setup-language') && (target.value === 'en' || target.value === 'zh')) { lang = target.value; if (panel !== 'setup') persist(); render(); }
+  if ((target.id === 'language' || target.id === 'setup-language') && languages.includes(target.value as Lang)) { lang = target.value as Lang; if (panel !== 'setup') persist(); render(); narrateCurrent(); }
 });
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && panel && panel !== 'setup') { event.preventDefault(); closePanel(); return; }
-  if (event.key === 'Escape' && !panel && place !== 'town') { place = 'town'; feedback = undefined; render(); return; }
+  if (event.key === 'Escape' && !panel && place !== 'town') { narrator.stop(); place = 'town'; feedback = undefined; render(); return; }
   if (event.key !== 'Tab' || !panel || !['setup', 'retry', 'reset'].includes(panel)) return;
   const focusable = Array.from(host.querySelectorAll<HTMLElement>('.protected-panel button:not(:disabled), .protected-panel select'));
   const first = focusable[0], last = focusable[focusable.length - 1];
@@ -241,7 +257,22 @@ document.addEventListener('keydown', event => {
   else if (!event.shiftKey && (document.activeElement === last || !host.querySelector('.protected-panel')?.contains(document.activeElement))) { event.preventDefault(); first?.focus(); }
 });
 window.addEventListener('resize', sizeWorld);
-document.addEventListener('visibilitychange', () => { if (document.hidden) void audio?.suspend().catch(() => {}); });
-window.addEventListener('pagehide', () => { void audio?.close().catch(() => {}); audio = undefined; });
+document.addEventListener('visibilitychange', () => { if (document.hidden) {narrator.stop();void audio?.suspend().catch(() => {});} });
+window.addEventListener('pagehide', () => { narrator.stop();void audio?.close().catch(() => {}); audio = undefined; });
 render();
 if (panel === 'setup') host.querySelector<HTMLButtonElement>('#choose-boy')?.focus({ preventScroll: true });
+
+void narrator.load().then(ready=>{audioMissing=!ready;render();});
+
+function lifeWallet():string {
+  const l=state.life!;
+  return `<div class="minor-wallet">${icon('bread')}<div><b>${t(lifeText('ui.company-cash'))} · ${amount(balance(l,'company.cash'))}</b><span>${t(common('ownership'))}: ${l.ownership}%</span><span>${t(common('company-debt'))}: ${amount(-balance(l,'company.loan'))}</span><span>${t(common('interest'))}: ${amount(-balance(l,'company.loanInterest'))}</span><span>${t(common('supplier-debt'))}: ${amount(-balance(l,'company.supplierDebt'))}</span><span>${t(common('foreign-cash'))}: ${amount(l.foreign,true)}</span><span>${t(common('receivable'))}: ${amount(l.foreignReceivable,true)}</span><span>${t(common('delivered'))}: ${l.goods.delivered??0} · ${t(common('damaged'))}: ${l.goods.lostInTransit??0}</span></div></div><div class="family-album"><h3>${t(common('family-ages'))}</h3><p>${portrait(state.family.gender)} ${l.age} · ${portrait('parent')} ${l.parentsAge}</p><p>${t(common('children'))}: ${l.childrenAges.length?l.childrenAges.join(' · '):'—'}</p><div>${l.photos.slice(-6).map(photo=>`<span>${icon('heart')}${photo.age}</span>`).join('')}</div></div>`;
+}
+function lifeLedger():string {
+  return `<details class="ledger life-ledger"><summary>${copy(lang).history}</summary><ol>${state.life!.journal.slice(-12).reverse().map(entry=>`<li><span>${entry.turn}</span><b>${t(common('entry'))}</b><div>${entry.postings.map(p=>`<small>${accountText(p.account,lang)} ${p.amount>=0?'+':''}${money(p.amount,lang)}</small>`).join('')}</div></li>`).join('')}</ol></details>`;
+}
+
+let keyboardChoiceFocus=false;
+host.addEventListener('pointerdown',()=>{keyboardChoiceFocus=false;});
+host.addEventListener('keydown',event=>{keyboardChoiceFocus=event.key==='Tab';});
+host.addEventListener('focusin',event=>{if(!keyboardChoiceFocus)return;keyboardChoiceFocus=false;const target=event.target as HTMLElement;const id=target.dataset.listen??target.dataset.action;if(id){const offer=getActions(state,place==='town'?getLevel(state).place:place).find(a=>a.id===id);if(offer){narrator.context(lang,state.family.gender);void narrator.play(choiceNarration(state,offer,lang));}}});

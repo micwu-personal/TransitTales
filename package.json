@@ -13,6 +13,7 @@
     "vexflow": "^4.2.5"
   },
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "typescript": "^5.9.3",
     "vite": "^7.1.0",
     "vitest": "^3.2.4"
