@@ -47,7 +47,7 @@ export class Narrator {
   private speech?: RecordedSpeech;
   private language: SpeechLanguage='zh';
   private gender:'boy'|'girl'='girl';
-  constructor(private base: string,private unavailable:()=>void,private makeAudio:()=>HTMLAudioElement=()=>new Audio(),private makeSpeech:()=>RecordedSpeech=()=>new RecordedSpeech()){}
+  constructor(private base: string,private unavailable:()=>void,private makeAudio:()=>HTMLAudioElement=()=>new Audio(),private makeSpeech:()=>RecordedSpeech=()=>new RecordedSpeech(),private activity:(active:boolean)=>void=()=>{}){}
   load(fetcher:typeof fetch=fetch):Promise<boolean>{
     const revision=++this.loadGeneration;this.stop();this.manifest=undefined;
     this.loading=(async()=>{
@@ -58,12 +58,14 @@ export class Narrator {
   }
   context(lang:Lang,gender:'boy'|'girl'):void {const language=spokenLanguage(lang);if(language!==this.language||gender!==this.gender)this.stop();this.language=language;this.gender=gender;}
   mute(value:boolean):void {this.muted=value;if(value)this.stop();}
-  stop():void {this.generation++;this.cancel?.();this.cancel=undefined;if(this.player){this.player.onended=null;this.player.onerror=null;this.player.onpause=null;this.player.pause();}}
+  stop():void {this.generation++;this.cancel?.();this.cancel=undefined;if(this.player){this.player.onended=null;this.player.onerror=null;this.player.onpause=null;this.player.pause();}this.activity(false);}
   dispose():void {this.stop();this.speech?.dispose();this.speech=undefined;}
   replay():Promise<void>{return this.play([...this.current]);}
   async play(ids:NarrationCue[]):Promise<void>{
     this.stop();this.current=ids.map(cue=>typeof cue==='string'?cue:[...cue]);if(this.muted)return;
     const token=this.generation;
+    this.activity(true);
+    try {
     if(this.loading)await this.loading;
     if(token!==this.generation||this.muted)return;
     const queue=this.language==='zh'?ids:ids.flat();
@@ -96,6 +98,9 @@ export class Narrator {
       } catch {if(token===this.generation)this.unavailable();return;}
       finally {if(token===this.generation){this.cancel?.();this.cancel=undefined;player.onended=null;player.onerror=null;player.onpause=null;}}
 
+    }
+    } finally {
+      if(token===this.generation)this.activity(false);
     }
   }
 }

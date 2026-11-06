@@ -11,6 +11,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     const model = await source.ssrLoadModule(path.resolve('src', 'economic', 'model.ts'));
     const storage = await source.ssrLoadModule(path.resolve('src', 'economic', 'storage.ts'));
     const childhood = await source.ssrLoadModule(path.resolve('src', 'economic', 'childhood.ts'));
+    const guidance = await source.ssrLoadModule(path.resolve('src', 'economic', 'family-guidance.ts'));
     const sequenceText = fs.readFileSync(path.resolve('tests','economic-life.test.ts'),'utf8');
     const sequences = new Function('return '+sequenceText.match(/const sequences = ([\s\S]*?);\r?\nfunction entry/)[1])();
     let progressed = model.createGame({gender:'girl',children:1});
@@ -167,15 +168,37 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     assert.deepEqual(layoutErrors,[]);
     fs.writeFileSync(path.join(artifacts,'economic-childhood-ui-results.json'),JSON.stringify(results,null,2));
     }
-    {
-      const {page,context}=await fixture(model.createGame({gender:'boy',children:1}),'zh',390,844);
+    for(const [width,height] of [[390,844],[1280,800]]) {
+      const entry=model.createGame({gender:'boy',children:1});
+      const {page,context}=await fixture(entry,'zh',width,height);
+      const mainBefore=await page.evaluate(key=>localStorage.getItem(key),storage.SAVE_KEY);
+      assert.equal(await page.locator('#replay').isDisabled(),true);
+      assert.equal(await page.locator('#stop').isDisabled(),true);
       await page.locator('#voice-toggle').click();
       await page.waitForFunction(()=>window.__plays.length>0,{},{timeout:30000}).catch(async error=>{console.error({errors,status:await page.locator('.narration-status').innerText()});throw error;});
+      await page.locator('#settings').click();
+      await page.waitForFunction(()=>window.__plays.flat().includes('ui.panel-settings'));
+      await page.evaluate(()=>window.__plays=[]);
+      await page.locator('#replay').click();
+      await page.waitForFunction(()=>window.__plays.length>0);
+      const expected=guidance.getGuidance(entry).message;
+      const catalog=JSON.parse(fs.readFileSync(path.resolve('src','economic','narration-catalog.json'),'utf8'));
+      const expectedID=catalog.scripts.find(script=>script.text.zh===expected.zh).id;
+      assert.deepEqual(await page.evaluate(()=>window.__plays.flat()),[expectedID],'Speaker reads the current step, not the last settings explanation');
+      assert.equal(await page.locator('#replay').getAttribute('aria-pressed'),'true');
+      assert.equal(await page.locator('#stop').isEnabled(),true);
+      await layout(page,`speaker ${width}x${height}`);
+      await page.screenshot({path:path.join(artifacts,`economic-speaker-${width}.png`)});
+      await page.locator('#stop').click();
+      assert.equal(await page.locator('#replay').getAttribute('aria-pressed'),'false');
+      assert.equal(await page.locator('#stop').isDisabled(),true);
+      assert.equal(await page.evaluate(key=>localStorage.getItem(key),storage.SAVE_KEY),mainBefore,'Listening and stopping never choose or advance the game');
       await page.locator('#voice-toggle').click();
       assert.equal(await page.locator('#voice-toggle').getAttribute('aria-pressed'),'false');
+      assert.equal(await page.locator('#replay').isDisabled(),true);
       await page.reload(); assert.deepEqual(await page.evaluate(()=>window.__plays),[]);
       assert.equal(await page.locator('#voice-toggle').getAttribute('aria-pressed'),'false');
-      results.push({voiceStarted:true,voiceOffPersisted:true}); await context.close();
+      results.push({width,height,voiceStarted:true,voiceOffPersisted:true,currentStepSpeaker:true,playbackIndicator:true,stop:true,noncommitting:true}); await context.close();
     }
     {
       const {page,context}=await fixture(progressed,'zh',390,844);

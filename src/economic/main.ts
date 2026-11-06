@@ -53,7 +53,14 @@ const audioPreferences = loadAudioPreferences(storage);
 let sound = audioPreferences.voice;
 let effects = audioPreferences.effects;
 let audioMissing = false;
-const narrator = new Narrator(import.meta.env.BASE_URL, () => { audioMissing=true; host.querySelector<HTMLElement>('.narration-status')?.replaceChildren(document.createTextNode(text(lifeText('ui.audio-missing'),lang))); });
+let narrationActive = false;
+function updateNarrationActivity(active:boolean):void {
+  narrationActive=active;
+  host.querySelector<HTMLButtonElement>('#replay')?.setAttribute('aria-pressed',String(active));
+  const stop=host.querySelector<HTMLButtonElement>('#stop');
+  if(stop)stop.disabled=!active;
+}
+const narrator = new Narrator(import.meta.env.BASE_URL, () => { audioMissing=true; host.querySelector<HTMLElement>('.narration-status')?.replaceChildren(document.createTextNode(text(lifeText('ui.audio-missing'),lang))); },()=>new Audio(),undefined,updateNarrationActivity);
 narrator.mute(!sound);
 function persistAudio(): void { saveAudioPreferences(storage, { voice: sound, effects }); }
 const languages:Lang[]=['zh','en','ja','mn','mn-Mong'];
@@ -63,6 +70,10 @@ function debt():number {return state.life?-balance(state.life,'house.loan')-bala
 function narrateCurrent():void {
   narrator.context(lang,panel==='setup'?family.gender:state.family.gender);
   void narrator.play(panel==='setup'?['ui.setup']:panel==='childhood'?scriptIds([gameplayText('childhood'),gameplayText('envelopeNote')]):panel==='help'?hintNarration():panel==='wallet'&&childhood?scriptIds([gameplayText('envelopeNote')]):panel?[`ui.panel-${panel}`,...(panel==='wallet'?balanceNarration(state,lang):[])]:scriptIds([childhood?childhoodView(childhood).nextStep:getGuidance(state).message]));
+}
+function narrateStep():void {
+  narrator.context(lang,panel==='setup'?family.gender:state.family.gender);
+  void narrator.play(panel==='setup'?['ui.setup']:panel==='help'?hintNarration():scriptIds([childhood?childhoodView(childhood).nextStep:getGuidance(state).message]));
 }
 function hintOffer() {
   if (childhood) return childhoodView(childhood).choices.find(offer => !offer.disabled);
@@ -153,7 +164,7 @@ function render(): void {
       ${isFinal && !panel ? `<section class="picnic-ending" aria-labelledby="ending-title"><div class="ending-rosette">${icon('heart')}</div><h2 id="ending-title">${c.finale}</h2><p>${c.finaleBody}</p><span>${c.ending}</span><div class="ending-actions"><button id="ending-wallet" data-ui="wallet" class="primary">${icon('book')}${c.wallet}</button><button id="ending-reset" data-ui="reset" class="secondary">${c.reset}</button></div><small>${c.endingNote}</small></section>` : ''}
       <div class="game-footer" ${panel === 'setup' ? 'hidden' : ''}>
         <nav class="location-strip" aria-label="${c.visit}" ${isFinal||childhood ? 'hidden' : ''}>${places.map(location => `<button id="visit-${location}" data-place="${location}" ${place === location ? 'aria-current="location"' : ''} class="${guidance.place === location && !state.completed ? 'has-story' : ''}">${icon(placeIcons[location])}<span>${shortPlace(location)}</span></button>`).join('')}</nav>
-        <nav class="game-tools" aria-label="${c.settings}">${childhood?`<button id="leave-childhood" data-ui="leave-childhood" class="childhood-exit">${icon('arrow')}<span>${esc(gameplayCopy(lang).backStory)}</span></button>`:place !== 'town' && !isFinal ? button('town', c.map, 'map') : ''}${button('journal', c.chapter, 'book')}${button('settings', c.settings, 'settings')}${button('replay',text(lifeText('ui.replay'),lang),'sound')}${button('stop',text(lifeText('ui.stop'),lang),'close')}<button id="voice-toggle" data-ui="toggle-sound" class="voice-toggle" aria-pressed="${sound}" aria-label="${esc(gameplayCopy(lang).voice)}: ${sound?c.soundOn:c.soundOff}"><b>${esc(gameplayCopy(lang).voice)}</b><span>${sound?c.soundOn:c.soundOff}</span></button></nav>
+        <nav class="game-tools" aria-label="${c.settings}">${childhood?`<button id="leave-childhood" data-ui="leave-childhood" class="childhood-exit">${icon('arrow')}<span>${esc(gameplayCopy(lang).backStory)}</span></button>`:place !== 'town' && !isFinal ? button('town', c.map, 'map') : ''}${button('journal', c.chapter, 'book')}${button('settings', c.settings, 'settings')}${button('replay',text(lifeText('ui.replay'),lang),'sound',`aria-pressed="${narrationActive}" ${!sound?'disabled':''}`)}${button('stop',text(lifeText('ui.stop'),lang),'close',!narrationActive?'disabled':'')}<button id="voice-toggle" data-ui="toggle-sound" class="voice-toggle" aria-pressed="${sound}" aria-label="${esc(gameplayCopy(lang).voice)}: ${sound?c.soundOn:c.soundOff}"><b>${esc(gameplayCopy(lang).voice)}</b><span>${sound?c.soundOn:c.soundOff}</span></button></nav>
       </div>
       <p class="narration-status" role="status">${audioMissing?t(lifeText('ui.audio-missing')):''}</p>
       <p class="save-status ${childhood?!childhoodSaved?'save-warning':'':saveAttempted && !saved ? 'save-warning' : ''}" role="status">${childhood?(childhoodSaved?c.saved:c.unsaved):saveAttempted ? (saved ? c.saved : c.unsaved) : c.saveNote}</p>
@@ -348,7 +359,7 @@ host.addEventListener('click', event => {
   else if (action === 'close') closePanel();
   else if (action === 'more-hint') { hintDepth = 1; render(); narrateCurrent(); }
   else if (action === 'listen-hint') { narrator.context(lang,state.family.gender);void narrator.play(hintNarration()); }
-  else if (action === 'replay') {void narrator.replay();}
+  else if (action === 'replay') {narrateStep();}
   else if (action === 'stop') {narrator.stop();}
   else if (action === 'toggle-sound') { sound = !sound; narrator.mute(!sound); persistAudio(); render(); if (sound) narrateCurrent(); }
   else if (action === 'toggle-effects') { effects = !effects; persistAudio(); render(); if (!effects) void audio?.suspend().catch(() => {}); }

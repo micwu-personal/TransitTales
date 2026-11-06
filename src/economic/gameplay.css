@@ -4,6 +4,7 @@
 .game-footer .game-tools,.game-footer .location-strip{position:static;transform:none;max-width:100%;pointer-events:auto;margin:0}
 .game-footer .game-tools{grid-column:1;grid-row:1;align-items:center;gap:6px}
 .game-footer .location-strip{grid-column:2;grid-row:1;justify-self:center}
+.game-tools .tool[aria-pressed="true"]{background:#f5d981;border-color:#fff1b8;box-shadow:0 2px 0 #aa8157}
 .voice-toggle{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:7px 10px;border:2px solid #fffcdd;border-radius:13px;background:#f8f7e8;font-size:11px;box-shadow:0 4px 0 #576c413b}
 .voice-toggle span{padding:3px 7px;background:#d8e8bf;border-radius:7px;font-size:10px;white-space:nowrap}
 .voice-toggle[aria-pressed="false"] span{background:#eee2d3;color:#795139}
