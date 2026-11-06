@@ -4,6 +4,7 @@ import catalog from '../src/economic/narration-catalog.json';
 import { choiceNarration, outcomeNarration, outcomeChanges } from '../src/economic/narration-guidance';
 import { createGame, getActions, getLevel, act, type GameState } from '../src/economic/model';
 import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 const recording={file:'zh/girl/abc123.mp3',text:catalog.scripts[0].text.zh,voice:'approved',rate:'+0%',pitch:'+0Hz',durationSeconds:2,bytes:200,sha256:'a'.repeat(64),decodeVerified:true,contentReview:'pending'};
 import approved from '../scripts/economic-voice-profiles.json';
 const manifest:Manifest={version:1,complete:true,profiles:approved.profiles,recordings:Object.fromEntries((['zh','en','ja','mn'] as const).flatMap(language=>(['boy','girl'] as const).flatMap(gender=>catalog.scripts.map(script=>[`${language}|${gender}|${script.id}`,{...recording,file:`${language}/${gender}/abc123.mp3`,text:script.text[language],...approved.profiles[language][gender]}]))))};
@@ -30,10 +31,10 @@ describe('local prerecorded narration contract',()=>{
   });
   it('cancels stale queues on language, gender, stop and mute without synthesized speech',async()=>{
     const a=player(),n=new Narrator('/',vi.fn(),()=>a);await n.load(fetcher(manifest));const queue=n.play([catalog.scripts[0].id,catalog.scripts[0].id]);await Promise.resolve();n.context('ja','boy');await queue;expect(a.pause).toHaveBeenCalledOnce();expect(a.play).toHaveBeenCalledOnce();n.mute(true);await n.play([catalog.scripts[0].id]);expect(a.play).toHaveBeenCalledOnce();
-    const source=readFileSync('src\\economic\\narration.ts','utf8');expect(source).not.toContain('speechSynthesis');
+    const source=readFileSync(join('src','economic','narration.ts'),'utf8');expect(source).not.toContain('speechSynthesis');
   });
   it('keeps traditional text vertical-lr scoped while other locales stay horizontal',()=>{
-    const css=readFileSync('src\\economic\\style.css','utf8');expect(css).toContain('html[data-economic-lang="mn-Mong"]');expect(css).toContain('writing-mode:vertical-lr');expect(css).not.toContain('writing-mode:vertical-rl');
+    const css=readFileSync(join('src','economic','style.css'),'utf8');expect(css).toContain('html[data-economic-lang="mn-Mong"]');expect(css).toContain('writing-mode:vertical-lr');expect(css).not.toContain('writing-mode:vertical-rl');
     expect(scriptIds([catalog.scripts[0].text])).toEqual([catalog.scripts[0].id]);
   });
   it('speaks signed large values, Chinese internal zeros, Japanese hundreds, and distinct foreign units',()=>{
