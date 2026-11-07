@@ -19,7 +19,7 @@ export type GameState = {
 };
 export type Level = { id: string; title: Text; goal: Text; intro: Text; person: Text; place: Place; age: number; chapter: number; topic: Text };
 export type SpeechFact = { id: string; value: number; money?: 'home'|'foreign' };
-export type Offer = { facts?: SpeechFact[]; id: string; label: Text; detail: Text; icon: IconName; disabled?: Text };
+export type Offer = { facts?: SpeechFact[]; purchase?: Purchase; id: string; label: Text; detail: Text; icon: IconName; disabled?: Text };
 export type Price = { id: string; label: Text; price: number; stock: number; currency?: 'home' | 'foreign' };
 export type Progress = { current: number; total: number; description: Text };
 export type Result = { state: GameState; ok: boolean; message: Text };
@@ -160,8 +160,9 @@ export function getPrices(s: GameState): Price[] {
     default: return [];
   }
 }
+export type Purchase = { item: string; quantity: number; maxQuantity: number; adjustable: boolean; price: number; currency: 'home' | 'foreign'; payment?: 'prepaid' };
 type Action = Offer & { place: Place; run: (s: GameState) => Text };
-function actions(s: GameState): Action[] {
+function actions(s: GameState, selection?: { id: string; quantity: number }): Action[] {
   const list: Action[] = [];
   const n = s.family.children;
   const need = text('先完成前面的准备。', 'Finish the preparation first.');
@@ -181,6 +182,10 @@ function actions(s: GameState): Action[] {
   const mark = (place: Place, id: string, key: string, zh: string, en: string, detailZh: string, detailEn: string, icon: IconName, allowed = true, outcome = text('准备好了！', 'Ready!')) => at(place, id, zh, en, detailZh, detailEn, icon, allowed && !f(s, key), t => { set(t, key); return outcome; }, f(s, key) ? done : need);
   const buy = (place: Place, id: string, item: string, amount: number, allowed = true, budget = Infinity, digital = false) => {
     const p = getPrices(s).find(v => v.id === item)!;
+    const adjustable = s.level <= 1 && ['apple', 'bread'].includes(item);
+    const maxQuantity = adjustable ? Math.max(0, n - f(s, `bought_${item}`)) : amount;
+    if (adjustable) amount = Math.max(1, maxQuantity);
+    if (selection?.id === id) amount = selection.quantity;
     const cost = p.price * amount;
     const foreign = p.currency === 'foreign';
     const available = foreign ? f(s, 'foreignCash') : digital ? s.digital : s.cash;
@@ -196,13 +201,14 @@ function actions(s: GameState): Action[] {
       set(t, 'spent', f(t, 'spent') + cost);
       if (item === 'markdown') { set(t, 'markdownBought'); set(t, 'breadDay', t.day); }
       if (s.level === 5) { set(t, 'giftSpent', f(t, 'giftSpent') + cost); }
-      return text(`付了${money(cost)}${unitZh}，背包里多了${amount}${itemUnit(item)}${itemText(item).zh}。店长说：我的价签没有偷偷换！`, `Paid ${unitEn}${money(cost)}; your bag now has ${amount} more ${itemText(item).en}. The price tag did not sneak away!`);
+      return text(`付了${money(cost)}${unitZh}，背包里多了${amount}${itemUnit(item)}${itemText(item).zh}。`, `Paid ${unitEn}${money(cost)}; your bag now has ${amount} more ${itemText(item).en}.`);
     }, !allowed ? need : p.stock < amount ? done : available < cost ? funds : text('超过本关的小预算；玩具会挤掉需要的东西。可从检查点重试。', 'Over this mission’s budget; a toy crowds out needs. Retry the checkpoint if needed.'));
+    list[list.length-1].purchase = { item, quantity: amount, maxQuantity, adjustable, price: p.price, currency: foreign ? 'foreign' : 'home', ...(digital ? { payment: 'prepaid' } : {}) };
     list[list.length-1].facts=[{id:'quantity',value:amount},{id:'unit-price',value:p.price,money:foreign?'foreign':'home'},{id:'total',value:cost,money:foreign?'foreign':'home'},{id:'stock-count',value:p.stock},...(Number.isFinite(budget)?[{id:'budget',value:Math.max(0,budget-f(s,'spent')),money:'home' as const}]:[])];
   };
-  const end = (place: Place, id: string, zh: string, en: string, allowed: boolean, run?: (t: GameState) => void) => at(place, id, zh, en, getLevel(s).goal.zh, getLevel(s).goal.en, 'heart', allowed, t => { run?.(t); finish(t); return text('完成！钱包里的选择变成了生活里的笑容。新徽章会留在衣柜里。', 'Complete! Pocket decisions became real smiles. Earned badges stay in your wardrobe.'); });
+  const end = (place: Place, id: string, zh: string, en: string, allowed: boolean, run?: (t: GameState) => void) => at(place, id, zh, en, getLevel(s).goal.zh, getLevel(s).goal.en, 'heart', allowed, t => { run?.(t); finish(t); return text('完成这一关啦！新徽章会留在衣柜里。', 'Mission complete! Your new badge stays in the wardrobe.'); });
   const wait = (place: Place, id: string, days: number, allowed: boolean, zh: string, en: string) => at(place, id, zh, en, '游戏时间前进；价签、到期日和每游戏日利息会先更新，再让你做决定。', 'Game time moves; price tags, due dates and per-game-day interest update before your next decision.', 'calendar', allowed, t => { nextDay(t, days); set(t, id); return text(`过了${days}个游戏日。先看新的价签与日期，不要急着付款！`, `${days} game-day(s) passed. Check updated tags and dates before paying!`); });
-  const earn = (place: Place, id: string, amount: number, zh: string, en: string, allowed = true) => at(place, id, zh, en, `约定${money(amount)}元，只支付一次。`, `Agreed ¥${money(amount)}, paid once only.`, 'broom', allowed && !f(s, id), t => { record(t, text(zh, en), amount); set(t, id); return text('约定工作完成，报酬到账。袜子怪兽说：这次我没偷懒！', 'Agreed job done, payment received. Sock Monster says: no sneaky naps this time!'); }, f(s, id) ? done : need);
+  const earn = (place: Place, id: string, amount: number, zh: string, en: string, allowed = true) => at(place, id, zh, en, `约定${money(amount)}元，只支付一次。`, `Agreed ¥${money(amount)}, paid once only.`, 'broom', allowed && !f(s, id), t => { record(t, text(zh, en), amount); set(t, id); return text('这笔钱收好了，看看下一步要做什么吧。', 'Money received. Let’s see what comes next.'); }, f(s, id) ? done : need);
   const reserve = f(s, 'reserve');
   switch (s.level) {
     case 0:
@@ -388,11 +394,11 @@ function actions(s: GameState): Action[] {
   return list;
 }
 const places: Place[] = ['home', 'shop', 'school', 'bank', 'park'];
-function getActionsRaw(state: GameState, place: Place): Offer[] {
+function getActionsRaw(state: GameState, place: Place, selection?: { id: string; quantity: number }): Offer[] {
   if (!places.includes(place)) return [];
   if (state.life) return lifeActions(state, place);
   if (state.completed) return [{ id: `talk-${place}`, label: text('聊聊今天的选择', 'Talk about today’s choices'), detail: text(state.level === LEVEL_COUNT - 1 ? '童年旅程完成！按继续，和家人一起走进长大的故事。' : '本关完成；按“继续”开始下一关。不会跳过未完成的关卡。', state.level === LEVEL_COUNT - 1 ? 'Childhood campaign complete! Continue into growing-up stories with your family.' : 'Mission complete; Continue starts the next. Unfinished levels cannot be skipped.'), icon: 'heart' }];
-  const available = actions(state).filter(a => a.place === place).map(({ run: _run, place: _place, ...offer }) => offer);
+  const available = actions(state, selection).filter(a => a.place === place).map(({ run: _run, place: _place, ...offer }) => offer);
   if (available.length) return available;
   const targets = [...new Set(actions(state).filter(a => !a.disabled).map(a => a.place))];
   const names: Record<Place, Text> = { home: text('家', 'home'), shop: text('商店', 'shop'), school: text('学校', 'school'), bank: text('银行', 'bank'), park: text('公园', 'park') };
@@ -400,17 +406,23 @@ function getActionsRaw(state: GameState, place: Place): Offer[] {
   const targetEn = targets.map(p => names[p].en).join(', ') || 'the level checkpoint';
   return [{ id: `talk-${place}`, label: text('问问下一步去哪', 'Ask where to go next'), detail: text(`这里可以休息。下一步去${targetZh}；家务和准备动作也可能在别处。`, `Rest here. Next try ${targetEn}; preparation and jobs may be elsewhere.`), icon: 'arrow' }];
 }
-function actRaw(state: GameState, actionId: string): Result {
-  if (state.life) return lifeAct(state, actionId);
+function actRaw(state: GameState, actionId: string, quantity?: number): Result {
+  if (quantity !== undefined && (!Number.isSafeInteger(quantity) || quantity < 1)) return { state, ok: false, message: text('数量要是一个或更多的整数。', 'Choose a whole number of at least one.') };
+  if (state.life) return quantity === undefined ? lifeAct(state, actionId) : { state, ok: false, message: text('这个行动不需要选择数量。', 'This action does not take a quantity.') };
   if (typeof actionId !== 'string') return { state, ok: false, message: text('没有这个行动。', 'Unknown action.') };
-  if (actionId.startsWith('talk-')) {
+  if (actionId.startsWith('talk-') && quantity === undefined) {
     const place = actionId.slice(5) as Place;
     const offer = getActions(state, place).find(o => o.id === actionId);
     if (offer) return { state, ok: true, message: offer.detail };
   }
   if (state.completed) return { state, ok: false, message: text('本关已完成，不能重复领取或购物。', 'Mission complete; no repeat purchases or rewards.') };
-  const action = actions(state).find(a => a.id === actionId);
+  let action = actions(state).find(a => a.id === actionId);
   if (!action) return { state, ok: false, message: text('没有这个行动；请使用当前地点的按钮。', 'Unknown action; use the current place’s buttons.') };
+  if (quantity !== undefined) {
+    const purchase = action.purchase;
+    if (!purchase || quantity > purchase.maxQuantity || !purchase.adjustable && quantity !== purchase.quantity) return { state, ok: false, message: text('请在这件商品允许的数量里选择。', 'Choose an available quantity for this item.') };
+    action = actions(state, { id: actionId, quantity }).find(a => a.id === actionId)!;
+  }
   if (action.disabled) return { state, ok: false, message: action.disabled };
   const s = clone(state);
   const message = action.run(s);
@@ -428,12 +440,13 @@ const progressKeys = [
 export function getProgress(state: GameState): Progress {
   if (state.life) return lifeProgress(state);
   const keys = progressKeys[state.level];
-  const complete = (key: string) => key === 'complete' ? state.completed : key === 'protection' ? f(state, 'bought_umbrella') || f(state, 'bought_coat') : key === 'edible' ? count(state, 'markdown') >= state.family.children || f(state, 'bought_fresh') || state.completed : key === 'withdrawn' ? state.savings === 0 : key === 'foreignReturned' ? f(state, 'foreignCash') === 0 : f(state, key);
+  const complete = (key: string) => key === 'complete' ? state.completed : key === 'protection' ? f(state, 'bought_umbrella') || f(state, 'bought_coat') : key === 'edible' ? count(state, 'markdown') >= state.family.children || f(state, 'bought_fresh') || state.completed : key === 'withdrawn' ? state.savings === 0 : key === 'foreignReturned' ? f(state, 'foreignCash') === 0 : state.level <= 1 && ['bought_apple', 'bought_bread'].includes(key) ? f(state, key) >= state.family.children : f(state, key);
   return { current: state.completed ? keys.length : keys.filter(complete).length, total: keys.length, description: getLevel(state).goal };
 }
 
-export function getActions(state:GameState,place:Place):Offer[] {
-  const offers=getActionsRaw(state,place);if(state.life)return offers;
+export function getActions(state:GameState,place:Place,selection?:{id:string;quantity:number}):Offer[] {
+  let offers=getActionsRaw(state,place);if(state.life)return offers;
+  if(selection){const purchase=offers.find(o=>o.id===selection.id)?.purchase;if(purchase&&Number.isSafeInteger(selection.quantity)&&selection.quantity>=1&&selection.quantity<=purchase.maxQuantity&&(purchase.adjustable||selection.quantity===purchase.quantity))offers=getActionsRaw(state,place,selection);}
   return offers.map(original=>{
     const o={...original,facts:[...(original.facts??[])]},add=(id:string,value:number,money?:'home'|'foreign')=>{o.facts=o.facts.filter(f=>f.id!==id);o.facts.push({id,value,...(money?{money}:{})});};
     if(['read-loan','borrow'].includes(o.id)){add('principal',state.level===12?200:state.level===13?300:400,'home');add('rate',state.level===14?1:0);add('due',state.day+1);}
@@ -445,4 +458,4 @@ export function getActions(state:GameState,place:Place):Offer[] {
     return legacyOffer(o,state,getLevel(state).place);
   });
 }
-export function act(state:GameState,actionId:string):Result {const result=actRaw(state,actionId);return state.life?result:{...result,message:legacyResult(result.message,actionId,result.ok,result.state.completed)};}
+export function act(state:GameState,actionId:string,quantity?:number):Result {const result=actRaw(state,actionId,quantity);return state.life?result:{...result,message:legacyResult(result.message,actionId,result.ok,result.state.completed)};}

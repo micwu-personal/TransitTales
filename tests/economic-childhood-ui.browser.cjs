@@ -68,24 +68,103 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
         const overlap = (a, b) => a && b && Math.min(a.right, b.right) > Math.max(a.x, b.x) + 1 && Math.min(a.bottom, b.bottom) > Math.max(a.y, b.y) + 1;
         const footer = rect('.game-footer'), places = rect('.location-strip'), tools = rect('.game-tools');
         const complete = rect('.town-complete'), conversation = rect('.conversation'), wish = rect('.wish-note'), header = rect('.game-header');
-        return { viewportOverflow: document.documentElement.scrollWidth > innerWidth + 1 || document.documentElement.scrollHeight > innerHeight + 1, footer, places, tools, complete, conversation, footerCollision: overlap(places, tools), completionCollision: overlap(complete, places) || overlap(complete, tools), conversationCollision: overlap(conversation, footer), goalCollision: overlap(conversation,wish) || overlap(complete,wish), headerCollision: overlap(conversation,header) };
+        return { panelOutside: [conversation,complete].some(r => r && (r.x < -1 || r.right > innerWidth+1 || r.y < -1 || r.bottom > innerHeight+1)), viewportOverflow: document.documentElement.scrollWidth > innerWidth + 1 || document.documentElement.scrollHeight > innerHeight + 1, footer, places, tools, complete, conversation, footerCollision: overlap(places, tools), completionCollision: overlap(complete, places) || overlap(complete, tools), conversationCollision: overlap(conversation, footer), goalCollision: overlap(conversation,wish) || overlap(complete,wish), headerCollision: overlap(conversation,header) };
       });
-      for (const [key,message] of Object.entries({viewportOverflow:'viewport overflow',footerCollision:'controls cover places',completionCollision:'places cover the next-round reward',conversationCollision:'conversation covers footer',goalCollision:'dialogue or reward covers the goal',headerCollision:'dialogue covers the header'})) if(result[key]) layoutErrors.push(`${label}: ${message}`);
+      for (const [key,message] of Object.entries({panelOutside:'action panel clipped by the screen',viewportOverflow:'viewport overflow',footerCollision:'controls cover places',completionCollision:'places cover the next-round reward',conversationCollision:'conversation covers footer',goalCollision:'dialogue or reward covers the goal',headerCollision:'dialogue covers the header'})) if(result[key]) layoutErrors.push(`${label}: ${message}`);
       if (result.conversation && result.conversation.height < 80) layoutErrors.push(`${label}: unusably short dialogue`);
       return result;
     }
+    async function purchase(page, id, quantity = 1) {
+      await page.locator(`[data-product="${id}"]`).click();
+      for (let i = 1; i < quantity; i++) await page.locator('#quantity-more').click();
+      await page.locator(`[data-action="${id}"]`).click();
+    }
+    async function storyAction(page, id) {
+      const preview = page.locator(`[data-childhood-select="${id}"]`);
+      if (await preview.count()) await preview.click();
+      const change = page.locator(`[data-change-select="${id}"]`);
+      if (await change.count()) { await change.click(); await collectPieces(page); }
+      else await page.locator(`[data-childhood-action="${id}"]`).click();
+    }
+    async function collectPieces(page) {
+      const pieces = page.locator('.counter-side:not(.receiving-pocket) [data-money-piece]');
+      while (await pieces.count()) await pieces.first().click();
+      await page.locator('#confirm-change').click();
+    }
     const functionalOnly=process.argv.includes('--functional-only');
     if(!functionalOnly){
+    for (const lang of ['zh', 'en', 'ja', 'mn', 'mn-Mong']) {
+      const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+      const page = await context.newPage();
+      page.on('pageerror', error => errors.push(error.message));
+      await page.goto(new URL('economic.html', base).href);
+      await page.locator('#setup-language').selectOption(lang);
+      assert.equal(await page.locator('#setup-voice-toggle').getAttribute('aria-pressed'), 'false');
+      assert(await page.locator('#setup-voice-toggle').isVisible(), 'The family-picker voice switch must be reachable');
+      await page.locator('#setup-voice-toggle').click();
+      assert.equal(await page.locator('#setup-voice-toggle').getAttribute('aria-pressed'), 'true');
+      await page.locator('#setup-voice-toggle').click();
+      assert.equal(await page.locator('#setup-voice-toggle').getAttribute('aria-pressed'), 'false');
+      await page.screenshot({ path: path.join(artifacts, `economic-setup-${lang}.png`) });
+      await page.locator('#start').click();
+      await page.locator('[data-action="read-tags"]').click();
+      assert(await page.evaluate(() => Boolean(document.querySelector('.game-header .game-tools').compareDocumentPosition(document.querySelector('#language')) & Node.DOCUMENT_POSITION_FOLLOWING)), 'Utilities precede language selection in the header');
+      await page.locator('[data-product="buy-apple"]').click();
+      await layout(page, `${lang} staged shopping 390x844`);
+      await page.screenshot({ path: path.join(artifacts, `economic-shopping-${lang}.png`) });
+      await context.close();
+    }
+    for (const [lang, width, height] of [['zh',1440,900],['zh',390,844],['zh',320,568],['zh',844,390],['mn-Mong',390,844],['mn-Mong',320,568]]) {
+      const start = entries.get(2);
+      const entry = model.act(model.act(start,'check-price').state,'pay-note').state;
+      const {page,context} = await fixture(start,lang,width,height);
+      await page.locator('#go-story').click();
+      await page.locator('[data-action="check-price"]').click();
+      await page.locator('[data-action="pay-note"]').click();
+      const savedBefore = await page.evaluate(key => localStorage.getItem(key),storage.SAVE_KEY);
+      await page.locator('[data-change-select="collect-change"]').click();
+      assert(await page.locator('#confirm-change').isDisabled());
+      await page.locator('#money-piece-0').click();
+      assert.equal(await page.locator('#money-piece-0').getAttribute('aria-pressed'),'true');
+      assert(await page.locator('#confirm-change').isDisabled());
+      await page.locator('#money-piece-0').click();
+      assert.equal(await page.locator('#money-piece-0').getAttribute('aria-pressed'),'false');
+      assert.equal(await page.evaluate(key => localStorage.getItem(key),storage.SAVE_KEY),savedBefore,'Picking up and putting back money must not affect the saved wallet');
+      await page.screenshot({path:path.join(artifacts,`economic-change-${lang}-${width}x${height}.png`)});
+      await layout(page,`${lang} coin collection ${width}x${height}`);
+      await page.locator('#cancel-change').click();
+      assert.equal(await page.evaluate(key => localStorage.getItem(key),storage.SAVE_KEY),savedBefore);
+      await page.locator('[data-change-select="leave-change"]').click();
+      await collectPieces(page);
+      const partial = await page.evaluate(key => JSON.parse(localStorage.getItem(key)).state,storage.SAVE_KEY);
+      assert.equal(partial.cash,entry.cash+300); assert.equal(partial.flags.pendingChange,80);
+      assert(await page.locator('.transfer-receipt').isVisible());
+      await page.locator('[data-change-select="collect-rest"]').click();
+      await collectPieces(page);
+      const final = await page.evaluate(key => JSON.parse(localStorage.getItem(key)).state,storage.SAVE_KEY);
+      assert.equal(final.cash,entry.cash+380); assert.equal(final.flags.pendingChange,0);
+      assert.equal(await page.locator('.change-tray').count(),0);
+      await context.close();
+    }
     for (const children of [1, 2, 3]) {
       const { page, context } = await fixture(model.createGame({ gender: 'boy', children }), 'zh', 390, 844);
       await page.locator('#go-story').click();
       await page.locator('[data-action="read-tags"]').click();
-      await page.locator('[data-action="buy-apple"]').click();
-      const hint = await page.locator('.next-step').innerText();
+      const beforeSelection = await page.evaluate(key => localStorage.getItem(key), storage.SAVE_KEY);
+      await page.locator('[data-product="buy-apple"]').click();
+      if (children > 1) { await page.locator('#quantity-more').click(); await page.locator('#quantity-less').click(); }
+      assert.equal(await page.evaluate(key => localStorage.getItem(key), storage.SAVE_KEY), beforeSelection, 'Selection and quantity changes do not spend or save');
+      assert.equal(await page.locator('[data-product="buy-apple"]').getAttribute('aria-pressed'), 'true');
+      await page.screenshot({ path: path.join(artifacts, `economic-selection-family-${children}.png`) });
+      await page.locator('#cancel-purchase').click();
+      assert.equal(await page.evaluate(key => localStorage.getItem(key), storage.SAVE_KEY), beforeSelection, 'Cancel does not spend or save');
+      assert.equal(await page.locator('[data-product="buy-apple"]').getAttribute('aria-pressed'), 'false');
+      await purchase(page, 'buy-apple', children);
+      const hint = await page.locator('.step-detail').innerText();
       assert(hint.includes('家'), 'The successful purchase must explicitly lead home');
-      assert.equal(await page.locator('.next-step [data-place="home"]').count(), 1);
+      assert.equal(await page.locator('.step-detail [data-place="home"]').count(), 1);
       if (children === 1) assert(!(await page.locator('.wish-note').innerText()).includes('每个孩子'));
-      await page.locator('.next-step [data-place="home"]').click();
+      await page.locator('.step-detail [data-place="home"]').click();
       await page.locator('[data-action="share-apples"]').click();
       assert.equal(await page.locator('.round-celebration').count(), 1);
       assert.equal(await page.locator('.completion-keepsake').count(), 1);
@@ -107,8 +186,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
         const { page, context } = await fixture(model.createGame({ gender: 'girl', children: 1 }), lang, width, height, 'reduce');
         await page.locator('#go-story').click();
         await page.locator('[data-action="read-tags"]').click();
-        await page.locator('[data-action="buy-apple"]').click();
-        await page.locator('.next-step [data-place="home"]').click();
+        await purchase(page, 'buy-apple');
+        await page.locator('.step-detail [data-place="home"]').click();
         await page.locator('[data-action="share-apples"]').click();
         assert.equal(await page.locator('.action-moment').count(), 0);
         await page.locator('#journal').click();
@@ -140,7 +219,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
           await page.locator('[data-childhood-quote]').first().click();
           assert.equal(await page.evaluate(key=>localStorage.getItem(key),sideKey),before,'Listening never spends the envelope');
         }
-        await page.locator(`[data-childhood-action="${route[0]}"]`).click();
+        await storyAction(page, route[0]);
         const savedSide=await page.evaluate(key=>localStorage.getItem(key),sideKey);
         assert(savedSide && childhood.validateChildhood(JSON.parse(savedSide)));
         await page.reload(); assert.equal(await page.locator('.childhood-conversation').count(),1);
@@ -148,7 +227,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
         assert.equal(await page.locator('.round-celebration').count(),0);
         await page.locator('#goal-help').click(); await page.locator('#help-retry').click(); await page.locator('[data-ui="confirm-retry"]').click();
         assert.equal(JSON.parse(await page.evaluate(key=>localStorage.getItem(key),sideKey)).history.length,0,'Retry resets this envelope only');
-        for(const id of route) await page.locator(`[data-childhood-action="${id}"]`).click();
+        for(const id of route) await storyAction(page, id);
         assert.equal(JSON.parse(await page.evaluate(key=>localStorage.getItem(key),sideKey)).completed,true);
         assert.equal(await page.locator('.round-celebration').count(),1);
         await layout(page,`${story.id} ${lang} ${width}x${height} reward`);
@@ -207,7 +286,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       await page.evaluate(prefix=>{localStorage.setItem(prefix+'market','{');localStorage.setItem(prefix+'active','market');},prefix);
       await page.reload(); assert.equal(await page.locator('.childhood-conversation').count(),1);
       await page.evaluate(()=>{const set=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key.startsWith('transit-tales-economic-childhood-v1:'))throw new DOMException('Full','QuotaExceededError');return set.call(this,key,value);};});
-      await page.locator(`[data-childhood-action="${storyRoute('market')[0]}"]`).click();
+      await storyAction(page, storyRoute('market')[0]);
       assert.equal(await page.locator('.save-warning').count(),1);
       assert.equal(await page.evaluate(key=>localStorage.getItem(key),storage.SAVE_KEY),mainBefore);
       results.push({corruptSideSaveRecovered:true,quotaWarning:true,mainSavePreserved:true}); await context.close();

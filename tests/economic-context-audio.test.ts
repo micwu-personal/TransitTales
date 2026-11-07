@@ -31,9 +31,11 @@ describe('persistent audio preferences', () => {
     expect(data.has(AUDIO_PREFERENCE_KEY)).toBe(true);
   });
   it('tolerates corrupt or unavailable storage without blocking play', () => {
-    expect(loadAudioPreferences({ getItem: () => '{' })).toEqual({ voice: true, effects: true });
-    expect(loadAudioPreferences({ getItem: () => '{"voice":"false","effects":true}' })).toEqual({ voice: true, effects: true });
+    expect(loadAudioPreferences({ getItem: () => '{' })).toEqual({ voice: false, effects: true });
+    expect(loadAudioPreferences({ getItem: () => '{"voice":"false","effects":true}' })).toEqual({ voice: false, effects: true });
     expect(saveAudioPreferences(undefined, { voice: false, effects: false })).toBe(false);
-    expect(loadAudioPreferences({ getItem: () => { throw new Error('blocked'); } }).voice).toBe(true);
+    expect(loadAudioPreferences({ getItem: () => { throw new Error('blocked'); } }).voice).toBe(false);
+    expect(loadAudioPreferences(undefined)).toEqual({ voice: false, effects: true });
+    expect(loadAudioPreferences({ getItem: () => '{"voice":true,"effects":false}' })).toEqual({ voice: true, effects: false });
   });
 });

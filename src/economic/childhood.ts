@@ -56,7 +56,7 @@ export const CHILDHOOD_STORIES: { id: ChildhoodStoryId; minLevel: number; age: n
 ];
 export type ChildhoodAccount = 'cash' | 'debit' | 'prepaid' | 'foreignCash' | 'reserve' | 'debt' | 'cardPending' | 'pool' | 'siblings' | 'change' | 'shells' | 'copper' | 'silver' | 'gold' | 'paper';
 /** Money uses integer cents. A rate of 180 means 180 home cents per 100 foreign cents; no real exchange rates. */
-export type ChildhoodQuote = { label: Text; value: number; unit: 'home' | 'foreign' | 'count' | 'day' | 'gram' | 'rate'; facts: SpeechFact[] };
+export type ChildhoodQuote = { label: Text; value: number; unit: 'home' | 'foreign' | 'count' | 'day' | 'gram' | 'rate'; facts: SpeechFact[]; choiceId?: string };
 export type ChildhoodChoice = { id: string; label: Text; detail: Text; icon: IconName; disabled?: Text; facts?: SpeechFact[] };
 export type ChildhoodLedgerEntry = { day: number; scriptId: string; label: Text; accounts: Partial<Record<ChildhoodAccount, number>>; items: Record<string, number> };
 export type ChildhoodState = {
@@ -135,15 +135,15 @@ function scene(s: ChildhoodState): string {
 export function childhoodView(s: ChildhoodState): ChildhoodView {
   const descriptor = CHILDHOOD_STORIES.find(story => story.id === s.storyId)!;
   const choices: ChildhoodChoice[] = [], quotes: ChildhoodQuote[] = [];
-  const q = (key: string, value: number, unit: ChildhoodQuote['unit'] = 'home') => {
-    quotes.push({ label: t(key), value, unit, facts: [{ id: `childhood.${key}`, value, ...(unit === 'home' || unit === 'foreign' ? { money: unit } : {}) }] });
+  const q = (key: string, value: number, unit: ChildhoodQuote['unit'] = 'home', choiceId?: string) => {
+    quotes.push({ label: t(key), value, unit, ...(choiceId ? { choiceId } : {}), facts: [{ id: `childhood.${key}`, value, ...(unit === 'home' || unit === 'foreign' ? { money: unit } : {}) }] });
   };
   const c = (id: string, key = id, icon: IconName = 'handshake', disabled = false, detail = 'choice.detail') => choices.push({ id, label: t(key), detail: t(detail), icon, ...(disabled ? { disabled: t('shortage') } : {}) });
   if (!s.completed) switch (s.storyId) {
     case 'market':
       if (s.stage === 'start') {
         for (const [id, offer] of Object.entries(marketOffers)) {
-          q(id, offer.price); q('fare', offer.fare); q('time', offer.time, 'day'); q('quality', offer.quality, 'count'); q('warranty', offer.warranty, 'day');
+          q(id, offer.price, 'home', id); q('fare', offer.fare, 'home', id); q('time', offer.time, 'day', id); q('quality', offer.quality, 'count', id); q('warranty', offer.warranty, 'day', id);
           c(id, id, offer.icon, false, id === 'fruit-ripe' ? 'eat.today' : offer.warranty ? 'warranty.detail' : 'inspection.detail');
         }
         q('tender', 500); c('leave', 'leave', 'arrow');
@@ -177,7 +177,7 @@ export function childhoodView(s: ChildhoodState): ChildhoodView {
       if (s.stage === 'start') { c('swap', 'swap', 'handshake'); c('counteroffer', 'counteroffer', 'handshake'); }
       else if (s.stage === 'shells') { q('shell.price', 1, 'count'); c('shell-buy', 'shell-buy', 'apple'); c('shell-barter', 'shell-barter', 'handshake'); }
       else if (s.stage === 'metal') {
-        for (const [id, count, weight] of [['copper', 10, 100], ['silver', 2, 20], ['gold', 1, 10]] as const) { q(id, count, 'count'); q('weight', weight, 'gram'); c(id, id, 'coin'); }
+        for (const [id, count, weight] of [['copper', 10, 100], ['silver', 2, 20], ['gold', 1, 10]] as const) { q(id, count, 'count', id); q('weight', weight, 'gram', id); c(id, id, 'coin'); }
       } else if (s.stage === 'check') { c('inspect', 'inspect', 'coin'); c('replace-worn', 'replace-worn', 'coin'); }
       else if (s.stage === 'paper') { q('paper.price', 200); q('paper.tender', 500); c('paper-buy', 'paper-buy', 'wallet'); c('paper-replace', 'paper-replace', 'wallet'); }
       else { q('digital.price', 100); q('prepaid.balance', s.envelope.prepaid); c('digital-buy', 'digital-buy', 'wallet'); }
@@ -185,7 +185,7 @@ export function childhoodView(s: ChildhoodState): ChildhoodView {
     case 'insurance':
       if (s.stage === 'start') {
         for (const [id, premium, deductible, limit] of [['none', 0, 0, 0], ['book', 100, 100, 150], ['all', 180, 100, 300]] as const) {
-          q(id, premium); q('deductible', deductible); q('limit', limit); c(id, id, 'heart', false, 'policy.detail');
+          q(id, premium, 'home', id); q('deductible', deductible, 'home', id); q('limit', limit, 'home', id); c(id, id, 'heart', false, 'policy.detail');
         }
         q('pool', s.envelope.pool);
       } else if (s.stage === 'pack') { q('dry-bag', 60); c('dry-bag', 'dry-bag', 'bag'); c('ordinary-bag', 'ordinary-bag', 'bag'); }
@@ -194,7 +194,7 @@ export function childhoodView(s: ChildhoodState): ChildhoodView {
       break;
     case 'travel':
       if (s.stage === 'start') {
-        for (const [id, d] of Object.entries(CHILDHOOD_DESTINATIONS)) { q(`${id}.rate`, d.rate, 'rate'); q('fx.fee', d.fee); q('fare', d.fare);         c(id, id, 'bag', false, `${id}.entry`); }
+        for (const [id, d] of Object.entries(CHILDHOOD_DESTINATIONS)) { q(`${id}.rate`, d.rate, 'rate', id); q('fx.fee', d.fee, 'home', id); q('fare', d.fare, 'home', id); c(id, id, 'bag', false, `${id}.entry`); }
         q('reserve', 400);
       } else if (s.stage === 'compare') {
         const d = destination(s);

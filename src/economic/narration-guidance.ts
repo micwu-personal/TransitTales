@@ -28,8 +28,9 @@ export function balanceNarration(state:GameState,lang:Lang):NarrationCue[] {
   return result;
 }
 export function choiceNarration(state:GameState,offer:Offer,lang:Lang):NarrationCue[] {
-  const ids:NarrationCue[]=scriptIds([offer.label,offer.detail,...(offer.disabled?[offer.disabled]:[])]);
-  for(const fact of offer.facts??[])ids.push(...clause([...scriptIds([common(fact.id as keyof typeof import('./legacy-content.json').common)]),...(fact.money?amountIds(fact.value,lang,fact.money):numberIds(fact.value,lang))],lang));
+  const ids:NarrationCue[]=scriptIds(offer.purchase ? [itemText(offer.purchase.item),common(offer.purchase.payment==='prepaid'?'prepaid-purchase':offer.purchase.currency==='foreign'?'foreign-purchase':'cash-purchase'),...(offer.disabled?[offer.disabled]:[])] : [offer.label,offer.detail,...(offer.disabled?[offer.disabled]:[])]);
+  const facts=offer.purchase?(offer.facts??[]).filter(fact=>['quantity','unit-price','total'].includes(fact.id)):offer.facts??[];
+  for(const fact of facts)ids.push(...clause([...scriptIds([common(fact.id as keyof typeof import('./legacy-content.json').common)]),...(fact.money?amountIds(fact.value,lang,fact.money):numberIds(fact.value,lang))],lang));
   return ids;
 }
 export function priceNarration(state:GameState,place:Place,lang:Lang):NarrationCue[] {return (place==='shop'?getPrices(state):[]).flatMap(p=>[...clause([...scriptIds([p.label]),'legacy.common.unit-price',...amountIds(p.price,lang,p.currency==='foreign'?'foreign':'home')],lang),...clause(['legacy.common.stock-count',...numberIds(p.stock,lang)],lang)]);}
