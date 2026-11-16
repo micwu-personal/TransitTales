@@ -12,6 +12,16 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     const model = await source.ssrLoadModule(path.resolve('src', 'economic', 'model.ts'));
     const storage = await source.ssrLoadModule(path.resolve('src', 'economic', 'storage.ts'));
     const guidance = await source.ssrLoadModule(path.resolve('src', 'economic', 'narration-guidance.ts'));
+    const { scriptIds } = await source.ssrLoadModule(path.resolve('src', 'economic', 'narration.ts'));
+    async function first3playPlan(page, state) {
+      for (const item of ['apple', 'bread']) await page.locator(`[data-play-token="list:${item}"]`).click();
+      assert.equal(await page.locator('[data-play-zone="plan"] [data-play-token]').count(), 2);
+      await page.locator('[data-play-command="plan"]').click();
+      const result = model.act(state, 'make-list'); assert(result.ok);
+      assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)).state, storage.SAVE_KEY), JSON.parse(JSON.stringify(result.state)));
+      assert.equal(await page.locator('[data-opening-phase="shop"]').count(), 1);
+      return result.state;
+    }
     const manifest = JSON.parse(fs.readFileSync(path.resolve('public', 'audio', 'economic', 'manifest.json'), 'utf8'));
     assert.equal(manifest.complete, true);
     const sequences = new Function('return ' + fs.readFileSync(path.resolve('tests', 'economic-life.test.ts'), 'utf8').match(/const sequences = ([\s\S]*?);\r?\nfunction entry/)[1])();
@@ -58,18 +68,28 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       }, { key: storage.SAVE_KEY, state, lang });
       await page.goto(new URL('economic.html', url).href);
       await page.waitForFunction(() => window.__manifestComplete === true);
+      if (await page.locator('#voice-toggle').getAttribute('aria-pressed') === 'false') await page.locator('#voice-toggle').click();
       await page.locator('#go-story').click();
-      await page.locator('[data-ui="stop"]').click();
+      if (await page.locator('[data-ui="stop"]').isEnabled()) await page.locator('[data-ui="stop"]').click();
+      if (level < 3) {
+        state = await first3playPlan(page, state);
+        if (await page.locator('[data-ui="stop"]').isEnabled()) await page.locator('[data-ui="stop"]').click();
+      }
       const offers = model.getActions(state, model.getLevel(state).place);
       const offer = offers.find(candidate => candidate.disabled) || offers[0];
       assert(offer);
-      const ids = guidance.choiceNarration(state, offer, lang);
+      if (level >= 3) {
+        await page.locator(`[data-explain="${offer.id}"]`).click();
+        if (await page.locator('[data-ui="stop"]').isEnabled()) await page.locator('[data-ui="stop"]').click();
+      }
+      const ids = level < 3 ? scriptIds([model.getGuidance(state).message]) : guidance.choiceNarration(state, offer, lang);
       const speech = lang === 'mn-Mong' ? 'mn' : lang;
       const expected = ids.map(cue => typeof cue === 'string' ? [cue] : [...cue]);
       const recording = id => new URL('audio/economic/' + manifest.recordings[`${speech}|${gender}|${id}`].file, url).href;
       await page.evaluate(() => { window.__audioEnded = []; window.__audioPlayed = []; window.__audioErrors = []; window.__audioCues = []; });
       const saved = await page.evaluate(key => localStorage.getItem(key), storage.SAVE_KEY);
-      await page.locator(`[data-listen="${offer.id}"]`).click();
+      if (level < 3) await page.locator('[data-ui="replay"]').click();
+      else await page.locator(`[data-listen="${offer.id}"]`).click();
       // Seek only after real playback begins; this checks media activation and queue order, not pronunciation.
       await page.waitForFunction(expectedCount => {
         for (const audio of window.__audioPlayers) if (!audio.paused && Number.isFinite(audio.duration) && audio.currentTime < audio.duration - 0.08) audio.currentTime = Math.max(0, audio.duration - 0.05);
@@ -98,7 +118,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       assert.equal(evidence.players, 1);
       assert.equal(evidence.status, '');
       assert.equal(await page.evaluate(key => localStorage.getItem(key), storage.SAVE_KEY), saved, 'Listening changed the saved choice');
-      results.push({ lang, gender, level, disabled: !!offer.disabled, clips: expected.length, prerecordedFragments: expected.flat().length, continuousClauses: expected.filter(cue => cue.length > 1).length, retainedAudioElements: evidence.players });
+      results.push({ lang, gender, level, mode: level < 3 ? 'opening-plan-guidance-replay' : 'choice-listen', disabled: !!offer.disabled, clips: expected.length, prerecordedFragments: expected.flat().length, continuousClauses: expected.filter(cue => cue.length > 1).length, retainedAudioElements: evidence.players });
       console.log(JSON.stringify(results.at(-1)));
       await context.close();
     }
@@ -106,7 +126,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     const artifacts = path.resolve('artifacts');
     fs.mkdirSync(artifacts, { recursive: true });
     fs.writeFileSync(path.join(artifacts, 'economic-final-bundle-audio-results.json'), JSON.stringify(results, null, 2));
-    console.log('Production bundle:20 cases, all5 written locales/all8 voices, exact choice/FX constituent IDs, real continuous Chinese WAV playback and one retained player passed. Audio seeking used; not pronunciation certification.');
+    console.log('Production bundle:20 cases, all5 written locales/all8 voices, opening plan/guidance replay and later choice/FX constituent IDs, real continuous Chinese WAV playback and one retained player passed. Audio seeking used; not pronunciation certification.');
   } finally {
     await browser?.close();
     await new Promise(resolve => production ? production.httpServer.close(resolve) : resolve());

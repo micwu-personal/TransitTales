@@ -5,11 +5,14 @@ import { CHILDHOOD_STORIES, createChildhood, childhoodView, actChildhood, saveCh
 import { childhoodShelf, childhoodConversation, childhoodEnvelope, childhoodOutcomeChanges } from './childhood-ui';
 import { changeTray, toggleMoneyPiece, denominations, changeReady, transferReceipt, type ChangeSelection, type ReceiptChange } from './money-interaction';
 import './money-interaction.css';
+import { emptyOpening, moveBasket, movePacket, pursePieces, counterPieces, togglePiece, payOpening, collectOpening, deliverOpening, type Good, type OpeningDraft } from './opening-play';
+import { openingScene, openingPhase, openingText } from './opening-ui';
 import { common, itemText, ledgerText, accountText } from './legacy-localization';
 import './style.css';
 import './gameplay.css';
 import './childhood-ui.css';
 import './action-presentation.css';
+import './opening-play.css';
 import { groupOffers, actionKind, actionTitle, presentationText, salesUnitText, itemArtwork, moneyArtwork, type ActionKind } from './action-presentation';
 import { act, advance, createGame, getActions, getGuidance, getLevel, getPrices, getProgress, getWeather, CAMPAIGN_LEVELS as LEVELS, CAMPAIGN_COUNT as LEVEL_COUNT, netWorth, type Family, type GameState, type Lang, type Place, type Text } from './model';
 import { loadGame, saveGame, type Save } from './storage';
@@ -52,6 +55,10 @@ let feedbackOk = true;
 let draft: { id: string; quantity: number } | undefined;
 let explainedOffer: string | undefined;
 let changeSelection: ChangeSelection | undefined;
+let opening: OpeningDraft = emptyOpening();
+let heldFood: Good | undefined;
+function clearOpening(): void { opening = emptyOpening(); heldFood = undefined; }
+function openingActive(): boolean { return !childhood && state.level < 3 && !state.completed; }
 let childhoodChanges: ReceiptChange[] = [];
 let hintDepth = 0;
 let changes:ReturnType<typeof outcomeChanges>=[];
@@ -139,6 +146,7 @@ function shortPlace(location: Place): string {
   return copy(lang).locations[location];
 }
 function render(): void {
+  cancelOpeningDrag();
   const focused = (document.activeElement as HTMLElement | null)?.id;
   const c = copy(lang), prices = getPrices(state);
   const sideView = childhood ? childhoodView(childhood) : undefined;
@@ -196,6 +204,7 @@ function shoppingOffers(location: Place) {
   return getActions(state, location).map(offer => offer.purchase?.adjustable ? getActions(state, location, {id: offer.id, quantity: draft?.id === offer.id ? draft.quantity : 1}).find(o => o.id === offer.id)! : offer);
 }
 function conversation(location: Place): string {
+  if (openingActive()) return openingScene(state, lang, location, opening, heldFood, feedback, feedbackOk, changes);
   const c = copy(lang), offers = shoppingOffers(location), guidance = getGuidance(state);
   const npc = location === 'bank' ? 'banker' : location === 'home' ? 'parent' : 'friend';
   const selected = draft && offers.find(offer => offer.id === draft!.id && offer.purchase && draft!.quantity <= offer.purchase.maxQuantity);
@@ -332,9 +341,111 @@ function chime(ok: boolean): void {
     });
   } catch { effects = false; }
 }
+function openingRerender(source?: HTMLElement, destination?: string): void {
+  const scroll = host.querySelector('.opening-scroll')?.scrollTop ?? 0;
+  const rect = source?.getBoundingClientRect(), artwork = source?.innerHTML;
+  render();
+  const scroller = host.querySelector('.opening-scroll'); if (scroller) scroller.scrollTop = scroll;
+  const end = destination ? host.querySelector<HTMLElement>(destination) : undefined;
+  if (!rect || !artwork || !end || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const target = end.getBoundingClientRect(), flying = document.createElement('div');
+  flying.className = 'opening-flight'; flying.setAttribute('aria-hidden', 'true'); flying.innerHTML = artwork;
+  Object.assign(flying.style, { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` });
+  document.body.append(flying);
+  const motion = flying.animate([{ transform: 'translate(0,0) rotate(-8deg)', opacity: 1 }, { transform: `translate(${target.left + target.width / 2 - rect.left - rect.width / 2}px,${target.top + target.height / 2 - rect.top - rect.height / 2}px) rotate(6deg)`, opacity: .3 }], { duration: 320, easing: 'ease-in-out' });
+  void motion.finished.then(() => flying.remove(), () => flying.remove());
+  end.classList.add('opening-arrival');
+}
+function manipulateOpening(target: HTMLButtonElement, zone?: string): void {
+  if (!openingActive() || panel || place === 'town') return;
+  const [source, value, last] = target.dataset.playToken!.split(':');
+  const item = (last ?? value) as Good;
+  let destination: string | undefined, changed = false;
+  const old = opening;
+  const phase = openingPhase(state, place);
+  if (source === 'shelf' && phase === 'shop' && (!zone || zone === 'basket')) {
+    opening = moveBasket(state, opening, item, 1); destination = '[data-play-zone="basket"]';
+  } else if (source === 'basket' && phase === 'shop' && (!zone || zone === 'shelf')) {
+    opening = moveBasket(state, opening, item, -1); destination = `[data-play-token="shelf:${item}"]`;
+  } else if (source === 'list' && phase === 'plan' && (!zone || zone === 'plan') && opening.plan.length < 2 && !opening.plan.includes(item)) {
+    opening = { ...opening, plan: [...opening.plan, item] }; destination = '[data-play-zone="plan"]';
+  } else if (source === 'plan' && phase === 'plan' && (!zone || zone === 'list')) {
+    opening = { ...opening, plan: opening.plan.filter((_, i) => i !== Number(value)) }; destination = `[data-play-token="list:${item}"]`;
+  } else if (['purse', 'tender'].includes(source) && phase === 'shop' && (!zone || zone === (source === 'purse' ? 'tender' : 'purse'))) {
+    const indices = togglePiece(opening.tender, Number(value), pursePieces(state));
+    opening = { ...opening, tender: indices }; destination = `[data-play-zone="${source === 'purse' ? 'tender' : 'purse'}"]`;
+  } else if (['counter', 'hand'].includes(source) && phase === 'change' && (!zone || zone === (source === 'counter' ? 'hand' : 'counter'))) {
+    const indices = togglePiece(opening.change, Number(value), counterPieces(state));
+    opening = { ...opening, change: indices }; destination = `[data-play-zone="${source === 'counter' ? 'hand' : 'counter'}"]`;
+  } else if (source === 'food' && phase === 'pack') {
+    if (zone?.startsWith('packet:')) { opening = movePacket(state, opening, item, Number(zone.split(':')[1])); destination = `[data-play-zone="${zone}"]`; heldFood = undefined; }
+    else if (!zone) { heldFood = heldFood === item ? undefined : item; changed = true; }
+  } else if (source === 'packet' && phase === 'pack' && (!zone || zone === 'food')) {
+    opening = movePacket(state, opening, item, Number(value), true); destination = `[data-play-token="food:${item}"]`;
+  }
+  if (opening !== old || changed) { feedback = undefined; openingRerender(target, destination); chime(true); }
+}
+function commitOpening(command: string): void {
+  if (!openingActive() || panel || place === 'town') return;
+  const phase = openingPhase(state, place), before = state;
+  let result: ReturnType<typeof act>;
+  if (command === 'pay' && phase === 'shop') result = payOpening(state, opening, { empty: openingText('empty'), budget: openingText('budget'), exact: openingText(state.level === 2 ? 'exactNote' : 'exact') });
+  else if (command === 'collect' && phase === 'change') result = collectOpening(state, opening, openingText('wrongChange'));
+  else if (command === 'deliver' && phase === 'pack') result = deliverOpening(state, opening, openingText('incomplete'));
+  else if (command === 'plan' && phase === 'plan') {
+    result = opening.plan.length === 2 && opening.plan.includes('apple') && opening.plan.includes('bread') ? act(state, 'make-list') : { state, ok: false, message: openingText('planWrong') };
+  } else return;
+  narrator.stop(); state = result.state; feedbackOk = result.ok;
+  changes = outcomeChanges(before, state);
+  feedback = result.ok && command === 'pay' && state.level < 2 ? openingText('paid') : result.ok && command === 'collect' && state.flags.pendingChange ? openingText('partial') : result.message;
+  if (result.ok) { clearOpening(); persist(); if (command === 'plan') { place = 'shop'; feedback = undefined; } }
+  chime(result.ok); openingRerender();
+  if (result.ok) {
+    const scroller = host.querySelector('.opening-scroll'); if (scroller) scroller.scrollTop = 0;
+    narrator.context(lang, state.family.gender);
+    void narrator.play([...outcomeNarration(before, state, undefined, lang), ...(!state.completed ? scriptIds([getGuidance(state).message]) : [])]);
+  }
+  animateChoice(result.ok, !before.completed && state.completed, command === 'deliver' ? 'heart' : command === 'plan' ? 'book' : 'coin');
+  if (state.completed) host.querySelector<HTMLButtonElement>('#next')?.focus({ preventScroll: true });
+}
+let openingDrag: { pointer: number; x: number; y: number; target: HTMLButtonElement; ghost?: HTMLElement; zone?: HTMLElement } | undefined;
+let suppressedOpeningToken: string | undefined;
+function cancelOpeningDrag(): void {
+  openingDrag?.ghost?.remove(); openingDrag?.zone?.classList.remove('opening-drop-active'); openingDrag = undefined;
+}
+host.addEventListener('pointerdown', event => {
+  const target = (event.target as Element).closest<HTMLButtonElement>('[data-play-token]');
+  if (!target || target.disabled || !openingActive() || event.button !== 0 || !event.isPrimary) return;
+  cancelOpeningDrag(); openingDrag = { pointer: event.pointerId, x: event.clientX, y: event.clientY, target };
+  target.setPointerCapture(event.pointerId);
+});
+host.addEventListener('pointermove', event => {
+  const drag = openingDrag; if (!drag || event.pointerId !== drag.pointer) return;
+  if (!drag.ghost && Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < 8) return;
+  event.preventDefault();
+  if (!drag.ghost) { drag.ghost = document.createElement('div'); drag.ghost.className = 'opening-drag-ghost'; drag.ghost.setAttribute('aria-hidden', 'true'); drag.ghost.innerHTML = drag.target.innerHTML; document.body.append(drag.ghost); }
+  Object.assign(drag.ghost.style, { left: `${event.clientX - 32}px`, top: `${event.clientY - 32}px` });
+  const zone = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-play-zone]');
+  drag.zone?.classList.remove('opening-drop-active'); drag.zone = zone ?? undefined; drag.zone?.classList.add('opening-drop-active');
+});
+host.addEventListener('pointerup', event => {
+  const drag = openingDrag; if (!drag || event.pointerId !== drag.pointer) return;
+  const moved = Boolean(drag.ghost), zone = drag.zone?.dataset.playZone;
+  cancelOpeningDrag();
+  if (moved) { event.preventDefault(); suppressedOpeningToken = drag.target.dataset.playToken; window.setTimeout(() => { suppressedOpeningToken = undefined; }, 80); if (zone) manipulateOpening(drag.target, zone); }
+});
+host.addEventListener('pointercancel', cancelOpeningDrag);
+host.addEventListener('lostpointercapture', cancelOpeningDrag);
 host.addEventListener('click', event => {
   const target = (event.target as Element).closest<HTMLButtonElement>('button');
   if (!target || target.disabled) return;
+  if (target.dataset.playToken) { if (target.dataset.playToken !== suppressedOpeningToken) manipulateOpening(target); return; }
+  if (target.dataset.playPacket !== undefined && heldFood && openingActive() && place !== 'town' && openingPhase(state, place) === 'pack') {
+    const source = host.querySelector<HTMLElement>(`[data-play-token="food:${heldFood}"]`) ?? target;
+    const previous = opening; opening = movePacket(state, opening, heldFood, Number(target.dataset.playPacket));
+    if (opening !== previous) { heldFood = undefined; feedback = undefined; openingRerender(source, `[data-play-zone="packet:${target.dataset.playPacket}"]`); chime(true); } return;
+  }
+  if (target.dataset.playCommand) { commitOpening(target.dataset.playCommand); return; }
   if (target.dataset.changeSelect) {
     const id = target.dataset.changeSelect;
     const offer = childhood ? childhoodView(childhood).choices.find(offer => offer.id === id) : shoppingOffers(place === 'town' ? getGuidance(state).place : place).find(offer => offer.id === id);
@@ -368,7 +479,7 @@ host.addEventListener('click', event => {
   if (target.dataset.childhood) {
     const story = CHILDHOOD_STORIES.find(story => story.id === target.dataset.childhood);
     if (!story || state.level < story.minLevel) return;
-    draft = undefined; explainedOffer = undefined; changeSelection = undefined; narrator.stop(); resumeChildhood(story.id); childhoodFeedback = undefined; panel = undefined; persistChildhood(); render();
+    clearOpening(); draft = undefined; explainedOffer = undefined; changeSelection = undefined; narrator.stop(); resumeChildhood(story.id); childhoodFeedback = undefined; panel = undefined; persistChildhood(); render();
     narrator.context(lang,state.family.gender); void narrator.play(scriptIds([gameplayText('envelopeNote'),childhoodView(childhood!).message]));
     host.querySelector<HTMLButtonElement>('[data-childhood-action]:not(:disabled)')?.focus({preventScroll:true}); return;
   }
@@ -412,9 +523,9 @@ host.addEventListener('click', event => {
   if (target.dataset.ui === 'cancel-purchase') { draft = undefined; explainedOffer = undefined; changeSelection = undefined; render(); host.querySelector<HTMLButtonElement>('[data-product]:not(:disabled)')?.focus({preventScroll:true}); return; }
   const location = target.dataset.place as Place | undefined;
   if (!childhood && location && places.includes(location)) {
-    draft = undefined; explainedOffer = undefined; changeSelection = undefined;
+    clearOpening(); draft = undefined; explainedOffer = undefined; changeSelection = undefined;
     place = location; panel = undefined; feedback = undefined; render(); narrateCurrent();
-    host.querySelector<HTMLButtonElement>('.choices button:not(:disabled), #next')?.focus({ preventScroll: true });
+    host.querySelector<HTMLButtonElement>('[data-play-token]:not(:disabled), #opening-go, .choices button:not(:disabled), #next')?.focus({ preventScroll: true });
     return;
   }
   if (target.dataset.gender) { family.gender = target.dataset.gender as Family['gender']; render(); narrateCurrent(); return; }
@@ -435,14 +546,14 @@ host.addEventListener('click', event => {
   }
   if(target.dataset.listen){const offer=shoppingOffers(place==='town'?getLevel(state).place:place).find(o=>o.id===target.dataset.listen);if(offer){narrator.context(lang,state.family.gender);void narrator.play(choiceNarration(state,offer,lang));}return;}
   const action = target.dataset.ui as Panel | 'start' | 'town' | 'leave-childhood' | 'next' | 'close' | 'confirm-retry' | 'confirm-reset' | 'toggle-sound' | 'toggle-effects' | 'more-hint' | 'listen-hint' | 'replay' | 'stop';
-  if (['start', 'town', 'next', 'retry', 'confirm-retry', 'confirm-reset', 'leave-childhood'].includes(action!)) { draft = undefined; explainedOffer = undefined; changeSelection = undefined; }
+  if (['start', 'town', 'next', 'retry', 'confirm-retry', 'confirm-reset', 'leave-childhood'].includes(action!)) { clearOpening(); draft = undefined; explainedOffer = undefined; changeSelection = undefined; }
   if (action === 'leave-childhood') { leaveChildhood(); return; }
   if (action === 'start') {
     if (childhood) { persistChildhood(); try { storage?.removeItem(activeChildhoodKey()); } catch { /* New play does not require storage. */ } }
     childhood = undefined; childhoodFeedback = undefined;
     state = createGame(family); checkpoint = structuredCopy(state); place = getLevel(state).place;
     panel = undefined; feedback = undefined; outfitChoice = undefined; persist(); render(); narrateCurrent();
-    host.querySelector<HTMLButtonElement>('.choices button:not(:disabled)')?.focus({ preventScroll: true });
+    host.querySelector<HTMLButtonElement>('[data-play-token]:not(:disabled), #opening-go, .choices button:not(:disabled)')?.focus({ preventScroll: true });
   } else if (action === 'town') { narrator.stop(); place = 'town'; panel = undefined; feedback = undefined; render(); }
   else if (action === 'next') {
     if (childhood || !state.completed || state.level >= LEVEL_COUNT - 1) return;
@@ -454,7 +565,7 @@ host.addEventListener('click', event => {
       persistChildhood(); render(); narrateCurrent(); host.querySelector<HTMLButtonElement>('[data-childhood-action]:not(:disabled)')?.focus({preventScroll:true}); return;
     }
     state = structuredCopy(checkpoint); feedback = undefined; place = getLevel(state).place; panel = undefined; persist(); render(); narrateCurrent();
-    host.querySelector<HTMLButtonElement>('.choices button:not(:disabled)')?.focus({ preventScroll: true });
+    host.querySelector<HTMLButtonElement>('[data-play-token]:not(:disabled), #opening-go, .choices button:not(:disabled)')?.focus({ preventScroll: true });
   } else if (action === 'confirm-reset') { family = { ...state.family }; openPanel('setup', target.id); }
   else if (action === 'close') closePanel();
   else if (action === 'more-hint') { hintDepth = 1; render(); narrateCurrent(); }
@@ -474,7 +585,7 @@ host.addEventListener('change', event => {
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && panel && panel !== 'setup') { event.preventDefault(); closePanel(); return; }
   if (event.key === 'Escape' && !panel && childhood) { event.preventDefault(); leaveChildhood(); return; }
-  if (event.key === 'Escape' && !panel && place !== 'town') { draft = undefined; explainedOffer = undefined; changeSelection = undefined; narrator.stop(); place = 'town'; feedback = undefined; render(); return; }
+  if (event.key === 'Escape' && !panel && place !== 'town') { clearOpening(); draft = undefined; explainedOffer = undefined; changeSelection = undefined; narrator.stop(); place = 'town'; feedback = undefined; render(); return; }
   if (event.key !== 'Tab' || !panel || !['setup', 'retry', 'reset'].includes(panel)) return;
   const focusable = Array.from(host.querySelectorAll<HTMLElement>('.protected-panel button:not(:disabled), .protected-panel select'));
   const first = focusable[0], last = focusable[focusable.length - 1];
@@ -482,8 +593,8 @@ document.addEventListener('keydown', event => {
   else if (!event.shiftKey && (document.activeElement === last || !host.querySelector('.protected-panel')?.contains(document.activeElement))) { event.preventDefault(); first?.focus(); }
 });
 window.addEventListener('resize', sizeWorld);
-document.addEventListener('visibilitychange', () => { if (document.hidden) {narrator.stop();void audio?.suspend().catch(() => {});} });
-window.addEventListener('pagehide', () => { narrator.dispose();void audio?.close().catch(() => {}); audio = undefined; });
+document.addEventListener('visibilitychange', () => { if (document.hidden) {cancelOpeningDrag(); narrator.stop();void audio?.suspend().catch(() => {});} });
+window.addEventListener('pagehide', () => { cancelOpeningDrag(); narrator.dispose();void audio?.close().catch(() => {}); audio = undefined; });
 render();
 if (panel === 'setup') host.querySelector<HTMLButtonElement>('#choose-boy')?.focus({ preventScroll: true });
 

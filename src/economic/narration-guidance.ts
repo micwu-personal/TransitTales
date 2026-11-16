@@ -54,8 +54,8 @@ export function outcomeChanges(before:GameState,after:GameState):OutcomeChange[]
   if(before.life&&after.life){for(const [label,field] of [['company-owner','company.cash'],['supplier-debt','company.supplierDebt'],['reserves','bankA.reserves']] as const)add(common(label),balance(before.life,field)*(field==='company.supplierDebt'?-1:1),balance(after.life,field)*(field==='company.supplierDebt'?-1:1),'home');add(common('foreign-cash'),before.life.foreign,after.life.foreign,'foreign');add(common('receivable'),before.life.foreignReceivable,after.life.foreignReceivable,'foreign');for(const [label,field] of [['delivered','delivered'],['delivered','ordersDelivered'],['damaged','lostInTransit']] as const)add(common(label),before.life.goods[field]??0,after.life.goods[field]??0);}
   return rows;
 }
-export function outcomeNarration(before:GameState,after:GameState,message:import('./model').Text,lang:Lang):NarrationCue[]{
-  const ids:NarrationCue[]=scriptIds([message]),changes=outcomeChanges(before,after);if(changes.length)ids.push('legacy.common.changes');
+export function outcomeNarration(before:GameState,after:GameState,message:import('./model').Text|undefined,lang:Lang):NarrationCue[]{
+  const ids:NarrationCue[]=scriptIds(message?[message]:[]),changes=outcomeChanges(before,after);if(changes.length)ids.push('legacy.common.changes');
   for(const row of changes){
     const value=Math.abs(row.value),wholeQuantity=lang==='zh'&&row.item?smallQuantityScript(row.item,value):undefined;
     const quantity=wholeQuantity?[wholeQuantity]:[...numberIds(value,lang),...(lang==='zh'&&row.item?[unitScript(row.item)]:[])];

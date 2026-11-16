@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { act, createGame, getActions } from '../src/economic/model';
 import { balanceNarration, choiceNarration, outcomeNarration } from '../src/economic/narration-guidance';
 import { AUDIO_PREFERENCE_KEY, loadAudioPreferences, saveAudioPreferences } from '../src/economic/audio-preferences';
+import { scriptIds } from '../src/economic/narration';
 
 describe('concise child-facing narration', () => {
   it('keeps choices focused on the selected action rather than reading the whole wallet', () => {
@@ -19,6 +20,22 @@ describe('concise child-facing narration', () => {
     expect(cues).toContain('ui.bag-item');
     for (const id of ['ui.owed', 'legacy.common.savings', 'legacy.common.digital', 'legacy.common.current-day']) expect(cues).not.toContain(id);
     expect(balanceNarration(before, 'zh').flat()).toContain('ui.pocket');
+  });
+});
+
+describe('opening transaction narration', () => {
+  it('can read only actual changes without repeating the transaction message', () => {
+    const before = act(createGame({ gender: 'girl', children: 1 }), 'read-tags').state;
+    const result = act(before, 'buy-apple');
+    for (const lang of ['zh', 'en', 'ja', 'mn', 'mn-Mong'] as const) {
+      const cues = outcomeNarration(before, result.state, undefined, lang).flat();
+      expect(cues[0]).toBe('legacy.common.changes');
+      expect(cues).toContain('legacy.common.change-down');
+      expect(cues).toContain('legacy.common.change-up');
+      for (const id of scriptIds([result.message])) expect(cues).not.toContain(id);
+      for (const id of ['ui.owed', 'legacy.common.savings', 'legacy.common.digital']) expect(cues).not.toContain(id);
+    }
+    expect(outcomeNarration(before, before, undefined, 'zh')).toEqual([]);
   });
 });
 
