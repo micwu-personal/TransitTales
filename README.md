@@ -105,7 +105,9 @@ Original procedural illustrations are not photographs or literal views through a
 
 ## Moonline / 月光列车
 
-Open `/moonline.html` from the departure beside Melody Train. On your ticket, choose **Piano keys** for the traditional white-and-black layout or **Compact · used notes** for a single row of only the pitches needed by your part. The choice is saved in this browser; drum tracks always use drum pads. Tap the cab instrument or use the labeled keyboard shortcuts as each note reaches its key. The selected part is yours; the other tracks play automatically. **Listen first** plays every part, and **Slow practice** slows audio, timing and scenery together. Pause or end a ride at any time. The game is available in English and Simplified Chinese.
+Open `/moonline.html` from the departure beside Melody Train. Tap the route and part stamps to choose what to play. **Piano keys** gives you a traditional white-and-black layout and **Compact keys** uses a single row of the pitches needed by your part. Drum tracks always use pads. Choose **Note flight** or **Staff railway**; the latter turns the tracks into a five-line perspective staff and guides notes from their diatonic positions to their keys at the same audio-clock onset. It is a gameplay cue, not a printable score; accidentals use MIDI pitches spelled as sharps, and drums use unpitched cues. Both visual choices are saved in this browser.
+
+Tap the cab instrument or use the labeled keyboard shortcuts as each note reaches its key. The selected part is yours; the others play automatically. Switch on **Listen first** to hear every part, or **Slow practice** to slow audio and visuals together. **Pause** (or Escape) brings back the ticket, where you can change the cue path or keys and then **Resume ride** without restarting or losing your score. To change routes, parts, or practice settings, end the ride first. The game is available in English and Simplified Chinese.
 
 Ride through original illustrated stations with downloadable MIDI of public-domain music. Moonline uses synthesized instruments; the stations are imaginary, with short historical notes where relevant.
 
@@ -118,6 +120,8 @@ Ride through original illustrated stations with downloadable MIDI of public-doma
 - **Grieg, In the Hall of the Mountain King (Op. 46, No. 4):** both piano staves, mm. 1–25, at a steady game tempo, from the [1918 University Society edition via Mutopia](https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=1888).
 
 - **《茉莉花》 / Jasmine Flower (1804 variant):** a song of this title appears in Lesson 1 of [人音版《音乐》六年级上册（五线谱，北京）](https://www.dzskb.com/rybwxpjpxxysyyls.html). Moonline uses the different historical melody transcribed by J. C. Hüttner and printed in [John Barrow’s *Travels in China* (1804), p. 316](https://archive.org/details/in.ernet.dli.2015.46928/page/316/mode/1up), following the [C-major re-engraving](https://commons.wikimedia.org/wiki/File:Jasmine_barrow.svg). The plucked strings, soft strings and bass are original Moonline parts; no modern classroom setting or recording is used.
+
+The [2026 人音版《音乐》五年级上册（五线谱，北京） contents](https://www.dzkbw.com/books/ryb/yinyue/jpwxp5s_2026/001.htm) list the Mongolian folk song 《金杯》 in Unit 6 《多彩民族》. It is not currently a Moonline route: a source for the exact tune that permits public MIDI distribution has not been verified. The listing does not establish inclusion of the modern songs titled 《金杯银杯》 or 《祝酒歌》.
 
 The [人音版（北京）（2024）八年级上册 contents](https://www.51jiaoxi.com/books/3003659/) also list the two works below. Moonline uses these independent editions, not the textbook’s arrangements, translations or recordings:
 

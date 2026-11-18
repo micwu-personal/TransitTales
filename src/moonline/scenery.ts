@@ -678,7 +678,7 @@ function atmosphere(ctx: Ink, scene: number, progress: number, span: number) {
   ctx.globalAlpha = 1;
 }
 
-export function createScenery(host: HTMLElement): { draw(scene: number, progress: number): void; resize(): void; dispose(): void } {
+export function createScenery(host: HTMLElement): { draw(scene: number, progress: number, staff?: boolean): void; resize(): void; dispose(): void } {
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
   Object.assign(canvas.style, { display: 'block', position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none' });
@@ -693,14 +693,16 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
   let activeProgress = 0;
   let plateScene = -1;
   let paintedProgress = Number.NaN;
+  let activeStaff = false, paintedStaff = false;
   let disposed = false;
 
-  function draw(scene: number, progress: number) {
+  function draw(scene: number, progress: number, staff = activeStaff) {
+    activeStaff = staff;
     const index = Number.isFinite(scene) ? Math.trunc(scene) : 0;
     activeScene = (index % places.length + places.length) % places.length;
     activeProgress = Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
     const travel = reduced?.matches ? 0 : activeProgress;
-    if (disposed || !ctx || !ink || !width || !height || (plateScene === activeScene && paintedProgress === travel)) return;
+    if (disposed || !ctx || !ink || !width || !height || (plateScene === activeScene && paintedProgress === travel && paintedStaff === staff)) return;
     const place = places[activeScene];
     const span = Math.min(740, Math.max(300, width / height * 337));
     const xScale = canvas.width / (span * 2);
@@ -715,9 +717,9 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.drawImage(plate, 0, 0);
     ctx.setTransform(xScale, 0, 0, yScale, xCenter, horizon);
-    rails(ctx, place, activeScene, travel, span);
+    if (!staff) rails(ctx, place, activeScene, travel, span);
     atmosphere(ctx, activeScene, travel, span);
-    paintedProgress = travel;
+    paintedProgress = travel; paintedStaff = staff;
   }
 
   function resize() {

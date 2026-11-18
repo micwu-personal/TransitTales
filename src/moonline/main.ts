@@ -5,6 +5,7 @@ import { approachSeconds, compactCodes, cuePosition, hitWindow, instrumentPitche
 import { decodeMidi } from './midi';
 import { routes as arrangements } from './repertoire';
 import { createScenery } from './scenery';
+import { drawStaff, drawStaffNote, staffCue, staffStep } from './staff';
 import { pitchName, type Note, type Role, type Song } from './score';
 import { openStudio } from './studio';
 
@@ -31,10 +32,15 @@ let textUntil = 0, pendingStart = false;
 let pitches: number[] = [], mapped = new Map<string, number>(), keys = new Map<number, HTMLButtonElement>();
 let anchors = new Map<number, {x: number; y: number}>();
 let pulses = new Map<number, ReturnType<typeof setTimeout>>();
-let width = 1, height = 1, banked = false, lastBeat = 0;
+let width = 1, height = 1, banked = false;
 const layoutPreference = 'moonline-keyboard';
 let keyboardStyle: 'piano' | 'compact' = 'piano';
-try { if (localStorage.getItem(layoutPreference) === 'compact') keyboardStyle = 'compact'; } catch { /* optional preference */ }
+const cuePreference = 'moonline-cues';
+let cueStyle: 'flight' | 'staff' = 'flight', staffCenter = 71;
+try {
+  if (localStorage.getItem(layoutPreference) === 'compact') keyboardStyle = 'compact';
+  if (localStorage.getItem(cuePreference) === 'staff') cueStyle = 'staff';
+} catch { /* optional preferences */ }
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const route = () => routes.find(r => r.song.id === song.id);
 const sections = () => route()?.sections ?? [
@@ -53,11 +59,24 @@ game.innerHTML = `
   <div class="moon-title"><h1>${tr('Moonline', '月光列车')}</h1><p>${tr('Follow the notes to the next station.', '循着音符，驶向下一站。')}</p></div>
   <section class="moon-ticket" aria-labelledby="moon-ticket-title">
     <h2 id="moon-ticket-title">${tr('Departure ticket', '发车车票')}</h2>
-    <div class="moon-fields"><label>${tr('Route', '线路')}<select id="moon-song"></select></label><label>${tr('Your part', '你的声部')}<select id="moon-track"></select></label></div>
-    <p class="moon-credit"></p>
-    <label class="moon-keyboard-choice">${tr('Keyboard', '琴键布局')}<select id="moon-keyboard"><option value="piano">${tr('Piano keys', '钢琴键')}</option><option value="compact">${tr('Compact · used notes', '紧凑 · 仅用到的音')}</option></select></label>
-    <div class="moon-options"><label><input type="checkbox" id="moon-demo"> ${tr('Listen first', '先听示范')}</label><label><input type="checkbox" id="moon-slow"> ${tr('Slow practice', '慢速练习')}</label></div>
-    <div class="moon-ticket-actions"><button id="moon-start" class="moon-action">${tr('Depart', '发车')} <span aria-hidden="true">→</span></button><button id="moon-edit" hidden>${tr('Edit song', '编辑乐曲')}</button><a id="moon-midi" download>${tr('MIDI file', '下载 MIDI')} <span aria-hidden="true">↓</span></a></div>
+    <div class="moon-ticket-face">
+      <div class="moon-fields">
+        <button id="moon-song" class="moon-stamp" aria-controls="moon-picker"><small>${tr('Route', '线路')}</small><strong></strong></button>
+        <button id="moon-track" class="moon-stamp" aria-controls="moon-picker"><small>${tr('Your part', '你的声部')}</small><strong></strong></button>
+      </div>
+      <p class="moon-credit"></p>
+      <div class="moon-switches">
+        <div class="moon-levers moon-keyboard-choice" role="group" aria-label="${tr('Keyboard', '琴键布局')}"><button data-keyboard="piano" aria-pressed="true">${tr('Piano keys', '钢琴键')}</button><button data-keyboard="compact" aria-pressed="false">${tr('Compact keys', '紧凑琴键')}</button></div>
+        <div class="moon-levers" role="group" aria-label="${tr('Note path', '音符轨道')}"><button data-cues="flight" aria-pressed="true">${tr('Note flight', '飞行音符')}</button><button data-cues="staff" aria-pressed="false">${tr('Staff railway', '五线谱铁路')}</button></div>
+      </div>
+      <div class="moon-options"><button id="moon-demo" class="moon-lamp" aria-pressed="false">${tr('Listen first', '先听示范')}</button><button id="moon-slow" class="moon-lamp" aria-pressed="false">${tr('Slow practice', '慢速练习')}</button></div>
+      <div class="moon-ticket-actions"><button id="moon-start" class="moon-action">${tr('Depart', '发车')} <span aria-hidden="true">→</span></button><button id="moon-ticket-end" hidden>${tr('End ride', '结束行程')}</button><button id="moon-edit" hidden>${tr('Edit song', '编辑乐曲')}</button><a id="moon-midi" download>${tr('MIDI file', '下载 MIDI')} <span aria-hidden="true">↓</span></a></div>
+      <p class="moon-error" hidden></p>
+    </div>
+    <section id="moon-picker" aria-labelledby="moon-picker-title" hidden>
+      <div class="moon-picker-head"><h3 id="moon-picker-title"></h3><button id="moon-picker-back">${tr('‹ Back to ticket', '‹ 返回车票')}</button></div>
+      <ul class="moon-picker-list"></ul>
+    </section>
   </section>
   <aside class="moon-station"><span class="moon-signal" aria-hidden="true"></span><div><h2 id="moon-station-name"></h2><p id="moon-story"></p></div></aside>
   <div class="moon-caption" aria-hidden="true"></div>
@@ -72,9 +91,9 @@ function replace(target: HTMLElement, ...items: Node[]) {
   target.append(...items);
 }
 const el = <T extends HTMLElement = HTMLElement>(selector: string) => game.querySelector<T>(selector)!;
-const selectSong = el<HTMLSelectElement>('#moon-song'), selectTrack = el<HTMLSelectElement>('#moon-track');
-const selectKeyboard = el<HTMLSelectElement>('#moon-keyboard');
-selectKeyboard.value = keyboardStyle;
+const songButton = el<HTMLButtonElement>('#moon-song'), trackButton = el<HTMLButtonElement>('#moon-track');
+const picker = el('#moon-picker'), ticketFace = el('.moon-ticket-face');
+let pickerTrigger: HTMLButtonElement | undefined;
 const stage = el('.moon-scene'), scenery = createScenery(stage);
 const canvas = el<HTMLCanvasElement>('.moon-cues'), ctx = canvas.getContext('2d');
 const instrument = el('.moon-instrument'), ticket = el('.moon-ticket'), studio = el('.moon-studio');
@@ -92,15 +111,47 @@ const laneLimit = () => Math.max(8, Math.min(compactCodes.length, Math.floor(ins
 const whiteLimit = () => Math.max(7, Math.min(11, Math.floor(instrumentWidth() / 43)));
 const onPiano = () => keyboardStyle === 'piano' && role() !== 'drums';
 
-function setOptions() {
-  replace(selectSong, ...[...routes.map(r => r.song), ...library].map(s => new Option(title(s), s.id)));
-  selectSong.value = song.id;
-  replace(selectTrack, ...song.tracks.map((t, i) => {
-    const part = route()?.partNames?.[i];
-    const name = part ? local(part) : t.name;
-    const option = new Option(name, String(i)); option.disabled = !t.notes.length; return option;
+function partTitle(index: number) {
+  const part = route()?.partNames?.[index];
+  return part ? local(part) : song.tracks[index].name;
+}
+function closePicker(focus = false) {
+  picker.hidden = true; ticketFace.hidden = false;
+  if (focus) pickerTrigger?.focus();
+  pickerTrigger = undefined;
+}
+function openPicker(kind: 'route' | 'part') {
+  const pickingRoute = kind === 'route';
+  pickerTrigger = pickingRoute ? songButton : trackButton;
+  const options = pickingRoute ? [...routes.map(r => r.song), ...library].map(s => ({
+    label: title(s), selected: s.id === song.id, disabled: false, choose: () => chooseSong(s.id),
+  })) : song.tracks.map((t, i) => ({
+    label: partTitle(i), selected: i === track, disabled: !t.notes.length, choose: () => {
+      track = i; setOptions(); setupTrack(); end();
+    },
   }));
-  selectTrack.value = String(track);
+  el('#moon-picker-title').textContent = pickingRoute ? tr('Choose a route', '选择线路') : tr('Choose your part', '选择声部');
+  replace(el('.moon-picker-list'), ...options.map(({label, selected, disabled, choose}) => {
+    const item = document.createElement('li'), button = document.createElement('button');
+    button.textContent = label; button.disabled = disabled;
+    if (selected) button.setAttribute('aria-current', 'true');
+    button.onclick = () => { closePicker(); if (!selected) choose(); (pickingRoute ? songButton : trackButton).focus(); };
+    item.append(button); return item;
+  }));
+  ticketFace.hidden = true; picker.hidden = false;
+  el('#moon-picker-back').focus();
+}
+function setSwitches() {
+  game.dataset.cues = cueStyle;
+  game.querySelectorAll<HTMLButtonElement>('[data-keyboard], [data-cues]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.keyboard === keyboardStyle || button.dataset.cues === cueStyle));
+  });
+  el('#moon-demo').setAttribute('aria-pressed', String(demo));
+  el('#moon-slow').setAttribute('aria-pressed', String(speed < 1));
+}
+function setOptions() {
+  songButton.querySelector('strong')!.textContent = title(song);
+  trackButton.querySelector('strong')!.textContent = partTitle(track);
   const classical = route();
   el('.moon-credit').textContent = classical ? local(classical.composer) : tr('From your studio', '来自你的创作室');
   el('#moon-edit').hidden = Boolean(classical);
@@ -150,19 +201,23 @@ function buildInstrument(next: number[]) {
   updateAnchors();
 }
 
-function setupTrack() {
+function setupTrack(at = 0) {
   notes = [...song.tracks[track].notes].sort((a, b) => a.beat - b.beat || a.pitch - b.pitch);
-  const horizon = approachSeconds / secondsPerBeat();
+  const byPitch = notes.map(n => n.pitch).sort((a, b) => a - b);
+  const middle = byPitch[Math.floor(byPitch.length / 2)] ?? 71;
+  staffCenter = [35, 50, 71, 83, 95, 107].reduce((best, p) => Math.abs(p - middle) < Math.abs(best - middle) ? p : best);
+  const spb = secondsPerBeat(), start = Math.max(0, at - hitWindow / spb);
+  const horizon = (approachSeconds + hitWindow) / spb;
   if (onPiano() && notes.length) {
     const all = notes.map(n => n.pitch);
     const extent = all.reduce(([low, high], p) => [Math.min(low, p), Math.max(high, p)], [127, 0]);
     const limit = whiteLimit();
     banked = pianoPitches(extent[0], extent[1]).filter(p => !isBlack(p)).length > limit;
-    buildInstrument(pianoBank(notes, 0, banked ? horizon : Infinity, limit));
+    buildInstrument(pianoBank(notes, start, banked ? horizon : Infinity, limit, at + hitWindow / spb));
   } else {
     const limit = laneLimit();
     banked = new Set(notes.map(n => n.pitch)).size > limit;
-    buildInstrument(instrumentPitches(notes, 0, horizon, limit));
+    buildInstrument(instrumentPitches(notes, start, horizon, limit));
   }
 }
 
@@ -186,21 +241,28 @@ function setStops() {
 
 function statusView() {
   game.dataset.state = state;
-  ticket.hidden = state !== 'station' && state !== 'arrival';
-  pauseButton.hidden = state !== 'play' && state !== 'pause';
+  const paused = state === 'pause';
+  ticket.hidden = state === 'play';
+  instrument.inert = paused;
+  pauseButton.hidden = state !== 'play';
   resetButton.hidden = pauseButton.hidden;
-  studioButton.hidden = ticket.hidden;
-  pauseButton.textContent = state === 'pause' ? tr('Resume', '继续') : tr('Pause', '暂停');
-  el('#moon-ticket-title').textContent = state === 'arrival' ? tr('End of the line', '列车到站') : tr('Departure ticket', '发车车票');
-  startButton.firstChild!.textContent = state === 'arrival' ? tr('Ride again ', '再坐一次 ') : tr('Depart ', '发车 ');
+  studioButton.hidden = ticket.hidden || paused;
+  songButton.disabled = trackButton.disabled = paused;
+  el('#moon-ticket-end').hidden = !paused;
+  el('.moon-options').hidden = paused;
+  el('#moon-edit').hidden = paused || Boolean(route());
+  el('#moon-midi').hidden = paused || !route();
+  el('#moon-ticket-title').textContent = paused ? tr('Train paused', '列车已暂停') : state === 'arrival' ? tr('End of the line', '列车到站') : tr('Departure ticket', '发车车票');
+  startButton.firstChild!.textContent = paused ? tr('Resume ride ', '继续行程 ') : state === 'arrival' ? tr('Ride again ', '再坐一次 ') : tr('Depart ', '发车 ');
 }
 function updateCount() { el('.moon-count').textContent = demo ? tr('Listening', '示范') : `${played.size} / ${notes.length}`; }
 function end(next: 'station' | 'arrival' = 'station') {
   const moveFocus = ticket.hidden && studio.hidden;
-  revision++; audio.stop(); lastBeat = 0; pendingStart = false;
+  revision++; audio.stop(); pendingStart = false;
   cancelAnimationFrame(frame); frame = 0;
   state = next; beat = next === 'arrival' ? song.beats : 0;
   startButton.disabled = false;
+  el('.moon-error').hidden = true;
   if (next === 'station') { played.clear(); streak = 0; }
   caption(next === 'arrival' ? demo ? tr('Journey complete', '旅程结束') : tr(`${played.size} notes brought home`, `带回了 ${played.size} 个音符`) : '');
   statusView(); updateCount(); draw(beat);
@@ -213,30 +275,32 @@ function chooseSong(id: string) {
 }
 function pause(message = tr('Train paused', '列车已暂停')) {
   if (state !== 'play') return;
-  beat = lastBeat;
-  audio.stop(); cancelAnimationFrame(frame); frame = 0;
-  state = 'pause'; statusView(); caption(message); announce(message);
+  audio.stop(); beat = audio.beat;
+  cancelAnimationFrame(frame); frame = 0;
+  state = 'pause'; statusView(); caption(''); draw(beat); announce(message);
+  if (!document.hidden) startButton.focus();
 }
 async function start(resume = false) {
   if (pendingStart) return;
-  const request = ++revision; pendingStart = true; startButton.disabled = true; pauseButton.disabled = true;
+  const request = ++revision; pendingStart = true; startButton.disabled = true;
+  el('.moon-error').hidden = true;
   try {
     await audio.unlock();
     if (request !== revision || document.hidden) return;
     if (!resume) { played.clear(); streak = 0; beat = 0; setupTrack(); }
     const from = resume ? Math.max(0, Math.min(song.beats, beat)) : 0;
-    audio.start(song, demo ? -1 : track, from, resume && beat >= 0 ? 0 : 3, speed);
-    lastBeat = audio.beat;
+    audio.start(song, demo ? -1 : track, from, resume ? Math.max(0, -beat) : 3, speed);
     state = 'play'; statusView(); updateCount(); caption('');
-    if (!resume) pauseButton.focus();
+    pauseButton.focus();
     frame = requestAnimationFrame(tick);
   } catch {
     if (revision === request) {
       const message = tr('Sound could not start. Tap again to retry.', '声音未能启动，请再点一次。');
-      caption(message); announce(message);
+      const error = el('.moon-error');
+      error.textContent = message; error.hidden = false; announce(message);
     }
   } finally {
-    if (revision === request) { pendingStart = false; startButton.disabled = false; pauseButton.disabled = false; }
+    if (revision === request) { pendingStart = false; startButton.disabled = false; }
   }
 }
 function audition(type: Role, pitch: number, seconds = .26) {
@@ -250,6 +314,7 @@ function pulse(pitch: number) {
   pulses.set(pitch, setTimeout(() => { pulses.delete(pitch); key.classList.remove('moon-pressed'); }, 150));
 }
 function playPitch(pitch: number) {
+  if (state === 'pause' || !picker.hidden) return;
   const at = state === 'play' ? audio.beat : beat;
   let duration = .26;
   if (state === 'play' && !demo) {
@@ -268,11 +333,13 @@ function draw(at: number) {
   const stop = stops.reduce((index, s, i) => at >= s.at ? i : index, 0);
   const from = stops[stop].at, to = stops[stop + 1]?.at ?? song.beats;
   const progress = Math.max(0, Math.min(1, (at - from) / Math.max(.001, to - from)));
-  stationDisplay(stop); scenery.draw(stops[stop].scene, reduceMotion.matches ? .25 : progress);
+  const staff = cueStyle === 'staff';
+  const active = state === 'play' || state === 'pause';
+  stationDisplay(stop); scenery.draw(stops[stop].scene, reduceMotion.matches ? .25 : progress, active && staff);
   el('.moon-stops').style.setProperty('--trip', `${Math.max(0, Math.min(1, at / song.beats)) * 100}%`);
   if (!ctx) return;
   ctx.clearRect(0, 0, width, height);
-  if (state !== 'play' && state !== 'pause') return;
+  if (!active) return;
   const spb = secondsPerBeat();
   if (banked && at >= 0) {
     const earliest = lowerBound(notes, at - hitWindow / spb, n => n.beat);
@@ -286,7 +353,15 @@ function draw(at: number) {
     }
   }
   const first = lowerBound(notes, at - hitWindow / spb, n => n.beat);
+  const locked = reduceMotion.matches;
   const horizonX = width / 2, horizonY = height * .37;
+  const ref = staff ? canvas.getBoundingClientRect() : undefined;
+  const cab = staff ? instrument.getBoundingClientRect() : undefined;
+  const vanishing = {x: horizonX, y: horizonY};
+  const deck = {x: horizonX, y: Math.max(horizonY + 5, (cab && ref ? cab.top - ref.top : height) - Math.min(73, height * .13))};
+  const spacing = Math.min(22, (cab?.width ?? width) / 21);
+  const pitched = role() !== 'drums';
+  if (cab && ref) drawStaff(ctx, vanishing, deck, spacing, at, spb, !locked, cab.left - ref.left, cab.right - ref.left);
   for (let index = first, count = 0; index < notes.length && count < 256; index++, count++) {
     const n = notes[index], dt = (n.beat - at) * spb;
     if (dt > approachSeconds) break;
@@ -297,11 +372,17 @@ function draw(at: number) {
       if (!played.has(index)) { played.add(index); pulse(n.pitch); }
       continue;
     }
-    const locked = reduceMotion.matches;
-    const {x, y, depth} = locked ? {x: key.x, y: key.y - 9, depth: 1} : cuePosition(dt, horizonX, horizonY, key.x, key.y);
     if (locked && dt > .65) continue;
+    const step = pitched ? staffStep(n.pitch, staffCenter) : ((key.x - deck.x) / Math.max(1, cab?.width ?? width)) * 9;
+    const {x, y, depth} = locked ? {...key, depth: 1} : staff
+      ? staffCue(step, dt, vanishing, deck, spacing, key) : cuePosition(dt, horizonX, horizonY, key.x, key.y);
     const scale = 3 + 8 * depth;
     ctx.globalAlpha = (dt < 0 ? 1 + dt / hitWindow : .16 + .84 * depth) * (locked && dt > .18 ? .48 : 1);
+    if (staff) {
+      const onStaff = !locked && y <= deck.y;
+      drawStaffNote(ctx, x, y, scale, step, n.pitch, pitched && onStaff, spacing * (.08 + .92 * (y - horizonY) / (deck.y - horizonY)));
+      continue;
+    }
     ctx.strokeStyle = '#c7f8c8'; ctx.fillStyle = '#e6ffd6'; ctx.lineWidth = 1.5 + depth;
     ctx.beginPath(); ctx.ellipse(x, y, scale, scale * .55, -.34, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.moveTo(x + scale * .8, y - 1); ctx.lineTo(x + scale * .8, y - scale * 2); ctx.lineTo(x + scale * 1.5, y - scale * 1.65); ctx.stroke();
@@ -310,7 +391,7 @@ function draw(at: number) {
 }
 function tick() {
   if (state !== 'play') return;
-  beat = audio.beat; lastBeat = beat;
+  beat = audio.beat;
   if (beat >= song.beats) {
     const message = demo ? tr('Journey complete', '旅程结束') : tr(`Arrived. You played ${played.size} of ${notes.length} notes.`, `已到站。你演奏了 ${played.size} / ${notes.length} 个音符。`);
     announce(message); end('arrival'); startButton.focus(); return;
@@ -327,7 +408,7 @@ function resize() {
   if (width < 1 || height < 1) return;
   canvas.width = Math.ceil(width * dpr); canvas.height = Math.ceil(height * dpr);
   ctx?.setTransform(dpr, 0, 0, dpr, 0, 0); scenery.resize();
-  if (state === 'station' || state === 'arrival') setupTrack(); else updateAnchors();
+  setupTrack(beat);
   draw(beat);
 }
 
@@ -348,18 +429,28 @@ function launchStudio(edit?: Song) {
   }});
 }
 
-selectSong.onchange = () => chooseSong(selectSong.value);
-selectTrack.onchange = () => { track = Number(selectTrack.value); setupTrack(); end(); };
-selectKeyboard.onchange = () => {
-  keyboardStyle = selectKeyboard.value === 'compact' ? 'compact' : 'piano';
-  try { localStorage.setItem(layoutPreference, keyboardStyle); } catch { /* optional preference */ }
-  setupTrack();
-};
-el<HTMLInputElement>('#moon-demo').onchange = e => { demo = (e.target as HTMLInputElement).checked; updateCount(); };
-el<HTMLInputElement>('#moon-slow').onchange = e => { speed = (e.target as HTMLInputElement).checked ? .70 : 1; };
-startButton.onclick = () => void start();
-pauseButton.onclick = () => state === 'play' ? pause() : void start(true);
-resetButton.onclick = () => { end(); startButton.focus(); };
+songButton.onclick = () => openPicker('route');
+trackButton.onclick = () => openPicker('part');
+el<HTMLButtonElement>('#moon-picker-back').onclick = () => closePicker(true);
+game.querySelectorAll<HTMLButtonElement>('button[data-keyboard]').forEach(button => {
+  button.onclick = () => {
+    keyboardStyle = button.dataset.keyboard === 'compact' ? 'compact' : 'piano';
+    try { localStorage.setItem(layoutPreference, keyboardStyle); } catch { /* optional preference */ }
+    setSwitches(); setupTrack(beat); draw(beat);
+  };
+});
+game.querySelectorAll<HTMLButtonElement>('button[data-cues]').forEach(button => {
+  button.onclick = () => {
+    cueStyle = button.dataset.cues === 'staff' ? 'staff' : 'flight';
+    try { localStorage.setItem(cuePreference, cueStyle); } catch { /* optional preference */ }
+    setSwitches(); draw(beat);
+  };
+});
+el<HTMLButtonElement>('#moon-demo').onclick = () => { demo = !demo; setSwitches(); updateCount(); };
+el<HTMLButtonElement>('#moon-slow').onclick = () => { speed = speed === 1 ? .70 : 1; setSwitches(); };
+startButton.onclick = () => void start(state === 'pause');
+pauseButton.onclick = () => pause();
+resetButton.onclick = el<HTMLButtonElement>('#moon-ticket-end').onclick = () => { end(); startButton.focus(); };
 studioButton.onclick = () => launchStudio();
 el<HTMLButtonElement>('#moon-edit').onclick = () => launchStudio(song);
 instrument.addEventListener('pointerdown', event => {
@@ -372,7 +463,9 @@ instrument.addEventListener('click', event => {
 });
 document.addEventListener('keydown', event => {
   if (!studio.hidden || event.altKey || event.ctrlKey || event.metaKey || event.repeat || (event.target as HTMLElement).matches('select,input,textarea,[contenteditable]')) return;
-  if (event.key === 'Escape' && state === 'play') { pause(); pauseButton.focus(); return; }
+  if (event.key === 'Escape' && !picker.hidden) { closePicker(true); return; }
+  if (event.key === 'Escape' && state === 'play') { pause(); return; }
+  if (state === 'pause' || !picker.hidden) return;
   const pitch = mapped.get(event.code);
   if (pitch !== undefined) { event.preventDefault(); playPitch(pitch); }
 });
@@ -381,5 +474,6 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('pagehide', () => { if (state === 'play') pause(); else audio.stop(); });
 window.addEventListener('resize', resize);
+reduceMotion.addEventListener('change', () => draw(beat));
 if (typeof ResizeObserver === 'function') new ResizeObserver(updateAnchors).observe(instrument);
-chooseSong(song.id); resize();
+setSwitches(); chooseSong(song.id); resize();
