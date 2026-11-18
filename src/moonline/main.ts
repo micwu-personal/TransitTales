@@ -1,11 +1,11 @@
 import './style.css';
 import { JourneyAudio } from './audio';
 import { loadLibrary, saveToLibrary } from './library';
-import { approachSeconds, compactCodes, cuePosition, hitWindow, instrumentPitches, isBlack, lowerBound, matchingNote, pianoBank, pianoKeys, pianoPitches, pitchBank } from './play';
+import { approachSeconds, compactCodes, cuePosition, hitWindow, instrumentPitches, isBlack, lowerBound, matchingNote, pianoBank, pianoKeys, pianoPitches, pitchBank, previewTarget } from './play';
 import { decodeMidi } from './midi';
 import { routes as arrangements } from './repertoire';
 import { createScenery } from './scenery';
-import { drawStaff, drawStaffNote, staffCue, staffStep } from './staff';
+import { createStaff, drawDuration, drawStaff, drawStaffNote, durationDepths, notate, scoreMeter } from './staff';
 import { pitchName, type Note, type Role, type Song } from './score';
 import { openStudio } from './studio';
 
@@ -31,6 +31,8 @@ let cleanupStudio: (() => void) | undefined;
 let textUntil = 0, pendingStart = false;
 let pitches: number[] = [], mapped = new Map<string, number>(), keys = new Map<number, HTMLButtonElement>();
 let anchors = new Map<number, {x: number; y: number}>();
+let cabLeft = 0, cabWidth = 0, strikeY = 0;
+let notation: ReturnType<typeof notate> = [], releaseBounds: number[] = [];
 let pulses = new Map<number, ReturnType<typeof setTimeout>>();
 let width = 1, height = 1, banked = false;
 const layoutPreference = 'moonline-keyboard';
@@ -162,6 +164,8 @@ function setOptions() {
 
 function updateAnchors() {
   const ref = canvas.getBoundingClientRect();
+  const cab = instrument.getBoundingClientRect();
+  cabLeft = cab.left - ref.left; cabWidth = cab.width; strikeY = cab.top - ref.top;
   anchors = new Map([...keys].map(([pitch, key]) => {
     const rect = key.getBoundingClientRect();
     return [pitch, {x: rect.left + rect.width / 2 - ref.left, y: rect.top - ref.top}];
@@ -205,7 +209,10 @@ function setupTrack(at = 0) {
   notes = [...song.tracks[track].notes].sort((a, b) => a.beat - b.beat || a.pitch - b.pitch);
   const byPitch = notes.map(n => n.pitch).sort((a, b) => a - b);
   const middle = byPitch[Math.floor(byPitch.length / 2)] ?? 71;
-  staffCenter = [35, 50, 71, 83, 95, 107].reduce((best, p) => Math.abs(p - middle) < Math.abs(best - middle) ? p : best);
+  staffCenter = middle < 61 ? 50 : 71;
+  notation = notate(notes, staffCenter, scoreMeter(song.id));
+  let latestRelease = -Infinity;
+  releaseBounds = notes.map(n => latestRelease = Math.max(latestRelease, n.beat + n.length));
   const spb = secondsPerBeat(), start = Math.max(0, at - hitWindow / spb);
   const horizon = (approachSeconds + hitWindow) / spb;
   if (onPiano() && notes.length) {
@@ -289,7 +296,7 @@ async function start(resume = false) {
     if (request !== revision || document.hidden) return;
     if (!resume) { played.clear(); streak = 0; beat = 0; setupTrack(); }
     const from = resume ? Math.max(0, Math.min(song.beats, beat)) : 0;
-    audio.start(song, demo ? -1 : track, from, resume ? Math.max(0, -beat) : 3, speed);
+    audio.start(song, demo ? -1 : track, from, resume ? Math.max(0, -beat) : Math.max(3, Math.ceil(approachSeconds / secondsPerBeat())), speed);
     state = 'play'; statusView(); updateCount(); caption('');
     pauseButton.focus();
     frame = requestAnimationFrame(tick);
@@ -341,51 +348,59 @@ function draw(at: number) {
   ctx.clearRect(0, 0, width, height);
   if (!active) return;
   const spb = secondsPerBeat();
-  if (banked && at >= 0) {
+  if (banked) {
     const earliest = lowerBound(notes, at - hitWindow / spb, n => n.beat);
-    whileBank: for (let i = earliest; i < notes.length && (notes[i].beat - at) * spb < approachSeconds; i++) {
+    for (let i = earliest; i < notes.length && (notes[i].beat - at) * spb < approachSeconds; i++) {
       if (!played.has(i) && !keys.has(notes[i].pitch)) {
         const start = at - hitWindow / spb, horizon = (approachSeconds + hitWindow) / spb;
-        const group = onPiano() ? pianoBank(notes, start, horizon, whiteLimit(), at + hitWindow / spb) : pitchBank(notes, start, horizon, laneLimit());
+        const group = onPiano() ? pianoBank(notes, start, horizon, whiteLimit(), at + hitWindow / spb) : pitchBank(notes, start, horizon, laneLimit(), at + hitWindow / spb);
         if (group.join() !== pitches.join()) buildInstrument(group);
-        break whileBank;
+        break;
       }
     }
   }
   const first = lowerBound(notes, at - hitWindow / spb, n => n.beat);
-  const locked = reduceMotion.matches;
-  const horizonX = width / 2, horizonY = height * .37;
-  const ref = staff ? canvas.getBoundingClientRect() : undefined;
-  const cab = staff ? instrument.getBoundingClientRect() : undefined;
-  const vanishing = {x: horizonX, y: horizonY};
-  const deck = {x: horizonX, y: Math.max(horizonY + 5, (cab && ref ? cab.top - ref.top : height) - Math.min(73, height * .13))};
-  const spacing = Math.min(22, (cab?.width ?? width) / 21);
-  const pitched = role() !== 'drums';
-  if (cab && ref) drawStaff(ctx, vanishing, deck, spacing, at, spb, !locked, cab.left - ref.left, cab.right - ref.left);
-  for (let index = first, count = 0; index < notes.length && count < 256; index++, count++) {
-    const n = notes[index], dt = (n.beat - at) * spb;
+  if (demo && state === 'play') {
+    for (let i = first; i < notes.length && notes[i].beat <= at; i++) {
+      if (!played.has(i)) { played.add(i); pulse(notes[i].pitch); }
+    }
+  }
+  const horizon = {x: width / 2, y: Math.min(height * .37, strikeY * .65)};
+  const meter = scoreMeter(song.id);
+  const score = staff ? createStaff(horizon, strikeY, Math.max(1, cabWidth), staffCenter, anchors, Boolean(meter?.flats), role() !== 'drums') : null;
+  const target = (pitch: number) => anchors.get(pitch) ?? previewTarget(pitch, anchors, cabLeft, cabWidth, strikeY);
+  if (score) {
+    drawStaff(ctx, score, at, spb, song.beats, meter, staffCenter);
+    // Include sustains whose onsets have already crossed the strike line.
+    for (let i = lowerBound(releaseBounds, at, n => n); i < notes.length; i++) {
+      const n = notes[i], dt = (n.beat - at) * spb;
+      if (dt > approachSeconds) break;
+      const [head, tail] = durationDepths(dt, n.length * spb);
+      if (head > tail) drawDuration(ctx, score, n.pitch, head, tail, target(n.pitch).x);
+    }
+  }
+  for (let i = first; i < notes.length; i++) {
+    const n = notes[i], dt = (n.beat - at) * spb;
     if (dt > approachSeconds) break;
-    if (played.has(index)) continue;
-    const key = anchors.get(n.pitch);
-    if (!key) continue;
-    if (demo && dt <= 0 && state === 'play') {
-      if (!played.has(index)) { played.add(index); pulse(n.pitch); }
-      continue;
+    if (played.has(i) && !score) continue;
+    const key = target(n.pitch);
+    const depthOnStaff = durationDepths(dt, 0)[0];
+    const {x, y, depth} = score ? {...score.cue(n.pitch, depthOnStaff, key.x), depth: depthOnStaff}
+      : cuePosition(dt, horizon.x, horizon.y, key.x, key.y);
+    const scale = score ? 3 + 6 * depth : 4 + 7 * depth;
+    // Note travel is essential to play. Reduced motion still disables scenery travel.
+    ctx.globalAlpha = dt < 0 ? Math.max(0, 1 + dt / hitWindow) : .60 + .40 * depth;
+    if (score) {
+      drawStaffNote(ctx, score, {x, y}, depth, scale, notation[i]);
+    } else {
+      ctx.strokeStyle = '#c7f8c8'; ctx.fillStyle = '#e6ffd6'; ctx.lineWidth = 1.5 + depth;
+      ctx.beginPath(); ctx.ellipse(x, y, scale, scale * .55, -.34, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x + scale * .8, y - 1); ctx.lineTo(x + scale * .8, y - scale * 2); ctx.lineTo(x + scale * 1.5, y - scale * 1.65); ctx.stroke();
     }
-    if (locked && dt > .65) continue;
-    const step = pitched ? staffStep(n.pitch, staffCenter) : ((key.x - deck.x) / Math.max(1, cab?.width ?? width)) * 9;
-    const {x, y, depth} = locked ? {...key, depth: 1} : staff
-      ? staffCue(step, dt, vanishing, deck, spacing, key) : cuePosition(dt, horizonX, horizonY, key.x, key.y);
-    const scale = 3 + 8 * depth;
-    ctx.globalAlpha = (dt < 0 ? 1 + dt / hitWindow : .16 + .84 * depth) * (locked && dt > .18 ? .48 : 1);
-    if (staff) {
-      const onStaff = !locked && y <= deck.y;
-      drawStaffNote(ctx, x, y, scale, step, n.pitch, pitched && onStaff, spacing * (.08 + .92 * (y - horizonY) / (deck.y - horizonY)));
-      continue;
+    if (!anchors.has(n.pitch)) {
+      ctx.fillStyle = '#ffd59c'; ctx.font = '600 11px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(pitchLabel(n.pitch), x, y - scale * 2.3);
     }
-    ctx.strokeStyle = '#c7f8c8'; ctx.fillStyle = '#e6ffd6'; ctx.lineWidth = 1.5 + depth;
-    ctx.beginPath(); ctx.ellipse(x, y, scale, scale * .55, -.34, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(x + scale * .8, y - 1); ctx.lineTo(x + scale * .8, y - scale * 2); ctx.lineTo(x + scale * 1.5, y - scale * 1.65); ctx.stroke();
   }
   ctx.globalAlpha = 1;
 }
