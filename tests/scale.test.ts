@@ -2,6 +2,43 @@ import { describe, expect, it } from 'vitest';
 import { carbon, encounterFrames, expectedRemaining, frequency, gravity, hydrogenSamples, orbitFrames, scaleRatio } from '../src/scale/physics';
 import { stops } from '../src/scale/stops';
 import { sceneArt } from '../src/scale/art';
+import { nearestStop, scalePosition } from '../src/scale/scale-ruler';
+import { projectPoint, wrapAngle } from '../src/scale/projection';
+import { missions } from '../src/scale/fieldwork';
+
+it('jumps to the closest stop in log space, including both ends', () => {
+  expect(nearestStop(0,stops)).toBe(0);
+  expect(nearestStop(1,stops)).toBe(stops.length-1);
+  stops.forEach((stop,i)=>expect(nearestStop(scalePosition(stop.meters),stops)).toBe(i));
+});
+
+it('can orbit all the way around a solid, reversing foreground depth', () => {
+  const near=projectPoint([1,0,-1],0,0,7,700,0,0);
+  const far=projectPoint([1,0,-1],Math.PI,0,7,700,0,0);
+  expect(far.x).toBeLessThan(0);
+  expect(far.scale).toBeLessThan(near.scale);
+  expect(wrapAngle(Math.PI*9)).toBeCloseTo(Math.PI);
+  expect(wrapAngle(-Math.PI/2)).toBeCloseTo(Math.PI*1.5);
+});
+
+it('has a bilingual, spatially interactive, finite exhibit at every stop', () => {
+  for(const {id} of stops) {
+    const mission=missions[id];
+    expect(mission.title.every(Boolean),id).toBe(true);
+    const a=mission.frame(0,0,null), b=mission.frame(1,mission.duration ?? 0,0);
+    expect(a.grip,id).not.toEqual(b.grip);
+    expect(b.shapes,id).not.toEqual(a.shapes);
+    expect(mission.result(1,mission.duration ?? 0).every(Boolean),id).toBe(true);
+    for(const frame of [a,b]) {
+      expect(frame.shapes.length,id).toBeGreaterThan(3);
+      expect(frame.grip.every(Number.isFinite),id).toBe(true);
+      for(const shape of frame.shapes) {
+        const points=shape.kind==='orb'?[shape.at]:shape.points;
+        expect(points.every(p=>p.length===3 && p.every(Number.isFinite)),id).toBe(true);
+      }
+    }
+  }
+});
 
 describe('expedition itinerary', () => {
   it('has sixteen distinct illustrated and sourced stops in logarithmic order', () => {

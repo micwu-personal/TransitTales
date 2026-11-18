@@ -3,6 +3,8 @@ import { stops, type Locale, type Text } from './stops';
 import { sceneArt } from './art';
 import { Exhibits } from './exhibits';
 import { scaleRatio } from './physics';
+import { Fieldwork } from './fieldwork';
+import { nearestStop, scalePosition } from './scale-ruler';
 
 const $ = <T extends Element = HTMLElement>(selector:string) => document.querySelector<T>(selector)!;
 const home = stops.findIndex(s=>s.id==='house');
@@ -20,11 +22,15 @@ try {
 $('#scale').innerHTML=`<div id="world" aria-hidden="true">
   <div id="camera"><svg class="landscape" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice"><g id="landscape-current"></g><g id="specimen"></g></svg></div>
   <svg class="landscape passage" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice"></svg>
+  <canvas id="field-view"></canvas>
   <div class="vignette"></div>
 </div>
-<header class="top"><a href="index.html" id="concourse"></a><span id="signature"></span><div class="tools"><button id="motion" aria-controls="motion-panel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M5 5l3 3m8 8 3 3M5 19l3-3m8-8 3-3"/><circle cx="12" cy="12" r="6"/></svg><span></span></button><button id="lang"></button></div></header>
+<header class="top"><a href="index.html" id="concourse"></a><span id="signature"></span><div class="tools"><button id="view-mode" aria-pressed="false">3D</button><button id="motion" aria-controls="motion-panel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M5 5l3 3m8 8 3 3M5 19l3-3m8-8 3-3"/><circle cx="12" cy="12" r="6"/></svg><span></span></button><button id="lang"></button></div></header>
 <section class="location" aria-labelledby="stop-name"><h1 id="stop-name"></h1><div class="place-meta"><span id="scale-size"></span><span id="evidence"></span></div><p id="hook"></p></section>
 <button id="pin" aria-controls="observation" aria-expanded="false"><span class="pin-dot" aria-hidden="true"></span><span id="pin-label"></span></button>
+<button id="mission-toggle" aria-controls="mission" aria-expanded="false"><span aria-hidden="true">✦</span><span id="mission-label"></span></button>
+<div id="grip" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span aria-hidden="true">⤧</span></div>
+<section id="mission" aria-labelledby="mission-title"><div><h2 id="mission-title"></h2><p id="mission-guide"></p><p id="mission-result" role="status"></p></div><button id="mission-reset"></button></section>
 <aside id="observation" class="folio" hidden aria-labelledby="observation-title">
   <div class="folio-top"><h2 id="observation-title"></h2><button id="close-observation" class="cross">×</button></div><p id="detail"></p><p id="fiber-memory" hidden></p><div id="lab" hidden></div><a id="source" target="_blank" rel="noopener noreferrer"></a>
 </aside>
@@ -35,7 +41,7 @@ $('#scale').innerHTML=`<div id="world" aria-hidden="true">
   <div class="folio-top"><h2 id="motion-title"></h2><button id="close-motion" class="cross">×</button></div><p id="motion-desc"></p><div class="lab-actions"><button id="sensors"></button><button id="step"></button><button id="recenter"></button></div><p id="sensor-status" role="status"></p>
 </aside>
 <footer class="trail">
-  <div id="ratio" aria-live="polite"></div><div class="ruler" aria-hidden="true"><span class="ruler-start">10⁻³⁵ m</span><div class="ticks"><i id="needle"></i></div><span class="ruler-end">10²⁷ m</span></div>
+  <div id="ratio" aria-live="polite"></div><div class="ruler" id="travel-ruler" role="slider" tabindex="0" aria-valuemin="1" aria-valuemax="${stops.length}"><span class="ruler-start" aria-hidden="true">10⁻³⁵ m</span><div class="ticks" aria-hidden="true">${stops.map(s=>`<b style="left:${scalePosition(s.meters)*100}%"></b>`).join('')}<i id="needle"></i></div><span class="ruler-end" aria-hidden="true">10²⁷ m</span></div>
   <nav class="gates"><button id="smaller" class="gate"><b aria-hidden="true">↙</b><span><small></small><strong></strong></span></button><button id="map" aria-controls="atlas" aria-expanded="false"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12"/><path d="M16 4v4m0 16v4M4 16h4m16 0h4m-4-7-4 11-11 4 4-11z"/></svg><span></span></button><button id="larger" class="gate"><span><small></small><strong></strong></span><b aria-hidden="true">↗</b></button></nav>
 </footer>
 <div id="live" class="sr-only" aria-live="polite"></div>`;
@@ -46,10 +52,16 @@ const panels=['observation','atlas','motion-panel'] as const;
 type Panel=typeof panels[number];
 const triggers:Record<Panel,string>={observation:'#pin',atlas:'#map','motion-panel':'#motion'};
 const exhibits=new Exhibits($('#lab'),$<SVGGElement>('#specimen'));
+const fieldwork=new Fieldwork($('#scale'),$<HTMLCanvasElement>('#field-view'),()=>mark());
+let sceneArrival: Animation|undefined;
 let index=home, panel:Panel|undefined, attempt=0;
 let animation: Animation|undefined, arrival: Animation|undefined;
 let x=0,y=0,depth=0, sx=0,sy=0;
-let drag: {id:number;x:number;y:number} | undefined;
+const cameraPointers=new Map<number,{x:number;y:number}>();
+function zoomBy(factor:number) {
+  fieldwork.scene.zoom=Math.max(.68,Math.min(1.45,fieldwork.scene.zoom*factor));
+  fieldwork.schedule();
+}
 
 function drawCamera() {
   const {width,height}=stage.getBoundingClientRect();
@@ -59,11 +71,15 @@ function drawCamera() {
   const markerX=width/2+(px-500)*factor*zoom+x+sx, markerY=height/2+(py-350)*factor*zoom+y+sy;
   pin.style.left=`${Math.max(68,Math.min(width-68,markerX))}px`;
   pin.style.top=`${Math.max(Math.min(153,height*.46),Math.min(height-113,markerY))}px`;
+  fieldwork.schedule();
 }
-function recenter() { x=0;y=0;depth=0;sx=0;sy=0;reference=undefined;drawCamera(); }
+function recenter() { x=0;y=0;depth=0;sx=0;sy=0;reference=undefined;fieldwork.scene.recenter();drawCamera(); }
 const clamp=(v:number,max:number) => Math.max(-max,Math.min(max,v));
-function nudge(dx:number,dy:number) { x=clamp(x+dx,48);y=clamp(y+dy,36);drawCamera(); }
-function walk(){ depth=(depth+1)%5;drawCamera(); }
+function nudge(dx:number,dy:number) {
+  if(fieldwork.view==='3d') { fieldwork.scene.orbit(dx,dy);fieldwork.schedule();return; }
+  x=clamp(x+dx,48);y=clamp(y+dy,36);drawCamera();
+}
+function walk(){ depth=(depth+1)%5;fieldwork.scene.zoom=1+depth*.06;drawCamera(); }
 
 function paint() {
   const s=stops[index];
@@ -78,7 +94,22 @@ function paint() {
   $('#evidence').textContent=s.kind==='observed'?t('实证 · 绘景','Evidence · illustration'):s.kind==='model'?t('科学模型','Scientific model'):t('知识边界','Knowledge limit');
   $('#hook').textContent=text(s.hook);
   $('#pin-label').textContent=text(s.target);
-  $('#needle').style.left=`${100*(Math.log10(s.meters)+35)/62}%`;
+  $('#needle').style.left=`${100*scalePosition(s.meters)}%`;
+  const ruler=$('#travel-ruler'), rulerLabel=t('轻触尺度尺，跳到任意一站','Tap the scale ruler to jump');
+  ruler.setAttribute('aria-label',rulerLabel);ruler.title=rulerLabel;
+  ruler.setAttribute('aria-valuenow',String(index+1));
+  ruler.setAttribute('aria-valuetext',`${text(s.name)} · ${text(s.scale)}`);
+  const viewMode=$<HTMLButtonElement>('#view-mode');
+  viewMode.disabled=!fieldwork.scene.available;
+  viewMode.setAttribute('aria-label',t('3D 视图','3D view'));
+  viewMode.setAttribute('aria-pressed',String(fieldwork.view==='3d'));
+  viewMode.title=fieldwork.scene.available?t('切换 2D / 3D','Switch 2D / 3D'):t('此浏览器无法绘制立体场景','3D drawing is unavailable in this browser');
+  const missionToggle=$<HTMLButtonElement>('#mission-toggle');
+  missionToggle.hidden=fieldwork.view==='3d' || !fieldwork.scene.available;
+  missionToggle.setAttribute('aria-expanded',String(fieldwork.active));
+  $('#mission-label').textContent=fieldwork.active?t('返回绘景','Back to illustration'):t('动手探索','Try it here');
+  $('#ratio').dataset.hint=t('轻触跳转','Tap to jump');
+  fieldwork.paint(locale);
   const gate=(id:string,step:number,label:string,end:string) => {
     const btn=$<HTMLButtonElement>(id), stop=stops[index+step];
     btn.disabled=!stop;
@@ -97,7 +128,7 @@ function paint() {
   $('#atlas-note').textContent=t(`观察笔记 ${visited.size} / ${stops.length}。从任意一站继续。` ,`${visited.size} of ${stops.length} observations recorded. Continue from any stop.`);
   $('#stops').innerHTML=stops.map((spot,i)=>`<li><button data-stop="${i}"${i===index?' aria-current="location"':''}><span>${visited.has(spot.id)?'✓':'·'} ${text(spot.name)}</span><small>${text(spot.scale)}</small></button></li>`).join('');
   $('#motion-title').textContent=t('看向四周','Look around');
-  $('#motion-desc').textContent=t('拖动场景或按 WASD 环顾。按空格向前察看，也可以用设备朝向转动景框。开启传感器后，可以轻踏原地试试；它不会定位或测量你走了多远。','Drag the scenery or use WASD to look. Space steps into the scene. Device sensors can tilt the view and try small steps in place, without tracking your location or measuring distance.');
+  $('#motion-desc').textContent=t('在 3D 中拖动背景或按 WASD，绕展品转一整圈。双指捏合、滚轮或空格可缩放。传感器能转动视角，不会定位或测量距离。','In 3D, drag the background or use WASD to orbit the exhibit. Pinch, scroll, or press Space to zoom. Sensors can tilt the view without tracking location or distance.');
   $('#step').textContent=t('向前一步','Step in');
   $('#recenter').textContent=t('居中','Recenter');
   for(const id of ['close-observation','close-atlas','close-motion']) $('#'+id).setAttribute('aria-label',t('关闭','Close'));
@@ -112,6 +143,8 @@ function mark() {
 function show(next?:Panel, focus=true) {
   const before=panel;
   panel=next===before?undefined:next;
+  $('#scale').dataset.panel=panel ?? '';
+  $('#grip').tabIndex=panel?-1:0;
   for(const id of panels) { $('#'+id).hidden=id!==panel; $(triggers[id]).setAttribute('aria-expanded',String(id===panel)); }
   if(panel==='observation') { mark();paint(); }
   else exhibits.close();
@@ -123,8 +156,8 @@ function arrive(next:number,fromAtlas=false) {
   const old=stops[index], fresh=stops[next], sign=Math.sign(next-index);
   const wasOpen=!!panel;
   show(undefined,false);
-  animation?.cancel();arrival?.cancel();passage.innerHTML='';
-  if (!reduced.matches && typeof passage.animate==='function') {
+  animation?.cancel();arrival?.cancel();sceneArrival?.cancel();passage.innerHTML='';
+  if (!reduced.matches && !fieldwork.active && typeof passage.animate==='function') {
     // Use a separate copy of the departing scene above the new one for an optical zoom dissolve.
     passage.innerHTML=landscape.innerHTML;
     const from=sign>0?.87:1.23, entry=sign>0?1.21:.86;
@@ -135,7 +168,11 @@ function arrive(next:number,fromAtlas=false) {
   }
   index=next;
   landscape.innerHTML=sceneArt(fresh.id);
-  recenter();paint();
+  fieldwork.enter(fresh.id);recenter();paint();
+  const fieldView=$('#field-view');
+  if(fieldwork.active && !reduced.matches && typeof fieldView.animate==='function') {
+    sceneArrival=fieldView.animate([{opacity:.35,transform:`scale(${sign>0?1.06:.95})`},{opacity:1,transform:'scale(1)'}],{duration:470,easing:'cubic-bezier(.2,.7,.25,1)'});
+  }
   const ratio=scaleRatio(old.meters,fresh.meters);
   const factor=Math.max(ratio,1/ratio);
   const number=factor<1e6?Math.round(factor).toLocaleString(locale==='zh'?'zh-CN':'en'):factor.toExponential(1).replace('e+',' × 10^');
@@ -162,6 +199,7 @@ function orient(e:DeviceOrientationEvent) {
   const gx=e.gamma-reference.gamma, by=((e.beta-reference.beta+540)%360)-180;
   sx=clamp((gx*Math.cos(angle)-by*Math.sin(angle))*1.35,35);
   sy=clamp((by*Math.cos(angle)+gx*Math.sin(angle))*1.12,26);
+  fieldwork.scene.tiltX=-sx*.017;fieldwork.scene.tiltY=sy*.015;
   drawCamera();
 }
 function senseStep(e:DeviceMotionEvent) {
@@ -175,7 +213,7 @@ function senseStep(e:DeviceMotionEvent) {
 function stopSensors(status:typeof sensorStatus='idle') {
   ++attempt;sensorsOn=false;motionAllowed=false;sensorStatus=status;clearTimeout(watchdog);
   window.removeEventListener('deviceorientation',orient);window.removeEventListener('devicemotion',senseStep);
-  reference=undefined;sx=0;sy=0;drawCamera();sensorCopy();
+  reference=undefined;sx=0;sy=0;fieldwork.scene.tiltX=0;fieldwork.scene.tiltY=0;drawCamera();sensorCopy();
 }
 async function startSensors() {
   if(sensorsOn || sensorStatus==='pending') { stopSensors();return; }
@@ -194,12 +232,49 @@ async function startSensors() {
   } catch { if(token===attempt) stopSensors('denied'); }
 }
 
-stage.addEventListener('pointerdown', e => {if(!e.isPrimary || e.button!==0) return;drag={id:e.pointerId,x:e.clientX,y:e.clientY};stage.setPointerCapture(e.pointerId);});
-stage.addEventListener('pointermove', e => {
-  if(drag?.id!==e.pointerId) return;
-  nudge((e.clientX-drag.x)*.62,(e.clientY-drag.y)*.62);drag.x=e.clientX;drag.y=e.clientY;
+stage.addEventListener('pointerdown',e=>{
+  if(e.button!==0 || cameraPointers.size>=2 || !e.isPrimary && (fieldwork.view==='2d' || e.pointerType!=='touch')) return;
+  cameraPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});stage.setPointerCapture(e.pointerId);
 });
-stage.addEventListener('lostpointercapture',()=>{drag=undefined;});
+stage.addEventListener('pointermove',e=>{
+  const before=cameraPointers.get(e.pointerId);
+  if(!before) return;
+  const point={x:e.clientX,y:e.clientY};cameraPointers.set(e.pointerId,point);
+  if(cameraPointers.size===2 && fieldwork.view==='3d') {
+    for(const [id,other] of cameraPointers) if(id!==e.pointerId) {
+      const previous=Math.hypot(before.x-other.x,before.y-other.y);
+      if(previous>4) zoomBy(Math.hypot(point.x-other.x,point.y-other.y)/previous);
+    }
+    return;
+  }
+  const factor=fieldwork.view==='3d'?1:.62;
+  nudge((point.x-before.x)*factor,(point.y-before.y)*factor);
+});
+for(const event of ['pointerup','pointercancel','lostpointercapture'] as const) {
+  stage.addEventListener(event,e=>{cameraPointers.delete(e.pointerId);});
+}
+stage.addEventListener('wheel',e=>{
+  if(fieldwork.view!=='3d') return;
+  e.preventDefault();zoomBy(Math.exp(-e.deltaY*.001));
+},{passive:false});
+$('#view-mode').addEventListener('click',()=>{if(panel) show(undefined,false);fieldwork.toggleView();paint();});
+$('#mission-toggle').addEventListener('click',()=>{if(panel) show(undefined,false);fieldwork.togglePlay();paint();});
+const ruler=$('#travel-ruler');
+ruler.addEventListener('click',e=>{
+  const track=$('.ticks').getBoundingClientRect();
+  arrive(nearestStop((e.clientX-track.left)/track.width,stops));ruler.focus({preventScroll:true});
+});
+ruler.addEventListener('keydown',e=>{
+  let next=index;
+  switch(e.key){
+    case 'ArrowLeft':case 'ArrowDown':next--;break;
+    case 'ArrowRight':case 'ArrowUp':next++;break;
+    case 'Home':next=0;break;
+    case 'End':next=stops.length-1;break;
+    default:return;
+  }
+  e.preventDefault();e.stopPropagation();arrive(next);ruler.focus({preventScroll:true});
+});
 pin.addEventListener('click',()=>show('observation'));
 $('#map').addEventListener('click',()=>show('atlas'));
 $('#motion').addEventListener('click',()=>show('motion-panel'));
@@ -213,11 +288,12 @@ $('#step').addEventListener('click',()=>walk());
 $('#recenter').addEventListener('click',()=>recenter());
 window.addEventListener('resize',()=>drawCamera());
 window.addEventListener('orientationchange',()=>{reference=undefined;});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){stopSensors();exhibits.suspend();}});
-window.addEventListener('pagehide',()=>{stopSensors();exhibits.suspend();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopSensors();exhibits.suspend();fieldwork.suspend();}else fieldwork.schedule();});
+window.addEventListener('pagehide',()=>{stopSensors();exhibits.suspend();fieldwork.suspend();});
+window.addEventListener('pageshow',()=>fieldwork.schedule());
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape' && panel){show();return;}
-  if(e.altKey || e.ctrlKey || e.metaKey || (e.target as Element).closest('button,input,a,select,textarea')) return;
+  if(e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || (e.target as Element).closest('button,input,a,select,textarea,[role=slider]')) return;
   switch(e.key.toLowerCase()) {
     case 'arrowleft': arrive(index-1);break;
     case 'arrowright': arrive(index+1);break;
@@ -230,4 +306,4 @@ document.addEventListener('keydown',e=>{
   }
   e.preventDefault();
 });
-landscape.innerHTML=sceneArt(stops[index].id);paint();drawCamera();
+landscape.innerHTML=sceneArt(stops[index].id);fieldwork.enter(stops[index].id);paint();drawCamera();
