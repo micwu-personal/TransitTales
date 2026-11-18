@@ -1,7 +1,7 @@
 import './style.css';
 import { JourneyAudio } from './audio';
 import { loadLibrary, saveToLibrary } from './library';
-import { approachSeconds, cuePosition, hitWindow, instrumentPitches, isBlack, keyboardCodes, lowerBound, matchingNote, pitchBank } from './play';
+import { approachSeconds, compactCodes, cuePosition, hitWindow, instrumentPitches, isBlack, lowerBound, matchingNote, pianoBank, pianoKeys, pianoPitches, pitchBank } from './play';
 import { decodeMidi } from './midi';
 import { routes as arrangements } from './repertoire';
 import odeMidi from './scores/ode-to-joy.mid?inline';
@@ -33,6 +33,9 @@ let pitches: number[] = [], mapped = new Map<string, number>(), keys = new Map<n
 let anchors = new Map<number, {x: number; y: number}>();
 let pulses = new Map<number, ReturnType<typeof setTimeout>>();
 let width = 1, height = 1, banked = false, lastBeat = 0;
+const layoutPreference = 'moonline-keyboard';
+let keyboardStyle: 'piano' | 'compact' = 'piano';
+try { if (localStorage.getItem(layoutPreference) === 'compact') keyboardStyle = 'compact'; } catch { /* optional preference */ }
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const route = () => routes.find(r => r.song.id === song.id);
 const sections = () => route()?.sections ?? [
@@ -53,6 +56,7 @@ game.innerHTML = `
     <h2 id="moon-ticket-title">${tr('Departure ticket', '发车车票')}</h2>
     <div class="moon-fields"><label>${tr('Route', '线路')}<select id="moon-song"></select></label><label>${tr('Your part', '你的声部')}<select id="moon-track"></select></label></div>
     <p class="moon-credit"></p>
+    <label class="moon-keyboard-choice">${tr('Keyboard', '琴键布局')}<select id="moon-keyboard"><option value="piano">${tr('Piano keys', '钢琴键')}</option><option value="compact">${tr('Compact · used notes', '紧凑 · 仅用到的音')}</option></select></label>
     <div class="moon-options"><label><input type="checkbox" id="moon-demo"> ${tr('Listen first', '先听示范')}</label><label><input type="checkbox" id="moon-slow"> ${tr('Slow practice', '慢速练习')}</label></div>
     <div class="moon-ticket-actions"><button id="moon-start" class="moon-action">${tr('Depart', '发车')} <span aria-hidden="true">→</span></button><button id="moon-edit" hidden>${tr('Edit song', '编辑乐曲')}</button><a id="moon-midi" download>${tr('MIDI file', '下载 MIDI')} <span aria-hidden="true">↓</span></a></div>
   </section>
@@ -70,6 +74,8 @@ function replace(target: HTMLElement, ...items: Node[]) {
 }
 const el = <T extends HTMLElement = HTMLElement>(selector: string) => game.querySelector<T>(selector)!;
 const selectSong = el<HTMLSelectElement>('#moon-song'), selectTrack = el<HTMLSelectElement>('#moon-track');
+const selectKeyboard = el<HTMLSelectElement>('#moon-keyboard');
+selectKeyboard.value = keyboardStyle;
 const stage = el('.moon-scene'), scenery = createScenery(stage);
 const canvas = el<HTMLCanvasElement>('.moon-cues'), ctx = canvas.getContext('2d');
 const instrument = el('.moon-instrument'), ticket = el('.moon-ticket'), studio = el('.moon-studio');
@@ -82,18 +88,22 @@ function caption(message: string, duration = 0) {
 }
 const secondsPerBeat = () => 60 / (song.bpm * speed);
 const pitchLabel = (pitch: number) => role() === 'drums' && drumCopy[pitch] ? local(drumCopy[pitch]) : pitchName(pitch);
-const laneLimit = () => Math.max(8, Math.min(12, Math.floor((instrument.clientWidth || game.clientWidth) / 45)));
+const instrumentWidth = () => instrument.clientWidth || game.clientWidth;
+const laneLimit = () => Math.max(8, Math.min(compactCodes.length, Math.floor(instrumentWidth() / 45)));
+const whiteLimit = () => Math.max(7, Math.min(11, Math.floor(instrumentWidth() / 43)));
+const onPiano = () => keyboardStyle === 'piano' && role() !== 'drums';
 
 function setOptions() {
   replace(selectSong, ...[...routes.map(r => r.song), ...library].map(s => new Option(title(s), s.id)));
   selectSong.value = song.id;
   replace(selectTrack, ...song.tracks.map((t, i) => {
-    const name = route() && zh ? (i === 0 ? '主旋律' : local(roleCopy[t.role])) : t.name;
+    const part = route()?.partNames?.[i];
+    const name = part ? local(part) : t.name;
     const option = new Option(name, String(i)); option.disabled = !t.notes.length; return option;
   }));
   selectTrack.value = String(track);
   const classical = route();
-  el('.moon-credit').textContent = classical ? `${local(classical.composer)} · ${tr('Moonline arrangement', '月光列车改编')}` : tr('From your studio', '来自你的创作室');
+  el('.moon-credit').textContent = classical ? local(classical.composer) : tr('From your studio', '来自你的创作室');
   el('#moon-edit').hidden = Boolean(classical);
   const midi = el<HTMLAnchorElement>('#moon-midi');
   midi.hidden = !classical;
@@ -113,22 +123,15 @@ function buildInstrument(next: number[]) {
   pulses.forEach(clearTimeout); pulses.clear();
   pitches = next; keys.clear(); mapped.clear();
   const type = role();
-  const piano = (type === 'piano' || type === 'pad') && !banked && next.length > 0 && next[next.length - 1] - next[0] <= 17;
+  const piano = onPiano();
   instrument.dataset.role = type;
   instrument.dataset.layout = piano ? 'keys' : 'pads';
-  let layout = next;
-  if (piano) {
-    const left = next[0] - Number(isBlack(next[0]));
-    const end = next[next.length - 1] + Number(isBlack(next[next.length - 1]));
-    layout = Array.from({length: end - left + 1}, (_, i) => left + i).filter(n => !isBlack(n) || next.includes(n));
-  }
-  const white = layout.filter(p => !isBlack(p));
-  replace(instrument, ...layout.map((pitch, i) => {
+  el('.moon-keyboard-choice').hidden = type === 'drums';
+  const layout = piano ? pianoKeys(next) : next.map((pitch, i) => ({pitch, black: false, code: compactCodes[i], left: 0, width: 0}));
+  replace(instrument, ...layout.map(({pitch, black, code, left, width}) => {
     const key = document.createElement('button');
-    const black = piano && isBlack(pitch);
     key.type = 'button'; key.className = `moon-key${black ? ' moon-black' : ''}`;
     key.dataset.pitch = String(pitch);
-    const code = piano ? keyboardCodes[pitch - layout[0]] : keyboardCodes.filter((_, index) => !isBlack(60 + index))[i];
     const label = code?.replace('Key', '').replace('Semicolon', ';').replace('Quote', "'").replace('BracketRight', ']') ?? '';
     key.innerHTML = '<span></span><kbd></kbd>';
     key.querySelector('span')!.textContent = pitchLabel(pitch);
@@ -136,9 +139,8 @@ function buildInstrument(next: number[]) {
     key.setAttribute('aria-label', `${pitchLabel(pitch)}${label ? ` · ${label}` : ''}`);
     if (code) mapped.set(code, pitch);
     if (piano) {
-      const pos = black ? white.filter(p => p < pitch).length - .30 : white.indexOf(pitch);
-      key.style.left = `${pos / white.length * 100}%`;
-      key.style.width = `${(black ? .60 : 1) / white.length * 100}%`;
+      key.style.left = `${left * 100}%`;
+      key.style.width = `${width * 100}%`;
     }
     keys.set(pitch, key);
     return key;
@@ -151,9 +153,18 @@ function buildInstrument(next: number[]) {
 
 function setupTrack() {
   notes = [...song.tracks[track].notes].sort((a, b) => a.beat - b.beat || a.pitch - b.pitch);
-  const limit = laneLimit();
-  banked = new Set(notes.map(n => n.pitch)).size > limit;
-  buildInstrument(instrumentPitches(notes, 0, approachSeconds / secondsPerBeat(), limit));
+  const horizon = approachSeconds / secondsPerBeat();
+  if (onPiano() && notes.length) {
+    const all = notes.map(n => n.pitch);
+    const extent = all.reduce(([low, high], p) => [Math.min(low, p), Math.max(high, p)], [127, 0]);
+    const limit = whiteLimit();
+    banked = pianoPitches(extent[0], extent[1]).filter(p => !isBlack(p)).length > limit;
+    buildInstrument(pianoBank(notes, 0, banked ? horizon : Infinity, limit));
+  } else {
+    const limit = laneLimit();
+    banked = new Set(notes.map(n => n.pitch)).size > limit;
+    buildInstrument(instrumentPitches(notes, 0, horizon, limit));
+  }
 }
 
 function stationDisplay(at: number) {
@@ -268,7 +279,8 @@ function draw(at: number) {
     const earliest = lowerBound(notes, at - hitWindow / spb, n => n.beat);
     whileBank: for (let i = earliest; i < notes.length && (notes[i].beat - at) * spb < approachSeconds; i++) {
       if (!played.has(i) && !keys.has(notes[i].pitch)) {
-        const group = pitchBank(notes, at - hitWindow / spb, approachSeconds / spb, laneLimit());
+        const start = at - hitWindow / spb, horizon = (approachSeconds + hitWindow) / spb;
+        const group = onPiano() ? pianoBank(notes, start, horizon, whiteLimit(), at + hitWindow / spb) : pitchBank(notes, start, horizon, laneLimit());
         if (group.join() !== pitches.join()) buildInstrument(group);
         break whileBank;
       }
@@ -339,6 +351,11 @@ function launchStudio(edit?: Song) {
 
 selectSong.onchange = () => chooseSong(selectSong.value);
 selectTrack.onchange = () => { track = Number(selectTrack.value); setupTrack(); end(); };
+selectKeyboard.onchange = () => {
+  keyboardStyle = selectKeyboard.value === 'compact' ? 'compact' : 'piano';
+  try { localStorage.setItem(layoutPreference, keyboardStyle); } catch { /* optional preference */ }
+  setupTrack();
+};
 el<HTMLInputElement>('#moon-demo').onchange = e => { demo = (e.target as HTMLInputElement).checked; updateCount(); };
 el<HTMLInputElement>('#moon-slow').onchange = e => { speed = (e.target as HTMLInputElement).checked ? .70 : 1; };
 startButton.onclick = () => void start();

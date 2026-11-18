@@ -26,6 +26,8 @@ body{margin:0}
 #moonline .moon-ticket select{color:#2a1d30;background:#fff2d9;border-color:#926572;width:100%;display:block;margin-top:3px;padding-inline:6px;min-height:42px;font-size:.87rem}
 .moon-ticket :focus-visible{outline-color:#492f5b!important}
 .moon-credit{color:#553645;font-size:.76rem;margin:.52rem 0 0}
+.moon-keyboard-choice{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;margin-top:6px}
+#moonline .moon-keyboard-choice select{margin:0;min-height:44px}
 .moon-options,.moon-ticket-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 13px}
 .moon-options{border-top:1px dashed #9e6968;margin-top:.62rem;padding-top:.13rem}
 .moon-options label{display:flex;align-items:center;min-height:36px;gap:4px;cursor:pointer}
@@ -52,15 +54,15 @@ body{margin:0}
 .moon-instrument{position:relative;display:flex;height:var(--keys);border-top:2px solid #e9ab84;touch-action:none;user-select:none;-webkit-user-select:none;background:#291a33;isolation:isolate}
 #moonline .moon-key{padding:0 1px 5px;display:flex;flex-direction:column;align-items:center;justify-content:end;gap:2px;line-height:1.05;font-size:clamp(.67rem,1.7vw,1rem);font-weight:800;min-width:0;touch-action:none;overflow:hidden}
 .moon-key kbd{font:650 .63rem/1 system-ui,sans-serif;opacity:.78}
-.moon-key:focus-visible{outline-offset:-4px!important;z-index:5!important}
-.moon-instrument[data-layout=keys] .moon-key{position:absolute;top:0;height:100%;color:#37283c;background:linear-gradient(180deg,#d1b697,#fff7e8 18%,#f6e3c5 86%,#d2b494 88%,#e2cab0);border:1px solid #76545d;border-radius:0 0 5px 5px}
-.moon-instrument[data-layout=keys] .moon-black{z-index:1;height:61%;color:#fff2e3;background:linear-gradient(180deg,#181220,#392942 69%,#4b3651 71%,#23192d);border-color:#201426;box-shadow:0 4px 4px #2a182b8c;font-size:.64rem!important}
+.moon-key:focus-visible{outline-offset:-4px!important}
+#moonline .moon-instrument[data-layout=keys] .moon-key{position:absolute;top:0;height:100%;min-height:0;color:#37283c;background:linear-gradient(180deg,#d1b697,#fff7e8 18%,#f6e3c5 86%,#d2b494 88%,#e2cab0);border:1px solid #76545d;border-radius:0 0 5px 5px}
+#moonline .moon-instrument[data-layout=keys] .moon-black{z-index:1;height:64%;color:#fff2e3;background:linear-gradient(180deg,#181220,#392942 69%,#4b3651 71%,#23192d);border-color:#201426;box-shadow:0 4px 4px #2a182b8c;font-size:.64rem}
 .moon-instrument[data-layout=pads]{gap:3px;padding:0 1px}
 .moon-instrument[data-layout=pads] .moon-key{flex:1;background:linear-gradient(#665077,#3a274b);border-color:#a482a7;color:#fff4e8;border-bottom:5px solid #23172e}
-.moon-instrument[data-role=guitar] .moon-key,.moon-instrument[data-role=bass] .moon-key{position:relative;background:repeating-linear-gradient(1deg,#4b2f37 0 4px,#67403d 5px 7px,#563439 9px 13px);border-left:2px solid #bc987c}
-.moon-instrument[data-role=guitar] .moon-key::before,.moon-instrument[data-role=bass] .moon-key::before{content:'';position:absolute;top:19%;left:0;right:0;height:30%;background:repeating-linear-gradient(0deg,#ffe4b187 0 1px,#2d1e2575 2px 3px,transparent 3px 8px)}
+.moon-instrument[data-layout=pads]:is([data-role=guitar],[data-role=bass]) .moon-key{position:relative;background:repeating-linear-gradient(1deg,#4b2f37 0 4px,#67403d 5px 7px,#563439 9px 13px);border-left:2px solid #bc987c}
+.moon-instrument[data-layout=pads]:is([data-role=guitar],[data-role=bass]) .moon-key::before{content:'';position:absolute;top:19%;left:0;right:0;height:30%;background:repeating-linear-gradient(0deg,#ffe4b187 0 1px,#2d1e2575 2px 3px,transparent 3px 8px)}
 .moon-instrument[data-role=drums] .moon-key{background:radial-gradient(ellipse at 50% 31%,#bc806e 0 20%,#684356 48%,#3c2949 74%);border-radius:43% 43% 9px 9px;border-color:#b77d77}
-#moonline .moon-key.moon-pressed{color:#172925;background:linear-gradient(#99d5ae,#edffd2);border-color:#98b994;box-shadow:0 0 13px #ceffae8a inset}
+#moonline .moon-instrument .moon-key.moon-pressed{color:#172925;background:linear-gradient(#99d5ae,#edffd2);border-color:#98b994;box-shadow:0 0 13px #ceffae8a inset}
 .moon-sill{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:6px 2px 5px;min-height:29px;color:#f1d7df;font-size:.73rem;text-align:center}
 .moon-role,.moon-count{font-weight:800;color:#fff0d2;min-width:44px}
 .moon-count{color:var(--mint);white-space:nowrap}
