@@ -1,17 +1,23 @@
 import type { Song } from './score';
 import { ode, variations } from './classical-scores';
+import { odeMelody } from './ode-melody';
+import { classicalMiniatures } from './classical-miniatures';
+import { jasmineRoute } from './jasmine';
+import { textbookClassics } from './textbook-classics';
 
 type Bilingual = [string, string];
-type Route = {
+export type Route = {
   song: Song;
+  titleZh: string;
   composer: Bilingual;
-  partNames?: Bilingual[];
+  partNames: Bilingual[];
   sections: { at: number; scene: number; title: Bilingual; story: Bilingual }[];
 };
 
 export const routes: Route[] = [
   {
     song: ode,
+    titleZh: '欢乐颂',
     composer: ['Ludwig van Beethoven · Symphony No. 9, IV, mm. 92–187 · Selected orchestral parts', '路德维希·范·贝多芬 · 第九交响曲第四乐章，第92–187小节 · 管弦乐选编'],
     partNames: [
       ['Cello', '大提琴'], ['Double bass', '低音提琴'], ['Bassoon I', '第一巴松'], ['Bassoon II', '第二巴松'],
@@ -28,7 +34,20 @@ export const routes: Route[] = [
     ],
   },
   {
+    song: odeMelody,
+    titleZh: '欢乐颂 · 单旋律版',
+    composer: ['Ludwig van Beethoven · Symphony No. 9, IV · Moonline reduction', '路德维希·范·贝多芬 · 第九交响曲第四乐章 · 月光列车简编'],
+    partNames: [['Melody', '主旋律'], ['Strings & replies', '弦乐与应答'], ['Bass', '低音']],
+    sections: [
+      { at: 0, scene: 0, title: ['Copper Concert Quarter', '铜色音乐街区'], story: ['The tune is yours from the concert hall to the terminus. Play it all in the same register.', '从音乐厅到终点站，主旋律始终由你演奏，无须切换音域。'] },
+      { at: 96, scene: 4, title: ['The Echo Viaduct', '回声高架桥'], story: ['Listen for a quiet answer from below the bridge as the theme returns.', '主题再度响起，留意桥下轻轻传来的应答。'] },
+      { at: 192, scene: 1, title: ['The Frostwater Promenade', '霜河长廊'], story: ['A second line winds alongside your tune, like a path along the riverbank.', '另一条旋律伴着你的琴声蜿蜒前行，像河岸旁的小路。'] },
+      { at: 288, scene: 3, title: ['Crownlight Terminus', '冠灯终点站'], story: ['The lights gather ahead. Carry the tune through the last turn and into the station.', '前方灯光渐密。带着旋律驶过最后一个弯，进站吧。'] },
+    ],
+  },
+  {
     song: variations,
+    titleZh: '小星星（莫扎特变奏曲主题）',
     composer: ['Wolfgang Amadeus Mozart · K. 265, Thema, mm. 1–24 · Moonline arrangement', '沃尔夫冈·阿马德乌斯·莫扎特 · K. 265 主题，第1–24小节 · 月光列车编曲'],
     partNames: [
       ['Piano right hand', '钢琴右手'], ['Piano left hand', '钢琴左手'],
@@ -41,4 +60,7 @@ export const routes: Route[] = [
       { at: 32, scene: 3, title: ['Crownlight Terminus', '冠灯终点站'], story: ['The opening tune returns just as the station clock comes into view.', '车站的钟楼刚映入眼帘，开头的旋律也回来了。'] },
     ],
   },
+  ...classicalMiniatures,
+  jasmineRoute,
+  ...textbookClassics,
 ];

@@ -1,7 +1,7 @@
 export type Role = 'piano' | 'guitar' | 'bass' | 'pad' | 'drums';
 export type Note = { pitch: number; beat: number; length: number; velocity: number };
 export type Track = { name: string; role: Role; notes: Note[] };
-export type Song = { id: string; title: string; bpm: number; beats: number; tracks: Track[] };
+export type Song = { id: string; title: string; bpm: number; beats: number; tracks: Track[]; midiCopyright?: string };
 
 export function quantize(beat: number, step: number): number {
   return Number.isFinite(step) && step > 0 ? Math.round(beat / step) * step || 0 : beat;

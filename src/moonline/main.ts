@@ -4,8 +4,6 @@ import { loadLibrary, saveToLibrary } from './library';
 import { approachSeconds, compactCodes, cuePosition, hitWindow, instrumentPitches, isBlack, lowerBound, matchingNote, pianoBank, pianoKeys, pianoPitches, pitchBank } from './play';
 import { decodeMidi } from './midi';
 import { routes as arrangements } from './repertoire';
-import odeMidi from './scores/ode-to-joy.mid?inline';
-import mozartMidi from './scores/ah-vous-dirai-je-maman.mid?inline';
 import { createScenery } from './scenery';
 import { pitchName, type Note, type Role, type Song } from './score';
 import { openStudio } from './studio';
@@ -17,9 +15,10 @@ const tr = (en: string, cn: string) => zh ? cn : en;
 const local = (pair: [string, string]) => pair[zh ? 1 : 0];
 document.documentElement.lang = zh ? 'zh-CN' : 'en';
 document.title = `${tr('Moonline', '月光列车')} · Transit Tales`;
-const clips: Record<string, string> = { 'ode-to-joy': odeMidi, 'ah-vous-dirai-je-maman': mozartMidi };
+const clips = import.meta.glob<string>('./scores/*.mid', { eager: true, query: '?inline', import: 'default' });
+const midiClip = (id: string) => clips[`./scores/${id}.mid`];
 const routes = arrangements.map(({song, ...rest}) => ({...rest, song: decodeMidi(
-  Uint8Array.from(atob(clips[song.id].split(',')[1]), char => char.charCodeAt(0)), song.id, song.title,
+  Uint8Array.from(atob(midiClip(song.id).split(',')[1]), char => char.charCodeAt(0)), song.id, song.title,
 )}));
 const audio = new JourneyAudio();
 let library = loadLibrary();
@@ -46,7 +45,7 @@ const sections = () => route()?.sections ?? [
 const roleCopy: Record<Role, [string, string]> = {piano: ['Piano', '钢琴'], guitar: ['Strings', '弦乐'], bass: ['Bass', '贝司'], pad: ['Pads', '合成铺底'], drums: ['Drums', '鼓组']};
 const drumCopy: Record<number, [string, string]> = {35: ['Kick', '底鼓'], 36: ['Kick', '底鼓'], 37: ['Rim', '鼓边'], 38: ['Snare', '军鼓'], 39: ['Clap', '拍手'], 40: ['Snare', '军鼓'], 42: ['Hi-hat', '踩镲'], 44: ['Pedal hat', '脚踩镲'], 45: ['Tom', '通鼓'], 46: ['Open hat', '开镲'], 49: ['Crash', '吊镲'], 51: ['Ride', '叮叮镲']};
 const role = () => song.tracks[track].role;
-const title = (s: Song) => zh ? ({'ode-to-joy': '欢乐颂', 'twinkle': '小星星', 'ah-vous-dirai-je-maman': '小星星（莫扎特变奏曲主题）'} as Record<string, string>)[s.id] ?? s.title : s.title;
+const title = (s: Song) => zh ? routes.find(r => r.song.id === s.id)?.titleZh ?? s.title : s.title;
 
 game.innerHTML = `
   <div class="moon-scene" aria-hidden="true"></div><canvas class="moon-cues" aria-hidden="true"></canvas>
@@ -107,7 +106,7 @@ function setOptions() {
   el('#moon-edit').hidden = Boolean(classical);
   const midi = el<HTMLAnchorElement>('#moon-midi');
   midi.hidden = !classical;
-  if (classical) { midi.href = clips[song.id]; midi.download = `${song.id}.mid`; }
+  if (classical) { midi.href = midiClip(song.id); midi.download = `${song.id}.mid`; }
 }
 
 function updateAnchors() {

@@ -68,6 +68,21 @@ describe('Moonline classical charts', () => {
     expect(attacks(flutes, 382, 384)).toEqual([[382, 78, 1], [382, 86, 1]]);
   });
 
+  it('keeps Beethoven’s theme playable in one register through every orchestral handoff', () => {
+    const score = bundledScore('ode-to-joy-melody');
+    const [lead, strings, bass] = score.tracks;
+    expect(score.tracks.map(track => track.name)).toEqual(['Melody', 'Strings & replies', 'Bass']);
+    expect(score.beats).toBe(383);
+    expect(lead.notes.every((n, i) => n.pitch >= 57 && n.pitch <= 69
+      && (i === 0 || lead.notes[i - 1].beat + lead.notes[i - 1].length === n.beat))).toBe(true);
+    for (const start of [0, 96, 192, 288]) {
+      expect(attacks(lead, start, start + 4)).toEqual([[start, 66, 2], [start + 2, 67, 1], [start + 3, 69, 1]]);
+    }
+    expect(attacks(lead, 380, 383)).toEqual([[380, 64, 1.5], [381.5, 62, .5], [382, 62, 1]]);
+    expect(attacks(bass, 0, 16)).toEqual([[0, 38, 1.5], [4, 33, 1.5], [8, 38, 1.5], [12, 33, 1.5]]);
+    expect(strings.notes.some(n => n.beat >= 288)).toBe(true);
+  });
+
   it('preserves both Mozart staves, including the written cadences (K. 265, Thema)', () => {
     const score = bundledScore('ah-vous-dirai-je-maman');
     const [right, left] = score.tracks;
@@ -88,6 +103,26 @@ describe('Moonline classical charts', () => {
     expect(attacks(inner, 30, 32)).toEqual([[30, 64, 1], [31, 62, 1]]);
     expect(attacks(bass, 30, 32)).toEqual([[30, 43, 2]]);
     expect(attacks(bass, 42, 46)).toEqual([[42, 48, 1], [43, 45, 1], [44, 41, 1], [45, 43, 1]]);
+  });
+
+  it('keeps Schubert’s introduction and piano replies outside the player melody', () => {
+    const { tracks: [melody, accompaniment, replies, bass] } = bundledScore('schubert-serenade');
+    expect(melody.notes[0]).toMatchObject({ beat: 12, pitch: 69 });
+    expect(accompaniment.notes[0].beat).toBe(0);
+    expect(bass.notes[0].beat).toBe(0);
+    expect(replies.notes[0]).toMatchObject({ beat: 24, pitch: 73 });
+    expect(attacks(melody, 24, 30)).toEqual([]);
+  });
+
+  it('keeps Chopin’s pickup, within-bar bass motion, and download attribution', () => {
+    const id = 'chopin-nocturne-op-9-no-2';
+    const { tracks: [melody, chords, bass] } = bundledScore(id);
+    expect(attacks(melody, 0, .5)).toEqual([[0, 70, .5]]);
+    expect(attacks(bass, .5, 6.5)).toEqual([[.5, 39, .5], [2, 51, .5], [3.5, 39, .5], [5, 38, .5]]);
+    expect(attacks(chords, 24, 24.5)).toEqual([[24, 58, .5], [24, 63, .5], [24, 67, .5]]);
+    const bytes = readFileSync(new URL(`../src/moonline/scores/${id}.mid`, import.meta.url));
+    expect(bytes.includes('Renato Biolcati Rinaldi')).toBe(true);
+    expect(bytes.includes('https://creativecommons.org/licenses/by-sa/3.0/')).toBe(true);
   });
 
   it.each(routes)('round-trips the $song.title chart through Standard MIDI', ({song, sections, partNames}) => {

@@ -27,9 +27,9 @@ function chunk(tag: string, body: number[]): Uint8Array {
   return result;
 }
 
-function trackName(body: number[], name: string) {
-  const text = encoder.encode(name);
-  body.push(0, 0xFF, 0x03, ...vlq(text.length));
+function textEvent(body: number[], type: number, value: string) {
+  const text = encoder.encode(value);
+  body.push(0, 0xFF, type, ...vlq(text.length));
   for (const byte of text) body.push(byte);
 }
 
@@ -46,7 +46,8 @@ export function encodeMidi(song: Song): Uint8Array {
   if (song.tracks.length >= 0xFFFF) throw new RangeError('Too many MIDI tracks');
   const end = tick(song.beats);
   const conductor: number[] = [];
-  trackName(conductor, song.title);
+  if (song.midiCopyright) textEvent(conductor, 0x02, song.midiCopyright);
+  textEvent(conductor, 0x03, song.title);
   conductor.push(0, 0xFF, 0x51, 3, ...uint(tempo, 3), ...vlq(end), 0xFF, 0x2F, 0);
   const chunks = [chunk('MThd', [0, 1, ...uint(song.tracks.length + 1, 2), ...uint(PPQ, 2)]), chunk('MTrk', conductor)];
   const free = Array.from({ length: 16 }, (_, i) => i).filter(i => i !== 9);
@@ -62,7 +63,7 @@ export function encodeMidi(song: Song): Uint8Array {
       ? free.shift() ?? primary.get(track.role)! : primary.get(track.role)!;
     used.add(track.role);
     const body: number[] = [];
-    trackName(body, track.name);
+    textEvent(body, 0x03, track.name);
     body.push(0, 0xFF, 0x20, 1, channel);
     if (channel !== 9) body.push(0, 0xC0 | channel, PROGRAM[track.role]);
     const events: { at: number; on: boolean; pitch: number; velocity: number }[] = [];
