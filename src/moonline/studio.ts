@@ -69,7 +69,7 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
   let stepMode = true;
   let cursor = 0;
   let page = 0;
-  let pitch = homePitch[draft.tracks[0].role];
+  let pitch = draft.tracks[0].notes[0]?.pitch ?? homePitch[draft.tracks[0].role];
   let octave = Math.floor(pitch / 12) - 1;
   let dirty = false;
   let disposed = false;
@@ -91,11 +91,7 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
   root.className = 'ml-studio';
   root.lang = options.zh ? 'zh-CN' : 'en';
   root.setAttribute('aria-label', t('Moonline composition studio', '月光线作曲室'));
-  root.innerHTML = `<!-- THESIS: A score you can tap like a departure board, not a miniature DAW.
-  OWN-WORLD: Peach ticket stock carries the song; plum ink and mint notes carry the music.
-  STORY: Write a phrase at the keys, lay it beside other tracks, listen, and save a playable song.
-  FIRST VIEWPORT: Ticket and playback at the top, keys over the full-width arrangement.
-  FORM: A conductor’s workbench, directly shaped to the pinned Moonline brief. -->
+  root.innerHTML = `
   <div class="ml-studio-shell">
     <header class="ml-studio-header">
       <div><h1 tabindex="-1">${t('Moonline Studio', '月光线作曲室')}</h1><p>${t('Tap out a tune. Give it a whole train of sounds.', '敲出一段旋律，再给它配上一路的声音。')}</p></div>
@@ -112,36 +108,49 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
         <p data-part="status" role="status" aria-atomic="true">${t('Saved songs stay on this device.', '曲子保存在这台设备上。')}</p>
       </div>
     </div>
-    <section class="ml-studio-keys-section" aria-label="${t('Note keys', '音符琴键')}">
-      <div class="ml-studio-heading"><h2>${t('Note keys', '音符琴键')} <span data-part="instrument"></span></h2><div class="ml-studio-entry-tools">
-        ${button('mode', t('Step entry', '逐步输入'), 'aria-pressed="true"')}${button('rest', t('Skip step', '跳过一步'))}
+    <section class="ml-studio-arrangement" aria-labelledby="ml-roll-title">
+      <div class="ml-studio-heading"><h2 id="ml-roll-title">${t('Piano roll', '钢琴卷帘')}</h2><div class="ml-studio-pager">
+        ${button('prev', '←', `aria-label="${t('Previous 4 beats', '前 4 拍')}"`)}
+        <label>${t('Page', '页')}<input data-field="page" type="number" min="1" step="1"></label><span data-part="pages"></span>
+        ${button('next', '→', `aria-label="${t('Next 4 beats', '后 4 拍')}"`)}
+      </div></div>
+      <div class="ml-studio-roll-tools ml-studio-entry-tools">
+        <label>${t('Track', '轨道')}<select data-field="track"></select></label>
         <label>${t('Snap', '对齐网格')}<select data-field="step"><option value="1">${t('1 beat', '1 拍')}</option><option value="0.5" selected>${t('½ beat', '½ 拍')}</option><option value="0.25">${t('¼ beat', '¼ 拍')}</option></select></label>
         <label>${t('New note length', '新音符时长')}<select data-field="length"><option value="0.25">${t('¼ beat', '¼ 拍')}</option><option value="0.5" selected>${t('½ beat', '½ 拍')}</option><option value="1">${t('1 beat', '1 拍')}</option><option value="2">${t('2 beats', '2 拍')}</option><option value="4">${t('4 beats', '4 拍')}</option></select></label>
+      </div>
+      <div class="ml-studio-roll">
+        <div class="ml-studio-timeline" data-part="timeline" role="region" aria-label="${t('Pitches and beats', '音高和拍点')}"></div>
+        <div class="ml-studio-note-dock">
+          <p class="ml-studio-hint" data-part="roll-hint">${t('Tap an empty square to write. Tap a note to hear or edit it. Scroll for more pitches.', '点空格写入音符，点音符试听或编辑。滚动查看更多音高。')}</p>
+          <div data-part="note-tools" role="group" aria-label="${t('Selected note actions', '所选音符操作')}" hidden>
+            <p data-part="inspection" role="status"></p>
+            <div class="ml-studio-actions">
+              ${button('hear-note', t('Hear', '试听'))}${button('shorter', t('Shorter', '缩短'))}${button('longer', t('Longer', '延长'))}
+              ${button('remove-note', t('Delete', '删除'), `aria-label="${t('Delete note', '删除音符')}"`)}
+              ${button('clear-note', '×', `aria-label="${t('Deselect note', '取消选择音符')}"`)}
+            </div>
+            <details class="ml-studio-precision">
+              <summary>${t('Precise edit', '精确编辑')}</summary>
+              <fieldset>
+                <label>${t('Pitch (MIDI)', '音高 (MIDI)')}<input data-field="pitch" type="number" min="0" max="127" step="1"></label>
+                <label>${t('Start beat', '起始拍')}<input data-field="beat" type="number" min="1" step="any"></label>
+                <label>${t('Length (beats)', '时长 (拍)')}<input data-field="duration" type="number" min="0.001" step="any"></label>
+              </fieldset>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+    <details class="ml-studio-keys-section">
+      <summary>${t('On-screen keys & step entry', '屏幕琴键和逐步输入')}</summary>
+      <div class="ml-studio-heading"><h2>${t('Note keys', '音符琴键')} <span data-part="instrument"></span></h2><div class="ml-studio-entry-tools">
+        ${button('mode', t('Step entry', '逐步输入'), 'aria-pressed="true"')}${button('rest', t('Skip step', '跳过一步'))}
       </div></div>
       <div class="ml-studio-keybed"><div data-part="keys"></div><div class="ml-studio-register" data-part="register"></div></div>
       <p class="ml-studio-hint" data-part="entry-hint"></p>
-    </section>
-    <section class="ml-studio-arrangement" aria-label="${t('Arrangement', '编曲')}">
-      <div class="ml-studio-heading"><h2>${t('Arrangement', '编曲')}</h2><div class="ml-studio-pager">
-        ${button('prev', '←', `aria-label="${t('Previous bar', '上一小节')}"`)}
-        <label>${t('Bar', '小节')}<input data-field="page" type="number" min="1" step="1"></label><span data-part="pages"></span>
-        ${button('next', '→', `aria-label="${t('Next bar', '下一小节')}"`)}
-      </div></div>
-      <div class="ml-studio-timeline" data-part="timeline" role="region" aria-label="${t('Track timeline', '轨道时间线')}"></div>
-      <p class="ml-studio-hint">${t('Tap + to place the chosen note. Tap any note to edit it below.', '点按 + 放入选中的音符。点按已有音符可在下方修改。')}</p>
-    </section>
-    <section class="ml-studio-controls" aria-label="${t('Edit notes and tracks', '编辑音符与轨道')}">
-      <div class="ml-studio-inspector">
-        <h2>${t('Edit note', '编辑音符')}</h2>
-        <p class="ml-studio-hint" data-part="inspection"></p>
-        <fieldset data-part="note-fields">
-          <label class="ml-studio-note-picker">${t('Notes in this step', '这一步的音符')}<select data-field="note"></select></label>
-          <label>${t('Pitch (MIDI)', '音高 (MIDI)')}<input data-field="pitch" type="number" min="0" max="127" step="1"></label>
-          <label>${t('Start beat', '起始拍')}<input data-field="beat" type="number" min="1" step="any"></label>
-          <label>${t('Length (beats)', '时长 (拍)')}<input data-field="duration" type="number" min="0.001" step="any"></label>
-          ${button('hear-note', t('Hear note', '试听音符'))}${button('remove-note', t('Remove note', '移除音符'))}
-        </fieldset>
-      </div>
+    </details>
+    <section class="ml-studio-controls" aria-label="${t('Edit tracks', '编辑轨道')}">
       <div class="ml-studio-track-tools">
         <h2>${t('Tracks', '轨道')}</h2>
         <div class="ml-studio-track-fields"><label>${t('Track name', '轨道名称')}<input data-field="track-name" type="text" maxlength="150" spellcheck="false"></label>
@@ -205,46 +214,53 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
     if (registerFocus && document.activeElement === document.body) register.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus({ preventScroll: true });
   }
 
+  function lanePitches() {
+    return track().role === 'drums'
+      ? [...new Set([...drums, ...track().notes.map(note => note.pitch), pitch])]
+      : Array.from({ length: 128 }, (_, i) => 127 - i);
+  }
+
   function renderTimeline() {
     const oldFocus = focusWithin(timeline);
+    const scrollTop = timeline.scrollTop;
+    const scrollLeft = timeline.scrollLeft;
     const start = page * bar;
-    const end = start + bar;
+    const end = Math.min(start + bar, draft.beats);
+    const span = end - start;
     const slots = slotsOnPage();
-    const activeSlot = Math.round((cursor - start) / step);
     const beats = Array.from({ length: slots }, (_, i) => start + i * step);
-    const fragment = document.createDocumentFragment();
-    const ruler = document.createElement('div');
-    ruler.className = 'ml-studio-row ml-studio-ruler';
-    ruler.innerHTML = `<span>${t('Track / beat', '轨道 / 拍')}</span>${beats.map(beat => `<span class="${Number.isInteger(beat) ? 'is-beat' : ''}">${displayBeat(beat)}</span>`).join('')}`;
-    fragment.append(ruler);
-    draft.tracks.forEach((lane, ti) => {
-      const row = document.createElement('div');
-      row.className = `ml-studio-row ml-studio-lane ml-studio-lane-${lane.role}`;
-      row.innerHTML = button('track', '<span></span><small></small>', `data-track="${ti}" data-focus="track-${ti}" aria-pressed="${ti === trackIndex}" class="ml-studio-lane-label"`);
-      row.querySelector('span')!.textContent = lane.name || roleNames[lane.role];
-      row.querySelector('small')!.textContent = roleNames[lane.role];
-      const buckets: { note: Note; index: number }[][] = Array.from({ length: slots }, () => []);
-      for (let index = firstNoteAt(lane.notes, start); index < lane.notes.length && lane.notes[index].beat < end; index++) {
-        const note = lane.notes[index];
-        buckets[Math.floor((note.beat - start) / step)]?.push({ note, index });
-      }
-      row.insertAdjacentHTML('beforeend', beats.map((beat, slot) => {
-        const active = ti === trackIndex && slot === activeSlot;
-        const cellNotes = buckets[slot];
-        const focusKey = `slot-${ti}-${slot}`;
-        const details = cellNotes.slice(0, 3).map(({ note, index }) => {
-          const name = labelPitch(lane.role, note.pitch);
-          return button('note', `<span>${name}</span>`, `class="ml-studio-note" data-track="${ti}" data-index="${index}" data-focus="note-${ti}-${index}" aria-pressed="${selected === note}" aria-label="${name} · ${t('Beat', '第')} ${displayBeat(note.beat)}" tabindex="-1"`);
-        }).join('');
-        const more = cellNotes.length > 3 ? button('chord', `+${cellNotes.length - 3}`, `data-track="${ti}" data-slot="${slot}" aria-label="${t('Show all notes in this step', '显示这一步的所有音符')}" tabindex="-1" class="ml-studio-more"`) : '';
-        const place = button('place', '+', `class="ml-studio-place" data-track="${ti}" data-slot="${slot}" data-focus="${focusKey}" aria-label="${t('Place note at beat', '在此拍放置音符')} ${displayBeat(beat)}" tabindex="${active ? 0 : -1}"`);
-        return `<div class="ml-studio-slot ${Number.isInteger(beat) ? 'is-beat' : ''} ${active ? 'is-cursor' : ''}" data-slot-column="${slot}">${details}${more}${place}</div>`;
-      }).join(''));
-      fragment.append(row);
-    });
+    const pct = (beat: number) => (beat - start) / span * 100;
+    const lane = track();
+    const byPitch = new Map<number, string[]>();
+    const last = firstNoteAt(lane.notes, end);
+    for (let i = 0; i < last; i++) {
+      const note = lane.notes[i];
+      const finish = note.beat + note.length;
+      if (finish <= start) continue;
+      const name = labelPitch(lane.role, note.pitch);
+      const left = pct(Math.max(start, note.beat));
+      const width = pct(Math.min(end, finish)) - left;
+      const block = button('note', name, `class="ml-studio-note ${note.beat < start ? 'is-held' : ''} ${finish > end ? 'is-tied' : ''}" data-index="${i}" data-focus="note-${i}" aria-pressed="${selected === note}" aria-label="${name} · ${t('Beat', '拍')} ${displayBeat(note.beat)} · ${Number(note.length.toFixed(3))} ${t('beats', '拍')}" tabindex="-1" style="--ml-left:${left}%;--ml-width:${width}%"`);
+      const blocks = byPitch.get(note.pitch);
+      if (blocks) blocks.push(block); else byPitch.set(note.pitch, [block]);
+    }
     timeline.style.setProperty('--ml-slots', String(slots));
-    timeline.textContent = '';
-    timeline.appendChild(fragment);
+    timeline.innerHTML = `<div class="ml-studio-sheet ml-studio-lane-${lane.role}">
+      <div class="ml-studio-row ml-studio-ruler"><span>${t('Beat', '拍')}</span><div>${beats.filter(Number.isInteger).map(beat => `<span style="--ml-left:${pct(beat)}%">${displayBeat(beat)}</span>`).join('')}</div></div>
+      ${lanePitches().map(midi => {
+        const name = labelPitch(lane.role, midi);
+        const tone = lane.role === 'drums' ? 'is-drum' : blackKeys.includes(midi % 12) ? 'is-sharp' : midi % 12 === 0 ? 'is-c' : '';
+        return `<div class="ml-studio-row ml-studio-lane ${tone}">
+          ${button('pitch-key', name, `class="ml-studio-lane-label" data-pitch="${midi}" tabindex="-1" aria-label="${t('Hear', '试听')} ${name}"`)}
+          <div class="ml-studio-lane-grid">${beats.map((beat, i) => {
+            const active = midi === pitch && beat === cursor;
+            return button('place', '', `class="ml-studio-place ${Number.isInteger(beat) ? 'is-beat' : ''} ${active ? 'is-cursor' : ''}" data-pitch="${midi}" data-slot="${i}" data-focus="cell-${midi}-${i}" aria-label="${name} · ${t('Beat', '拍')} ${displayBeat(beat)}" tabindex="${active ? 0 : -1}" style="--ml-left:${pct(beat)}%;--ml-width:${pct(Math.min(end, beat + step)) - pct(beat)}%"`);
+          }).join('')}${byPitch.get(midi)?.join('') ?? ''}</div></div>`;
+      }).join('')}
+      <div class="ml-studio-playhead" data-part="playhead" hidden><div></div></div>
+    </div>`;
+    timeline.scrollTop = scrollTop;
+    timeline.scrollLeft = scrollLeft;
     field('page').value = String(page + 1);
     field('page').max = String(lastPage() + 1);
     part('pages').textContent = `/ ${lastPage() + 1}`;
@@ -256,7 +272,7 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
   }
 
   function focusCursor() {
-    timeline.querySelector<HTMLElement>('.is-cursor [data-act="place"]')?.focus({ preventScroll: true });
+    timeline.querySelector<HTMLElement>('.is-cursor')?.focus({ preventScroll: true });
   }
 
   function revealCursor() {
@@ -272,34 +288,19 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
     else if (cell.top < bounds.top + rulerHeight) timeline.scrollTop -= bounds.top + rulerHeight - cell.top;
   }
 
-  function notesInCursor() {
-    const notes = track().notes;
-    return notes.slice(firstNoteAt(notes, cursor), firstNoteAt(notes, cursor + step));
-  }
-
   function renderInspector() {
-    const notes = notesInCursor();
-    const picker = field<HTMLSelectElement>('note');
-    picker.textContent = '';
-    const choices = document.createDocumentFragment();
-    notes.forEach((note, i) => choices.appendChild(new Option(`${labelPitch(track().role, note.pitch)} · ${displayBeat(note.beat)}`, String(i))));
-    picker.appendChild(choices);
-    if (!notes.length) picker.add(new Option(t('No notes here', '此处没有音符'), ''));
-    picker.value = selected ? String(notes.indexOf(selected)) : '';
-    if (notes.length && !selected) {
-      picker.add(new Option(t('Choose a note', '选择音符'), ''), 0);
-      picker.value = '';
-    }
-    picker.disabled = notes.length === 0;
-    for (const control of ['pitch', 'beat', 'duration']) field(control).disabled = !selected;
-    action('hear-note').disabled = !selected;
-    action('remove-note').disabled = !selected;
+    part('roll-hint').hidden = Boolean(selected);
+    part('note-tools').hidden = !selected;
     part('inspection').textContent = selected
-      ? `${track().name} · ${labelPitch(track().role, selected.pitch)} · ${t('Beat', '拍')} ${displayBeat(selected.beat)}`
-      : t('Choose a note in the arrangement to change it.', '在编曲中选一个音符进行修改。');
+      ? `${labelPitch(track().role, selected.pitch)} · ${t('Beat', '拍')} ${displayBeat(selected.beat)} · ${Number(selected.length.toFixed(3))} ${t('beats', '拍')}` : '';
     field('pitch').value = selected ? String(selected.pitch) : '';
     field('beat').value = selected ? String(selected.beat + 1) : '';
     field('duration').value = selected ? String(selected.length) : '';
+    action('shorter').disabled = !selected || selected.length <= step;
+    action('longer').disabled = !selected || selected.beat + selected.length >= draft.beats;
+    const picker = field<HTMLSelectElement>('track');
+    picker.replaceChildren(...draft.tracks.map((lane, i) => new Option(lane.name || roleNames[lane.role], String(i))));
+    picker.value = String(trackIndex);
     field('track-name').value = track().name;
     field<HTMLSelectElement>('role').value = track().role;
     action('remove-track').disabled = draft.tracks.length <= 1;
@@ -322,13 +323,15 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
   function selectTrack(index: number) {
     if (trackIndex === index) return;
     trackIndex = index;
-    pitch = homePitch[track().role];
+    pitch = track().notes[firstNoteAt(track().notes, page * bar)]?.pitch ?? track().notes[0]?.pitch ?? homePitch[track().role];
     octave = Math.floor(pitch / 12) - 1;
     selected = undefined;
   }
-  function selectNote(note: Note, hear = true) {
+  function selectNote(note: Note, hear = true, keepPage = false) {
     selected = note;
-    cursor = slotOf(note.beat);
+    const pageStart = page * bar;
+    const staysVisible = keepPage && note.beat < pageStart + bar && note.beat + note.length > pageStart;
+    cursor = staysVisible ? Math.max(pageStart, slotOf(note.beat)) : slotOf(note.beat);
     page = Math.floor(cursor / bar);
     pitch = note.pitch;
     octave = Math.floor(pitch / 12) - 1;
@@ -363,19 +366,11 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
   }
 
   function paintPlayhead() {
-    const onPage = playing && Math.floor(playBeat / bar) === page;
-    const next = onPage ? String(Math.floor((playBeat - page * bar) / step)) : '';
-    const current = timeline.querySelector<HTMLElement>('.ml-studio-ruler .is-playing')?.dataset.column ?? '';
-    if (current === next) return;
-    timeline.querySelectorAll('.is-playing').forEach(node => node.classList.remove('is-playing'));
-    if (next) {
-      const rulerCell = timeline.querySelector<HTMLElement>(`.ml-studio-ruler > :nth-child(${Number(next) + 2})`);
-      if (rulerCell) {
-        rulerCell.dataset.column = next;
-        rulerCell.classList.add('is-playing');
-      }
-      timeline.querySelectorAll(`[data-slot-column="${next}"]`).forEach(node => node.classList.add('is-playing'));
-    }
+    const head = part('playhead');
+    const start = page * bar;
+    const span = Math.min(bar, draft.beats - start);
+    head.hidden = !playing || playBeat < start || playBeat >= start + span;
+    if (!head.hidden) head.style.setProperty('--ml-left', `${(playBeat - start) / span * 100}%`);
   }
   function stopPlayback() {
     if (frame) cancelAnimationFrame(frame);
@@ -440,7 +435,7 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
       stopPlayback();
       draft = next;
       trackIndex = 0;
-      pitch = homePitch[track().role];
+      pitch = track().notes[0]?.pitch ?? homePitch[track().role];
       octave = Math.floor(pitch / 12) - 1;
       cursor = page = 0;
       selected = undefined;
@@ -492,9 +487,9 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
       draft[name] = value;
       if (old !== value) setDirty();
       if (name === 'beats') { if (selected) selectNote(selected, false); else moveCursor(cursor); }
-    } else if (name === 'note') {
-      const note = input.value === '' ? undefined : notesInCursor()[Number(input.value)];
-      if (note) selectNote(note);
+    } else if (name === 'track') {
+      selectTrack(Number(input.value));
+      render(true);
     } else if (name === 'track-name') {
       const next = input.value.trim() || roleNames[track().role];
       if (next !== track().name) { track().name = next; setDirty(); }
@@ -504,8 +499,9 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
       track().role = input.value as Role;
       pitch = homePitch[track().role];
       octave = Math.floor(pitch / 12) - 1;
+      selected = undefined;
       setDirty();
-      render();
+      render(true);
     } else if (selected && (name === 'pitch' || name === 'beat' || name === 'duration')) {
       if (!Number.isFinite(value) || (name === 'duration' && value <= 0)) { renderInspector(); return; }
       stopPlayback();
@@ -524,7 +520,6 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
   function click(event: MouseEvent) {
     const button = (event.target as Element).closest<HTMLButtonElement>('button[data-act]');
     if (!button || button.disabled) return;
-    const ti = Number(button.dataset.track);
     switch (button.dataset.act) {
       case 'close':
         if (!dirty || window.confirm(t('Leave without saving this draft?', '不保存草稿就离开吗？'))) { stopPlayback(); options.close(); }
@@ -553,28 +548,44 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
         } else renderKeys();
         break;
       }
-      case 'track': selectTrack(ti); render(true); break;
-      case 'note': selectTrack(ti); selectNote(track().notes[Number(button.dataset.index)]); break;
-      case 'chord':
-        selectTrack(ti);
-        moveCursor(page * bar + Number(button.dataset.slot) * step);
-        field<HTMLSelectElement>('note').focus();
+      case 'pitch-key': options.audition(track().role, Number(button.dataset.pitch)); break;
+      case 'note': {
+        const note = track().notes[Number(button.dataset.index)];
+        selectNote(note, true, true);
+        timeline.querySelector<HTMLElement>('[data-act="note"][aria-pressed="true"]')?.focus({ preventScroll: true });
         break;
+      }
       case 'place': {
-        selectTrack(ti);
-        const note = putNote(page * bar + Number(button.dataset.slot) * step, pitch);
-        if (note) selectNote(note);
+        const midi = Number(button.dataset.pitch);
+        const at = page * bar + Number(button.dataset.slot) * step;
+        const existing = event.detail === 0 ? track().notes.slice(0, firstNoteAt(track().notes, at + step)).find(note => note.pitch === midi && note.beat + note.length > at) : undefined;
+        const note = existing ?? putNote(at, midi);
+        if (note) {
+          selectNote(note, true, true);
+          timeline.querySelector<HTMLElement>('[data-act="note"][aria-pressed="true"]')?.focus({ preventScroll: true });
+        }
         break;
       }
       case 'hear-note': if (selected) options.audition(track().role, selected.pitch); break;
-      case 'remove-note':
+      case 'shorter': case 'longer':
+        if (selected) {
+          stopPlayback();
+          selected.length = Math.min(draft.beats - selected.beat, Math.max(minimumNote, selected.length + (button.dataset.act === 'longer' ? step : -step)));
+          setDirty();
+          selectNote(selected, false, true);
+          if (button.disabled) action('hear-note').focus({ preventScroll: true });
+        }
+        break;
+      case 'clear-note': case 'remove-note':
         if (!selected) break;
-        stopPlayback();
-        track().notes = track().notes.filter(note => note !== selected);
+        if (button.dataset.act === 'remove-note') {
+          stopPlayback();
+          track().notes = track().notes.filter(note => note !== selected);
+          setDirty();
+        }
         selected = undefined;
-        setDirty();
-        render();
-        if (notesInCursor().length) field<HTMLSelectElement>('note').focus(); else focusCursor();
+        render(true);
+        focusCursor();
         break;
       case 'snap':
         stopPlayback();
@@ -627,13 +638,25 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
 
   function keydown(event: KeyboardEvent) {
     const target = event.target as HTMLElement;
+    if (selected && (timeline.contains(target) || part('note-tools').contains(target)) && event.key === 'Escape') {
+      event.preventDefault();
+      action('clear-note').click();
+      return;
+    }
     if (!timeline.contains(target) || !target.matches('[data-act="place"], [data-act="note"]')) return;
+    if (event.key === 'Delete' && selected) { event.preventDefault(); action('remove-note').click(); return; }
+    if (event.key === 'Tab' && !event.shiftKey && selected) {
+      event.preventDefault();
+      action('hear-note').focus();
+      return;
+    }
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
     event.preventDefault();
-    const ti = Number(target.dataset.track);
-    const at = page * bar + Number(target.closest<HTMLElement>('[data-slot-column]')?.dataset.slotColumn) * step;
-    const nextTrack = cap(ti + (event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0), 0, draft.tracks.length - 1);
-    selectTrack(nextTrack);
+    const pitches = lanePitches();
+    const at = target.dataset.slot === undefined ? cursor : page * bar + Number(target.dataset.slot) * step;
+    const midi = target.dataset.pitch === undefined ? pitch : Number(target.dataset.pitch);
+    pitch = pitches[cap(pitches.indexOf(midi) + (event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0), 0, pitches.length - 1)];
+    octave = Math.floor(pitch / 12) - 1;
     moveCursor(at + (event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0));
     focusCursor();
   }
@@ -648,6 +671,8 @@ export function openStudio(container: HTMLElement, song: Song | undefined, optio
   root.addEventListener('keydown', keydown);
   renderSongFields();
   render();
+  const initial = timeline.querySelector<HTMLElement>('.is-cursor');
+  if (initial) timeline.scrollTop += initial.getBoundingClientRect().top - timeline.getBoundingClientRect().top - timeline.clientHeight / 2;
   root.querySelector('h1')?.focus({ preventScroll: true });
   return () => {
     disposed = true;
