@@ -1,0 +1,88 @@
+:root{color-scheme:dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#211a36;color:#fff4e6}
+*{box-sizing:border-box}
+body{margin:0}
+#moonline{position:relative;isolation:isolate;width:100%;height:100vh;height:100dvh;overflow:hidden;background:#281d3b;--ink:#261931;--peach:#ffc79c;--mint:#ccf4c5;--side:max(20px,env(safe-area-inset-left),env(safe-area-inset-right));--floor:max(12px,env(safe-area-inset-bottom));--keys:clamp(56px,13vh,126px)}
+#moonline [hidden],#moonline .moon-behind{display:none!important}
+#moonline button,#moonline select{font:inherit;border:1px solid #a9859a;border-radius:6px;min-height:44px}
+#moonline button{cursor:pointer}
+#moonline :focus-visible{outline:3px solid #d6ffc8;outline-offset:3px}
+#moonline button:disabled{opacity:.62;cursor:wait}
+.moon-scene,.moon-cues{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.moon-scene{z-index:-3}
+.moon-scene::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#1b142cd9,#23183043 30%,transparent 51%,#20152935 70%,#1c132af0 100%);pointer-events:none}
+.moon-cues{z-index:2}
+.moon-top{position:absolute;top:max(12px,env(safe-area-inset-top));left:var(--side);right:var(--side);display:flex;align-items:center;justify-content:space-between;z-index:5}
+.moon-top a,.moon-top button{display:inline-flex;align-items:center;gap:.45rem;padding:0 .72rem;height:44px;color:#fff4e6;background:#301f40;border:1px solid #a9859a;border-radius:6px;text-decoration:none;font-weight:700;font-size:.83rem}
+.moon-top .moon-home{background:#2d1f3b;border-color:#84677d}
+.moon-tools{display:flex;align-items:center;gap:8px}
+.moon-title{position:absolute;top:clamp(64px,11vh,116px);left:var(--side);z-index:1;text-shadow:0 3px 14px #1b122d;pointer-events:none}
+.moon-title h1{font-family:Georgia,'Songti SC',SimSun,serif;font-size:clamp(3.25rem,8vw,6rem);font-weight:400;letter-spacing:-.04em;line-height:.93;margin:0;color:#fff3d9}
+.moon-title p{margin:.78rem 0 0;color:#fff0df;font-size:clamp(.9rem,2vw,1.17rem);font-weight:650}
+#moonline[data-state=play] .moon-title,#moonline[data-state=pause] .moon-title{display:none}
+.moon-ticket{position:absolute;z-index:4;top:clamp(66px,12vh,130px);right:var(--side);color:var(--ink);width:min(385px,46vw);padding:17px 19px 15px;background:linear-gradient(135deg,#ffe4bd,#efb18a);border:1px solid #ffdbaf;border-radius:9px 9px 19px 9px;box-shadow:0 12px 26px #2113269e}
+.moon-ticket h2{font:500 1.5rem/1.15 Georgia,'Songti SC',SimSun,serif;margin:0 0 .7rem}
+.moon-fields{display:grid;grid-template-columns:1.45fr 1fr;gap:9px}
+.moon-ticket label{font-weight:750;font-size:.78rem;min-width:0}
+#moonline .moon-ticket select{color:#2a1d30;background:#fff2d9;border-color:#926572;width:100%;display:block;margin-top:3px;padding-inline:6px;min-height:42px;font-size:.87rem}
+.moon-ticket :focus-visible{outline-color:#492f5b!important}
+.moon-credit{color:#553645;font-size:.76rem;margin:.52rem 0 0}
+.moon-options,.moon-ticket-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 13px}
+.moon-options{border-top:1px dashed #9e6968;margin-top:.62rem;padding-top:.13rem}
+.moon-options label{display:flex;align-items:center;min-height:36px;gap:4px;cursor:pointer}
+.moon-options input{accent-color:#3d2248;width:17px;height:17px;margin:0 3px 0 0}
+.moon-ticket-actions button{background:#fff2d9;color:var(--ink);padding:0 12px;font-weight:750!important;font-size:.87rem!important}
+#moonline .moon-action{background:#382348;color:#fff3de;border:1px solid #54376a;padding:0 15px;min-width:120px;text-align:left}
+.moon-action span{float:right;margin-left:12px}
+.moon-station{position:absolute;bottom:calc(var(--keys) + var(--floor) + 110px);left:var(--side);z-index:1;display:flex;align-items:flex-start;gap:10px;max-width:min(365px,45vw);padding:8px 12px 10px;background:#30203dea;border:1px solid #9e7688;border-bottom:3px solid #be826f;border-radius:6px;box-shadow:0 5px 17px #21132b75;pointer-events:none}
+.moon-signal{flex:none;width:9px;height:9px;margin-top:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px #bce1b0a6}
+.moon-station h2{margin:0;font:500 clamp(1rem,2.4vw,1.4rem)/1.14 Georgia,'Songti SC',SimSun,serif;color:#fff0d4}
+.moon-station p{margin:4px 0 0;color:#f2dede;font-size:.77rem;line-height:1.35}
+.moon-caption{position:absolute;z-index:3;pointer-events:none;left:50%;top:50%;transform:translate(-50%,-50%);font:600 clamp(1.2rem,4vw,2.6rem)/1.12 Georgia,'Songti SC',SimSun,serif;text-align:center;color:#f2ffda;text-shadow:0 2px 4px #261633,0 0 15px #21182f;width:min(88%,480px)}
+.moon-console{width:min(990px,calc(100% - 2 * var(--side)));position:absolute;bottom:var(--floor);left:50%;transform:translateX(-50%);padding:0 8px;background:linear-gradient(#45304d,#291c37 58%,#35243e);border:1px solid #976f80;border-top-color:#e4aa91;border-radius:12px 12px 7px 7px;box-shadow:0 12px 36px #170d27cc,0 2px 0 #f4b59370 inset}
+.moon-rail{display:flex;align-items:center;gap:10px;min-height:52px;padding:2px 4px}
+.moon-stops{position:relative;display:flex;align-items:flex-start;justify-content:space-between;flex:1;min-width:0;list-style:none;margin:3px 0 0;padding:0 5px;color:#e1bfd3;text-align:center;font-size:.67rem;line-height:1;min-height:34px}
+.moon-stops::before,.moon-stops::after{content:'';position:absolute;top:6px;left:9%;right:9%;height:2px;background:#a47f96}
+.moon-stops::after{right:auto;width:calc(var(--trip,0%) * .82);background:var(--mint)}
+.moon-stops li{position:relative;z-index:1;flex:1;min-width:0;padding:0 1px;overflow-wrap:anywhere}
+.moon-stops li::before{content:'';display:block;width:9px;height:9px;margin:2px auto 4px;border:2px solid #e9b69f;background:#3c2947;transform:rotate(45deg)}
+.moon-stops li[aria-current],.moon-stops .moon-past{color:#f3ffd9}
+.moon-stops li[aria-current]::before,.moon-stops .moon-past::before{background:#c5f5c4;border-color:#c5f5c4}
+.moon-transport{display:flex;gap:6px}
+.moon-transport button{color:#fff1db;background:#35213e;padding:0 8px;font-size:.78rem!important;font-weight:700}
+.moon-instrument{position:relative;display:flex;height:var(--keys);border-top:2px solid #e9ab84;touch-action:none;user-select:none;-webkit-user-select:none;background:#291a33;isolation:isolate}
+#moonline .moon-key{padding:0 1px 5px;display:flex;flex-direction:column;align-items:center;justify-content:end;gap:2px;line-height:1.05;font-size:clamp(.67rem,1.7vw,1rem);font-weight:800;min-width:0;touch-action:none;overflow:hidden}
+.moon-key kbd{font:650 .63rem/1 system-ui,sans-serif;opacity:.78}
+.moon-key:focus-visible{outline-offset:-4px!important;z-index:5!important}
+.moon-instrument[data-layout=keys] .moon-key{position:absolute;top:0;height:100%;color:#37283c;background:linear-gradient(180deg,#d1b697,#fff7e8 18%,#f6e3c5 86%,#d2b494 88%,#e2cab0);border:1px solid #76545d;border-radius:0 0 5px 5px}
+.moon-instrument[data-layout=keys] .moon-black{z-index:1;height:61%;color:#fff2e3;background:linear-gradient(180deg,#181220,#392942 69%,#4b3651 71%,#23192d);border-color:#201426;box-shadow:0 4px 4px #2a182b8c;font-size:.64rem!important}
+.moon-instrument[data-layout=pads]{gap:3px;padding:0 1px}
+.moon-instrument[data-layout=pads] .moon-key{flex:1;background:linear-gradient(#665077,#3a274b);border-color:#a482a7;color:#fff4e8;border-bottom:5px solid #23172e}
+.moon-instrument[data-role=guitar] .moon-key,.moon-instrument[data-role=bass] .moon-key{position:relative;background:repeating-linear-gradient(1deg,#4b2f37 0 4px,#67403d 5px 7px,#563439 9px 13px);border-left:2px solid #bc987c}
+.moon-instrument[data-role=guitar] .moon-key::before,.moon-instrument[data-role=bass] .moon-key::before{content:'';position:absolute;top:19%;left:0;right:0;height:30%;background:repeating-linear-gradient(0deg,#ffe4b187 0 1px,#2d1e2575 2px 3px,transparent 3px 8px)}
+.moon-instrument[data-role=drums] .moon-key{background:radial-gradient(ellipse at 50% 31%,#bc806e 0 20%,#684356 48%,#3c2949 74%);border-radius:43% 43% 9px 9px;border-color:#b77d77}
+#moonline .moon-key.moon-pressed{color:#172925;background:linear-gradient(#99d5ae,#edffd2);border-color:#98b994;box-shadow:0 0 13px #ceffae8a inset}
+.moon-sill{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:6px 2px 5px;min-height:29px;color:#f1d7df;font-size:.73rem;text-align:center}
+.moon-role,.moon-count{font-weight:800;color:#fff0d2;min-width:44px}
+.moon-count{color:var(--mint);white-space:nowrap}
+.moon-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.moon-studio{position:absolute;inset:0;z-index:8;overflow:auto;overscroll-behavior:contain;background:#261a34}
+@media (hover:hover){.moon-top a:hover,.moon-top button:hover,.moon-transport button:hover{background:#4d355b}.moon-ticket button:hover{filter:brightness(1.12)}.moon-key:hover{filter:brightness(1.12)}}
+@media (max-width:650px) and (orientation:portrait){
+  #moonline{--side:max(12px,env(safe-area-inset-left),env(safe-area-inset-right));--keys:clamp(61px,12vh,92px)}
+  .moon-title{top:max(63px,calc(env(safe-area-inset-top) + 55px))}.moon-title h1{font-size:clamp(2.45rem,11vw,3.95rem)}.moon-title p{margin-top:.48rem}
+  .moon-ticket{top:max(146px,calc(env(safe-area-inset-top) + 138px));left:var(--side);right:auto;width:min(390px,calc(100% - 2 * var(--side)));padding:11px 12px}
+  .moon-ticket h2{font-size:1.14rem;margin-bottom:6px}.moon-credit{margin-top:4px}.moon-options{margin-top:6px}
+  .moon-station{max-width:calc(100% - 2 * var(--side));bottom:calc(var(--keys) + var(--floor) + 89px);padding:6px 8px 7px}.moon-station p{max-width:42ch}
+  .moon-console{padding:0 4px}.moon-stops{font-size:.58rem;padding:0}.moon-rail{gap:5px;padding-inline:0}.moon-key kbd{display:none}
+  .moon-transport{gap:4px}.moon-transport button{padding:0 5px;font-size:.68rem!important}
+}
+@media (max-height:680px) and (orientation:portrait){#moonline[data-state=station] .moon-station,#moonline[data-state=arrival] .moon-station{display:none}.moon-ticket{top:133px}}
+@media (max-height:560px) and (orientation:landscape){
+  #moonline{--side:max(9px,env(safe-area-inset-left),env(safe-area-inset-right));--keys:clamp(47px,13vh,70px)}
+  .moon-title{top:58px}.moon-title h1{font-size:clamp(2.65rem,8vw,4rem)}.moon-title p{margin-top:.35rem}
+  .moon-ticket{top:62px;padding:8px 12px;max-height:calc(100% - 66px - var(--keys) - 49px - var(--floor));overflow:auto;width:min(360px,47vw)}
+  .moon-ticket h2{font-size:1.12rem;margin-bottom:4px}.moon-options{margin-top:4px}.moon-credit{margin-top:4px}.moon-options label{min-height:30px}
+  .moon-station{bottom:calc(var(--keys) + var(--floor) + 83px);max-width:40vw}.moon-station p{display:none}.moon-rail{min-height:47px}.moon-sill{min-height:23px;padding:3px}
+}
+@media (pointer:coarse){.moon-key kbd{display:none}}
+.moon-ticket-actions a{display:inline-flex;align-items:center;gap:.4em;min-height:44px;color:#382248;text-underline-offset:.16em;font-size:.78rem;font-weight:750;padding:0 4px}

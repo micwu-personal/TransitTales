@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 
 export default defineConfig({
   base: process.env.GITHUB_ACTIONS === 'true' ? '/TransitTales/' : '/',
+  assetsInclude: ['**/*.mid'],
   plugins: [{
     name: 'universe-resilient-startup',
     transformIndexHtml: {
@@ -29,6 +30,7 @@ export default defineConfig({
         escalator: resolve(process.cwd(), 'escalator.html'),
         beijing: resolve(process.cwd(), 'beijing.html'),
         melody: resolve(process.cwd(), 'melody.html'),
+        moonline: resolve(process.cwd(), 'moonline.html'),
         universe: resolve(process.cwd(), 'universe.html'),
         economic: resolve(process.cwd(), 'economic.html'),
       },

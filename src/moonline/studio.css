@@ -1,0 +1,235 @@
+/* The studio is also mountable on its own; match the game’s ID-level control styles without depending on its markup. */
+.ml-studio:not(#moonline) {
+  --ml-ink: #1c1425;
+  --ml-night: #23172d;
+  --ml-panel: #302039;
+  --ml-line: #614560;
+  --ml-text: #fff1e6;
+  --ml-muted: #d6b9d0;
+  --ml-peach: #ffd3ab;
+  --ml-gold: #f5b975;
+  --ml-mint: #b6f0d2;
+  min-block-size: 100%;
+  width: 100%;
+  inline-size: 100%;
+  color: var(--ml-text);
+  color-scheme: dark;
+  background: radial-gradient(ellipse at 12% 0%, #42253e, transparent 55rem), var(--ml-ink);
+  font: 500 1rem/1.45 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  text-align: start;
+  isolation: isolate;
+}
+
+.ml-studio:not(#moonline) *, .ml-studio:not(#moonline) *::before, .ml-studio:not(#moonline) *::after { box-sizing: border-box; }
+.ml-studio:not(#moonline) [hidden] { display: none !important; }
+.ml-studio:not(#moonline) h1, .ml-studio:not(#moonline) h2, .ml-studio:not(#moonline) p, .ml-studio:not(#moonline) fieldset { margin: 0; }
+.ml-studio:not(#moonline) h2 { font-size: clamp(1.2rem, 2.4vw, 1.55rem); line-height: 1.2; }
+.ml-studio:not(#moonline) h1 {
+  font-family: Georgia, "Songti SC", SimSun, serif;
+  font-size: clamp(2.1rem, 5vw, 4.1rem);
+  line-height: 1.07;
+  font-weight: 500;
+  text-wrap: balance;
+}
+.ml-studio:not(#moonline) p { max-inline-size: 68ch; }
+.ml-studio:not(#moonline) button, .ml-studio:not(#moonline) input, .ml-studio:not(#moonline) select {
+  font: inherit;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  border: 1px solid var(--ml-line);
+  border-radius: 6px;
+  color: var(--ml-text);
+  background: var(--ml-panel);
+  padding: .46rem .7rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.ml-studio:not(#moonline) input, .ml-studio:not(#moonline) select { inline-size: 100%; }
+.ml-studio:not(#moonline) label { display: grid; gap: .25rem; min-inline-size: 0; font-size: .85rem; font-weight: 650; }
+.ml-studio:not(#moonline) button { cursor: pointer; touch-action: manipulation; font-weight: 650; }
+.ml-studio:not(#moonline) button:disabled { color: var(--ml-muted); cursor: not-allowed; opacity: .62; }
+.ml-studio:not(#moonline) button[aria-pressed="true"] { background: var(--ml-mint); color: var(--ml-ink); border-color: var(--ml-mint); }
+.ml-studio:not(#moonline) button:focus-visible, .ml-studio:not(#moonline) input:focus-visible, .ml-studio:not(#moonline) select:focus-visible { outline: 3px solid var(--ml-mint); outline-offset: 2px; position: relative; z-index: 1; }
+@supports not selector(:focus-visible) {
+  .ml-studio:not(#moonline) button:focus, .ml-studio:not(#moonline) input:focus, .ml-studio:not(#moonline) select:focus { outline: 3px solid var(--ml-gold); outline-offset: -3px; }
+}
+@media (hover: hover) {
+  .ml-studio:not(#moonline) button:hover:not(:disabled):not([aria-pressed="true"]) { border-color: var(--ml-mint); background: #4c3353; }
+}
+
+.ml-studio:not(#moonline) .ml-studio-shell {
+  max-inline-size: 76rem;
+  margin-inline: auto;
+  padding: clamp(.85rem, 3vw, 2.6rem) clamp(.8rem, 3.5vw, 3.5rem) max(1.75rem, env(safe-area-inset-bottom));
+}
+.ml-studio:not(#moonline) .ml-studio-header { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; margin-block-end: clamp(1rem, 3vw, 1.75rem); }
+.ml-studio:not(#moonline) .ml-studio-header p { color: var(--ml-muted); margin-block-start: .4rem; }
+.ml-studio:not(#moonline) .ml-studio-header button { flex: none; }
+.ml-studio:not(#moonline) .ml-studio-ticket {
+  --ml-ticket-mark: #9c5d57;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(13rem, 1fr);
+  background: var(--ml-peach);
+  color: #3c2033;
+  color-scheme: light;
+  border-radius: 9px;
+  box-shadow: 0 9px 24px #11091366;
+}
+.ml-studio:not(#moonline) .ml-studio-ticket-fields {
+  display: grid;
+  grid-template-columns: minmax(7rem, 2.5fr) minmax(6rem, .85fr) minmax(5.5rem, .8fr);
+  gap: .75rem;
+  align-content: center;
+  padding: 1rem clamp(1rem, 2.5vw, 1.6rem);
+}
+.ml-studio:not(#moonline) .ml-studio-ticket-actions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: start;
+  gap: .5rem;
+  padding: 1rem clamp(1rem, 2.5vw, 1.6rem);
+  border-inline-start: 1px dashed var(--ml-ticket-mark);
+  background: repeating-linear-gradient(135deg, transparent 0 6px, #ac61490a 6px 7px);
+}
+.ml-studio:not(#moonline) .ml-studio-ticket-actions::before,
+.ml-studio:not(#moonline) .ml-studio-ticket-actions::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: -.5rem;
+  inline-size: 1rem;
+  block-size: .5rem;
+  background: #34213a;
+}
+.ml-studio:not(#moonline) .ml-studio-ticket-actions::before { inset-block-start: 0; border-radius: 0 0 1rem 1rem; }
+.ml-studio:not(#moonline) .ml-studio-ticket-actions::after { inset-block-end: 0; border-radius: 1rem 1rem 0 0; }
+.ml-studio:not(#moonline) .ml-studio-ticket input { color: #3c2033; background: #fff0d9; border-color: #a05e58; }
+.ml-studio:not(#moonline) .ml-studio-song-title input { font-size: 1.13rem; font-weight: 700; }
+.ml-studio:not(#moonline) .ml-studio-ticket button { min-inline-size: 6.4rem; color: #3c2033; background: #fff0d9; border-color: #91514d; }
+.ml-studio:not(#moonline) .ml-studio-ticket [data-act="save"] { background: #3c2033; color: #fff0d9; border-color: #3c2033; }
+.ml-studio:not(#moonline) .ml-studio-ticket button:hover:not(:disabled) { background: #f4b47b; color: #3c2033; border-color: #3c2033; }
+.ml-studio:not(#moonline) .ml-studio-ticket input:focus-visible, .ml-studio:not(#moonline) .ml-studio-ticket button:focus-visible { outline-color: #592b53; }
+.ml-studio:not(#moonline) .ml-studio-ticket-actions p { flex: 1 0 100%; font-size: .84rem; }
+.ml-studio:not(#moonline) .ml-studio-ticket-actions .is-error { color: #7a1926; font-weight: 700; }
+
+.ml-studio:not(#moonline) .ml-studio-keys-section, .ml-studio:not(#moonline) .ml-studio-arrangement { margin-block-start: clamp(1.25rem, 3.2vw, 2.3rem); }
+.ml-studio:not(#moonline) .ml-studio-heading { display: flex; justify-content: space-between; align-items: end; gap: .75rem 1.2rem; flex-wrap: wrap; margin-block-end: .65rem; }
+.ml-studio:not(#moonline) .ml-studio-heading h2 { min-inline-size: 0; overflow-wrap: anywhere; }
+.ml-studio:not(#moonline) .ml-studio-heading h2 span { display: inline-block; vertical-align: middle; color: var(--ml-mint); font: 650 .88rem/1.3 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif; margin-inline-start: .4rem; }
+.ml-studio:not(#moonline) .ml-studio-entry-tools, .ml-studio:not(#moonline) .ml-studio-actions { display: flex; gap: .45rem; flex-wrap: wrap; align-items: end; }
+.ml-studio:not(#moonline) .ml-studio-entry-tools button, .ml-studio:not(#moonline) .ml-studio-actions button, .ml-studio:not(#moonline) .ml-studio-entry-tools select, .ml-studio:not(#moonline) .ml-studio-actions button { font-size: .9rem; }
+.ml-studio:not(#moonline) .ml-studio-keybed { display: flex; align-items: stretch; gap: .5rem 1rem; background: #1b1224; border: 1px solid var(--ml-line); border-radius: 8px; padding: .65rem; }
+.ml-studio:not(#moonline) .ml-studio-keybed [data-part="keys"] { min-inline-size: 0; flex: 1; }
+.ml-studio:not(#moonline) .ml-studio-naturals, .ml-studio:not(#moonline) .ml-studio-sharps, .ml-studio:not(#moonline) .ml-studio-pads { display: grid; gap: .35rem; }
+.ml-studio:not(#moonline) .ml-studio-naturals, .ml-studio:not(#moonline) .ml-studio-pads { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.ml-studio:not(#moonline) .ml-studio-sharps { grid-template-columns: repeat(14, minmax(0, 1fr)); margin-block-end: .35rem; }
+.ml-studio:not(#moonline) .ml-studio-sharps button { grid-column: span 2; border-color: #735677; }
+.ml-studio:not(#moonline) .ml-studio-sharps button:nth-child(1) { grid-column: 2 / span 2; }
+.ml-studio:not(#moonline) .ml-studio-sharps button:nth-child(3) { grid-column: 8 / span 2; }
+.ml-studio:not(#moonline) .ml-studio-naturals button, .ml-studio:not(#moonline) .ml-studio-pads button {
+  min-block-size: 52px;
+  padding: .4rem .15rem;
+  color: #3a2033;
+  background: #f9dec7;
+  border-color: var(--ml-peach);
+  border-block-end: 4px solid #ba8b82;
+  overflow-wrap: anywhere;
+}
+.ml-studio:not(#moonline) .ml-studio-pads button { background: #c9e4d7; border-color: #94b9b0; border-block-end-color: #709e99; }
+.ml-studio:not(#moonline) .ml-studio-sharps button { padding-inline: .1rem; }
+.ml-studio:not(#moonline) .ml-studio-keybed button[aria-pressed="true"], .ml-studio:not(#moonline) .ml-studio-keybed button:hover:not(:disabled) { color: #1c1425; background: var(--ml-mint); border-color: #77baa7; }
+.ml-studio:not(#moonline) .ml-studio-register { display: flex; gap: .35rem; flex-wrap: wrap; justify-content: center; align-content: center; align-items: center; }
+.ml-studio:not(#moonline) .ml-studio-register button, .ml-studio:not(#moonline) .ml-studio-pager button { min-inline-size: 44px; }
+.ml-studio:not(#moonline) .ml-studio-register span { color: var(--ml-muted); font-size: .86rem; }
+.ml-studio:not(#moonline) .ml-studio-register b { color: var(--ml-text); }
+.ml-studio:not(#moonline) .ml-studio-hint { font-size: .86rem; color: var(--ml-muted); margin-block-start: .55rem; }
+
+.ml-studio:not(#moonline) .ml-studio-pager { display: flex; gap: .45rem; align-items: end; max-inline-size: 100%; }
+.ml-studio:not(#moonline) .ml-studio-pager input { inline-size: 5.5rem; }
+.ml-studio:not(#moonline) .ml-studio-pager span { align-self: end; padding-block: .65rem; color: var(--ml-muted); white-space: nowrap; }
+.ml-studio:not(#moonline) .ml-studio-timeline {
+  --ml-lane-width: clamp(6.2rem, 18vw, 11.5rem);
+  max-height: 24rem;
+  max-block-size: 24rem;
+  max-block-size: min(31rem, max(15rem, 51dvh));
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #896684 var(--ml-night);
+  border: 1px solid var(--ml-line);
+  border-radius: 8px;
+  background: var(--ml-night);
+}
+.ml-studio:not(#moonline) .ml-studio-row { display: grid; grid-template-columns: var(--ml-lane-width) repeat(var(--ml-slots), minmax(3.6rem, 1fr)); min-inline-size: max(100%, calc(var(--ml-lane-width) + var(--ml-slots) * 3.6rem)); }
+.ml-studio:not(#moonline) .ml-studio-ruler { position: sticky; top: 0; inset-block-start: 0; z-index: 4; background: #442b49; }
+.ml-studio:not(#moonline) .ml-studio-ruler > span { color: #eed2e6; padding: .5rem .35rem; font-size: .76rem; text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ml-studio:not(#moonline) .ml-studio-ruler > span:first-child { position: sticky; left: 0; inset-inline-start: 0; z-index: 1; padding-inline: .7rem; text-align: start; background: #442b49; }
+.ml-studio:not(#moonline) .ml-studio-ruler > .is-beat { color: var(--ml-peach); font-weight: 700; }
+.ml-studio:not(#moonline) .ml-studio-ruler > .is-playing { background: var(--ml-mint); color: var(--ml-ink); }
+.ml-studio:not(#moonline) .ml-studio-lane { border-block-start: 1px solid var(--ml-line); --ml-note: #b6f0d2; }
+.ml-studio:not(#moonline) .ml-studio-lane-guitar { --ml-note: #ffd2a6; }
+.ml-studio:not(#moonline) .ml-studio-lane-bass { --ml-note: #bde6fb; }
+.ml-studio:not(#moonline) .ml-studio-lane-pad { --ml-note: #e0cdf6; }
+.ml-studio:not(#moonline) .ml-studio-lane-drums { --ml-note: #ffe49e; }
+.ml-studio:not(#moonline) button.ml-studio-lane-label {
+  position: sticky;
+  left: 0;
+  inset-inline-start: 0;
+  z-index: 2;
+  display: grid;
+  align-content: center;
+  gap: .1rem;
+  padding: .35rem .65rem;
+  border: 0;
+  border-radius: 0;
+  text-align: start;
+  background: #35243e;
+}
+.ml-studio:not(#moonline) button.ml-studio-lane-label[aria-pressed="true"] { background: var(--ml-note); color: var(--ml-ink); }
+.ml-studio:not(#moonline) .ml-studio-lane-label:focus-visible { z-index: 3; outline-offset: -3px; outline-color: var(--ml-gold); }
+.ml-studio:not(#moonline) .ml-studio-lane-label span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ml-studio:not(#moonline) .ml-studio-lane-label small { font-size: .75rem; font-weight: 550; }
+.ml-studio:not(#moonline) .ml-studio-slot { display: flex; flex-direction: column; gap: .2rem; min-inline-size: 0; min-block-size: 58px; padding: .21rem; border-inline-start: 1px solid #4d3654; }
+.ml-studio:not(#moonline) .ml-studio-slot.is-beat { border-inline-start-color: #825b7d; }
+.ml-studio:not(#moonline) .ml-studio-slot.is-playing { background: #36524b; }
+.ml-studio:not(#moonline) .ml-studio-slot.is-cursor { background: #45314a; box-shadow: inset 0 0 0 2px var(--ml-gold); }
+.ml-studio:not(#moonline) .ml-studio-slot button { inline-size: 100%; font-size: .78rem; padding: .2rem .12rem; }
+.ml-studio:not(#moonline) .ml-studio-slot .ml-studio-place { flex: 1; color: var(--ml-muted); background: transparent; border-color: transparent; font-size: 1rem; }
+.ml-studio:not(#moonline) .ml-studio-slot.is-cursor .ml-studio-place { color: var(--ml-peach); }
+.ml-studio:not(#moonline) .ml-studio-slot .ml-studio-note { color: var(--ml-ink); background: var(--ml-note); border-color: var(--ml-note); overflow-wrap: anywhere; }
+.ml-studio:not(#moonline) .ml-studio-slot .ml-studio-note[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ml-ink); }
+.ml-studio:not(#moonline) .ml-studio-slot .ml-studio-note:hover:not(:disabled) { background: #fff1df; color: var(--ml-ink); }
+.ml-studio:not(#moonline) .ml-studio-slot button:focus-visible { outline-offset: -2px; outline-color: var(--ml-gold); }
+
+.ml-studio:not(#moonline) .ml-studio-controls { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 1.2rem 1.6rem; margin-block-start: 1.75rem; }
+.ml-studio:not(#moonline) .ml-studio-controls > div { min-inline-size: 0; border-block-start: 1px solid var(--ml-line); padding-block-start: 1rem; }
+.ml-studio:not(#moonline) .ml-studio-controls fieldset, .ml-studio:not(#moonline) .ml-studio-track-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; padding: 0; border: 0; min-inline-size: 0; margin-block: .65rem; }
+.ml-studio:not(#moonline) .ml-studio-controls fieldset button { font-size: .87rem; }
+.ml-studio:not(#moonline) .ml-studio-note-picker { grid-column: 1 / -1; }
+.ml-studio:not(#moonline) .ml-studio-track-fields { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.ml-studio:not(#moonline) .ml-studio-midi { border-block-start: 1px dashed var(--ml-line); margin-block-start: 1.5rem; padding-block-start: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem 1rem; font-size: .9rem; color: var(--ml-muted); }
+.ml-studio:not(#moonline) .ml-studio-midi-message { margin-block-start: .4rem; color: var(--ml-mint); font-size: .9rem; }
+.ml-studio:not(#moonline) .ml-studio-midi-message.is-error { color: #ffabae; }
+
+@media (max-width: 48rem) {
+  .ml-studio:not(#moonline) .ml-studio-ticket { grid-template-columns: minmax(0, 1fr); }
+  .ml-studio:not(#moonline) .ml-studio-ticket-actions { border-inline-start: 0; border-block-start: 1px dashed var(--ml-ticket-mark); }
+  .ml-studio:not(#moonline) .ml-studio-ticket-actions::before, .ml-studio:not(#moonline) .ml-studio-ticket-actions::after { inset-block-start: -.5rem; inset-block-end: auto; inline-size: .5rem; block-size: 1rem; }
+  .ml-studio:not(#moonline) .ml-studio-ticket-actions::before { inset-inline-start: 0; border-radius: 0 1rem 1rem 0; }
+  .ml-studio:not(#moonline) .ml-studio-ticket-actions::after { inset-inline-start: auto; inset-inline-end: 0; border-radius: 1rem 0 0 1rem; }
+  .ml-studio:not(#moonline) .ml-studio-controls { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 37rem) {
+  .ml-studio:not(#moonline) .ml-studio-header { gap: .5rem; }
+  .ml-studio:not(#moonline) .ml-studio-header p { font-size: .88rem; }
+  .ml-studio:not(#moonline) .ml-studio-ticket-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ml-studio:not(#moonline) .ml-studio-song-title { grid-column: 1 / -1; }
+  .ml-studio:not(#moonline) .ml-studio-entry-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); inline-size: 100%; }
+  .ml-studio:not(#moonline) .ml-studio-keybed { flex-direction: column; }
+  .ml-studio:not(#moonline) .ml-studio-keybed .ml-studio-naturals,   .ml-studio:not(#moonline) .ml-studio-keybed .ml-studio-sharps { gap: .18rem; }
+  .ml-studio:not(#moonline) .ml-studio-keybed button[data-act="key"] { font-size: .83rem; }
+  .ml-studio:not(#moonline) .ml-studio-pads { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ml-studio:not(#moonline) .ml-studio-register { align-self: flex-end; }
+  .ml-studio:not(#moonline) .ml-studio-controls fieldset button { grid-column: span 1; padding-inline: .2rem; }
+}
