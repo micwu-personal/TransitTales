@@ -99,6 +99,8 @@ Open [Scale Expedition](https://micwu-personal.github.io/TransitTales/scale.html
 
 The game starts in illustrated 2D. Choose **Try it here** to manipulate the exhibit over the illustration, or switch to **3D** for a full orbit around it. View mode is remembered on the current browser. Drag the background or use WASD to orbit in 3D; pinch, scroll, or use Space to zoom. Drag the ring on the specimen (or focus it and use the arrow keys) to test the scene, then release to watch the result. The observation marker opens the sources and the original lab controls; discoveries are recorded in the local journal. Device motion is optional on supported secure browsers, and reduced motion skips automatic exhibit playback and travel animations.
 
+The Local Group exhibit runs for 15 seconds after release so you can follow the modeled galaxies and their tracer paths beyond the first close pass.
+
 Original procedural illustrations are not photographs or literal views through a microscope. Each stop links to its science source. The interactive exhibits are bounded Newtonian, structural, atomic, wave and probability models, not predictions for the real Local Group, live changes to the cat, or a model of physics at the Planck length. The nuclear exhibit covers spontaneous carbon-14 decay, not a chain reaction. Motion is for local scene inspection only and is not tracked or saved.
 
 ## Moonline / 月光列车

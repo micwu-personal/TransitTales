@@ -40,6 +40,19 @@ it('has a bilingual, spatially interactive, finite exhibit at every stop', () =>
   }
 });
 
+it('continues the Local Group encounter beyond the first close pass for 15 seconds', () => {
+  const mission=missions.group;
+  expect(mission.duration).toBe(15);
+  const coresAt=(seconds:number)=>mission.frame(0,seconds,null).shapes.flatMap(shape=>
+    shape.kind==='orb' && shape.r===.14 ? [shape.at] : []);
+  const start=coresAt(0), close=coresAt(5), later=coresAt(10), end=coresAt(15);
+  const distance=([a,b]:ReturnType<typeof coresAt>)=>Math.hypot(...a.map((x,i)=>x-b[i]));
+  expect(distance(close)).toBeLessThan(distance(start)/2);
+  expect(later).not.toEqual(close);
+  expect(end).not.toEqual(later);
+  expect(coresAt(16)).toEqual(end);
+});
+
 describe('expedition itinerary', () => {
   it('has sixteen distinct illustrated and sourced stops in logarithmic order', () => {
     expect(stops).toHaveLength(16);

@@ -304,7 +304,9 @@ const encounterRadii = [.27,.42,.6,.82,1.01];
 const encounterGap = (value: number) => mix(.5,2.45,value);
 const encounterCenters = (value: number): [Vec, Vec] => [[-2.8,-encounterGap(value)/2],[2.8,encounterGap(value)/2]];
 const encounterCount = 9 * encounterRadii.length;
-const encounterDuration = 5;
+const encounterLength = 3;
+const encounterDuration = 5 * encounterLength;
+const encounterFrameCount = GRAVITY_FRAMES * encounterLength;
 
 // Continuous variant of encounterFrames: only the initial transverse gap changes.
 // Same softened gravity and velocity Verlet steps. Only the two centers source gravity.
@@ -325,7 +327,7 @@ function continuousEncounter(value: number): Track {
     return [a[0] + b[0],a[1] + b[1]];
   };
   const dt = .011, track = [points];
-  for (let i = 0; i < GRAVITY_FRAMES * 4; i++) {
+  for (let i = 0; i < encounterFrameCount * 4; i++) {
     speeds = speeds.map(([x,y], j) => {
       const a = accel(points[j],j,points);
       return [x+a[0]*dt/2,y+a[1]*dt/2];
@@ -347,7 +349,7 @@ const group: Mission = {
   frame(value, elapsed, baseline) {
     const centers = encounterCenters(value);
     const grip = add(groupPoint(centers[1]),[0,.19,0]);
-    const t = GRAVITY_FRAMES * clamp(elapsed / encounterDuration);
+    const t = encounterFrameCount * clamp(elapsed / encounterDuration);
     const track = t > 0 ? groupTrack(value) : null;
     const old = t > 0 && baseline !== null && Math.abs(value - baseline) > 1e-4 ? groupTrack(baseline) : null;
     const positions = track ? track[0] : [...centers,...seedDisk(centers[0],encounterRadii,9),...seedDisk(centers[1],encounterRadii,9)];
