@@ -67,9 +67,7 @@ export function createStaff(horizon: Point, strikeY: number, width: number, cent
     return low ? mix(low.x, high.x, (step - low.step) / (high.step - low.step)) : high.x + (step - high.step) * spacing;
   };
   const bound = (x: number) => Math.max(horizon.x - width / 2, Math.min(horizon.x + width / 2, x));
-  const project = (x: number, depth: number, y = strikeY) => ({
-    x: mix(horizon.x, x, mix(.22, 1, depth)), y: mix(horizon.y, y, depth),
-  });
+  const project = (x: number, depth: number) => ({x, y: mix(horizon.y, strikeY, depth)});
   // Octave-clef lines can fall beyond a small bank. Compress only that overhang, never the active key centers.
   const edge = width / 2, inner = edge * .80;
   const soften = (x: number) => {
@@ -82,8 +80,11 @@ export function createStaff(horizon: Point, strikeY: number, width: number, cent
     const {step} = spellPitch(pitch, center, flats);
     const key = anchors.get(pitch);
     const ideal = pitched ? stepX(step) : previewX;
-    const split = clamp((depth - .4) / .6);
-    return project(mix(ideal, key?.x ?? bound(previewX), split * split), depth, key?.y);
+    // Keep the written line until the short docking zone, then route to the physical key.
+    const targetX = key?.x ?? bound(previewX);
+    if (depth >= 1) return {x: targetX, y: strikeY};
+    const split = clamp((depth - .68) / .32);
+    return project(mix(ideal, targetX, split * split), depth);
   };
   return {rail, cue, pitched};
 }
@@ -95,8 +96,9 @@ const segment = (ctx: CanvasRenderingContext2D, a: Point, b: Point) => {
 
 export function drawStaff(ctx: CanvasRenderingContext2D, staff: Staff, beat: number, spb: number, end: number, meter: Meter | undefined, center: number) {
   const [a, b, c, d] = [staff.rail(-5, 0), staff.rail(5, 0), staff.rail(5, 1), staff.rail(-5, 1)];
-  ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineTo(c.x, c.y); ctx.lineTo(d.x, d.y); ctx.closePath();
-  ctx.fillStyle = '#231b34d9'; ctx.fill();
+  ctx.fillStyle = '#231b34d9'; ctx.fillRect(d.x, d.y, c.x - d.x, a.y - d.y);
+  ctx.beginPath(); segment(ctx, d, a); segment(ctx, c, b);
+  ctx.strokeStyle = '#bd977d57'; ctx.lineWidth = 1; ctx.stroke();
   const ink = ctx.createLinearGradient(0, a.y, 0, d.y);
   ink.addColorStop(0, '#f4c89794'); ink.addColorStop(1, '#f4c897da');
   ctx.beginPath(); (staff.pitched ? lines : [0]).forEach(step => segment(ctx, staff.rail(step, 0), staff.rail(step, 1)));
@@ -109,11 +111,11 @@ export function drawStaff(ctx: CanvasRenderingContext2D, staff: Staff, beat: num
       ctx.lineWidth = 1 + z; ctx.stroke();
     }
   }
-  ctx.beginPath(); segment(ctx, d, c); ctx.lineWidth = 2; ctx.stroke();
+  ctx.beginPath(); segment(ctx, d, c); ctx.strokeStyle = '#ffe2b5'; ctx.lineWidth = 2; ctx.stroke();
   if (staff.pitched) {
-    const clef = staff.rail(0, .18);
-    ctx.save(); ctx.translate(clef.x, clef.y + 6); ctx.rotate(Math.PI / 2);
-    ctx.font = '24px "Segoe UI Symbol", "Noto Music", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffdbab';
+    const clef = staff.rail(0, 0);
+    ctx.save(); ctx.translate(clef.x, clef.y + 15); ctx.rotate(Math.PI / 2);
+    ctx.font = '23px "Segoe UI Symbol", "Noto Music", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffdbab';
     ctx.fillText(center <= 50 ? '\u{1d122}' : '\u{1d11e}', 0, 0); ctx.restore();
   }
 }
@@ -142,6 +144,7 @@ export function drawStaffNote(ctx: CanvasRenderingContext2D, staff: Staff, point
     }
     ctx.strokeStyle = '#f4d5a5'; ctx.lineWidth = 1.25; ctx.stroke();
   }
+  // Rotate the written axes: later (right) becomes down, higher (up) becomes right.
   ctx.save(); ctx.translate(x, y); ctx.rotate(Math.PI / 2);
   ctx.fillStyle = ctx.strokeStyle = '#ecffdb'; ctx.lineWidth = Math.max(1, size * .19);
   ctx.beginPath();

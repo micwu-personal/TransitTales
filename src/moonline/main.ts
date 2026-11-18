@@ -165,10 +165,12 @@ function setOptions() {
 function updateAnchors() {
   const ref = canvas.getBoundingClientRect();
   const cab = instrument.getBoundingClientRect();
-  cabLeft = cab.left - ref.left; cabWidth = cab.width; strikeY = cab.top - ref.top;
+  const overhead = cueStyle === 'staff' && (state === 'play' || state === 'pause');
+  cabLeft = cab.left - ref.left; cabWidth = cab.width; strikeY = (overhead ? cab.bottom : cab.top) - ref.top;
+  if (overhead) game.style.setProperty('--staff-strike', `${strikeY}px`);
   anchors = new Map([...keys].map(([pitch, key]) => {
     const rect = key.getBoundingClientRect();
-    return [pitch, {x: rect.left + rect.width / 2 - ref.left, y: rect.top - ref.top}];
+    return [pitch, {x: rect.left + rect.width / 2 - ref.left, y: (overhead ? rect.bottom : rect.top) - ref.top}];
   }));
 }
 
@@ -261,6 +263,7 @@ function statusView() {
   el('#moon-midi').hidden = paused || !route();
   el('#moon-ticket-title').textContent = paused ? tr('Train paused', '列车已暂停') : state === 'arrival' ? tr('End of the line', '列车到站') : tr('Departure ticket', '发车车票');
   startButton.firstChild!.textContent = paused ? tr('Resume ride ', '继续行程 ') : state === 'arrival' ? tr('Ride again ', '再坐一次 ') : tr('Depart ', '发车 ');
+  updateAnchors();
 }
 function updateCount() { el('.moon-count').textContent = demo ? tr('Listening', '示范') : `${played.size} / ${notes.length}`; }
 function end(next: 'station' | 'arrival' = 'station') {
@@ -367,7 +370,9 @@ function draw(at: number) {
   }
   const horizon = {x: width / 2, y: Math.min(height * .37, strikeY * .65)};
   const meter = scoreMeter(song.id);
-  const score = staff ? createStaff(horizon, strikeY, Math.max(1, cabWidth), staffCenter, anchors, Boolean(meter?.flats), role() !== 'drums') : null;
+  const score = staff ? createStaff({x: cabLeft + cabWidth / 2, y: Math.max(strikeY + 1, height - (height < 470 ? 48 : 70))},
+    strikeY, Math.max(1, cabWidth), staffCenter, anchors, Boolean(meter?.flats), role() !== 'drums') : null;
+  const staffSize = Math.max(3.5, Math.min(8, cabWidth / 65, (height - strikeY) / 25));
   const target = (pitch: number) => anchors.get(pitch) ?? previewTarget(pitch, anchors, cabLeft, cabWidth, strikeY);
   if (score) {
     drawStaff(ctx, score, at, spb, song.beats, meter, staffCenter);
@@ -382,14 +387,14 @@ function draw(at: number) {
   for (let i = first; i < notes.length; i++) {
     const n = notes[i], dt = (n.beat - at) * spb;
     if (dt > approachSeconds) break;
-    if (played.has(i) && !score) continue;
+    if (score ? dt < 0 : played.has(i)) continue;
     const key = target(n.pitch);
     const depthOnStaff = durationDepths(dt, 0)[0];
     const {x, y, depth} = score ? {...score.cue(n.pitch, depthOnStaff, key.x), depth: depthOnStaff}
       : cuePosition(dt, horizon.x, horizon.y, key.x, key.y);
-    const scale = score ? 3 + 6 * depth : 4 + 7 * depth;
+    const scale = score ? staffSize : 4 + 7 * depth;
     // Note travel is essential to play. Reduced motion still disables scenery travel.
-    ctx.globalAlpha = dt < 0 ? Math.max(0, 1 + dt / hitWindow) : .60 + .40 * depth;
+    ctx.globalAlpha = dt < 0 ? Math.max(0, 1 + dt / hitWindow) : score ? 1 : .60 + .40 * depth;
     if (score) {
       drawStaffNote(ctx, score, {x, y}, depth, scale, notation[i]);
     } else {

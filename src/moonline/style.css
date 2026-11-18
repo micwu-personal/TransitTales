@@ -86,6 +86,18 @@ body{margin:0}
 .moon-count{color:var(--mint);white-space:nowrap}
 .moon-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .moon-studio{position:absolute;inset:0;z-index:8;overflow:auto;overscroll-behavior:contain;background:#261a34}
+/* Overhead cab: the score feeds into a common edge at the back of the keybed. */
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-console{top:calc(max(12px,env(safe-area-inset-top)) + 48px);bottom:auto;display:grid;grid-template-areas:'rail' 'sill' 'keys';z-index:1}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-rail{grid-area:rail}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-sill{grid-area:sill;min-height:0;padding:2px 2px 5px}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-instrument{grid-area:keys;margin-bottom:1px}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-instrument[data-layout=keys] .moon-key:not(.moon-black){justify-content:start;padding:5px 1px 0}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-instrument[data-layout=keys] .moon-black{top:auto;bottom:0;border-radius:5px 5px 0 0;box-shadow:0 -3px 4px #2a182b8c}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-station{bottom:var(--floor);z-index:3}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-station p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-caption{inset:auto var(--side) var(--floor) auto;transform:none;width:max-content;max-width:42%;text-align:right;font-size:clamp(.9rem,2vw,1.35rem)}
+@media (max-height:469px){#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-station p{display:none}}
+#moonline[data-cues=staff][data-state=pause] .moon-ticket{--ticket-top:calc(var(--staff-strike, 200px) + 8px);max-height:calc(100% - var(--ticket-top) - var(--floor))}
 @media (hover:hover){.moon-top a:hover,.moon-top button:hover,.moon-transport button:hover{background:#4d355b}.moon-ticket button:hover{filter:brightness(1.12)}.moon-key:hover{filter:brightness(1.12)}}
 @media (max-width:650px) and (orientation:portrait){
   #moonline{--side:max(12px,env(safe-area-inset-left),env(safe-area-inset-right));--keys:clamp(61px,12vh,92px)}

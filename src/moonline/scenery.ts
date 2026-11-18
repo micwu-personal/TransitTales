@@ -678,6 +678,33 @@ function atmosphere(ctx: Ink, scene: number, progress: number, span: number) {
   ctx.globalAlpha = 1;
 }
 
+function overheadPlate(ctx: Ink, p: Place, scene: number, w: number, h: number) {
+  ctx.fillStyle = gradient(ctx, 0, h, [[0, p.sky[1]], [.47, p.ground[1]], [1, p.sky[0]]]);
+  ctx.fillRect(0, 0, w, h);
+  const rnd = random(870 + scene);
+  for (const side of [-1, 1]) {
+    ctx.save(); ctx.translate(w / 2, 0); ctx.scale(side, 1);
+    const shore = (y: number) => w * (.35 + .06 * Math.sin(y / h * 7 + side + scene));
+    for (let band = 0; band < 5; band++) {
+      ctx.beginPath(); ctx.moveTo(w / 2, -16);
+      for (let y = -16; y <= h + 16; y += 8) ctx.lineTo(shore(y) + band * 9, y);
+      ctx.lineTo(w / 2, h + 16); ctx.closePath();
+      ctx.globalAlpha = .28; ctx.fillStyle = p.hills[band % 3]; ctx.fill();
+      ctx.globalAlpha = .42; ctx.strokeStyle = p.rail; ctx.lineWidth = .65; ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    for (let i = 0; i < 60; i++) {
+      const y = rnd() * h, x = shore(y) + rnd() * w * .12;
+      if (x > w / 2 - 5) continue;
+      const r = 1.8 + rnd() * 6;
+      oval(ctx, '#211a38aa', x + 2, y + 3, r * 1.2, r);
+      oval(ctx, i % 5 ? p.roof : p.wall, x, y, r, r * .81);
+      if (!(i % 5)) oval(ctx, p.light, x, y, 1.2);
+    }
+    ctx.restore();
+  }
+}
+
 export function createScenery(host: HTMLElement): { draw(scene: number, progress: number, staff?: boolean): void; resize(): void; dispose(): void } {
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
@@ -701,15 +728,21 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
     const index = Number.isFinite(scene) ? Math.trunc(scene) : 0;
     activeScene = (index % places.length + places.length) % places.length;
     activeProgress = Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
-    const travel = reduced?.matches ? 0 : activeProgress;
+    const travel = staff || reduced?.matches ? 0 : activeProgress;
     if (disposed || !ctx || !ink || !width || !height || (plateScene === activeScene && paintedProgress === travel && paintedStaff === staff)) return;
     const place = places[activeScene];
+    if (staff) {
+      ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
+      overheadPlate(ctx, place, activeScene, width, height);
+      plateScene = activeScene; paintedProgress = travel; paintedStaff = true;
+      return;
+    }
     const span = Math.min(740, Math.max(300, width / height * 337));
     const xScale = canvas.width / (span * 2);
     const yScale = canvas.height / 800;
     const xCenter = canvas.width / 2;
     const horizon = canvas.height * .37;
-    if (plateScene !== activeScene) {
+    if (paintedStaff || plateScene !== activeScene) {
       ink.setTransform(xScale, 0, 0, yScale, xCenter, horizon);
       sceneryPlate(ink, place, activeScene, span + 15);
       plateScene = activeScene;
@@ -717,7 +750,7 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.drawImage(plate, 0, 0);
     ctx.setTransform(xScale, 0, 0, yScale, xCenter, horizon);
-    if (!staff) rails(ctx, place, activeScene, travel, span);
+    rails(ctx, place, activeScene, travel, span);
     atmosphere(ctx, activeScene, travel, span);
     paintedProgress = travel; paintedStaff = staff;
   }
