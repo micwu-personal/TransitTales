@@ -33,6 +33,7 @@ export default defineConfig({
         moonline: resolve(process.cwd(), 'moonline.html'),
         universe: resolve(process.cwd(), 'universe.html'),
         economic: resolve(process.cwd(), 'economic.html'),
+        scale: resolve(process.cwd(), 'scale.html'),
       },
     },
   },
