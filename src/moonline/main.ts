@@ -4,7 +4,7 @@ import { loadLibrary, saveToLibrary } from './library';
 import { approachSeconds, compactCodes, cuePosition, hitWindow, instrumentPitches, lowerBound, matchingNote, pianoKeys } from './play';
 import { decodeMidi } from './midi';
 import { routes as arrangements } from './repertoire';
-import { createScenery } from './scenery';
+import { createScenery, landscapeProgress } from './scenery';
 import { createStaff, drawDuration, drawStaff, drawStaffNote, durationDepths, notate, scoreMeter } from './staff';
 import { pitchName, type Note, type Role, type Song } from './score';
 import { openStudio } from './studio';
@@ -362,7 +362,8 @@ function draw(at: number) {
   const progress = Math.max(0, Math.min(1, (at - from) / Math.max(.001, to - from)));
   const staff = cueStyle === 'staff';
   const active = state === 'play' || state === 'pause';
-  stationDisplay(stop); scenery.draw(stops[stop].scene, reduceMotion.matches ? .25 : progress, active && staff);
+  stationDisplay(stop);
+  scenery.draw(stops[stop].scene, progress, active && staff, landscapeProgress(stops, stop, at, song.beats));
   el('.moon-stops').style.setProperty('--trip', `${Math.max(0, Math.min(1, at / song.beats)) * 100}%`);
   if (!ctx) return;
   ctx.clearRect(0, 0, width, height);

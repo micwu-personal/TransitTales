@@ -473,6 +473,9 @@ function terminus(ctx: Ink, p: Place, span: number) {
     }
     ctx.restore();
   }
+}
+
+function terminusGate(ctx: Ink, p: Place) {
   tower(ctx, p, -165, -8, 43, 135, true);
   tower(ctx, p, 150, 3, 30, 90, false);
   poly(ctx, '#5a4757', [-45, 9], [-45, -15], [0, -43], [44, -15], [44, 9], [17, 6], [17, -4], [0, -15], [-17, -4], [-17, 7]);
@@ -485,8 +488,13 @@ function sceneryPlate(ctx: Ink, p: Place, scene: number, span: number) {
   ridges(ctx, p, scene, span);
   ctx.fillStyle = gradient(ctx, 0, 510, [[0, p.ground[0]], [.41, p.ground[1]], [1, '#1d192b']]);
   ctx.fillRect(-span, 2, span * 2, 520);
-  const rnd = random(742 + scene);
   if (scene === 1 || scene === 4 || scene === 5) river(ctx, p, scene, span);
+}
+
+type LandmarkLayers = readonly [far: Ink, middle: Ink, near: Ink];
+
+function landmarks([far, middle, near]: LandmarkLayers, p: Place, scene: number, span: number) {
+  const rnd = random(742 + scene);
   if (scene === 0 || scene === 1) {
     for (let i = 0; i < 30; i++) {
       const x = -span + i * span / 14.5;
@@ -494,20 +502,21 @@ function sceneryPlate(ctx: Ink, p: Place, scene: number, span: number) {
       const w = 13 + rnd() * 22;
       const y = 13 + rnd() * 21;
       const h = 14 + rnd() * (scene === 0 ? 52 : 21);
-      house(ctx, p, x, y, w, h, h > 32 ? 2 : 1, i + 200, x > 0);
+      house(far, p, x, y, w, h, h > 32 ? 2 : 1, i + 200, x > 0);
     }
   }
+  const ctx = middle;
   switch (scene) {
     case 0:
       for (let i = 8; i >= 0; i--) {
         const t = i / 8;
         const x = 58 + t * 459;
         const y = 14 + t * t * 187;
-        house(ctx, p, x, y, 27 + t * 100, 34 + t * 110, t > .5 ? 3 : 2, 285 + i, true);
+        house(y < 38 ? far : y < 125 ? middle : near, p, x, y, 27 + t * 100, 34 + t * 110, t > .5 ? 3 : 2, 285 + i, true);
       }
-      tower(ctx, p, 194, 82, 37, 104, true);
-      house(ctx, p, -398, 121, 98, 109, 3, 24);
-      theatre(ctx, p, -194, 104);
+      tower(middle, p, 194, 82, 37, 104, true);
+      house(near, p, -398, 121, 98, 109, 3, 24);
+      theatre(middle, p, -194, 104);
       for (let i = 0; i < 12; i++) {
         const x = -span + rnd() * (span - 82);
         const y = 115 + rnd() * 112;
@@ -521,17 +530,17 @@ function sceneryPlate(ctx: Ink, p: Place, scene: number, span: number) {
         for (let i = 0; i < 21; i++) {
           const x = side * (82 + rnd() * (span - 47));
           const y = 30 + Math.abs(x) ** 1.32 * .012 + rnd() * 15;
-          tree(ctx, x, y, 17 + rnd() * (22 + Math.abs(x) * .16), i + side * 81, 'pine');
+          tree(y < 53 ? far : y < 95 ? middle : near, x, y, 17 + rnd() * (22 + Math.abs(x) * .16), i + side * 81, 'pine');
         }
       }
-      house(ctx, p, 130, 34, 38, 37, 2, 10, true);
-      house(ctx, p, -92, 30, 28, 22, 1, 50);
+      house(far, p, 130, 34, 38, 37, 2, 10, true);
+      house(far, p, -92, 30, 28, 22, 1, 50);
       break;
     case 2:
       for (let i = 0; i < 30; i++) {
         const x = (rnd() > .5 ? 1 : -1) * (62 + rnd() * span);
         const y = 19 + rnd() * 33;
-        tree(ctx, x, y, 28 + rnd() * 60, i + 65, i % 3 === 0 ? 'bloom' : 'cypress');
+        tree(far, x, y, 28 + rnd() * 60, i + 65, i % 3 === 0 ? 'bloom' : 'cypress');
       }
       pavilion(ctx, p, -161, 99, 1.42);
       pavilion(ctx, p, 172, 82, 1.1);
@@ -539,7 +548,7 @@ function sceneryPlate(ctx: Ink, p: Place, scene: number, span: number) {
         for (let i = 0; i < 9; i++) {
           const x = side * (110 + rnd() * span);
           const y = 103 + rnd() * 105;
-          tree(ctx, x, y, 59 + rnd() * 104, i + side * 137, 'bloom');
+          tree(near, x, y, 59 + rnd() * 104, i + side * 137, 'bloom');
         }
       }
       lanternString(ctx, p, -span, -110, -43, 32, 9);
@@ -548,16 +557,17 @@ function sceneryPlate(ctx: Ink, p: Place, scene: number, span: number) {
       break;
     case 3:
       terminus(ctx, p, span);
+      terminusGate(far, p);
       break;
     case 4:
-      viaduct(ctx, p, span);
-      tower(ctx, p, 178, 36, 26, 68, true);
+      viaduct(far, p, span);
+      tower(middle, p, 178, 36, 26, 68, true);
       for (let i = 0; i < 22; i++) {
         const side = i % 2 ? 1 : -1;
         const x = side * (98 + rnd() * span * .93);
         const y = 12 + Math.abs(x) * .087;
         if ((side === 1 && x > 151 && x < 208) || (side === -1 && x > -246 && x < -125)) continue;
-        tree(ctx, x, y, 18 + rnd() * (26 + Math.abs(x) * .07), i + 315, 'pine');
+        tree(y < 45 ? far : y < 64 ? middle : near, x, y, 18 + rnd() * (26 + Math.abs(x) * .07), i + 315, 'pine');
       }
       house(ctx, p, -177, 38, 44, 49, 2, 29);
       break;
@@ -565,19 +575,21 @@ function sceneryPlate(ctx: Ink, p: Place, scene: number, span: number) {
       for (let i = 0; i < 26; i++) {
         const x = (rnd() > .5 ? 1 : -1) * (35 + rnd() * span);
         const y = 14 + rnd() * 26;
-        tree(ctx, x, y, 22 + rnd() * 63, i + 157, 'bloom');
+        tree(far, x, y, 22 + rnd() * 63, i + 157, 'bloom');
       }
-      pavilion(ctx, p, 214, 132, 1.18);
-      pavilion(ctx, p, -222, 170, 1.43);
+      pavilion(middle, p, 214, 132, 1.18);
+      pavilion(near, p, -222, 170, 1.43);
       for (const side of [-1, 1]) {
         for (let i = 0; i < 6; i++) {
           const x = side * (185 + i * 49);
           const y = 96 + i * 31;
+          const ctx = i < 2 ? middle : near;
           lamp(ctx, p, x, y, 27 + i * 5, -side);
           if (i % 2 === 1) tree(ctx, x + side * 39, y + 12, 95 + i * 15, i + side * 217, 'bloom');
         }
       }
       for (const [x, y, s] of [[-104, 119, .78], [177, 218, 1.12], [65, 56, .37]]) {
+        const ctx = y < 60 ? far : y < 150 ? middle : near;
         oval(ctx, '#b1bdbe45', x, y + 3 * s, 34 * s, 5 * s);
         poly(ctx, '#d18a79', [x - 31 * s, y - 7 * s], [x + 33 * s, y - 7 * s], [x + 19 * s, y + 2 * s], [x - 20 * s, y + 2 * s]);
         poly(ctx, '#819d94', [x - 23 * s, y - 9 * s], [x - 6 * s, y - 21 * s], [x + 13 * s, y - 21 * s], [x + 25 * s, y - 9 * s]);
@@ -592,10 +604,11 @@ function sceneryPlate(ctx: Ink, p: Place, scene: number, span: number) {
     const x = side * (y * .72 + 30 + rnd() * span * (scene === 1 ? .8 : .95));
     if (Math.abs(x) > span + 9) continue;
     const g = 2 + rnd() * (y * .028 + 2);
+    const layer = y < 65 ? far : y < 125 ? middle : near;
     if (scene === 1 || scene === 5) {
-      line(ctx, '#b9ddd125', 1, [x - g, y], [x + g * 1.6, y]);
+      line(layer, '#b9ddd125', 1, [x - g, y], [x + g * 1.6, y]);
     } else {
-      line(ctx, i % 3 ? '#b0a38c29' : '#73948946', 1, [x - g * .6, y - g], [x, y], [x + g * .3, y - g * .8]);
+      line(layer, i % 3 ? '#b0a38c29' : '#73948946', 1, [x - g * .6, y - g], [x, y], [x + g * .3, y - g * .8]);
     }
   }
 }
@@ -705,7 +718,23 @@ function overheadPlate(ctx: Ink, p: Place, scene: number, w: number, h: number) 
   }
 }
 
-export function createScenery(host: HTMLElement): { draw(scene: number, progress: number, staff?: boolean): void; resize(): void; dispose(): void } {
+// Fraction of each layer's initial camera distance covered over one station leg.
+const depthTravel = [.065, .23, .41] as const;
+
+export function sceneryScale(progress: number, layer: 0 | 1 | 2): number {
+  return 1 / (1 - progress * depthTravel[layer]);
+}
+
+export function landscapeProgress(stops: readonly { scene: number; at: number }[], stop: number, beat: number, end: number): number {
+  const scene = stops[stop].scene;
+  let first = stop, next = stop + 1;
+  while (first > 0 && stops[first - 1].scene === scene) first--;
+  while (stops[next]?.scene === scene) next++;
+  const from = stops[first].at;
+  return Math.max(0, Math.min(1, (beat - from) / Math.max(.001, (stops[next]?.at ?? end) - from)));
+}
+
+export function createScenery(host: HTMLElement) {
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
   Object.assign(canvas.style, { display: 'block', position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none' });
@@ -713,28 +742,34 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
   const ctx = canvas.getContext('2d', { alpha: false });
   const plate = document.createElement('canvas');
   const ink = plate.getContext('2d', { alpha: false });
+  const layers = depthTravel.map(() => document.createElement('canvas'));
+  const [far, middle, near] = layers.map(layer => layer.getContext('2d'));
   const reduced = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null;
   let width = 0;
   let height = 0;
   let activeScene = 0;
-  let activeProgress = 0;
+  let activeProgress = 0, activeLandscape = 0;
   let plateScene = -1;
-  let paintedProgress = Number.NaN;
+  let paintedProgress = Number.NaN, paintedLandscape = Number.NaN;
   let activeStaff = false, paintedStaff = false;
   let disposed = false;
 
-  function draw(scene: number, progress: number, staff = activeStaff) {
+  function draw(scene: number, progress: number, staff: boolean, landscape = progress) {
     activeStaff = staff;
     const index = Number.isFinite(scene) ? Math.trunc(scene) : 0;
     activeScene = (index % places.length + places.length) % places.length;
     activeProgress = Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
-    const travel = staff || reduced?.matches ? 0 : activeProgress;
-    if (disposed || !ctx || !ink || !width || !height || (plateScene === activeScene && paintedProgress === travel && paintedStaff === staff)) return;
+    activeLandscape = Number.isFinite(landscape) ? Math.min(1, Math.max(0, landscape)) : 0;
+    const still = staff || reduced?.matches;
+    const travel = still ? 0 : activeProgress;
+    const perspective = still ? 0 : activeLandscape;
+    if (disposed || !ctx || !ink || !far || !middle || !near || !width || !height) return;
+    if (plateScene === activeScene && paintedProgress === travel && paintedLandscape === perspective && paintedStaff === staff) return;
     const place = places[activeScene];
     if (staff) {
       ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
       overheadPlate(ctx, place, activeScene, width, height);
-      plateScene = activeScene; paintedProgress = travel; paintedStaff = true;
+      plateScene = activeScene; paintedProgress = travel; paintedLandscape = perspective; paintedStaff = true;
       return;
     }
     const span = Math.min(740, Math.max(300, width / height * 337));
@@ -745,14 +780,25 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
     if (paintedStaff || plateScene !== activeScene) {
       ink.setTransform(xScale, 0, 0, yScale, xCenter, horizon);
       sceneryPlate(ink, place, activeScene, span + 15);
+      for (const layer of [far, middle, near]) {
+        const { width: w, height: h } = layer.canvas;
+        layer.setTransform(1, 0, 0, 1, 0, 0);
+        layer.clearRect(0, 0, w, h);
+        layer.setTransform(w / (span * 2), 0, 0, h / 800, w / 2, h * .37);
+      }
+      landmarks([far, middle, near], place, activeScene, span + 15);
       plateScene = activeScene;
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.drawImage(plate, 0, 0);
+    for (const layer of [0, 1, 2] as const) {
+      const scale = sceneryScale(perspective, layer);
+      ctx.drawImage(layers[layer], xCenter * (1 - scale), horizon * (1 - scale), canvas.width * scale, canvas.height * scale);
+    }
     ctx.setTransform(xScale, 0, 0, yScale, xCenter, horizon);
     rails(ctx, place, activeScene, travel, span);
     atmosphere(ctx, activeScene, travel, span);
-    paintedProgress = travel; paintedStaff = staff;
+    paintedProgress = travel; paintedLandscape = perspective; paintedStaff = staff;
   }
 
   function resize() {
@@ -768,8 +814,14 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
     height = h;
     canvas.width = plate.width = pixelsWide;
     canvas.height = plate.height = pixelsHigh;
+    // Keep the three translucent plates within a separate, bounded texture budget.
+    const raster = Math.min(1, Math.sqrt(1_200_000 / (pixelsWide * pixelsHigh)));
+    for (const layer of layers) {
+      layer.width = Math.max(1, Math.round(pixelsWide * raster));
+      layer.height = Math.max(1, Math.round(pixelsHigh * raster));
+    }
     plateScene = -1;
-    draw(activeScene, activeProgress);
+    draw(activeScene, activeProgress, activeStaff, activeLandscape);
   }
 
   resize();
@@ -777,5 +829,6 @@ export function createScenery(host: HTMLElement): { draw(scene: number, progress
     disposed = true;
     canvas.remove();
     canvas.width = canvas.height = plate.width = plate.height = 0;
+    for (const layer of layers) layer.width = layer.height = 0;
   } };
 }
