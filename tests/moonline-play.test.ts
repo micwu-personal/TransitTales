@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { encodeMidi, decodeMidi } from '../src/moonline/midi';
-import { cuePosition, instrumentPitches, matchingNote, pianoBank, pitchBank, previewTarget } from '../src/moonline/play';
+import { cuePosition, matchingNote } from '../src/moonline/play';
 import { routes } from '../src/moonline/repertoire';
 
 const n = (pitch: number, beat: number) => ({ pitch, beat, length: .4, velocity: 90 });
@@ -12,18 +12,6 @@ describe('Moonline approach and performance', () => {
     expect(cuePosition(0, 400, 200, 70, 600)).toEqual({x: 70, y: 600, depth: 1});
     expect(cuePosition(-.05, 400, 200, 570, 600)).toEqual({x: 570, y: 600, depth: 1});
   });
-  it('previews a pitch outside the current bank before making it playable', () => {
-    const chart = [n(60, 0), n(84, 1), n(88, 1)];
-    const bank = pianoBank(chart, 0, 2, 7);
-    expect(bank).not.toContain(84);
-    const anchors = new Map(bank.map((pitch, i) => [pitch, {x: 40 + i * 10}]));
-    const preview = previewTarget(84, anchors, 20, 210, 600);
-    expect(preview.x).toBeGreaterThan(anchors.get(bank.at(-1)!)!.x);
-    const approaching = cuePosition(1.25, 110, 200, preview.x, preview.y);
-    expect(approaching.y).toBe(400);
-    expect(pianoBank(chart, 0, 2, 7, 1)).toEqual(expect.arrayContaining([60, 84, 88]));
-    expect(pitchBank(chart, 0, 2, 1, 1)).toEqual([60, 84, 88]);
-  });
   it('requires the correct pitch and matches repeated notes one at a time', () => {
     const chart = [n(60, 0), n(60, .5), n(64, .5), n(60, 1)];
     expect(matchingNote(chart, new Set(), 60, .51, .5)).toBe(1);
@@ -31,11 +19,7 @@ describe('Moonline approach and performance', () => {
     expect(matchingNote(chart, new Set([1]), 64, .51, .5)).toBe(2);
     expect(matchingNote(chart, new Set(), 67, .51, .5)).toBe(-1);
   });
-  it('keeps narrow charts fixed and prioritizes upcoming notes in wide charts', () => {
-    const chart = Array.from({length: 40}, (_, i) => n(i, i));
-    expect(instrumentPitches(chart.slice(0, 6), 20, 2, 8)).toEqual([0, 1, 2, 3, 4, 5]);
-    expect(pitchBank(chart, 10, 2, 8)).toEqual([10, 11, 12, 13, 14, 15, 16, 17]);
-  });
+
 });
 
 describe('Moonline classical charts', () => {

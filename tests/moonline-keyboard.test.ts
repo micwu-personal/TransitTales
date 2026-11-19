@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { compactCodes, cuePosition, instrumentPitches, pianoBank, pianoKeys, pianoPitches } from '../src/moonline/play';
+import { cuePosition, instrumentPitches, pianoKeys, pianoPitches } from '../src/moonline/play';
 
 const note = (pitch: number, beat: number) => ({pitch, beat, length: 1, velocity: .8});
 
 describe('Moonline cab keyboards', () => {
   it('keeps only chart pitches in compact mode', () => {
-    expect(instrumentPitches([note(61, 0), note(67, 1), note(61, 2)], 0, 4, compactCodes.length)).toEqual([61, 67]);
+    expect(instrumentPitches([note(61, 0), note(67, 1), note(61, 2)], false)).toEqual([61, 67]);
   });
 
   it('builds a complete piano register centered between the correct white keys', () => {
@@ -22,14 +22,14 @@ describe('Moonline cab keyboards', () => {
     }
   });
 
-  it('slides the chromatic window for wide parts without splitting the next chord', () => {
-    const chart = [note(58, 0), note(60, 0), note(83, 4), note(88, 4), note(94, 5)];
-    expect(pianoBank(chart, 0, 8, 8)).toContain(58);
-    expect(pianoBank(chart, 0, 8, 8)).not.toContain(83);
-    expect(pianoBank(chart, 1, 8, 8)).toEqual(expect.arrayContaining([83, 84, 85, 86, 87, 88]));
-    expect(pianoBank([note(60, 0), note(84, .25)], 0, 2, 7, .3)).toEqual(expect.arrayContaining([60, 84]));
-    expect(pianoBank([note(40, 0), note(76, 0)], 0, 4, 7)).toEqual(expect.arrayContaining([40, 76]));
-    expect(Math.max(...pianoBank([note(127, 0)], 0, 4, 7))).toBe(127);
-    expect(Math.min(...pianoBank([note(0, 0)], 0, 4, 7))).toBe(0);
+  it('includes the entire part up front, even across distant register jumps', () => {
+    const chart = [note(58, 0), note(60, 0), note(83, 80), note(88, 80), note(94, 120)];
+    expect(instrumentPitches(chart, false)).toEqual([58, 60, 83, 88, 94]);
+    const piano = pianoKeys(instrumentPitches(chart, true));
+    expect(piano.map(key => key.pitch)).toEqual(Array.from({length: 39}, (_, i) => 57 + i));
+    const shortcuts = piano.flatMap(({code}) => code ? [code] : []);
+    expect(new Set(shortcuts).size).toBe(shortcuts.length);
+    expect(Math.max(...instrumentPitches([note(127, 0)], true))).toBe(127);
+    expect(Math.min(...instrumentPitches([note(0, 0)], true))).toBe(0);
   });
 });

@@ -119,7 +119,7 @@ describe('Moonline scores and MIDI', () => {
 class Parameter {
   value = 0;
   setValueAtTime() {}
-  exponentialRampToValueAtTime() {}
+  exponentialRampToValueAtTime = vi.fn<(value: number, at: number) => void>();
 }
 
 class Source {
@@ -146,7 +146,11 @@ class TestContext extends EventTarget {
   resume = vi.fn(async () => { this.state = 'running'; });
   constructor() { super(); TestContext.last = this; }
   getOutputTimestamp() { return this.stamp; }
-  createGain() { return { gain: new Parameter(), connect() {}, disconnect() {} }; }
+  gains: Parameter[] = [];
+  createGain() {
+    const gain = new Parameter(); this.gains.push(gain);
+    return { gain, connect() {}, disconnect() {} };
+  }
   createOscillator() { const osc = new Source(); this.sources.push(osc); return osc; }
   createBufferSource() { return this.createOscillator(); }
   createBiquadFilter() { return { frequency: new Parameter(), connect() {}, disconnect() {} }; }
@@ -186,6 +190,35 @@ describe('Moonline transport', () => {
     expect(audio.running).toBe(false);
     expect(audio.beat).toBe(4);
     expect(vi.getTimerCount()).toBe(0);
+    audio.stop();
+  });
+
+  it('changes only the scheduled player part gain, never backing or tap gain', async () => {
+    const { audio, context } = await setup();
+    const peaks = (part: number, guide: number) => {
+      context.gains.length = 0;
+      audio.start(song, part, 0, 0, 1, guide);
+      audio.tap('piano', 60);
+      return context.gains.map(gain => gain.exponentialRampToValueAtTime.mock.calls[0][0]);
+    };
+    const [full, bass, tap] = peaks(-1, 0);
+    expect(peaks(0, 0)).toEqual([bass, tap]);
+    expect(peaks(0, .25)).toEqual([full * .25, bass, tap]);
+    audio.stop();
+  });
+
+  it('resumes at the same beat and schedules slower onsets on the shared clock', async () => {
+    const { audio, context } = await setup();
+    const from = 1, rate = .7;
+    const chart = { ...song, tracks: [{ name: 'Bass', role: 'bass' as const, notes: [1, 2].map(beat => ({pitch: 36, beat, length: .2, velocity: 90})) }] };
+    audio.start(chart, -1, from, 0, rate);
+    expect(audio.beat).toBe(from);
+    const first = context.sources[0].start.mock.calls[0][0];
+    context.currentTime = first + .6;
+    vi.advanceTimersByTime(25);
+    expect(context.sources[1].start.mock.calls[0][0] - first).toBeCloseTo(.5 / rate);
+    context.currentTime = context.sources[1].start.mock.calls[0][0];
+    expect(audio.beat).toBeCloseTo(2);
     audio.stop();
   });
 

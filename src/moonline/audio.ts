@@ -63,8 +63,8 @@ export class JourneyAudio {
     }
   }
 
-  /** Omitted track is by index; -1 plays every track. The pre-roll begins at fromBeat - countIn. */
-  start(song: Song, omittedTrack: number, fromBeat = 0, countIn = 0, speed = 1): void {
+  /** The player part is silent by default; -1 plays the full ensemble. */
+  start(song: Song, playerTrack: number, fromBeat = 0, countIn = 0, speed = 1, guideVolume = 0): void {
     this.stop();
     const end = Number.isFinite(song.beats) ? Math.max(0, song.beats) : 0;
     const from = Number.isFinite(fromBeat) ? Math.max(0, Math.min(end, fromBeat)) : 0;
@@ -82,7 +82,8 @@ export class JourneyAudio {
       cues.push({ role: 'piano', pitch: tick === 0 ? 84 : 79, beat, length: Math.min(from - beat, 0.075 / beatSeconds), level: 0.055, click: true });
     }
     song.tracks.forEach((track, index) => {
-      if (index === omittedTrack) return;
+      const volume = index === playerTrack ? Math.max(0, Math.min(1, guideVolume)) : 1;
+      if (!(volume > 0)) return;
       for (const note of track.notes) {
         const beat = Math.max(from, note.beat);
         const finish = Math.min(end, note.beat + note.length);
@@ -90,7 +91,7 @@ export class JourneyAudio {
           || !Number.isFinite(note.pitch) || note.pitch < 0 || note.pitch > 127
           || !Number.isFinite(note.velocity) || note.velocity <= 0
           || (track.role === 'drums' && note.beat < from)) continue;
-        cues.push({ role: track.role, pitch: note.pitch, beat, length: finish - beat, level: Math.min(1, note.velocity / 127) });
+        cues.push({ role: track.role, pitch: note.pitch, beat, length: finish - beat, level: volume * Math.min(1, note.velocity / 127) });
       }
     });
     cues.sort((a, b) => a.beat - b.beat);
