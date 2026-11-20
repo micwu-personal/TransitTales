@@ -35,7 +35,7 @@ let anchors = new Map<number, {x: number; y: number}>();
 let cabLeft = 0, cabWidth = 0, strikeY = 0;
 let notation: ReturnType<typeof notate> = [], releaseBounds: number[] = [];
 let pulses = new Map<number, ReturnType<typeof setTimeout>>();
-let width = 1, height = 1, pixelRatio = 0, resizeFrame = 0;
+let width = 1, height = 1, pixelRatio = 0, resizeFrame = 0, layoutDirty = false;
 const layoutPreference = 'moonline-keyboard';
 let keyboardStyle: 'piano' | 'compact' = 'piano';
 const cuePreference = 'moonline-cues';
@@ -58,7 +58,13 @@ const title = (s: Song) => zh ? routes.find(r => r.song.id === s.id)?.titleZh ??
 
 game.innerHTML = `
   <div class="moon-scene" aria-hidden="true"></div><canvas class="moon-cues" aria-hidden="true"></canvas>
-  <header class="moon-top"><a class="moon-home" href="index.html" aria-label="${tr('Back to Transit Tales', '返回旅途故事')}">‹ <span>${tr('Transit Tales', '旅途故事')}</span></a><div class="moon-tools"><button id="moon-studio">${tr('✎ Studio', '✎ 创作室')}</button><a class="moon-lang" href="?lang=${zh ? 'en' : 'zh'}" lang="${zh ? 'en' : 'zh-CN'}">${zh ? 'English' : '简体中文'}</a></div></header>
+  <header class="moon-top">
+    <a class="moon-home" href="index.html" aria-label="${tr('Back to Transit Tales', '返回旅途故事')}">‹ <span>${tr('Transit Tales', '旅途故事')}</span></a>
+    <div class="moon-tools">
+      <button id="moon-pause" hidden>${tr('Pause', '暂停')}</button><button id="moon-reset" hidden>${tr('End ride', '结束行程')}</button>
+      <button id="moon-studio">${tr('✎ Studio', '✎ 创作室')}</button><a class="moon-lang" href="?lang=${zh ? 'en' : 'zh'}" lang="${zh ? 'en' : 'zh-CN'}">${zh ? 'English' : '简体中文'}</a>
+    </div>
+  </header>
   <div class="moon-title"><h1>${tr('Moonline', '月光列车')}</h1><p>${tr('Follow the notes to the next station.', '循着音符，驶向下一站。')}</p></div>
   <section class="moon-ticket" aria-labelledby="moon-ticket-title">
     <h2 id="moon-ticket-title">${tr('Departure ticket', '发车车票')}</h2>
@@ -94,7 +100,7 @@ game.innerHTML = `
   <aside class="moon-station"><span class="moon-signal" aria-hidden="true"></span><div><h2 id="moon-station-name"></h2><p id="moon-story"></p></div></aside>
   <div class="moon-caption" aria-hidden="true"></div>
   <section class="moon-console" aria-label="${tr('Cab instrument', '驾驶室乐器')}">
-    <div class="moon-rail"><ol class="moon-stops" aria-label="${tr('Stations', '沿途车站')}"></ol><div class="moon-transport"><button id="moon-pause" hidden></button><button id="moon-reset" hidden>${tr('End ride', '结束行程')}</button></div></div>
+    <div class="moon-rail"><ol class="moon-stops" aria-label="${tr('Stations', '沿途车站')}"></ol></div>
     <div class="moon-instrument" role="group" aria-label="${tr('Playable instrument', '演奏乐器')}"></div>
     <div class="moon-sill"><span class="moon-role"></span><span class="moon-hint"></span><span class="moon-count"></span></div>
   </section>
@@ -280,7 +286,7 @@ function statusView() {
   el('#moon-midi').hidden = paused || !route();
   el('#moon-ticket-title').textContent = paused ? tr('Train paused', '列车已暂停') : state === 'arrival' ? tr('End of the line', '列车到站') : tr('Departure ticket', '发车车票');
   startButton.firstChild!.textContent = paused ? tr('Resume ride ', '继续行程 ') : state === 'arrival' ? tr('Ride again ', '再坐一次 ') : tr('Depart ', '发车 ');
-  updateAnchors();
+  measureLayout();
 }
 function updateCount() { el('.moon-count').textContent = demo ? tr('Listening', '示范') : `${played.size} / ${notes.length}`; }
 function end(next: 'station' | 'arrival' = 'station') {
@@ -305,7 +311,7 @@ function pause(message = tr('Train paused', '列车已暂停')) {
   audio.stop(); beat = audio.beat;
   cancelAnimationFrame(frame); frame = 0;
   state = 'pause'; statusView(); caption(''); draw(beat); announce(message);
-  if (!document.hidden) startButton.focus();
+  if (!document.hidden) startButton.focus({ preventScroll: true });
 }
 async function start(resume = false) {
   if (pendingStart) return;
@@ -318,7 +324,7 @@ async function start(resume = false) {
     const from = resume ? Math.max(0, Math.min(song.beats, beat)) : 0;
     audio.start(song, demo ? -1 : track, from, resume ? Math.max(0, -beat) : Math.max(3, Math.ceil(approachSeconds / secondsPerBeat())), speed / 100, guideVolume / 100);
     state = 'play'; statusView(); updateCount(); caption('');
-    pauseButton.focus();
+    pauseButton.focus({ preventScroll: true });
     frame = requestAnimationFrame(tick);
   } catch {
     if (revision === request) {
@@ -423,10 +429,12 @@ function tick() {
   if (!audio.running || document.hidden) { pause(); return; }
   if (beat < 0) caption(String(Math.max(1, Math.ceil(-beat))));
   else if (textUntil ? performance.now() > textUntil : /^\d$/.test(el('.moon-caption').textContent ?? '')) caption('');
+  if (layoutDirty) measureLayout();
   draw(beat);
   frame = requestAnimationFrame(tick);
 }
-function resize() {
+function measureLayout() {
+  layoutDirty = false;
   const rect = canvas.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
   if (rect.width < 1 || rect.height < 1) return;
   if (rect.width !== width || rect.height !== height || dpr !== pixelRatio) {
@@ -436,12 +444,17 @@ function resize() {
     scenery.resize();
   }
   updateAnchors();
-  draw(state === 'play' ? audio.beat : beat);
 }
 
 function queueResize() {
-  if (resizeFrame) return;
-  resizeFrame = requestAnimationFrame(() => { resizeFrame = 0; resize(); });
+  layoutDirty = true;
+  // During a ride, update the canvas and key anchors in the same frame as the cues.
+  if (state === 'play' || resizeFrame) return;
+  resizeFrame = requestAnimationFrame(() => {
+    resizeFrame = 0;
+    if (state === 'play' || !layoutDirty) return;
+    measureLayout(); draw(beat);
+  });
 }
 
 function launchStudio(edit?: Song) {
@@ -452,7 +465,7 @@ function launchStudio(edit?: Song) {
   const close = () => {
     const cleanup = cleanupStudio; cleanupStudio = undefined; cleanup?.();
     studio.hidden = true; siblings.forEach(item => item.classList.remove('moon-behind'));
-    revision++; audio.stop(); resize(); studioButton.focus();
+    revision++; audio.stop(); measureLayout(); draw(beat); studioButton.focus();
   };
   cleanupStudio = openStudio(studio, edit, {zh, audition, close, save: saved => {
     const result = saveToLibrary(library, saved); if (!result) return false;
@@ -511,10 +524,9 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('pagehide', () => { if (state === 'play') pause(); else audio.stop(); });
 window.addEventListener('resize', queueResize);
-window.visualViewport?.addEventListener('resize', queueResize);
-reduceMotion.addEventListener('change', () => draw(beat));
+reduceMotion.addEventListener('change', queueResize);
 if (typeof ResizeObserver === 'function') {
   const observer = new ResizeObserver(queueResize);
   observer.observe(game); observer.observe(el('.moon-console')); observer.observe(instrument);
 }
-setSwitches(); chooseSong(song.id); resize();
+setSwitches(); chooseSong(song.id);

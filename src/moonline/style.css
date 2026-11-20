@@ -2,6 +2,9 @@
 *{box-sizing:border-box}
 body{margin:0}
 #moonline{position:relative;isolation:isolate;width:100%;height:100vh;height:100dvh;overflow:hidden;background:#281d3b;--ink:#261931;--peach:#ffc79c;--mint:#ccf4c5;--side:max(20px,env(safe-area-inset-left),env(safe-area-inset-right));--floor:max(12px,env(safe-area-inset-bottom));--keys:clamp(78px,17vh,154px)}
+/* Keep the cab independent of Safari’s expanding and collapsing browser chrome. */
+#moonline:is([data-state=play],[data-state=pause]){height:100vh;height:100svh;overflow:clip}
+:root:has(#moonline:is([data-state=play],[data-state=pause])){overflow:hidden;overscroll-behavior:none}
 #moonline [hidden],#moonline .moon-behind{display:none!important}
 #moonline button{font:inherit;border:1px solid #a9859a;border-radius:6px;min-height:44px}
 #moonline button{cursor:pointer}
@@ -13,8 +16,15 @@ body{margin:0}
 .moon-cues{z-index:2}
 .moon-top{position:absolute;top:max(12px,env(safe-area-inset-top));left:var(--side);right:var(--side);display:flex;align-items:center;justify-content:space-between;z-index:5}
 .moon-top a,.moon-top button{display:inline-flex;align-items:center;gap:.45rem;padding:0 .72rem;height:44px;color:#fff4e6;background:#301f40;border:1px solid #a9859a;border-radius:6px;text-decoration:none;font-weight:700;font-size:.83rem}
-.moon-top .moon-home{background:#2d1f3b;border-color:#84677d}
+.moon-top .moon-home{background:#2d1f3b;border-color:#84677d;justify-content:center;min-width:44px}
 .moon-tools{display:flex;align-items:center;gap:8px}
+#moonline .moon-tools button{font-size:.83rem;font-weight:700}
+.moon-top :is(a,button){white-space:nowrap}
+@media (max-width:420px){
+  .moon-tools{gap:5px}
+  .moon-top a,.moon-top button{padding-inline:.58rem}
+  #moonline[data-state=play] .moon-home span{display:none}
+}
 .moon-title{position:absolute;top:clamp(64px,11vh,116px);left:var(--side);z-index:1;text-shadow:0 3px 14px #1b122d;pointer-events:none}
 .moon-title h1{font-family:Georgia,'Songti SC',SimSun,serif;font-size:clamp(3.25rem,8vw,6rem);font-weight:400;letter-spacing:-.04em;line-height:.93;margin:0;color:#fff3d9}
 .moon-title p{margin:.78rem 0 0;color:#fff0df;font-size:clamp(.9rem,2vw,1.17rem);font-weight:650}
@@ -80,8 +90,6 @@ body{margin:0}
 .moon-stops li::before{content:'';display:block;width:9px;height:9px;margin:2px auto 4px;border:2px solid #e9b69f;background:#3c2947;transform:rotate(45deg)}
 .moon-stops li[aria-current],.moon-stops .moon-past{color:#f3ffd9}
 .moon-stops li[aria-current]::before,.moon-stops .moon-past::before{background:#c5f5c4;border-color:#c5f5c4}
-.moon-transport{display:flex;gap:6px}
-.moon-transport button{color:#fff1db;background:#35213e;padding:0 8px;font-size:.78rem!important;font-weight:700}
 .moon-instrument{position:relative;display:flex;height:var(--keys);border-top:2px solid #e9ab84;touch-action:none;user-select:none;-webkit-user-select:none;background:#291a33;isolation:isolate}
 #moonline .moon-key{padding:0 1px 5px;display:flex;flex-direction:column;align-items:center;justify-content:end;gap:2px;line-height:1.05;font-size:clamp(.67rem,1.7vw,1rem);font-weight:800;min-width:0;touch-action:none;overflow:hidden}
 .moon-key kbd{font:650 .63rem/1 system-ui,sans-serif;opacity:.78}
@@ -111,7 +119,7 @@ body{margin:0}
 #moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-caption{inset:auto var(--side) var(--floor) auto;transform:none;width:max-content;max-width:42%;text-align:right;font-size:clamp(.9rem,2vw,1.35rem)}
 @media (max-height:469px){#moonline[data-cues=staff]:is([data-state=play],[data-state=pause]) .moon-station p{display:none}}
 #moonline[data-cues=staff][data-state=pause] .moon-ticket{--ticket-top:calc(var(--staff-strike, 200px) + 8px);max-height:calc(100% - var(--ticket-top) - var(--floor))}
-@media (hover:hover){.moon-top a:hover,.moon-top button:hover,.moon-transport button:hover{background:#4d355b}.moon-ticket button:hover{filter:brightness(1.12)}.moon-key:hover{filter:brightness(1.12)}}
+@media (hover:hover){.moon-top a:hover,.moon-top button:hover{background:#4d355b}.moon-ticket button:hover{filter:brightness(1.12)}.moon-key:hover{filter:brightness(1.12)}}
 @media (max-width:650px) and (orientation:portrait){
   #moonline{--side:max(12px,env(safe-area-inset-left),env(safe-area-inset-right));--keys:clamp(78px,16vh,126px)}
   .moon-title{top:max(63px,calc(env(safe-area-inset-top) + 55px))}.moon-title h1{font-size:clamp(2.45rem,11vw,3.95rem)}.moon-title p{margin-top:.48rem}
@@ -119,7 +127,6 @@ body{margin:0}
   .moon-ticket h2{font-size:1.14rem;margin-bottom:6px}.moon-credit{margin-top:4px}.moon-options{margin-top:6px}
   .moon-station{max-width:calc(100% - 2 * var(--side));bottom:calc(var(--keys) + var(--floor) + 89px);padding:6px 8px 7px}.moon-station p{max-width:42ch}
   .moon-console{padding:0 4px}.moon-stops{font-size:.58rem;padding:0}.moon-rail{gap:5px;padding-inline:0}.moon-key kbd{display:none}
-  .moon-transport{gap:4px}.moon-transport button{padding:0 5px;font-size:.68rem!important}
 }
 @media (max-height:680px) and (orientation:portrait){#moonline[data-state=station] .moon-station,#moonline[data-state=arrival] .moon-station{display:none}.moon-ticket{--ticket-top:133px}}
 @media (max-height:560px) and (orientation:landscape){
