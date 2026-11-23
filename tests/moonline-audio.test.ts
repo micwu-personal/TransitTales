@@ -193,6 +193,20 @@ describe('Moonline transport', () => {
     audio.stop();
   });
 
+  it('schedules the backing on the cue clock at 10% after a short fractional count-in', async () => {
+    const { audio, context } = await setup();
+    audio.start(song, 0, 0, .5, .1);
+    expect(audio.beat).toBe(-.5);
+    expect(context.sources).toHaveLength(1);
+    context.currentTime = 12.45;
+    vi.advanceTimersByTime(25);
+    expect(context.sources).toHaveLength(2);
+    expect(context.sources[1].start).toHaveBeenCalledWith(12.55);
+    context.currentTime = 17.55;
+    expect(audio.beat).toBeCloseTo(1);
+    audio.stop();
+  });
+
   it('changes only the scheduled player part gain, never backing or tap gain', async () => {
     const { audio, context } = await setup();
     const peaks = (part: number, guide: number) => {

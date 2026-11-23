@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { encodeMidi, decodeMidi } from '../src/moonline/midi';
-import { cuePosition, matchingNote } from '../src/moonline/play';
+import { approachingPitches, countInBeats, cuePosition, matchingNote } from '../src/moonline/play';
 import { routes } from '../src/moonline/repertoire';
 
 const n = (pitch: number, beat: number) => ({ pitch, beat, length: .4, velocity: 90 });
@@ -11,6 +11,20 @@ describe('Moonline approach and performance', () => {
     expect(cuePosition(2.5, 400, 200, 70, 600)).toEqual({x: 400, y: 200, depth: 0});
     expect(cuePosition(0, 400, 200, 70, 600)).toEqual({x: 70, y: 600, depth: 1});
     expect(cuePosition(-.05, 400, 200, 570, 600)).toEqual({x: 570, y: 600, depth: 1});
+  });
+  it('shows one guide per approaching pitch and drops early hits, past notes and distant cues', () => {
+    const chart = [n(50, -.1), n(53, 0), n(54, .25), n(54, .4), n(55, .5), n(57, .6)];
+    expect([...approachingPitches(chart, new Set(), 0, 5)]).toEqual([54, 55]);
+    expect([...approachingPitches(chart, new Set([2, 3]), 0, 5)]).toEqual([55]);
+    expect([...approachingPitches(chart, new Set(), .6, 5)]).toEqual([]);
+  });
+  it('keeps a full preview without a long count-in at 10% speed', () => {
+    expect(countInBeats(.5)).toBe(5);
+    for (const secondsPerBeat of [.375 * 10, .5 * 10, 1 * 10]) {
+      const duration = countInBeats(secondsPerBeat) * secondsPerBeat;
+      expect(duration).toBeGreaterThanOrEqual(2.5);
+      expect(duration).toBeLessThanOrEqual(4);
+    }
   });
   it('requires the correct pitch and matches repeated notes one at a time', () => {
     const chart = [n(60, 0), n(60, .5), n(64, .5), n(60, 1)];

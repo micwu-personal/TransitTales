@@ -1,7 +1,7 @@
 import './style.css';
 import { JourneyAudio } from './audio';
 import { loadLibrary, saveToLibrary } from './library';
-import { approachSeconds, compactCodes, cuePosition, hitWindow, instrumentPitches, lowerBound, matchingNote, pianoKeys } from './play';
+import { approachingPitches, approachSeconds, compactCodes, countInBeats, cuePosition, hitWindow, instrumentPitches, lowerBound, matchingNote, pianoKeys } from './play';
 import { decodeMidi } from './midi';
 import { routes as arrangements } from './repertoire';
 import { createScenery, landscapeProgress } from './scenery';
@@ -39,10 +39,13 @@ let width = 1, height = 1, pixelRatio = 0, resizeFrame = 0, layoutDirty = false;
 const layoutPreference = 'moonline-keyboard';
 let keyboardStyle: 'piano' | 'compact' = 'piano';
 const cuePreference = 'moonline-cues';
+const sceneryPreference = 'moonline-moving-scenery';
+let movingScenery = false;
 let cueStyle: 'flight' | 'staff' = 'flight', staffCenter = 71;
 try {
   if (localStorage.getItem(layoutPreference) === 'compact') keyboardStyle = 'compact';
   if (localStorage.getItem(cuePreference) === 'staff') cueStyle = 'staff';
+  movingScenery = localStorage.getItem(sceneryPreference) === 'on';
 } catch { /* optional preferences */ }
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const route = () => routes.find(r => r.song.id === song.id);
@@ -82,10 +85,11 @@ game.innerHTML = `
         <div class="moon-checks">
           <label><input id="moon-demo" type="checkbox">${tr('Listen first', '先听示范')}</label>
           <label><input id="moon-slow" type="checkbox">${tr('Slow practice', '慢速练习')}</label>
+          <label><input id="moon-scenery-motion" type="checkbox">${tr('Moving scenery', '沿途景色移动')}</label>
         </div>
         <div class="moon-faders">
           <div class="moon-fader"><label for="moon-guide">${tr('Guide volume', '示范音量')}</label><span id="moon-guide-value" aria-hidden="true"></span><input id="moon-guide" type="range" min="0" max="100" value="0"></div>
-          <div class="moon-fader"><label for="moon-speed">${tr('Speed', '播放速度')}</label><span id="moon-speed-value" aria-hidden="true"></span><input id="moon-speed" type="range" min="40" max="100" value="100"></div>
+          <div class="moon-fader"><label for="moon-speed">${tr('Speed', '播放速度')}</label><span id="moon-speed-value" aria-hidden="true"></span><input id="moon-speed" type="range" min="10" max="100" value="100"></div>
         </div>
         <div class="moon-presets" role="group" aria-label="${tr('Speed presets', '速度预设')}"><button id="moon-normal" type="button">${tr('Normal · 100%', '原速 · 100%')}</button><button id="moon-practice" type="button">${tr('Practice · 70%', '练习 · 70%')}</button></div>
       </div>
@@ -116,11 +120,13 @@ let pickerTrigger: HTMLButtonElement | undefined;
 const stage = el('.moon-scene'), scenery = createScenery(stage);
 const canvas = el<HTMLCanvasElement>('.moon-cues'), ctx = canvas.getContext('2d');
 const instrument = el('.moon-instrument'), ticket = el('.moon-ticket'), studio = el('.moon-studio');
+const trip = el('.moon-stops'), captionText = el('.moon-caption');
+let tripPercent = -1;
 const startButton = el<HTMLButtonElement>('#moon-start'), pauseButton = el<HTMLButtonElement>('#moon-pause'), resetButton = el<HTMLButtonElement>('#moon-reset');
 const studioButton = el<HTMLButtonElement>('#moon-studio');
 function announce(message: string) { el('#moon-status').textContent = message; }
 function caption(message: string, duration = 0) {
-  el('.moon-caption').textContent = message;
+  if (captionText.textContent !== message) captionText.textContent = message;
   textUntil = duration ? performance.now() + duration : 0;
 }
 const secondsPerBeat = () => 60 / song.bpm / (speed / 100);
@@ -164,6 +170,9 @@ function setSwitches() {
   });
   el<HTMLInputElement>('#moon-demo').checked = demo;
   el<HTMLInputElement>('#moon-slow').checked = speed < 100;
+  const motion = el<HTMLInputElement>('#moon-scenery-motion');
+  motion.checked = movingScenery;
+  motion.disabled = cueStyle === 'staff' || reduceMotion.matches;
   const guide = el<HTMLInputElement>('#moon-guide');
   guide.disabled = demo;
   const updateFader = (input: HTMLInputElement, value: number, label: string) => {
@@ -322,7 +331,7 @@ async function start(resume = false) {
     if (request !== revision || document.hidden) return;
     if (!resume) { played.clear(); streak = 0; beat = 0; }
     const from = resume ? Math.max(0, Math.min(song.beats, beat)) : 0;
-    audio.start(song, demo ? -1 : track, from, resume ? Math.max(0, -beat) : Math.max(3, Math.ceil(approachSeconds / secondsPerBeat())), speed / 100, guideVolume / 100);
+    audio.start(song, demo ? -1 : track, from, resume ? Math.max(0, -beat) : countInBeats(secondsPerBeat()), speed / 100, guideVolume / 100);
     state = 'play'; statusView(); updateCount(); caption('');
     pauseButton.focus({ preventScroll: true });
     frame = requestAnimationFrame(tick);
@@ -361,7 +370,7 @@ function playPitch(pitch: number) {
   audition(role(), pitch, duration); pulse(pitch);
 }
 
-function draw(at: number) {
+function draw(at: number, now?: number) {
   const stops = sections();
   const stop = stops.reduce((index, s, i) => at >= s.at ? i : index, 0);
   const from = stops[stop].at, to = stops[stop + 1]?.at ?? song.beats;
@@ -369,8 +378,10 @@ function draw(at: number) {
   const staff = cueStyle === 'staff';
   const active = state === 'play' || state === 'pause';
   stationDisplay(stop);
-  scenery.draw(stops[stop].scene, progress, active && staff, landscapeProgress(stops, stop, at, song.beats));
-  el('.moon-stops').style.setProperty('--trip', `${Math.max(0, Math.min(1, at / song.beats)) * 100}%`);
+  scenery.draw(stops[stop].scene, progress, active && staff,
+    movingScenery && !staff ? landscapeProgress(stops, stop, at, song.beats) : 0, movingScenery, now);
+  const percent = Math.round(Math.max(0, Math.min(1, at / song.beats)) * 1000) / 10;
+  if (percent !== tripPercent) { trip.style.setProperty('--trip', `${percent}%`); tripPercent = percent; }
   if (!ctx) return;
   ctx.clearRect(0, 0, width, height);
   if (!active) return;
@@ -382,7 +393,22 @@ function draw(at: number) {
     }
   }
   const horizon = {x: width / 2, y: Math.min(height * .37, strikeY * .65)};
-  const meter = scoreMeter(song.id);
+  if (!staff && onPiano()) {
+    const paths = approachingPitches(notes, played, at, spb);
+    if (paths.size) {
+      ctx.beginPath();
+      for (const pitch of paths) {
+        const key = anchors.get(pitch);
+        if (!key) continue;
+        ctx.moveTo(horizon.x, horizon.y); ctx.lineTo(key.x, key.y);
+      }
+      const glow = ctx.createLinearGradient(0, horizon.y, 0, Math.max(horizon.y + 1, strikeY));
+      glow.addColorStop(0, '#b2ebd600'); glow.addColorStop(.25, '#b2ebd638'); glow.addColorStop(1, '#b2ebd68c');
+      ctx.strokeStyle = '#b2ebd61c'; ctx.lineWidth = 5; ctx.stroke();
+      ctx.strokeStyle = glow; ctx.lineWidth = 1; ctx.stroke();
+    }
+  }
+  const meter = staff ? scoreMeter(song.id) : undefined;
   const score = staff ? createStaff({x: cabLeft + cabWidth / 2, y: Math.max(strikeY + 1, height - (height < 470 ? 48 : 70))},
     strikeY, Math.max(1, cabWidth), staffCenter, anchors, Boolean(meter?.flats), role() !== 'drums') : null;
   const staffSize = Math.max(3.5, Math.min(8, cabWidth / 65, (height - strikeY) / 25));
@@ -419,7 +445,7 @@ function draw(at: number) {
   }
   ctx.globalAlpha = 1;
 }
-function tick() {
+function tick(now: number) {
   if (state !== 'play') return;
   beat = audio.beat;
   if (beat >= song.beats) {
@@ -428,9 +454,9 @@ function tick() {
   }
   if (!audio.running || document.hidden) { pause(); return; }
   if (beat < 0) caption(String(Math.max(1, Math.ceil(-beat))));
-  else if (textUntil ? performance.now() > textUntil : /^\d$/.test(el('.moon-caption').textContent ?? '')) caption('');
+  else if (textUntil ? now > textUntil : /^\d+$/.test(captionText.textContent ?? '')) caption('');
   if (layoutDirty) measureLayout();
-  draw(beat);
+  draw(beat, now);
   frame = requestAnimationFrame(tick);
 }
 function measureLayout() {
@@ -492,7 +518,17 @@ game.querySelectorAll<HTMLButtonElement>('button[data-cues]').forEach(button => 
   };
 });
 el<HTMLInputElement>('#moon-demo').onchange = event => { demo = (event.currentTarget as HTMLInputElement).checked; setSwitches(); updateCount(); };
-function setSpeed(value: number) { speed = value; setSwitches(); draw(beat); }
+el<HTMLInputElement>('#moon-scenery-motion').onchange = event => {
+  movingScenery = (event.currentTarget as HTMLInputElement).checked;
+  try { localStorage.setItem(sceneryPreference, movingScenery ? 'on' : 'off'); } catch { /* optional preference */ }
+  draw(beat);
+};
+function setSpeed(value: number) {
+  const previous = speed;
+  speed = value;
+  if (state === 'pause' && beat < 0) beat *= speed / previous; // preserve the seconds left before departure
+  setSwitches(); draw(beat);
+}
 el<HTMLInputElement>('#moon-slow').onchange = event => setSpeed((event.currentTarget as HTMLInputElement).checked ? practiceSpeed : 100);
 el<HTMLInputElement>('#moon-speed').oninput = event => setSpeed((event.currentTarget as HTMLInputElement).valueAsNumber);
 el<HTMLInputElement>('#moon-guide').oninput = event => { guideVolume = (event.currentTarget as HTMLInputElement).valueAsNumber; setSwitches(); };
@@ -524,7 +560,7 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('pagehide', () => { if (state === 'play') pause(); else audio.stop(); });
 window.addEventListener('resize', queueResize);
-reduceMotion.addEventListener('change', queueResize);
+reduceMotion.addEventListener('change', () => { setSwitches(); queueResize(); });
 if (typeof ResizeObserver === 'function') {
   const observer = new ResizeObserver(queueResize);
   observer.observe(game); observer.observe(el('.moon-console')); observer.observe(instrument);

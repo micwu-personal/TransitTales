@@ -48,6 +48,22 @@ export function cuePosition(secondsUntilHit: number, fromX: number, fromY: numbe
   return { x: fromX + (toX - fromX) * depth, y: fromY + (toY - fromY) * depth, depth };
 }
 
+export function countInBeats(secondsPerBeat: number) {
+  const approach = approachSeconds / secondsPerBeat;
+  const musical = Math.max(3, Math.ceil(approach));
+  return musical * secondsPerBeat <= 4 ? musical : Math.max(approach, Math.floor(4 / secondsPerBeat));
+}
+
+export function approachingPitches(notes: Note[], played: ReadonlySet<number>, beat: number, secondsPerBeat: number) {
+  const pitches = new Set<number>();
+  for (let i = lowerBound(notes, beat, note => note.beat); i < notes.length; i++) {
+    const dt = (notes[i].beat - beat) * secondsPerBeat;
+    if (dt > approachSeconds) break;
+    if (dt > 0 && !played.has(i)) pitches.add(notes[i].pitch);
+  }
+  return pitches;
+}
+
 export function instrumentPitches(notes: Note[], piano: boolean) {
   const all = [...new Set(notes.map(n => n.pitch))].sort((a, b) => a - b);
   if (!piano || !all.length) return all;

@@ -77,8 +77,9 @@ export class JourneyAudio {
     if (!context || !isRunning(context)) throw new Error('Audio must be unlocked before playback');
     const cues: Cue[] = [];
 
-    for (let tick = 0; tick < count; tick++) {
-      const beat = first + tick;
+    const clicks = count < 1 ? Math.ceil(count) : Math.floor(count);
+    for (let tick = 0; tick < clicks; tick++) {
+      const beat = from - Math.min(count, clicks) + tick;
       cues.push({ role: 'piano', pitch: tick === 0 ? 84 : 79, beat, length: Math.min(from - beat, 0.075 / beatSeconds), level: 0.055, click: true });
     }
     song.tracks.forEach((track, index) => {

@@ -738,8 +738,12 @@ export function createScenery(host: HTMLElement) {
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
   Object.assign(canvas.style, { display: 'block', position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none' });
-  host.appendChild(canvas);
+  const railway = canvas.cloneNode() as HTMLCanvasElement;
+  railway.style.top = '33%';
+  railway.style.height = '67%';
+  host.append(canvas, railway);
   const ctx = canvas.getContext('2d', { alpha: false });
+  const track = railway.getContext('2d');
   const plate = document.createElement('canvas');
   const ink = plate.getContext('2d', { alpha: false });
   const layers = depthTravel.map(() => document.createElement('canvas'));
@@ -751,20 +755,29 @@ export function createScenery(host: HTMLElement) {
   let activeProgress = 0, activeLandscape = 0;
   let plateScene = -1;
   let paintedProgress = Number.NaN, paintedLandscape = Number.NaN;
-  let activeStaff = false, paintedStaff = false;
+  let landscapeFrame = -1, railwayFrame = -1;
+  let activeStaff = false, paintedStaff = false, activeMotion = false;
   let disposed = false;
 
-  function draw(scene: number, progress: number, staff: boolean, landscape = progress) {
+  function draw(scene: number, progress: number, staff: boolean, landscape = progress, motion = false, now?: number) {
     activeStaff = staff;
+    activeMotion = motion;
     const index = Number.isFinite(scene) ? Math.trunc(scene) : 0;
     activeScene = (index % places.length + places.length) % places.length;
     activeProgress = Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
     activeLandscape = Number.isFinite(landscape) ? Math.min(1, Math.max(0, landscape)) : 0;
     const still = staff || reduced?.matches;
     const travel = still ? 0 : activeProgress;
-    const perspective = still ? 0 : activeLandscape;
-    if (disposed || !ctx || !ink || !far || !middle || !near || !width || !height) return;
-    if (plateScene === activeScene && paintedProgress === travel && paintedLandscape === perspective && paintedStaff === staff) return;
+    const perspective = still || !motion ? 0 : activeLandscape;
+    if (disposed || !ctx || !track || !ink || !far || !middle || !near || !width || !height) return;
+    const fresh = plateScene !== activeScene || paintedStaff !== staff;
+    // Decoration has its own frame budgets; the caller still draws note cues on every RAF.
+    const landscapeSlot = now === undefined ? -1 : Math.floor(now * .015);
+    const railwaySlot = now === undefined ? -1 : Math.floor(now * .03);
+    const paintLandscape = fresh || (perspective !== paintedLandscape && (now === undefined || landscapeSlot !== landscapeFrame));
+    const paintRailway = fresh || (travel !== paintedProgress && (now === undefined || railwaySlot !== railwayFrame));
+    if (!paintLandscape && !paintRailway) return;
+    if (fresh) railway.style.display = staff ? 'none' : 'block';
     const place = places[activeScene];
     if (staff) {
       ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
@@ -789,16 +802,25 @@ export function createScenery(host: HTMLElement) {
       landmarks([far, middle, near], place, activeScene, span + 15);
       plateScene = activeScene;
     }
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.drawImage(plate, 0, 0);
-    for (const layer of [0, 1, 2] as const) {
-      const scale = sceneryScale(perspective, layer);
-      ctx.drawImage(layers[layer], xCenter * (1 - scale), horizon * (1 - scale), canvas.width * scale, canvas.height * scale);
+    if (paintLandscape) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.drawImage(plate, 0, 0);
+      for (const layer of [0, 1, 2] as const) {
+        const scale = sceneryScale(perspective, layer);
+        ctx.drawImage(layers[layer], xCenter * (1 - scale), horizon * (1 - scale), canvas.width * scale, canvas.height * scale);
+      }
+      paintedLandscape = perspective; landscapeFrame = landscapeSlot;
     }
-    ctx.setTransform(xScale, 0, 0, yScale, xCenter, horizon);
-    rails(ctx, place, activeScene, travel, span);
-    atmosphere(ctx, activeScene, travel, span);
-    paintedProgress = travel; paintedLandscape = perspective; paintedStaff = staff;
+    if (paintRailway) {
+      const fullHeight = railway.height / .67;
+      track.setTransform(1, 0, 0, 1, 0, 0);
+      track.clearRect(0, 0, railway.width, railway.height);
+      track.setTransform(railway.width / (span * 2), 0, 0, fullHeight / 800, railway.width / 2, fullHeight * (.37 - .33));
+      rails(track, place, activeScene, travel, span);
+      atmosphere(track, activeScene, travel, span);
+      paintedProgress = travel; railwayFrame = railwaySlot;
+    }
+    paintedStaff = staff;
   }
 
   function resize() {
@@ -814,6 +836,9 @@ export function createScenery(host: HTMLElement) {
     height = h;
     canvas.width = plate.width = pixelsWide;
     canvas.height = plate.height = pixelsHigh;
+    const railDensity = Math.min(density, 1, Math.sqrt(700_000 / (w * h * .67)));
+    railway.width = Math.max(1, Math.round(w * railDensity));
+    railway.height = Math.max(1, Math.round(h * .67 * railDensity));
     // Keep the three translucent plates within a separate, bounded texture budget.
     const raster = Math.min(1, Math.sqrt(1_200_000 / (pixelsWide * pixelsHigh)));
     for (const layer of layers) {
@@ -821,14 +846,14 @@ export function createScenery(host: HTMLElement) {
       layer.height = Math.max(1, Math.round(pixelsHigh * raster));
     }
     plateScene = -1;
-    draw(activeScene, activeProgress, activeStaff, activeLandscape);
+    draw(activeScene, activeProgress, activeStaff, activeLandscape, activeMotion);
   }
 
   resize();
   return { draw, resize, dispose() {
     disposed = true;
-    canvas.remove();
-    canvas.width = canvas.height = plate.width = plate.height = 0;
+    canvas.remove(); railway.remove();
+    canvas.width = canvas.height = plate.width = plate.height = railway.width = railway.height = 0;
     for (const layer of layers) layer.width = layer.height = 0;
   } };
 }
