@@ -20,6 +20,8 @@ const meters: Record<string, Meter> = {
   'ode-to-joy': {bar: 4}, 'ode-to-joy-melody': {bar: 4}, 'ah-vous-dirai-je-maman': {bar: 2},
   'minuet-in-g': {bar: 3}, 'gymnopedie-no-1': {bar: 3}, 'in-the-hall-of-the-mountain-king': {bar: 4},
   'schubert-serenade': {bar: 3, flats: true}, 'chopin-nocturne-op-9-no-2': {bar: 6, first: .5, flats: true},
+  'fur-elise': {bar: 1.5, first: .5}, 'mozart-k545-allegro': {bar: 4}, 'bach-air-bwv1068': {bar: 4},
+  'brahms-waltz-op39-no15': {bar: 3, flats: true}, 'blue-danube-theme': {bar: 3, first: 1},
 };
 export const scoreMeter = (id: string): Meter | undefined => meters[id];
 

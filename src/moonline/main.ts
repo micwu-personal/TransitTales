@@ -2,8 +2,8 @@ import './style.css';
 import { JourneyAudio } from './audio';
 import { loadLibrary, saveToLibrary } from './library';
 import { approachingPitches, approachSeconds, compactCodes, countInBeats, cuePosition, hitWindow, instrumentPitches, lowerBound, matchingNote, pianoKeys } from './play';
-import { decodeMidi } from './midi';
-import { routes as arrangements } from './repertoire';
+import { midiClip } from './bundled-midi';
+import { routes } from './repertoire';
 import { createScenery, landscapeProgress } from './scenery';
 import { createStaff, drawDuration, drawStaff, drawStaffNote, durationDepths, notate, scoreMeter } from './staff';
 import { pitchName, type Note, type Role, type Song } from './score';
@@ -16,11 +16,6 @@ const tr = (en: string, cn: string) => zh ? cn : en;
 const local = (pair: [string, string]) => pair[zh ? 1 : 0];
 document.documentElement.lang = zh ? 'zh-CN' : 'en';
 document.title = `${tr('Moonline', '月光列车')} · Transit Tales`;
-const clips = import.meta.glob<string>('./scores/*.mid', { eager: true, query: '?inline', import: 'default' });
-const midiClip = (id: string) => clips[`./scores/${id}.mid`];
-const routes = arrangements.map(({song, ...rest}) => ({...rest, song: decodeMidi(
-  Uint8Array.from(atob(midiClip(song.id).split(',')[1]), char => char.charCodeAt(0)), song.id, song.title,
-)}));
 const audio = new JourneyAudio();
 let library = loadLibrary();
 let song = routes[0].song;

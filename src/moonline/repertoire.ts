@@ -4,6 +4,8 @@ import { odeMelody } from './ode-melody';
 import { classicalMiniatures } from './classical-miniatures';
 import { jasmineRoute } from './jasmine';
 import { textbookClassics } from './textbook-classics';
+import { bundledSong } from './bundled-midi';
+import { concertClassics } from './concert-classics';
 
 type Bilingual = [string, string];
 export type Route = {
@@ -14,7 +16,7 @@ export type Route = {
   sections: { at: number; scene: number; title: Bilingual; story: Bilingual }[];
 };
 
-export const routes: Route[] = [
+export const scoreArrangements: Route[] = [
   {
     song: ode,
     titleZh: '欢乐颂',
@@ -63,4 +65,9 @@ export const routes: Route[] = [
   ...classicalMiniatures,
   jasmineRoute,
   ...textbookClassics,
+];
+
+export const routes: Route[] = [
+  ...scoreArrangements.map(({song, ...route}) => ({...route, song: bundledSong(song.id, song.title)})),
+  ...concertClassics,
 ];

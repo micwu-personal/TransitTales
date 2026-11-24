@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { encodeMidi, decodeMidi } from '../src/moonline/midi';
 import { approachingPitches, countInBeats, cuePosition, matchingNote } from '../src/moonline/play';
-import { routes } from '../src/moonline/repertoire';
+import { routes, scoreArrangements } from '../src/moonline/repertoire';
+import { scoreMeter } from '../src/moonline/staff';
 
 const n = (pitch: number, beat: number) => ({ pitch, beat, length: .4, velocity: 90 });
 
@@ -124,6 +125,36 @@ describe('Moonline classical charts', () => {
     expect(attacks(melody, 24, 30)).toEqual([]);
   });
 
+  it.each([
+    ['fur-elise', [517, 388], 1.5, .5, 'Stelios Samelis', 'public domain'],
+    ['mozart-k545-allegro', [610, 678], 4, 0, 'Alejandro Sierra', 'https://creativecommons.org/licenses/by-sa/3.0/'],
+    ['bach-air-bwv1068', [149, 105, 112, 150], 4, 0, 'Jeff Covey', 'https://creativecommons.org/licenses/by-sa/3.0/'],
+    ['brahms-waltz-op39-no15', [187, 238, 295], 3, 0, 'Brian D. Rude', 'public domain'],
+    ['blue-danube-theme', [96, 119, 32], 3, 1, 'Nikos Kouremenos', 'https://creativecommons.org/licenses/by-sa/4.0/'],
+  ] as const)('%s keeps the edition’s note count, staff meter and embedded credits', (id, counts, bar, first, credit, license) => {
+    const score = bundledScore(id);
+    const bytes = readFileSync(new URL(`../src/moonline/scores/${id}.mid`, import.meta.url));
+    expect(score.tracks.map(track => track.notes.length)).toEqual(counts);
+    expect([scoreMeter(id)?.bar, scoreMeter(id)?.first ?? 0]).toEqual([bar, first]);
+    expect(bytes.includes(credit)).toBe(true);
+    expect(bytes.includes(license)).toBe(true);
+  });
+
+  it('preserves written backing entrances, bass motion, and split waltz chords', () => {
+    const [elise, mozart, air, brahms, strauss] = [
+      'fur-elise', 'mozart-k545-allegro', 'bach-air-bwv1068', 'brahms-waltz-op39-no15', 'blue-danube-theme',
+    ].map(bundledScore);
+    expect(attacks(elise.tracks[0], 0, .5)).toEqual([[0, 76, .25], [.25, 75, .25]]);
+    expect(attacks(elise.tracks[1], 0, 2.5)).toEqual([[2, 45, .25], [2.25, 52, .25]]);
+    expect(attacks(mozart.tracks[1], 0, 2)).toEqual([[0, 60, .5], [.5, 67, .5], [1, 64, .5], [1.5, 67, .5]]);
+    expect(air.tracks.map(track => track.notes[0].pitch)).toEqual([78, 74, 69, 50]);
+    expect(attacks(air.tracks[3], 0, 2)).toEqual([[0, 50, .5], [.5, 62, .5], [1, 61, .5], [1.5, 49, .5]]);
+    expect(attacks(brahms.tracks[0], 0, 1.5)).toEqual([[0, 72, 1.5]]);
+    expect(attacks(brahms.tracks[1], 0, 1.5)).toEqual([[0, 63, 1.5]]);
+    expect(attacks(strauss.tracks[2], 0, 7)).toEqual([[4, 48, 1]]);
+    expect(attacks(strauss.tracks[1], 4, 7)).toEqual([[5, 52, 1], [5, 55, 1], [6, 52, 1], [6, 55, 1]]);
+  });
+
   it('keeps Chopin’s pickup, within-bar bass motion, and download attribution', () => {
     const id = 'chopin-nocturne-op-9-no-2';
     const { tracks: [melody, chords, bass] } = bundledScore(id);
@@ -135,10 +166,13 @@ describe('Moonline classical charts', () => {
     expect(bytes.includes('https://creativecommons.org/licenses/by-sa/3.0/')).toBe(true);
   });
 
-  it.each(routes)('round-trips the $song.title chart through Standard MIDI', ({song, sections, partNames}) => {
-    const bytes = encodeMidi(song);
-    const bundled = readFileSync(new URL(`../src/moonline/scores/${song.id}.mid`, import.meta.url));
-    expect(Buffer.compare(bundled, bytes)).toBe(0);
+  it.each(routes)('loads the $song.title chart from Standard MIDI', ({song, sections, partNames}) => {
+    const bytes = readFileSync(new URL(`../src/moonline/scores/${song.id}.mid`, import.meta.url));
+    const arrangement = scoreArrangements.find(route => route.song.id === song.id);
+    if (arrangement) {
+      expect(Buffer.compare(bytes, encodeMidi(arrangement.song))).toBe(0);
+      expect(song.tracks).toEqual(arrangement.song.tracks);
+    }
     expect([...bytes.slice(0, 4)]).toEqual([77, 84, 104, 100]);
     const imported = decodeMidi(bytes, song.id, song.title);
     expect(imported.beats).toBeCloseTo(song.beats, 2);
