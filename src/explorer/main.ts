@@ -1,0 +1,500 @@
+import { catalogCreditsUrl, constellations, destinations, loadCatalog, solarSystem, type SkyObject, type Vec } from './catalog';
+import { add, angles, apparentMagnitude, approachRange, camera, clamp, constellationTour, DEG, direction, easeAngle, length, lerp, LY, scale, smooth, spaceFrame, sub, unit, wrap } from './camera';
+import { createDeviceMotionController, type DeviceMotionState } from '../universe/device-motion';
+import { deck } from './deck';
+import { en, zh } from './locale';
+import { Sky } from './sky';
+import './style.css';
+
+const LAT = 19.82, LON = -155.47;
+type Destination = (typeof destinations)[number];
+type Shape = (typeof constellations)[number];
+type Pose = { position: Vec; yaw: number; pitch: number; zoom: number };
+type Trip = { destination: Destination; from: Vec; to: Pose; total: number; elapsed: number; duration: number };
+type Tour = { shape: Shape; members: Set<string>; center: Vec; radial: Vec; lookFromEarth: Vec; span: number; depth: number; origin: Pose; elapsed: number; playing: boolean };
+type Panel = 'travel' | 'shapes' | 'settings' | 'credits';
+const panels: Panel[] = ['travel', 'shapes', 'settings', 'credits'];
+const root = document.querySelector<HTMLElement>('#explorer')!;
+const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+const query = new URLSearchParams(location.search);
+let locale: 'en' | 'zh' = query.get('lang') === 'zh' || (!query.has('lang') && /^zh/i.test(navigator.language)) ? 'zh' : 'en';
+let t = locale === 'zh' ? zh : en;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const date = new Date();
+date.setUTCHours(8, 0, 0, 0); // 22:00 HST at the default observing site.
+let solar = solarSystem(date, LAT, LON);
+let catalog: SkyObject[] = [], byId = new Map<string, SkyObject>();
+let place = destinations[0], destinationId = destinations.find(d => d.id === 'hip-70890')?.id ?? destinations[1].id;
+let shapeId = constellations.find(c => c.id.toLowerCase() === 'ori')?.id ?? constellations[0]?.id;
+let view: Pose = { position: solar.observer, yaw: 102 * DEG, pitch: 22 * DEG, zoom: 1 };
+let desired = { yaw: view.yaw, pitch: view.pitch, zoom: 1 };
+let panel: Panel | undefined, trip: Trip | undefined, tour: Tour | undefined;
+let sky: Sky | undefined, skyCanvas: HTMLCanvasElement;
+let faint = 6.25, drawLines = false, focus = 0;
+let notice: keyof typeof en | undefined, picked: SkyObject | undefined;
+let motionState: DeviceMotionState | undefined;
+let frameRequest = 0, lastFrame = 0, lastStatus: string | undefined;
+const keys = new Set<string>();
+const arrows: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
+const ground = () => place.id === 'earth' && !trip && !tour;
+const frame = () => ground() ? solar : spaceFrame;
+const label = (object: { name: string; zh?: string }) => (locale === 'zh' && object.zh) || object.name;
+const selectedShape = () => constellations.find(c => c.id === shapeId);
+const selectedDestination = () => destinations.find(d => d.id === destinationId) ?? destinations[0];
+const group = (destination: Destination) => {
+  const pc = length(destination.position);
+  return pc < .01 ? 'local' : pc < 25 ? 'stars' : pc < 50_000 ? 'milky' : 'farther';
+};
+const number = (value: number, digits = 1) => value.toLocaleString(locale === 'zh' ? 'zh-CN' : 'en', { maximumFractionDigits: digits });
+function distance(pc: number) {
+  if (pc < .001) return `${number(pc * 206264.806, 2)} AU`;
+  return `${number(pc * LY)} ${locale === 'zh' ? '光年' : 'ly'}`;
+}
+const motion = createDeviceMotionController(state => {
+  motionState = state;
+  if (lastStatus !== state.status) updateMotion();
+  invalidate();
+});
+
+function updateMotion() {
+  const status = motionState?.status;
+  lastStatus = status;
+  const on = status === 'active' || status === 'requesting' || status === 'waiting';
+  $('motion').setAttribute('aria-pressed', String(on));
+  $('recenter').hidden = status !== 'active';
+  $('motion-mode').hidden = status !== 'active' || ground();
+  $('motion-mode').textContent = motionState?.mode === 'inspect' ? t.move : t.look;
+  const message = $('motion-status');
+  message.hidden = !status || ['idle', 'paused', 'disposed'].includes(status);
+  message.textContent = status === 'active' ? t.tiltReady : on ? t.tiltWaiting : t.tiltError;
+}
+
+function announce(key?: keyof typeof en) {
+  notice = key;
+  $('notice').hidden = !key;
+  $('notice-message').textContent = key ? t[key] : '';
+  $('retry').hidden = key !== 'failed';
+}
+
+function updateDate() {
+  $('date').setAttribute('value', date.toISOString().slice(0, 10));
+  const minutes = date.getUTCHours() * 60 + date.getUTCMinutes();
+  $('hour-value').textContent = date.toISOString().slice(11, 16);
+  $<HTMLInputElement>('date').value = date.toISOString().slice(0, 10);
+  $<HTMLInputElement>('hour').value = String(minutes);
+  $<HTMLInputElement>('hour').setAttribute('aria-valuetext', `${date.toISOString().slice(11, 16)} UTC`);
+}
+
+function setDate(value: Date) {
+  if (!Number.isFinite(+value)) return;
+  date.setTime(+value);
+  solar = solarSystem(date, LAT, LON);
+  if (ground()) view.position = solar.observer;
+  else if (!trip && !tour) {
+    const target = solar.objects.find(object => object.id === place.id);
+    if (target) setPose(park(place));
+  }
+  $('under').hidden = true;
+  $('body-below').hidden = true;
+  updateDate(); refresh(); invalidate();
+}
+
+function updateVisibility() {
+  $<HTMLInputElement>('visibility').value = String(faint);
+  $('visibility-value').textContent = number(faint, 2);
+  for (const [id, value] of [['clear', 6.25], ['haze', 4.25], ['city', 2.75]] as const) $(id).setAttribute('aria-pressed', String(faint === value));
+}
+
+function fillSelects() {
+  const select = $<HTMLSelectElement>('destination');
+  select.textContent = '';
+  for (const name of ['local', 'stars', 'milky', 'farther'] as const) {
+    const bucket = document.createElement('optgroup');
+    bucket.label = t[name];
+    for (const d of destinations.filter(item => group(item) === name)) bucket.append(new Option(label(d), d.id));
+    if (bucket.children.length) select.append(bucket);
+  }
+  select.value = destinationId;
+  const shape = $<HTMLSelectElement>('shape');
+  shape.textContent = '';
+  for (const c of [...constellations].sort((a, b) => label(a).localeCompare(label(b), locale))) shape.append(new Option(label(c), c.id));
+  shape.value = shapeId;
+}
+
+function shapeGeometry(shape: Shape) {
+  const members = new Set(shape.lines.flat());
+  const stars = Array.from(members).map(id => byId.get(id)).filter((entry): entry is SkyObject => !!entry);
+  if (stars.length < 2) return;
+  const center = scale(stars.reduce<Vec>((a, star) => add(a, star.position), [0, 0, 0]), 1 / stars.length);
+  const lookFromEarth = scale(stars.reduce<Vec>((a, star) => add(a, unit(sub(star.position, solar.observer))), [0, 0, 0]), 1 / stars.length);
+  const span = Math.max(...stars.map(star => length(sub(star.position, center))));
+  const distances = stars.map(star => length(sub(star.position, solar.observer)));
+  return { members, center, radial: unit(sub(center, solar.observer)), lookFromEarth, span, depth: Math.max(...distances) - Math.min(...distances) };
+}
+
+function updateShape() {
+  const shape = selectedShape();
+  const geo = shape && shapeGeometry(shape);
+  $('depth').textContent = geo ? `${t.depth} · ${distance(geo.depth)}` : '';
+  for (const id of ['find', 'tour', 'toggle-lines']) $<HTMLButtonElement>(id).disabled = !geo;
+  $('toggle-lines').setAttribute('aria-pressed', String(drawLines));
+}
+
+function updateObject() {
+  const item = picked && (solar.objects.find(object => object.id === picked?.id) ?? picked);
+  $('object-reading').hidden = !item;
+  if (!item) return;
+  $('object-name').textContent = label(item);
+  const range = length(sub(item.position, view.position));
+  const apparent = item.absolute == null ? item.mag : apparentMagnitude(item.absolute, range);
+  $('object-details').textContent = `${distance(range)} · ${t.magnitude} ${number(apparent, 2)}${item.absolute == null ? '' : ` · ${t.absolute} ${number(item.absolute, 2)}`}`;
+}
+
+function refresh() {
+  $('place').textContent = tour ? label(tour.shape) : label(trip?.destination ?? place);
+  $('prompt').textContent = tour ? t.tourText : ground() ? t.earthPrompt : t.spacePrompt;
+  $('readout').textContent = tour ? `${t.depth} · ${distance(tour.depth)}` : trip ? `${t.flying} · ${distance(trip.total)}` : ground() ? `${t.site} / ${date.toISOString().slice(0, 16).replace('T', ' ')} UTC` : `${t.fromEarth} · ${distance(length(sub(view.position, solar.earth)))}`;
+  $('travel-progress').hidden = !trip;
+  $('open-travel').hidden = !!tour;
+  $('open-shapes').hidden = !ground();
+  $('leave-tour').hidden = !tour;
+  $('tour-play').hidden = !tour;
+  $('tour-play').textContent = tour?.playing ? t.pause : t.auto;
+  $('auto').hidden = !tour;
+  $('auto').textContent = tour?.playing ? t.pause : t.auto;
+  $('atmosphere').hidden = !ground();
+  $('find-bodies').hidden = !ground();
+  $('observing').hidden = !!tour || !!trip;
+  for (const id of ['advance', 'retreat']) $(id).hidden = ground() || !!trip;
+  $('disclaimer').textContent = group(trip?.destination ?? place) === 'farther' ? t.remote : t.observed;
+  root.dataset.mode = tour ? 'tour' : trip ? 'flight' : ground() ? 'earth' : 'space';
+  root.dataset.place = place.id;
+  updateMotion(); updateShape(); updateObject();
+}
+
+function openPanel(next?: Panel, focusPanel = true) {
+  const prev = panel;
+  panel = next;
+  for (const id of panels) {
+    $(id).hidden = id !== panel;
+    $(`open-${id}`).setAttribute('aria-expanded', String(id === panel));
+  }
+  if (!focusPanel) return;
+  if (next) $(next).querySelector<HTMLElement>('button')?.focus();
+  else if (prev && !$(`open-${prev}`).hidden) $(`open-${prev}`).focus();
+  else skyCanvas.focus({ preventScroll: true });
+}
+
+function physicalPosition(site: Destination): Vec {
+  return solar.objects.find(object => object.id === site.id)?.position ?? site.position;
+}
+
+function park(site: Destination): Pose {
+  if (site.id === 'earth') return { position: solar.observer, yaw: 102 * DEG, pitch: 22 * DEG, zoom: 1 };
+  const center = physicalPosition(site);
+  const body = solar.objects.find(object => object.id === site.id);
+  const size = (body?.radiusKm ?? 0) / 3.08567758149e13;
+  const sunward = unit(sub(solar.objects.find(object => object.id === 'sun')?.position ?? [0, 0, 0], center));
+  const side = unit(add(sunward, [.41, -.76, .37]));
+  const orbit = size ? approachRange(size, 13 * DEG) : site.kind === 'star' ? .000022 : site.kind === 'black-hole' ? .25 : Math.max(.01, length(center) * .003);
+  const position = add(center, scale(body && site.id !== 'sun' ? side : [.88, .43, .16], orbit));
+  return { position, ...angles(spaceFrame, sub(center, position)), zoom: 1 };
+}
+
+function setPose(pose: Pose) {
+  view = { ...pose };
+  desired = { yaw: pose.yaw, pitch: pose.pitch, zoom: pose.zoom };
+}
+
+function go(site: Destination, fly: boolean) {
+  const from = view.position;
+  const heading = direction(frame(), view.yaw, view.pitch);
+  openPanel(undefined, false); tour = undefined; focus = 0; picked = undefined; trip = undefined;
+  const to = park(site);
+  const range = length(sub(to.position, from));
+  if (fly && range > 1e-12 && !reduced.matches) {
+    setPose({ position: from, ...angles(spaceFrame, heading), zoom: view.zoom });
+    trip = { destination: site, from, to, total: range, elapsed: 0, duration: clamp(2400 + Math.log10(1 + range) * 700, 2400, 6500) };
+    $<HTMLProgressElement>('travel-progress').value = 0;
+  } else {
+    place = site; setPose(to);
+  }
+  motion.recenter(); refresh(); skyCanvas.focus({ preventScroll: true }); invalidate();
+}
+
+function findShape() {
+  const shape = selectedShape();
+  const geo = shape && shapeGeometry(shape);
+  if (!ground() || !geo) return;
+  const bearing = angles(solar, geo.lookFromEarth);
+  $('under').hidden = bearing.pitch > 0;
+  if (bearing.pitch <= 0) return;
+  drawLines = true;
+  desired = { ...bearing, zoom: 1 };
+  openPanel(); refresh(); invalidate();
+}
+
+function startTour() {
+  const shape = selectedShape();
+  const geo = shape && shapeGeometry(shape);
+  if (!ground() || !shape || !geo) return;
+  const origin = { ...view };
+  const heading = direction(solar, view.yaw, view.pitch);
+  setPose({ position: solar.observer, ...angles(spaceFrame, heading), zoom: view.zoom });
+  tour = { shape, ...geo, origin, elapsed: 0, playing: !reduced.matches };
+  if (reduced.matches) {
+    const position = constellationTour(geo.center, geo.radial, geo.span, 0);
+    setPose({ position, ...angles(spaceFrame, sub(geo.center, position)), zoom: 1 });
+    tour.elapsed = 2100; focus = 1;
+  }
+  openPanel(undefined, false); picked = undefined; motion.recenter(); refresh(); skyCanvas.focus({ preventScroll: true }); invalidate();
+}
+
+function finishTour() {
+  if (!tour) return;
+  setPose({ ...tour.origin, position: solar.observer });
+  tour = undefined; focus = 0; picked = undefined;
+  motion.setMode('look'); motion.recenter(); refresh(); $('open-shapes').focus(); invalidate();
+}
+
+function orbitToggle() {
+  if (!tour) return;
+  if (tour.elapsed >= 16100) tour.elapsed = 0;
+  tour.playing = !tour.playing;
+  refresh(); invalidate();
+}
+
+function takeControl() {
+  if (tour?.playing) { tour.playing = false; focus = 1; refresh(); }
+}
+
+function turn(dx: number, dy: number) {
+  takeControl();
+  desired.yaw = wrap(desired.yaw + dx);
+  desired.pitch = clamp(desired.pitch + dy, -89.4 * DEG, 89.4 * DEG);
+  invalidate();
+}
+
+function zoom(by: number) {
+  takeControl();
+  desired.zoom = clamp(desired.zoom * by, .72, 4.5);
+  invalidate();
+}
+
+function movement(by: number) {
+  if (ground() || trip) return;
+  takeControl();
+  const amount = tour ? tour.span * .1 : clamp(length(sub(view.position, physicalPosition(place))) * .18, .00000000001, 1e4);
+  view.position = add(view.position, scale(direction(spaceFrame, view.yaw, view.pitch), by * amount));
+  updateObject(); invalidate();
+}
+
+function reset() {
+  if (trip) return;
+  if (tour) {
+    takeControl();
+    const position = constellationTour(tour.center, tour.radial, tour.span, 0);
+    setPose({ position, ...angles(spaceFrame, sub(tour.center, position)), zoom: 1 });
+  } else {
+    setPose(park(place));
+  }
+  motion.recenter(); refresh(); invalidate();
+}
+
+function invalidate() {
+  if (!frameRequest && !document.hidden) frameRequest = requestAnimationFrame(render);
+}
+
+function render(time: number) {
+  frameRequest = 0;
+  if (document.hidden || !sky) { lastFrame = 0; return; }
+  const dt = Math.min(45, lastFrame ? time - lastFrame : 16);
+  lastFrame = time;
+  if (trip) {
+    trip.elapsed += dt;
+    const portion = clamp(trip.elapsed / trip.duration, 0, 1);
+    const target = physicalPosition(trip.destination);
+    const a = smooth(portion);
+    view.position = lerp(trip.from, trip.to.position, a);
+    const aiming = angles(spaceFrame, sub(target, view.position));
+    desired.yaw = aiming.yaw; desired.pitch = aiming.pitch;
+    $<HTMLProgressElement>('travel-progress').value = a;
+    if (portion >= 1) {
+      place = trip.destination; setPose(trip.to); trip = undefined; picked = undefined; refresh();
+    }
+  }
+  if (tour?.playing) {
+    tour.elapsed = Math.min(16100, tour.elapsed + dt);
+    const intro = smooth(clamp(tour.elapsed / 2100, 0, 1));
+    const orbit = clamp((tour.elapsed - 2100) / 14000, 0, 1);
+    const viewpoint = constellationTour(tour.center, tour.radial, tour.span, orbit);
+    view.position = lerp(solar.observer, viewpoint, intro);
+    const aim = angles(spaceFrame, lerp(unit(tour.lookFromEarth), unit(sub(tour.center, view.position)), intro));
+    desired.yaw = aim.yaw; desired.pitch = aim.pitch; desired.zoom = 1 + intro * .2;
+    focus = intro;
+    if (tour.elapsed >= 16100) { tour.playing = false; refresh(); }
+  }
+  for (const key of keys) {
+    const vector = arrows[key];
+    turn(vector[0] * dt * .00145, vector[1] * dt * .00145);
+  }
+  const ease = reduced.matches ? 1 : 1 - Math.exp(-dt / 65);
+  view.yaw = wrap(easeAngle(view.yaw, desired.yaw, ease));
+  view.pitch += (desired.pitch - view.pitch) * ease;
+  view.zoom += (desired.zoom - view.zoom) * ease;
+  let yaw = view.yaw, pitch = view.pitch, position = view.position;
+  if (motionState?.status === 'active') {
+    if (motionState.mode === 'inspect' && !ground() && !trip) {
+      const eye = camera(spaceFrame, yaw, pitch, 1, 1);
+      const offset = tour ? tour.span * .13 : length(sub(view.position, physicalPosition(place))) * .18;
+      position = add(position, add(scale(eye.right, motionState.inspection.x * offset), scale(eye.forward, motionState.inspection.z * offset)));
+    } else {
+      yaw += motionState.yaw; pitch = clamp(pitch - motionState.pitch, -89.4 * DEG, 89.4 * DEG);
+    }
+  }
+  const turnDeg = Math.round((yaw / DEG % 360 + 360) % 360) % 360;
+  $('compass').textContent = ground() ? `${String(turnDeg).padStart(3, '0')}°  /  ${Math.round(pitch / DEG)}°` : `${view.zoom.toFixed(1)}×`;
+  const sun = solar.objects.find(object => object.id === 'sun')?.position ?? [0, 0, 0];
+  const objectLayers = solar.objects.filter(object => !ground() || object.id !== 'earth');
+  sky.draw({ position, frame: frame(), yaw, pitch, zoom: view.zoom, ground: ground(), sun, faintLimit: ground() ? faint : 6.25, locale,
+    objects: objectLayers, skyObjects: catalog, edges: tour?.shape.lines ?? (ground() && drawLines ? earthEdges : []), members: tour?.members, focus,
+    target: trip?.destination.id ?? (ground() ? undefined : place.id) });
+  if (trip || tour?.playing || keys.size || Math.abs(wrap(desired.yaw - view.yaw)) + Math.abs(desired.pitch - view.pitch) + Math.abs(desired.zoom - view.zoom) > .0007) invalidate();
+  else if (!frameRequest) lastFrame = 0;
+}
+
+const earthEdges = constellations.flatMap(c => c.lines);
+
+function attach() {
+  skyCanvas = $<HTMLCanvasElement>('sky');
+  try { sky = new Sky(skyCanvas); } catch { sky = undefined; notice = 'missingCanvas'; }
+  fillSelects(); updateDate(); updateVisibility(); refresh(); announce(notice);
+  $('data-credits').innerHTML = `<a href="${catalogCreditsUrl}" target="_blank" rel="noopener">${t.details} ↗</a>`;
+  openPanel(panel, false);
+  const click = (id: string, call: () => void) => $(id).addEventListener('click', call);
+  for (const p of panels) {
+    click(`open-${p}`, () => openPanel(panel === p ? undefined : p));
+    $(p).querySelector('[data-close]')?.addEventListener('click', () => openPanel());
+  }
+  click('language', () => {
+    locale = locale === 'en' ? 'zh' : 'en'; t = locale === 'zh' ? zh : en;
+    const url = new URL(location.href); url.searchParams.set('lang', locale); history.replaceState(null, '', url);
+    mount(); $('language').focus();
+  });
+  click('fullscreen', () => {
+    try {
+      const request = document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen?.();
+      if (!request) announce('unsupported');
+      else void request.catch(() => announce('unsupported'));
+    } catch { announce('unsupported'); }
+  });
+  updateFullscreen();
+  click('retry', () => { void stars(); });
+  click('launch', () => go(selectedDestination(), true));
+  click('start', () => go(selectedDestination(), false));
+  $('destination').addEventListener('change', event => { destinationId = (event.target as HTMLSelectElement).value; });
+  $('shape').addEventListener('change', event => { shapeId = (event.target as HTMLSelectElement).value; $('under').hidden = true; updateShape(); });
+  click('toggle-lines', () => { drawLines = !drawLines; updateShape(); invalidate(); });
+  click('find', findShape); click('tour', startTour); click('leave-tour', finishTour); click('auto', orbitToggle); click('tour-play', orbitToggle);
+  click('up', () => turn(0, .145)); click('down', () => turn(0, -.145));
+  click('left', () => turn(-.18, 0)); click('right', () => turn(.18, 0)); click('reset', reset);
+  for (const id of ['zoom-in', 'nearer']) click(id, () => zoom(1.22));
+  for (const id of ['zoom-out', 'wider']) click(id, () => zoom(1 / 1.22));
+  click('advance', () => movement(1)); click('retreat', () => movement(-1));
+  for (const id of ['sun', 'moon']) click(`find-${id}`, () => {
+    const body = solar.objects.find(object => object.id === id);
+    if (!ground() || !body) return;
+    const aim = angles(solar, sub(body.position, solar.observer));
+    $('body-below').hidden = aim.pitch > 0;
+    if (aim.pitch <= 0) return;
+    desired = { ...aim, zoom: 1 };
+    openPanel(); invalidate();
+  });
+  click('now', () => setDate(new Date()));
+  click('noon', () => { const d = new Date(+date); d.setUTCHours(22, 0, 0, 0); setDate(d); });
+  click('midnight', () => { const d = new Date(+date); d.setUTCHours(10, 0, 0, 0); setDate(d); });
+  $('date').addEventListener('change', () => {
+    const input = $<HTMLInputElement>('date');
+    if (input.validity.valid && input.value) setDate(new Date(`${input.value}T${date.toISOString().slice(11, 16)}:00Z`));
+  });
+  $('hour').addEventListener('input', () => {
+    const d = new Date(+date);
+    d.setUTCHours(0, Number($<HTMLInputElement>('hour').value), 0, 0); setDate(d);
+  });
+  $('visibility').addEventListener('input', () => { faint = Number($<HTMLInputElement>('visibility').value); updateVisibility(); invalidate(); });
+  for (const [id, value] of [['clear', 6.25], ['haze', 4.25], ['city', 2.75]] as const) click(id, () => { faint = value; updateVisibility(); invalidate(); });
+  click('motion', () => {
+    if (motionState?.status === 'active' || motionState?.status === 'waiting' || motionState?.status === 'requesting') motion.stop();
+    else { takeControl(); void motion.enable(); }
+  });
+  click('recenter', () => motion.recenter());
+  click('motion-mode', () => { takeControl(); motion.setMode(motionState?.mode === 'inspect' ? 'look' : 'inspect'); motion.recenter(); updateMotion(); });
+  let pointer: { id: number; x: number; y: number; travel: number } | undefined;
+  skyCanvas.addEventListener('pointerdown', event => {
+    if (event.button !== 0 || pointer) return;
+    pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, travel: 0 };
+    skyCanvas.setPointerCapture(event.pointerId); skyCanvas.classList.add('drag');
+    if (panel) openPanel(undefined, false);
+  });
+  skyCanvas.addEventListener('pointermove', event => {
+    if (!pointer || pointer.id !== event.pointerId) return;
+    const dx = event.clientX - pointer.x, dy = event.clientY - pointer.y;
+    pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, travel: pointer.travel + Math.abs(dx) + Math.abs(dy) };
+    if (pointer.travel > 3) turn(-dx * .0035 / view.zoom, dy * .0035 / view.zoom);
+  });
+  skyCanvas.addEventListener('pointerup', event => {
+    if (!pointer || pointer.id !== event.pointerId || pointer.travel > 5) return;
+    const box = skyCanvas.getBoundingClientRect();
+    picked = sky?.pick(event.clientX - box.left, event.clientY - box.top); updateObject();
+  });
+  skyCanvas.addEventListener('lostpointercapture', () => { pointer = undefined; skyCanvas.classList.remove('drag'); });
+  skyCanvas.addEventListener('wheel', event => { if (event.ctrlKey) return; event.preventDefault(); zoom(event.deltaY > 0 ? .92 : 1.09); }, { passive: false });
+}
+
+function updateFullscreen() {
+  const text = document.fullscreenElement ? t.leaveFull : t.full;
+  $('fullscreen').setAttribute('aria-label', text); $('fullscreen').title = text;
+}
+
+function mount() {
+  root.innerHTML = deck(t);
+  document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
+  document.title = `${t.title} · Transit Tales`;
+  attach(); invalidate();
+}
+
+async function stars() {
+  announce('loading');
+  try {
+    catalog = await loadCatalog();
+    byId = new Map(catalog.map(entry => [entry.id, entry]));
+    if (notice === 'loading') announce();
+    updateShape(); invalidate();
+  } catch { announce('failed'); }
+}
+
+mount();
+if (sky) void stars();
+window.addEventListener('resize', invalidate);
+window.addEventListener('blur', () => keys.clear());
+document.addEventListener('fullscreenchange', () => { updateFullscreen(); invalidate(); });
+document.addEventListener('visibilitychange', () => {
+  keys.clear(); lastFrame = 0;
+  if (document.hidden && frameRequest) { cancelAnimationFrame(frameRequest); frameRequest = 0; }
+  else invalidate();
+});
+window.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    if (panel) openPanel();
+    else if (picked) { picked = undefined; updateObject(); }
+    return;
+  }
+  if (event.ctrlKey || event.altKey || event.metaKey || (event.target as HTMLElement | null)?.closest('input, select, textarea, button, a')) return;
+  if (Object.prototype.hasOwnProperty.call(arrows, event.key)) {
+    event.preventDefault(); keys.add(event.key); invalidate();
+  } else if (event.key === '+' || event.key === '=') zoom(1.18);
+  else if (event.key === '-') zoom(1 / 1.18);
+  else if (event.key.toLowerCase() === 'w') movement(1);
+  else if (event.key.toLowerCase() === 's') movement(-1);
+});
+window.addEventListener('keyup', event => keys.delete(event.key));

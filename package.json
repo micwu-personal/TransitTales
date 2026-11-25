@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babylonjs/core": "^8.26.0",
+    "astronomy-engine": "2.1.19",
     "vexflow": "^4.2.5"
   },
   "devDependencies": {

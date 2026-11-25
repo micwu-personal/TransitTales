@@ -32,6 +32,7 @@ export default defineConfig({
         melody: resolve(process.cwd(), 'melody.html'),
         moonline: resolve(process.cwd(), 'moonline.html'),
         universe: resolve(process.cwd(), 'universe.html'),
+        explorer: resolve(process.cwd(), 'explorer.html'),
         economic: resolve(process.cwd(), 'economic.html'),
         scale: resolve(process.cwd(), 'scale.html'),
       },
