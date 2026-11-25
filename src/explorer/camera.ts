@@ -15,6 +15,30 @@ export const smooth = (t: number) => t * t * (3 - 2 * t);
 export const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 export const easeAngle = (a: number, b: number, t: number) => a + wrap(b - a) * t;
 
+export type Pose = { position: Vec; yaw: number; pitch: number; zoom: number };
+export type TourShot = { pose: Pose; atmosphere: number; focus: number };
+
+export function blendPose(from: Pose, to: Pose, t: number): Pose {
+  return {
+    position: lerp(from.position, to.position, t),
+    yaw: easeAngle(from.yaw, to.yaw, t),
+    pitch: from.pitch + (to.pitch - from.pitch) * t,
+    zoom: from.zoom + (to.zoom - from.zoom) * t,
+  };
+}
+
+// First find the shape from Earth, then move into its depth. The same shot can run backwards.
+export function constellationPassage(origin: Pose, bearing: Pose, arrival: Pose, progress: number): TourShot {
+  const turn = smooth(clamp(progress / .38, 0, 1));
+  const travel = smooth(clamp((progress - .38) / .62, 0, 1));
+  const atmosphere = 1 - smooth(clamp((progress - (bearing.pitch < 0 ? .05 : .28)) / .47, 0, 1));
+  return {
+    pose: progress < .38 ? blendPose(origin, bearing, turn) : blendPose(bearing, arrival, travel),
+    atmosphere,
+    focus: smooth(clamp((progress - .19) / .72, 0, 1)),
+  };
+}
+
 export type Frame = { up: Vec; north: Vec; east: Vec };
 export const spaceFrame: Frame = { up: [0, 0, 1], north: [1, 0, 0], east: [0, -1, 0] };
 export function direction(frame: Frame, yaw: number, pitch: number): Vec {
@@ -43,9 +67,11 @@ export function approachRange(viewRadius: number, angle: number) {
 }
 
 // Orbit on the incoming side first, then travel inside the group's distance range.
-export function constellationTour(center: Vec, radial: Vec, span: number, t: number): Vec {
+export function constellationTour(center: Vec, radial: Vec, span: number, t: number, earthRange = length(center)): Vec {
   const side = unit(cross(Math.abs(radial[2]) > .92 ? [0, 1, 0] : [0, 0, 1], radial));
-  const angle = smooth(t) * 2.65;
-  const range = span * (1.65 - .98 * smooth(t));
+  const orbit = smooth(t);
+  const angle = orbit * 2.65;
+  // Start between Earth and the group, even when distant outliers make its span large.
+  const range = Math.min(span * 1.65, earthRange * .8) * (1 - orbit) + span * .67 * orbit;
   return add(center, add(scale(radial, -Math.cos(angle) * range), scale(side, Math.sin(angle) * range)));
 }

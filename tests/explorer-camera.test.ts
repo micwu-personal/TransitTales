@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { angles, apparentMagnitude, camera, constellationTour, DEG, direction, dot, length, spaceFrame, sub } from '../src/explorer/camera';
+import { angles, apparentMagnitude, camera, constellationPassage, constellationTour, DEG, direction, dot, length, type Pose, spaceFrame, sub } from '../src/explorer/camera';
+import { labelFits, stellarLabelBudget } from '../src/explorer/labels';
 import type { Vec } from '../src/explorer/catalog';
 
 describe('Night Atlas camera', () => {
@@ -26,6 +27,38 @@ describe('Night Atlas camera', () => {
     expect(apparentMagnitude(4.83, 10)).toBeCloseTo(4.83);
     expect(apparentMagnitude(4.83, 100)).toBeCloseTo(9.83);
     expect(apparentMagnitude(4.83, 1)).toBeCloseTo(-.17);
+  });
+
+  it('frames the shape before traveling and blends terrain and field opacity in both directions', () => {
+    const origin: Pose = { position: [0, 0, 0], yaw: 179 * DEG, pitch: .2, zoom: 1 };
+    const bearing: Pose = { ...origin, yaw: -179 * DEG, pitch: -.3, zoom: 1.28 };
+    const arrival: Pose = { ...bearing, position: [45, 0, 0], pitch: -.2, zoom: 1.2 };
+    const sample = (t: number) => constellationPassage(origin, bearing, arrival, t);
+    expect(sample(0)).toEqual({ pose: origin, atmosphere: 1, focus: 0 });
+    expect(sample(.19).pose.yaw / DEG).toBeCloseTo(180);
+    expect(sample(.38).pose.position).toEqual(origin.position);
+    const middle = sample(.49);
+    expect(middle.pose.position[0]).toBeGreaterThan(0);
+    expect(middle.pose.position[0]).toBeLessThan(45);
+    expect(middle.atmosphere).toBeGreaterThan(0);
+    expect(middle.atmosphere).toBeLessThan(1);
+    expect(middle.focus).toBeGreaterThan(0);
+    expect(middle.focus).toBeLessThan(1);
+    expect(sample(1)).toEqual({ pose: arrival, atmosphere: 0, focus: 1 });
+  });
+
+  it('starts on the Earth-facing side even when a constellation’s depth dwarfs its distance', () => {
+    expect(constellationTour([10, 0, 0], [1, 0, 0], 100, 0)[0]).toBeCloseTo(2);
+  });
+
+  it('adapts the label budget to screen area and rejects collisions and clipped text', () => {
+    expect(stellarLabelBudget(0, 1350, 840)).toBe(0);
+    expect(stellarLabelBudget(3, 1350, 840)).toBeGreaterThan(stellarLabelBudget(2, 1350, 840));
+    expect(stellarLabelBudget(3, 390, 664)).toBeLessThan(stellarLabelBudget(3, 1350, 840));
+    const occupied = [{ x: 80, y: 52, width: 54 }];
+    expect(labelFits({ x: 135, y: 56, width: 42 }, occupied, 390, 664)).toBe(false);
+    expect(labelFits({ x: 135, y: 73, width: 42 }, occupied, 390, 664)).toBe(true);
+    expect(labelFits({ x: 370, y: 56, width: 42 }, occupied, 390, 664)).toBe(false);
   });
 
   it('orbits from the near side into a constellation’s depth', () => {
