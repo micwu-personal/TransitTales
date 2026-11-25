@@ -100,12 +100,37 @@ const { chromium, webkit, devices } = require('playwright');
         await page.locator('#settings').waitFor({ state: 'hidden' });
         const earthBearing = await compass();
         const passage = (value) => page.waitForFunction(v => document.querySelector('#explorer').dataset.passage === v, value);
+        const verifyMovingSky = async (state, value) => {
+          const frames = await page.evaluate(async ([state, value]) => {
+            const sky = document.querySelector('#sky');
+            const sample = document.createElement('canvas');
+            sample.width = 96; sample.height = 64;
+            const ctx = sample.getContext('2d', { willReadFrequently: true });
+            const frames = new Set();
+            for (let i = 0; i < 5; i++) {
+              if (document.querySelector('#explorer').dataset[state] !== value) break;
+              ctx.drawImage(sky, 0, 0, 96, 64);
+              frames.add(ctx.getImageData(0, 0, 96, 64).data.join(','));
+              await new Promise(resolve => setTimeout(resolve, 120));
+            }
+            return frames.size;
+          }, [state, value]);
+          assert.ok(frames >= 3, `${value}: expected visibly different intermediate sky frames, got ${frames}`);
+        };
+        const verifyDissolve = async () => {
+          await page.waitForFunction(() => {
+            const overlay = document.querySelector('.sky-dissolve');
+            return overlay && +getComputedStyle(overlay).opacity > 0 && +getComputedStyle(overlay).opacity < .95;
+          });
+          await page.locator('.sky-dissolve').waitFor({ state: 'detached' });
+        };
         await click('tour'); await mode('tour');
         if (!reducedMotion) {
           await passage('entering');
-          await page.waitForTimeout(1150);
+          await verifyMovingSky('passage', 'entering');
+          await page.waitForTimeout(550);
           if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-ascent.png` });
-        }
+        } else await verifyDissolve();
         await passage('');
         if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-tour.png` });
         assert.equal(await page.locator('#open-shapes').isVisible(), false);
@@ -114,7 +139,9 @@ const { chromium, webkit, devices } = require('playwright');
         await page.keyboard.press('+');
         await page.waitForFunction(initial => document.querySelector('#compass').textContent !== initial, tourZoom);
         await click('leave-tour');
-        if (!reducedMotion) await passage('returning');
+        if (!reducedMotion) {
+          await passage('returning'); await verifyMovingSky('passage', 'returning');
+        } else await verifyDissolve();
         await mode('earth');
         await page.waitForFunction(bearing => document.querySelector('#compass').textContent === bearing, earthBearing);
         if (!profile.isMobile) {
@@ -125,7 +152,11 @@ const { chromium, webkit, devices } = require('playwright');
         }
         await click('open-travel');
         await click('launch');
-        if (!reducedMotion) await mode('flight');
+        if (!reducedMotion) {
+          await mode('flight'); await verifyMovingSky('mode', 'flight');
+          await page.waitForFunction(() => document.querySelector('#travel-progress').value > .42);
+          if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-flight.png` });
+        } else await verifyDissolve();
         await mode('space');
         assert.notEqual(await root.getAttribute('data-place'), 'earth');
         await click('open-travel'); await page.locator('#destination').selectOption('earth'); await click('start'); await mode('earth');

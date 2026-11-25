@@ -58,6 +58,26 @@ export function camera(frame: Frame, yaw: number, pitch: number, width: number, 
   return { forward, right, up, focal };
 }
 
+export function cameraRoll(from: Frame, pose: Pose, to: Frame) {
+  const eye = camera(from, pose.yaw, pose.pitch, 1, 1);
+  const bearing = angles(to, eye.forward);
+  const base = camera(to, bearing.yaw, bearing.pitch, 1, 1);
+  return { ...bearing, roll: Math.atan2(dot(eye.right, base.up), dot(eye.right, base.right)) };
+}
+
+export function flightPassage(from: Pose, aim: Pose, approach: Vec, to: Pose, progress: number, near: number) {
+  const turn = smooth(clamp(progress / .22, 0, 1));
+  const cruise = smooth(clamp((progress - .22) / .57, 0, 1));
+  const settle = smooth(clamp((progress - .79) / .21, 0, 1));
+  const range = length(sub(approach, from.position));
+  // Reserve screen time for the last few AU or parsecs rather than rushing past the destination.
+  const ratio = Math.min(1e7, range / near);
+  const advance = ratio > 1 ? -Math.expm1(-Math.log1p(ratio) * cruise) * (1 + 1 / ratio) : cruise;
+  const pose = progress < .22 ? blendPose(from, aim, turn) : blendPose(aim, to, settle);
+  pose.position = progress < .79 ? lerp(from.position, approach, advance) : lerp(approach, to.position, settle);
+  return pose;
+}
+
 export function apparentMagnitude(absolute: number, distancePc: number) {
   return absolute + 5 * Math.log10(Math.max(distancePc, 1e-10) / 10);
 }

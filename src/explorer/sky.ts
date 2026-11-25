@@ -1,5 +1,5 @@
 import { type SkyObject, type Vec } from './catalog';
-import { apparentMagnitude, camera, clamp, DEG, dot, type Frame, length, scale, smooth, sub, unit } from './camera';
+import { add, apparentMagnitude, camera, clamp, DEG, dot, type Frame, length, scale, smooth, sub, unit } from './camera';
 import { labelFits, stellarLabelBudget, type LabelBox } from './labels';
 
 type Point = { x: number; y: number; distance: number };
@@ -7,7 +7,7 @@ export type SkyView = {
   position: Vec; frame: Frame; yaw: number; pitch: number; zoom: number;
   atmosphere: number; sun: Vec; faintLimit: number; locale: 'en' | 'zh'; density: number;
   objects: SkyObject[]; skyObjects: SkyObject[]; earthEdges: readonly [string, string][]; tourEdges: readonly [string, string][];
-  members?: Set<string>; focus: number; target?: string;
+  members?: Set<string>; focus: number; target?: string; roll: number; earthOpacity: number;
 };
 const PC_KM = 3.08567758149e13;
 const colors = ['190,213,255', '238,239,255', '255,236,200', '255,183,131'];
@@ -58,6 +58,12 @@ export class Sky {
     }
     pen.setTransform(dpr, 0, 0, dpr, 0, 0);
     const eye = camera(view.frame, view.yaw, view.pitch, w, h, view.zoom);
+    if (view.roll) {
+      const { right, up } = eye;
+      const cos = Math.cos(view.roll), sin = Math.sin(view.roll);
+      eye.right = add(scale(right, cos), scale(up, sin));
+      eye.up = add(scale(up, cos), scale(right, -sin));
+    }
     const sunDir = unit(sub(view.sun, view.position));
     const sunAlt = dot(sunDir, view.frame.up);
     const air = view.atmosphere;
@@ -100,7 +106,7 @@ export class Sky {
     const skyLimit = view.faintLimit - day * 9 - dusk * 1.6;
     for (const object of [...view.objects, ...view.skyObjects]) {
       const member = view.members?.has(object.id) ?? false;
-      const isolation = member ? 1 : 1 - view.focus;
+      const isolation = (member ? 1 : 1 - view.focus) * (object.id === 'earth' ? view.earthOpacity : 1);
       if (isolation <= 0) continue;
       const vector = sub(object.position, view.position);
       if (dot(vector, eye.forward) <= 0) continue;

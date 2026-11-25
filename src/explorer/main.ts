@@ -1,5 +1,5 @@
 import { catalogCreditsUrl, constellations, destinations, loadCatalog, solarSystem, type SkyObject, type Vec } from './catalog';
-import { add, angles, apparentMagnitude, approachRange, blendPose, camera, clamp, constellationPassage, constellationTour, DEG, direction, easeAngle, length, lerp, LY, type Pose, scale, smooth, spaceFrame, sub, unit, wrap } from './camera';
+import { add, angles, apparentMagnitude, approachRange, blendPose, camera, cameraRoll, clamp, constellationPassage, constellationTour, DEG, direction, easeAngle, flightPassage, type Frame, length, LY, type Pose, scale, smooth, spaceFrame, sub, unit, wrap } from './camera';
 import { createDeviceMotionController, type DeviceMotionState } from '../universe/device-motion';
 import { deck } from './deck';
 import { en, zh } from './locale';
@@ -9,7 +9,7 @@ import './style.css';
 const LAT = 19.82, LON = -155.47;
 type Destination = (typeof destinations)[number];
 type Shape = (typeof constellations)[number];
-type Trip = { destination: Destination; from: Vec; to: Pose; total: number; elapsed: number; duration: number };
+type Trip = { destination: Destination; from: Pose; aim: Pose; approach: Vec; to: Pose; landing: Pose; frame: Frame; fromEarth: boolean; toEarth: boolean; fromRoll: number; toRoll: number; near: number; total: number; elapsed: number; duration: number };
 type TourPassage = { progress: number; returning: boolean; endpoint: Pose };
 type Tour = { shape: Shape; members: Set<string>; stars: SkyObject[]; center: Vec; radial: Vec; span: number; depth: number; origin: Pose; bearing: Pose; elapsed: number; playing: boolean; passage?: TourPassage; rejoin?: { from: Pose; elapsed: number } };
 type Panel = 'travel' | 'shapes' | 'settings' | 'credits';
@@ -20,6 +20,13 @@ const query = new URLSearchParams(location.search);
 let locale: 'en' | 'zh' = query.get('lang') === 'zh' || (!query.has('lang') && /^zh/i.test(navigator.language)) ? 'zh' : 'en';
 let t = locale === 'zh' ? zh : en;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const cameraMotionKey = 'night-atlas.camera-motion';
+let cameraMotion = 'system';
+try {
+  const saved = localStorage.getItem(cameraMotionKey);
+  if (saved === 'full' || saved === 'gentle') cameraMotion = saved;
+} catch { /* Storage may be blocked. */ }
+const gentle = () => cameraMotion === 'gentle' || (cameraMotion === 'system' && reduced.matches);
 const date = new Date();
 date.setUTCHours(8, 0, 0, 0); // 22:00 HST at the default observing site.
 let solar = solarSystem(date, LAT, LON);
@@ -46,7 +53,7 @@ const keys = new Set<string>();
 const arrows: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
 const ground = () => place.id === 'earth' && !trip && !tour;
 // Keep Earth's coordinate axes (including camera roll) throughout the constellation tour.
-const frame = () => ground() || tour ? solar : spaceFrame;
+const frame = () => trip?.frame ?? (ground() || tour ? solar : spaceFrame);
 const label = (object: { name: string; zh?: string }) => (locale === 'zh' && object.zh) || object.name;
 const selectedShape = () => constellations.find(c => c.id === shapeId);
 const selectedDestination = () => destinations.find(d => d.id === destinationId) ?? destinations[0];
@@ -173,7 +180,7 @@ function refresh() {
   $('prompt').textContent = passage ? (passage.returning ? t.returningSky : t.leavingSky) : tour ? t.tourText : ground() ? t.earthPrompt : t.spacePrompt;
   $('readout').textContent = tour ? `${t.depth} · ${distance(tour.depth)}` : trip ? `${t.flying} · ${distance(trip.total)}` : ground() ? `${t.site} / ${date.toISOString().slice(0, 16).replace('T', ' ')} UTC` : `${t.fromEarth} · ${distance(length(sub(view.position, solar.earth)))}`;
   $('travel-progress').hidden = !trip;
-  $('open-travel').hidden = !!tour;
+  $('open-travel').hidden = !!tour || !!trip;
   $('open-shapes').hidden = !ground();
   $('leave-tour').hidden = !tour;
   for (const id of ['tour-play', 'auto']) {
@@ -228,18 +235,50 @@ function setPose(pose: Pose) {
   desired = { yaw: pose.yaw, pitch: pose.pitch, zoom: pose.zoom };
 }
 
+function dissolveSky() {
+  root.querySelector('.sky-dissolve')?.remove();
+  const still = document.createElement('canvas');
+  still.className = 'sky-dissolve';
+  still.setAttribute('aria-hidden', 'true');
+  still.width = skyCanvas.width; still.height = skyCanvas.height;
+  if (!still.width || !still.height) return;
+  const context = still.getContext('2d');
+  if (!context) return;
+  context.drawImage(skyCanvas, 0, 0);
+  skyCanvas.after(still);
+  still.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 480, easing: 'ease-in-out' }).onfinish = () => still.remove();
+}
+
 function go(site: Destination, fly: boolean) {
-  const from = view.position;
-  const heading = direction(frame(), view.yaw, view.pitch);
-  openPanel(undefined, false); tour = undefined; picked = undefined; trip = undefined;
-  const to = park(site);
-  const range = length(sub(to.position, from));
-  if (fly && range > 1e-12 && !reduced.matches) {
-    setPose({ position: from, ...angles(spaceFrame, heading), zoom: view.zoom });
-    trip = { destination: site, from, to, total: range, elapsed: 0, duration: clamp(2400 + Math.log10(1 + range) * 700, 2400, 6500) };
+  if (trip) return;
+  const source = displayedPose;
+  const sourceFrame = frame();
+  const fromEarth = ground(), toEarth = site.id === 'earth';
+  const landingFrame = toEarth ? solar : spaceFrame;
+  const basis = fromEarth || toEarth ? solar : spaceFrame;
+  const center = physicalPosition(site);
+  const landing = park(site);
+  const range = length(sub(landing.position, source.position));
+  openPanel(undefined, false); tour = undefined; picked = undefined;
+  if (fly && range > 1e-12 && !gentle()) {
+    const near = Math.max(length(sub(landing.position, center)), 1e-11);
+    // Arrive on the incoming side of the object instead of passing through it.
+    if (!toEarth && length(sub(source.position, center)) > near) {
+      landing.position = add(center, scale(unit(sub(source.position, center)), near));
+      Object.assign(landing, angles(spaceFrame, sub(center, landing.position)));
+    }
+    const approach = toEarth ? add(landing.position, scale(solar.up, near * 5)) : landing.position;
+    const start = cameraRoll(sourceFrame, source, basis);
+    const end = cameraRoll(landingFrame, landing, basis);
+    const from = { ...source, yaw: start.yaw, pitch: start.pitch };
+    const to = { ...landing, yaw: end.yaw, pitch: end.pitch };
+    const aim = { ...from, ...angles(basis, sub(toEarth ? approach : center, source.position)), zoom: 1 };
+    setPose(from);
+    trip = { destination: site, from, aim, approach, to, landing, frame: basis, fromEarth, toEarth, fromRoll: start.roll, toRoll: end.roll, near, total: range, elapsed: 0, duration: clamp(3900 + Math.log10(1 + range) * 630, 3900, 7000) };
     $<HTMLProgressElement>('travel-progress').value = 0;
   } else {
-    place = site; setPose(to);
+    if (fly && range > 1e-12) dissolveSky();
+    place = site; setPose(landing);
   }
   motion.recenter(); refresh(); skyCanvas.focus({ preventScroll: true }); invalidate();
 }
@@ -264,7 +303,7 @@ function startTour() {
   const bearing = { position: solar.observer, ...angles(solar, geo.lookFromEarth), zoom: 1.28 };
   tour = { shape, ...geo, origin, bearing, elapsed: 0, playing: false };
   const endpoint = orbitPose(tour, 0);
-  if (reduced.matches) setPose(endpoint);
+  if (gentle()) { dissolveSky(); setPose(endpoint); }
   else tour.passage = { progress: 0, returning: false, endpoint };
   openPanel(undefined, false); picked = undefined; motion.recenter(); refresh(); skyCanvas.focus({ preventScroll: true }); invalidate();
 }
@@ -276,7 +315,7 @@ function orbitPose(active: Tour, progress: number): Pose {
 
 function finishTour() {
   if (!tour || tour.passage?.returning) return;
-  if (reduced.matches) { landTour(); return; }
+  if (gentle() && !tour.passage) { dissolveSky(); landTour(); return; }
   tour.passage = tour.passage ? { ...tour.passage, returning: true } : { progress: 1, returning: true, endpoint: displayedPose };
   tour.playing = false;
   picked = undefined;
@@ -306,7 +345,7 @@ function takeControl() {
 }
 
 function turn(dx: number, dy: number) {
-  if (tour?.passage) return;
+  if (trip || tour?.passage) return;
   takeControl();
   desired.yaw = wrap(desired.yaw + dx);
   desired.pitch = clamp(desired.pitch + dy, -89.4 * DEG, 89.4 * DEG);
@@ -314,7 +353,7 @@ function turn(dx: number, dy: number) {
 }
 
 function zoom(by: number) {
-  if (tour?.passage) return;
+  if (trip || tour?.passage) return;
   takeControl();
   desired.zoom = clamp(desired.zoom * by, .72, 4.5);
   invalidate();
@@ -349,30 +388,31 @@ function render(time: number) {
   if (document.hidden || !sky) { lastFrame = 0; return; }
   const dt = Math.min(45, lastFrame ? time - lastFrame : 16);
   lastFrame = time;
+  let atmosphere = ground() ? 1 : 0, focus = tour ? 1 : 0, roll = 0;
   if (trip) {
     trip.elapsed += dt;
     const portion = clamp(trip.elapsed / trip.duration, 0, 1);
-    const target = physicalPosition(trip.destination);
-    const a = smooth(portion);
-    view.position = lerp(trip.from, trip.to.position, a);
-    const aiming = angles(spaceFrame, sub(target, view.position));
-    desired.yaw = aiming.yaw; desired.pitch = aiming.pitch;
-    $<HTMLProgressElement>('travel-progress').value = a;
+    setPose(flightPassage(trip.from, trip.aim, trip.approach, trip.to, portion, trip.near));
+    const settle = smooth(clamp((portion - .79) / .21, 0, 1));
+    roll = trip.fromRoll * (1 - smooth(clamp(portion / .22, 0, 1))) + trip.toRoll * settle;
+    atmosphere = trip.fromEarth ? 1 - smooth(clamp(portion / .29, 0, 1)) : trip.toEarth ? settle : 0;
+    $<HTMLProgressElement>('travel-progress').value = portion;
     if (portion >= 1) {
-      place = trip.destination; setPose(trip.to); trip = undefined; picked = undefined; refresh();
+      place = trip.destination; setPose(trip.landing); trip = undefined; picked = undefined; roll = 0;
+      atmosphere = ground() ? 1 : 0;
+      refresh();
     }
   }
-  let atmosphere = ground() ? 1 : 0, focus = tour ? 1 : 0;
   if (tour?.passage) {
     const passage = tour.passage;
     const step = dt / (passage.returning ? -1800 : 2400);
-    passage.progress = reduced.matches ? (passage.returning ? 0 : 1) : clamp(passage.progress + step, 0, 1);
+    passage.progress = clamp(passage.progress + step, 0, 1);
     const shot = constellationPassage(tour.origin, tour.bearing, passage.endpoint, passage.progress);
     setPose(shot.pose);
     atmosphere = shot.atmosphere; focus = shot.focus;
     if (passage.returning && passage.progress === 0) landTour();
     else if (!passage.returning && passage.progress === 1) {
-      tour.passage = undefined; tour.playing = !reduced.matches; motion.recenter(); refresh();
+      tour.passage = undefined; tour.playing = !gentle(); motion.recenter(); refresh();
     }
   } else if (tour?.playing) {
     tour.elapsed = Math.min(orbitDuration, tour.elapsed + dt);
@@ -394,7 +434,7 @@ function render(time: number) {
   view.pitch += (desired.pitch - view.pitch) * ease;
   view.zoom += (desired.zoom - view.zoom) * ease;
   let yaw = view.yaw, pitch = view.pitch, position = view.position;
-  if (motionState?.status === 'active' && !tour?.passage) {
+  if (motionState?.status === 'active' && !trip && !tour?.passage) {
     if (motionState.mode === 'inspect' && !ground() && !trip) {
       const eye = camera(frame(), yaw, pitch, 1, 1);
       const offset = tour ? tour.span * .13 : length(sub(view.position, physicalPosition(place))) * .18;
@@ -407,7 +447,7 @@ function render(time: number) {
   $('compass').textContent = ground() ? `${String(turnDeg).padStart(3, '0')}°  /  ${Math.round(pitch / DEG)}°` : `${view.zoom.toFixed(1)}×`;
   const sun = solar.objects.find(object => object.id === 'sun')?.position ?? [0, 0, 0];
   displayedPose = { position, yaw, pitch, zoom: view.zoom };
-  sky.draw({ position, frame: frame(), yaw, pitch, zoom: view.zoom, atmosphere, sun, faintLimit: 6.25 + (faint - 6.25) * atmosphere, locale, density,
+  sky.draw({ position, frame: frame(), yaw, pitch, zoom: view.zoom, atmosphere, sun, faintLimit: 6.25 + (faint - 6.25) * atmosphere, locale, density, roll, earthOpacity: 1 - atmosphere,
     objects: focus === 1 ? [] : solar.objects.filter(object => !(ground() || tour) || object.id !== 'earth'),
     skyObjects: focus === 1 && tour ? tour.stars : catalog, earthEdges: drawLines && (ground() || tour) && focus < 1 ? earthEdges : [],
     tourEdges: tour?.shape.lines ?? [], members: tour?.members, focus,
@@ -443,6 +483,12 @@ function attach() {
   });
   updateFullscreen();
   click('retry', () => { void stars(); });
+  const cameraStyle = $<HTMLSelectElement>('camera-motion');
+  cameraStyle.value = cameraMotion;
+  cameraStyle.addEventListener('change', () => {
+    cameraMotion = cameraStyle.value;
+    try { localStorage.setItem(cameraMotionKey, cameraMotion); } catch { /* Keep the current setting. */ }
+  });
   click('launch', () => go(selectedDestination(), true));
   click('start', () => go(selectedDestination(), false));
   $('destination').addEventListener('change', event => { destinationId = (event.target as HTMLSelectElement).value; });
