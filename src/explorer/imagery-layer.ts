@@ -1,6 +1,6 @@
 import type { Vec } from './catalog';
 import { add, clamp, type camera, dot, length, scale, smooth, sub, unit } from './camera';
-import { destinationPlates, galacticVector, imageCoverage, type ImageDestination, plateAxes, surveyU, surveyV } from './imagery';
+import { destinationPlates, galacticVector, imageCoverage, type ImageDestination, plateAxes, plateProjectionFade, surveyU, surveyV } from './imagery';
 
 type Eye = ReturnType<typeof camera>;
 type Key = ImageDestination | 'milky-way';
@@ -46,6 +46,8 @@ export class ImageryLayer {
     const center = add(add(target, scale(right, x)), scale(up, y));
     const depth = dot(center, eye.forward);
     if (depth <= radius * .20) return 0;
+    const projectionFade = plateProjectionFade(eye, center, scale(right, hw), scale(up, hh), w / (2 * eye.focal), h / (2 * eye.focal));
+    if (projectionFade === 0) return 0;
     const cx = dot(center, eye.right) / depth, cy = -dot(center, eye.up) / depth;
     const sx = w / 2 + eye.focal * cx, sy = h / 2 + eye.focal * cy;
     const f = eye.focal / depth;
@@ -57,7 +59,7 @@ export class ImageryLayer {
     const by = -hh * f * (-dot(up, eye.up) - cy * uz);
     const halfW = Math.abs(ax) + Math.abs(bx), halfH = Math.abs(ay) + Math.abs(by);
     if (sx + halfW < 0 || sx - halfW > w || sy + halfH < 0 || sy - halfH > h) return 0;
-    const alpha = opacity * imageCoverage(2 * Math.max(halfW, halfH)) * smooth(clamp((range / radius - .15) / .60, 0, 1));
+    const alpha = opacity * projectionFade * imageCoverage(2 * Math.max(halfW, halfH)) * smooth(clamp((range / radius - .15) / .60, 0, 1));
     if (alpha < .01) return 0;
     const image = this.image(id);
     if (!image) return 0;

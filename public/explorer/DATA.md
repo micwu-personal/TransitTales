@@ -25,7 +25,7 @@ The star snapshot ships with the game and is loaded from the same origin, never 
 
 ## Observational imagery
 
-The four nearby views are telescope composites, not naked-eye appearances. Night Atlas places each plate at its published equatorial center and orientation from Earth, uses its published field and the atlas’s catalog distance for scale, and reorients the flat plate for virtual approach. The plate is not a 3D reconstruction, and colors/brightness are not photometric. Plates are resampled to at most 960 px, darkened slightly where needed, edge-feathered and WebP-encoded for display; only M31 is cropped. Original images and credits:
+The four nearby views are telescope composites, not naked-eye appearances. Night Atlas places each plate at its published equatorial center and orientation from Earth, uses its published field and the atlas’s catalog distance for scale, and reorients the flat plate for virtual approach. The plate is not a 3D reconstruction, and colors/brightness are not photometric. Offscreen plates are culled, and highly oblique views fade out rather than stretching the image. Plates are resampled to at most 960 px, darkened slightly where needed, edge-feathered and WebP-encoded for display; only M31 is cropped. Original images and credits:
 
 | View | Original release and credit | Frame used |
 | --- | --- | --- |

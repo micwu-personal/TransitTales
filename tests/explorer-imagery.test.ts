@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { dot, length, unit } from '../src/explorer/camera';
-import { destinationImageRadius, destinationPlates, GALACTIC_X, GALACTIC_Y, GALACTIC_Z, galacticVector, imageCoverage, imageryCredits, plateAxes, surveyU, surveyV, type ImageDestination } from '../src/explorer/imagery';
+import { add, cross, dot, length, scale, unit } from '../src/explorer/camera';
+import { destinationImageRadius, destinationPlates, GALACTIC_X, GALACTIC_Y, GALACTIC_Z, galacticVector, imageCoverage, imageryCredits, plateAxes, plateProjectionFade, surveyU, surveyV, type ImageDestination } from '../src/explorer/imagery';
 
 describe('Night Atlas observing imagery', () => {
   it('frames each retained plate, including its offset from the navigation marker', () => {
@@ -40,6 +40,23 @@ describe('Night Atlas observing imagery', () => {
       expect(length(transported.right)).toBeCloseTo(1, 9);
       expect(length(transported.up)).toBeCloseTo(1, 9);
     }
+  });
+
+  it('rejects offscreen plates before affine projection can stretch them into view', () => {
+    const { normal, right, up, hw, hh } = destinationPlates.m31;
+    const forward = unit(add(right, scale(normal, .012)));
+    const eye = { forward, right: unit(cross(forward, up)), up };
+    const center = scale(normal, 766_000);
+    const halfRight = scale(right, hw);
+    const halfUp = scale(up, hh);
+    expect(plateProjectionFade(eye, center, halfRight, halfUp, .38, .78)).toBe(0);
+    expect(plateProjectionFade({ forward: normal, right, up }, center, halfRight, halfUp, .38, .78)).toBe(1);
+  });
+
+  it('keeps plates that cross the edge, even when their centers are outside', () => {
+    const eye = { forward: [0, 0, 1], right: [1, 0, 0], up: [0, 1, 0] } as const;
+    expect(plateProjectionFade(eye, [5.5, 0, 10], [1, 0, 0], [0, 1, 0], .5, .5)).toBe(1);
+    expect(plateProjectionFade(eye, [6.5, 0, 10], [1, 0, 0], [0, 1, 0], .5, .5)).toBe(0);
   });
 
   it('skips sub-resolution imagery and ships five compact local WebPs', () => {

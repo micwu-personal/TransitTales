@@ -1,5 +1,5 @@
 import type { Vec } from './catalog';
-import { add, clamp, DEG, dot, length, scale, sub, unit } from './camera';
+import { add, clamp, DEG, dot, length, scale, smooth, sub, unit } from './camera';
 
 type Credit = { credit: string; source: string };
 type PlateSource = Credit & {
@@ -97,6 +97,24 @@ export function plateAxes(id: ImageDestination, toward: Vec) {
   const b = unit(middle);
   const transport = (v: Vec) => sub(v, scale(b, 2 * dot(v, b)));
   return { right: transport(right), up: transport(up) };
+}
+
+/** Reject offscreen plates in camera space before fitting an affine screen transform. */
+export function plateProjectionFade(eye: { forward: Vec; right: Vec; up: Vec }, center: Vec, right: Vec, up: Vec, halfX: number, halfY: number) {
+  const depth = dot(center, eye.forward);
+  const rz = dot(right, eye.forward), uz = dot(up, eye.forward);
+  const depthSpread = Math.abs(rz) + Math.abs(uz);
+  if (depth <= 0 || depthSpread >= .5 * depth) return 0;
+  for (const [axis, edge] of [[eye.right, halfX], [eye.up, halfY]] as const) {
+    const centerAxis = dot(center, axis), rightAxis = dot(right, axis), upAxis = dot(up, axis);
+    for (const sign of [-1, 1]) {
+      const outside = sign * centerAxis - edge * depth;
+      const extent = Math.abs(sign * rightAxis - edge * rz) + Math.abs(sign * upAxis - edge * uz);
+      if (outside > extent) return 0;
+    }
+  }
+  // The affine fit is only reliable when depth varies little across the plate.
+  return 1 - smooth(clamp((depthSpread / depth - .25) / .25, 0, 1));
 }
 
 export function imageCoverage(pixels: number): number {
