@@ -1,5 +1,7 @@
-import { type SkyObject, type Vec } from './catalog';
+import { objectName, type SkyObject, type Vec } from './catalog';
 import { add, apparentMagnitude, camera, clamp, DEG, dot, type Frame, length, scale, smooth, sub, unit } from './camera';
+import { imageryCredits, isImageDestination, type ImageDestination } from './imagery';
+import { ImageryLayer } from './imagery-layer';
 import { labelFits, stellarLabelBudget, type LabelBox } from './labels';
 
 type Point = { x: number; y: number; distance: number };
@@ -17,12 +19,15 @@ export class Sky {
   private pen: CanvasRenderingContext2D;
   private hits: { x: number; y: number; object: SkyObject; radius: number }[] = [];
   private brushes = new Map<string, HTMLCanvasElement>();
+  private readonly imagery: ImageryLayer;
+  private readonly plateObjects = new WeakMap<SkyObject[], (SkyObject & { id: ImageDestination })[]>();
   private readonly reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(private canvas: HTMLCanvasElement, invalidate?: () => void) {
     const pen = canvas.getContext('2d', { alpha: false });
     if (!pen) throw new Error('Canvas unavailable');
     this.pen = pen;
+    this.imagery = new ImageryLayer(invalidate);
   }
 
   pick(x: number, y: number) {
@@ -98,6 +103,34 @@ export class Sky {
       haze.addColorStop(1, 'transparent');
       pen.fillStyle = haze; pen.fillRect(0, 0, w, h);
     }
+    const clearSky = (1 - view.focus) * (1 - day) ** 3 * (1 - dusk * .55);
+    // This is the Sun's observed sky, not a distant viewpoint or a volumetric model of the Galaxy.
+    const solarVicinity = 1 - smooth(clamp((length(view.position) - 120) / 780, 0, 1));
+    const surveyed = this.imagery.milkyWay(pen, eye, w, h, .75 * clearSky * solarVicinity);
+    const plateOpacity = new Map<string, number>();
+    const observed: string[] = surveyed ? ['milky-way'] : [];
+    const credits: string[] = [];
+    if (clearSky > .01) {
+      let plates = this.plateObjects.get(view.skyObjects);
+      if (!plates) {
+        plates = view.skyObjects.filter((object): object is SkyObject & { id: ImageDestination } => isImageDestination(object.id));
+        this.plateObjects.set(view.skyObjects, plates);
+      }
+      const minElevation = air > .9 ? -Math.sin(horizonDip) : -1;
+      for (const object of plates) {
+        const opacity = this.imagery.destination(pen, object.id, sub(object.position, view.position), eye, w, h,
+          clearSky, view.frame.up, minElevation);
+        if (opacity > 0) {
+          plateOpacity.set(object.id, opacity);
+          if (opacity > .1) {
+            observed.push(object.id);
+            credits.push(imageryCredits[object.id].credit);
+          }
+        }
+      }
+    }
+    const accessiblePlates = observed.join(' ');
+    if (canvas.dataset.observedPlates !== accessiblePlates) canvas.dataset.observedPlates = accessiblePlates;
     const edgeIds = new Set([...view.earthEdges.flat(), ...view.tourEdges.flat()]);
     const points = new Map<string, Point>();
     const labels: { point: Point; object: SkyObject; radius: number; mag: number; opacity: number }[] = [];
@@ -132,7 +165,7 @@ export class Sky {
       const disk = body && (radius > 1.7 || landmark);
       if (disk) {
         disks.push({ point, object, radius: Math.max(radius, 2), vector, opacity });
-      } else {
+      } else if ((plateOpacity.get(object.id) ?? 0) < .98) {
         const color = colors[(object.bv ?? .55) < .16 ? 0 : (object.bv ?? .55) < .52 ? 1 : (object.bv ?? .55) < .99 ? 2 : 3];
         const size = clamp(1.12 - mag * .125, .42, 2.7);
         const diffuse = object.kind === 'nebula' || object.kind === 'galaxy' || object.kind === 'cluster';
@@ -145,10 +178,10 @@ export class Sky {
         pen.beginPath(); pen.arc(point.x, point.y, size, 0, 2 * Math.PI); pen.fill();
       }
       const star = object.kind === 'star';
-      const named = !/^(HIP|HD|HR|HYG) /i.test(object.name);
+      const named = (view.locale === 'zh' && !!object.zh) || !/^(HIP|HD|HR|HYG) /i.test(object.name);
       const labelStar = star && view.density > 0 && (landmark || (view.density === 3 || (named && (member || mag < (view.density === 1 ? 1.8 : 4.5)))));
       if (opacity > .03 && (labelStar || (!star && (body || landmark)))) labels.push({ point, object, radius: disk ? Math.max(3, radius) : 1, mag, opacity });
-      if (opacity > .35 && (mag < 1 || landmark || member || body || labelStar)) this.hits.push({ ...point, object, radius: Math.max(22, radius) });
+      if (opacity > .35 && (mag < 1 || landmark || member || !star || labelStar)) this.hits.push({ ...point, object, radius: Math.max(22, radius) });
     }
     pen.globalAlpha = 1;
     pen.strokeStyle = `rgba(211,197,154,${.50 - .23 * day})`;
@@ -174,7 +207,7 @@ export class Sky {
       pen.globalAlpha = air;
       this.land(w, h, horizon, eye.focal, view.yaw, day, dusk);
     }
-    const occupied: LabelBox[] = [];
+    const occupied = this.plateCredits(credits, w, h);
     const score = (label: typeof labels[number]) => (label.object.id === view.target ? -200 : label.object.kind === 'star' ? 0 : -100)
       + clamp(label.mag, -30, 30) + (1 - label.opacity) * 6;
     labels.sort((a, b) => score(a) - score(b));
@@ -185,7 +218,7 @@ export class Sky {
     for (const { point, object, radius, opacity } of labels) {
       const star = object.kind === 'star';
       if (star && starCount >= budget) continue;
-      const name = (view.locale === 'zh' && object.zh) || object.name;
+      const name = objectName(object, view.locale);
       const y = point.y + 1;
       const width = pen.measureText(name).width;
       const box = { x: point.x + radius + 9, y, width };
@@ -198,6 +231,34 @@ export class Sky {
       if (star) starCount++;
     }
     pen.globalAlpha = 1;
+  }
+
+  private plateCredits(credits: string[], w: number, h: number): LabelBox[] {
+    if (!credits.length) return [];
+    const reserved: LabelBox[] = [];
+    const pen = this.pen;
+    pen.font = `11px 'Segoe UI', sans-serif`;
+    pen.textBaseline = 'middle';
+    pen.fillStyle = '#e8e4e0'; pen.strokeStyle = '#0b142b'; pen.lineWidth = 3;
+    const maxWidth = Math.min(w - 32, 470);
+    let y = Math.round(Math.min(h * .30, 125));
+    const draw = (line: string) => {
+      pen.strokeText(line, 16, y); pen.fillText(line, 16, y);
+      reserved.push({ x: 16, y, width: pen.measureText(line).width });
+    };
+    for (const credit of credits) {
+      let line = '';
+      for (const word of credit.split(' ')) {
+        const next = line ? `${line} ${word}` : word;
+        if (line && pen.measureText(next).width > maxWidth) {
+          draw(line);
+          y += 14; line = word;
+        } else line = next;
+      }
+      draw(line);
+      y += 17;
+    }
+    return reserved;
   }
 
   private body(object: SkyObject, p: Point, radius: number, vector: Vec, eye: ReturnType<typeof camera>, sun: Vec, opacity: number) {

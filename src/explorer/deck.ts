@@ -14,7 +14,7 @@ export function deck(t: Words) {
       <button type="button" class="glass" id="language">${t.switch}</button>${icon('fullscreen', t.full, '⛶')}
     </div></header>
     <div class="notice" id="notice" hidden><span role="status" id="notice-message"></span> ${button('retry', t.retry)}</div>
-    <section class="object-reading" id="object-reading" hidden><h2 id="object-name"></h2><p id="object-details"></p></section>
+    <section class="object-reading" id="object-reading" hidden>${icon('object-close', t.close, '×')}<h2 id="object-name"></h2><p id="object-details"></p><button class="object-launch" type="button" id="object-launch" hidden><span aria-hidden="true">✦</span> ${t.flyHere}</button></section>
     <div class="log"><h1 id="place"></h1><p id="prompt"></p><p class="readout" id="readout"></p><progress class="travel-progress" id="travel-progress" max="1" value="0" aria-label="${t.journey}" hidden></progress></div>
     <div class="deck"><div class="actions">${trigger('travel', t.travel, true)}${trigger('shapes', t.shapes)}${trigger('settings', t.sky)}<button type="button" class="primary" id="leave-tour" hidden>${t.back}</button><button type="button" class="glass" id="tour-play" hidden>${t.auto}</button></div>
       <div class="helm"><div class="zoom" role="group" aria-label="${t.telescopeZoom}">${icon('zoom-in', t.nearer, '+')}${icon('zoom-out', t.wider, '−')}</div>
@@ -28,5 +28,5 @@ export function deck(t: Words) {
       <fieldset><legend>${t.telescope}</legend><label for="camera-motion">${t.cameraMotion}</label><select id="camera-motion"><option value="system">${t.motionSystem}</option><option value="full">${t.motionFull}</option><option value="gentle">${t.motionGentle}</option></select><div class="row">${button('wider', t.wider)}${button('nearer', t.nearer)}${button('retreat', t.retreat)}${button('advance', t.advance)}${button('auto', t.auto)}</div></fieldset>
       <fieldset><legend>${t.tilt}</legend><div class="row">${button('motion', t.tilt)}${button('motion-mode', t.look)}${button('recenter', t.recenter)}</div><p role="status" id="motion-status" hidden></p></fieldset>`)}
     ${panel('credits', t.source, `<p>${t.limits}</p><p>${t.remote}</p><p>${t.diagrams}</p><p id="data-credits"></p>`)}
-    <footer class="caption"><div><span id="disclaimer">${t.observed}</span><span class="tip" id="look-tip"> · ${t.hint}</span></div>${trigger('credits', t.source)}</footer>`;
+    <aside class="frame-hint" id="frame-hint" hidden><span role="status">${t.frameHint}</span>${button('use-gentle', t.motionGentle)}${icon('dismiss-frame-hint', t.close, '×')}</aside><footer class="caption"><div><span id="disclaimer">${t.observed}</span><span class="tip" id="look-tip"> · ${t.hint}</span></div>${trigger('credits', t.source)}</footer>`;
 }

@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { constellations, destinations, loadCatalog, solarSystem, type Vec } from '../src/explorer/catalog';
+import { constellations, destinations, loadCatalog, objectName, solarSystem, type Vec } from '../src/explorer/catalog';
 
 const AU_PER_PC = 648000 / Math.PI;
 const DEGREES = 180 / Math.PI;
@@ -39,6 +39,29 @@ describe('explorer catalog', () => {
     expect(Math.asin(sirius.position[2] / norm(sirius.position)) * DEGREES).toBeCloseTo(-16.716116, 4);
     expect(norm(catalog.get('hip-70890')!.position)).toBeCloseTo(1.2959, 3);
     expect(catalog.get('hyg-118720')?.name).toBe('Wolf 359');
+  });
+
+  it('localizes sourced star names without replacing English names or designations', async () => {
+    const catalog = await loadFixture();
+    for (const [id, en, zh] of [
+      ['hip-24608', 'Capella', '五车二'],
+      ['hip-21421', 'Aldebaran', '毕宿五'],
+      ['hip-102098', 'Deneb', '天津四'],
+      ['hip-39953', 'Gam2Vel', '天社一'],
+      ['hip-11767', 'Polaris', '北极星'],
+    ]) {
+      const star = catalog.get(id)!;
+      expect(star).toMatchObject({ id, name: en, zh });
+      expect(objectName(star, 'en')).toBe(en);
+      expect(objectName(star, 'zh')).toBe(zh);
+    }
+    for (const [id, designation] of [['hip-48774', 'Phi Vel'], ['hip-108431', 'Del Ind'], ['hyg-118360', 'Gl 194B']]) {
+      const star = catalog.get(id)!;
+      expect(star.zh).toBeUndefined();
+      expect(objectName(star, 'zh')).toBe(designation);
+      expect(objectName(star, 'en')).toBe(designation);
+    }
+    expect([...catalog.values()].filter(star => star.kind === 'star' && star.zh).length).toBeGreaterThan(2700);
   });
 
   it('uses only observed star IDs for its 88 representative figures', async () => {
@@ -112,6 +135,22 @@ describe('explorer ephemeris', () => {
     expect(norm(subtract(first.earth, later.earth)) * AU_PER_PC).toBeGreaterThan(1);
     expect(later.objects.find(o => o.id === 'mars')!.position).not.toEqual(byId.get('mars')!.position);
     expect(later.objects.find(o => o.id === 'moon')!.mag).not.toBeCloseTo(byId.get('moon')!.mag);
+  });
+
+  it('retains localized names on the live solar system objects', () => {
+    const { objects } = solarSystem(eclipse, 0, 0);
+    const byId = new Map(objects.map(object => [object.id, object]));
+    for (const [id, en, zh] of [
+      ['sun', 'Sun', '太阳'],
+      ['moon', 'Moon', '月球'],
+      ['earth', 'Earth', '地球'],
+      ['jupiter', 'Jupiter', '木星'],
+    ]) {
+      const body = byId.get(id)!;
+      expect(body).toMatchObject({ id, name: en, zh });
+      expect(objectName(body, 'en')).toBe(en);
+      expect(objectName(body, 'zh')).toBe(zh);
+    }
   });
 
   it('provides an oriented local horizon and resolves lunar parallax', () => {

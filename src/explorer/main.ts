@@ -1,13 +1,15 @@
-import { catalogCreditsUrl, constellations, destinations, loadCatalog, solarSystem, type SkyObject, type Vec } from './catalog';
+import { catalogCreditsUrl, constellations, destinations, loadCatalog, objectName, solarSystem, type SkyObject, type Vec } from './catalog';
 import { add, angles, apparentMagnitude, approachRange, blendPose, camera, cameraRoll, clamp, constellationPassage, constellationTour, DEG, direction, easeAngle, flightPassage, type Frame, length, LY, type Pose, scale, smooth, spaceFrame, sub, unit, wrap } from './camera';
 import { createDeviceMotionController, type DeviceMotionState } from '../universe/device-motion';
 import { deck } from './deck';
+import { FrameBudget } from './frame-budget';
+import { destinationImageRadius } from './imagery';
 import { en, zh } from './locale';
 import { Sky } from './sky';
 import './style.css';
 
 const LAT = 19.82, LON = -155.47;
-type Destination = (typeof destinations)[number];
+type Destination = (typeof destinations)[number] | SkyObject;
 type Shape = (typeof constellations)[number];
 type Trip = { destination: Destination; from: Pose; aim: Pose; approach: Vec; to: Pose; landing: Pose; frame: Frame; fromEarth: boolean; toEarth: boolean; fromRoll: number; toRoll: number; near: number; total: number; elapsed: number; duration: number };
 type TourPassage = { progress: number; returning: boolean; endpoint: Pose };
@@ -21,17 +23,20 @@ let locale: 'en' | 'zh' = query.get('lang') === 'zh' || (!query.has('lang') && /
 let t = locale === 'zh' ? zh : en;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const cameraMotionKey = 'night-atlas.camera-motion';
-let cameraMotion = 'system';
+let cameraMotion = 'full';
 try {
   const saved = localStorage.getItem(cameraMotionKey);
-  if (saved === 'full' || saved === 'gentle') cameraMotion = saved;
+  if (saved === 'full' || saved === 'gentle' || saved === 'system') cameraMotion = saved;
 } catch { /* Storage may be blocked. */ }
 const gentle = () => cameraMotion === 'gentle' || (cameraMotion === 'system' && reduced.matches);
+const budget = new FrameBudget();
+let dismissedBudget = false;
 const date = new Date();
 date.setUTCHours(8, 0, 0, 0); // 22:00 HST at the default observing site.
 let solar = solarSystem(date, LAT, LON);
 let catalog: SkyObject[] = [], byId = new Map<string, SkyObject>();
-let place = destinations[0], destinationId = destinations.find(d => d.id === 'hip-70890')?.id ?? destinations[1].id;
+let place: Destination = destinations[0];
+let destinationId = destinations.find(d => d.id === 'hip-70890')?.id ?? destinations[1].id;
 let shapeId = constellations.find(c => c.id.toLowerCase() === 'ori')?.id ?? constellations[0]?.id;
 let view: Pose = { position: solar.observer, yaw: 102 * DEG, pitch: 22 * DEG, zoom: 1 };
 let desired = { yaw: view.yaw, pitch: view.pitch, zoom: 1 };
@@ -54,7 +59,7 @@ const arrows: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRigh
 const ground = () => place.id === 'earth' && !trip && !tour;
 // Keep Earth's coordinate axes (including camera roll) throughout the constellation tour.
 const frame = () => trip?.frame ?? (ground() || tour ? solar : spaceFrame);
-const label = (object: { name: string; zh?: string }) => (locale === 'zh' && object.zh) || object.name;
+const label = (object: { name: string; zh?: string }) => objectName(object, locale);
 const selectedShape = () => constellations.find(c => c.id === shapeId);
 const selectedDestination = () => destinations.find(d => d.id === destinationId) ?? destinations[0];
 const group = (destination: Destination) => {
@@ -160,8 +165,25 @@ function updateShape() {
   const shape = selectedShape();
   const geo = shape && shapeGeometry(shape);
   $('depth').textContent = geo ? `${t.depth} · ${distance(geo.depth)}` : '';
-  for (const id of ['find', 'tour', 'toggle-lines']) $<HTMLButtonElement>(id).disabled = !geo;
+  $('under').hidden ||= !ground();
+  for (const id of ['find', 'tour', 'toggle-lines']) $<HTMLButtonElement>(id).disabled = !geo || !ground();
   $('toggle-lines').setAttribute('aria-pressed', String(drawLines));
+}
+
+function pickedDestination(): Destination | undefined {
+  if (!picked || trip || tour?.passage || picked.id === place.id) return;
+  return destinations.find(site => site.id === picked?.id) ?? picked;
+}
+
+function updateBudgetHint() {
+  $('frame-hint').hidden = !budget.suggested || dismissedBudget || gentle() || !!trip || !!tour?.passage;
+}
+
+function setCameraMotion(value: string) {
+  cameraMotion = value;
+  $<HTMLSelectElement>('camera-motion').value = value;
+  try { localStorage.setItem(cameraMotionKey, value); } catch { /* Keep the current setting. */ }
+  updateBudgetHint();
 }
 
 function updateObject() {
@@ -169,6 +191,7 @@ function updateObject() {
   $('object-reading').hidden = !item;
   if (!item) return;
   $('object-name').textContent = label(item);
+  $('object-launch').hidden = !pickedDestination();
   const range = length(sub(item.position, view.position));
   const apparent = item.absolute == null ? item.mag : apparentMagnitude(item.absolute, range);
   $('object-details').textContent = `${distance(range)} · ${t.magnitude} ${number(apparent, 2)}${item.absolute == null ? '' : ` · ${t.absolute} ${number(item.absolute, 2)}`}`;
@@ -181,7 +204,7 @@ function refresh() {
   $('readout').textContent = tour ? `${t.depth} · ${distance(tour.depth)}` : trip ? `${t.flying} · ${distance(trip.total)}` : ground() ? `${t.site} / ${date.toISOString().slice(0, 16).replace('T', ' ')} UTC` : `${t.fromEarth} · ${distance(length(sub(view.position, solar.earth)))}`;
   $('travel-progress').hidden = !trip;
   $('open-travel').hidden = !!tour || !!trip;
-  $('open-shapes').hidden = !ground();
+  $('open-shapes').hidden = !ground() && !tour;
   $('leave-tour').hidden = !tour;
   for (const id of ['tour-play', 'auto']) {
     const button = $<HTMLButtonElement>(id);
@@ -198,7 +221,7 @@ function refresh() {
   root.dataset.mode = tour ? 'tour' : trip ? 'flight' : ground() ? 'earth' : 'space';
   root.dataset.place = place.id;
   root.dataset.passage = passage ? (passage.returning ? 'returning' : 'entering') : '';
-  updateMotion(); updateShape(); updateObject();
+  updateMotion(); updateShape(); updateObject(); updateBudgetHint();
 }
 
 function openPanel(next?: Panel, focusPanel = true) {
@@ -225,8 +248,9 @@ function park(site: Destination): Pose {
   const size = (body?.radiusKm ?? 0) / 3.08567758149e13;
   const sunward = unit(sub(solar.objects.find(object => object.id === 'sun')?.position ?? [0, 0, 0], center));
   const side = unit(add(sunward, [.41, -.76, .37]));
-  const orbit = size ? approachRange(size, 13 * DEG) : site.kind === 'star' ? .000022 : site.kind === 'black-hole' ? .25 : Math.max(.01, length(center) * .003);
-  const position = add(center, scale(body && site.id !== 'sun' ? side : [.88, .43, .16], orbit));
+  const photo = destinationImageRadius(site.id);
+  const orbit = size ? approachRange(size, 13 * DEG) : photo ? approachRange(photo, 22 * DEG) : site.kind === 'star' ? .000022 : site.kind === 'black-hole' ? .25 : Math.max(.01, length(center) * .001);
+  const position = add(center, scale(photo ? unit(sub(solar.earth, center)) : body && site.id !== 'sun' ? side : [.88, .43, .16], orbit));
   return { position, ...angles(spaceFrame, sub(center, position)), zoom: 1 };
 }
 
@@ -259,7 +283,8 @@ function go(site: Destination, fly: boolean) {
   const center = physicalPosition(site);
   const landing = park(site);
   const range = length(sub(landing.position, source.position));
-  openPanel(undefined, false); tour = undefined; picked = undefined;
+  if (panel !== 'shapes' || !toEarth) openPanel(undefined, false);
+  tour = undefined; picked = undefined;
   if (fly && range > 1e-12 && !gentle()) {
     const near = Math.max(length(sub(landing.position, center)), 1e-11);
     // Arrive on the incoming side of the object instead of passing through it.
@@ -292,7 +317,7 @@ function findShape() {
   if (bearing.pitch <= 0) return;
   drawLines = true;
   desired = { ...bearing, zoom: 1 };
-  openPanel(); refresh(); invalidate();
+  refresh(); invalidate();
 }
 
 function startTour() {
@@ -305,7 +330,7 @@ function startTour() {
   const endpoint = orbitPose(tour, 0);
   if (gentle()) { dissolveSky(); setPose(endpoint); }
   else tour.passage = { progress: 0, returning: false, endpoint };
-  openPanel(undefined, false); picked = undefined; motion.recenter(); refresh(); skyCanvas.focus({ preventScroll: true }); invalidate();
+  picked = undefined; motion.recenter(); refresh(); skyCanvas.focus({ preventScroll: true }); invalidate();
 }
 
 function orbitPose(active: Tour, progress: number): Pose {
@@ -386,7 +411,9 @@ function invalidate() {
 function render(time: number) {
   frameRequest = 0;
   if (document.hidden || !sky) { lastFrame = 0; return; }
-  const dt = Math.min(45, lastFrame ? time - lastFrame : 16);
+  const workStart = performance.now();
+  const animating = !!trip || !!tour?.passage;
+  const dt = Math.min(75, lastFrame ? time - lastFrame : 16);
   lastFrame = time;
   let atmosphere = ground() ? 1 : 0, focus = tour ? 1 : 0, roll = 0;
   if (trip) {
@@ -452,7 +479,14 @@ function render(time: number) {
     skyObjects: focus === 1 && tour ? tour.stars : catalog, earthEdges: drawLines && (ground() || tour) && focus < 1 ? earthEdges : [],
     tourEdges: tour?.shape.lines ?? [], members: tour?.members, focus,
     target: trip?.destination.id ?? (ground() || tour ? undefined : place.id) });
-  if (trip || tour?.passage || tour?.playing || keys.size || Math.abs(wrap(desired.yaw - view.yaw)) + Math.abs(desired.pitch - view.pitch) + Math.abs(desired.zoom - view.zoom) > .0007) invalidate();
+  const ready = notice !== 'loading';
+  if (ready) {
+    const suggested = budget.suggested;
+    budget.sample(time, performance.now() - workStart, animating);
+    if (animating && !trip && !tour?.passage) budget.finishAnimation();
+    if (suggested !== budget.suggested || (animating && !trip && !tour?.passage)) updateBudgetHint();
+  }
+  if ((ready && budget.warming) || trip || tour?.passage || tour?.playing || keys.size || Math.abs(wrap(desired.yaw - view.yaw)) + Math.abs(desired.pitch - view.pitch) + Math.abs(desired.zoom - view.zoom) > .0007) invalidate();
   else if (!frameRequest) lastFrame = 0;
 }
 
@@ -460,7 +494,7 @@ const earthEdges = constellations.flatMap(c => c.lines);
 
 function attach() {
   skyCanvas = $<HTMLCanvasElement>('sky');
-  try { sky = new Sky(skyCanvas); } catch { sky = undefined; notice = 'missingCanvas'; }
+  try { sky = new Sky(skyCanvas, invalidate); } catch { sky = undefined; notice = 'missingCanvas'; }
   fillSelects(); updateDate(); updateVisibility(); updateDensity(); refresh(); announce(notice);
   $('data-credits').innerHTML = `<a href="${catalogCreditsUrl}" target="_blank" rel="noopener">${t.details} ↗</a>`;
   openPanel(panel, false);
@@ -485,10 +519,11 @@ function attach() {
   click('retry', () => { void stars(); });
   const cameraStyle = $<HTMLSelectElement>('camera-motion');
   cameraStyle.value = cameraMotion;
-  cameraStyle.addEventListener('change', () => {
-    cameraMotion = cameraStyle.value;
-    try { localStorage.setItem(cameraMotionKey, cameraMotion); } catch { /* Keep the current setting. */ }
-  });
+  cameraStyle.addEventListener('change', () => setCameraMotion(cameraStyle.value));
+  click('use-gentle', () => { setCameraMotion('gentle'); $('open-settings').focus(); });
+  click('dismiss-frame-hint', () => { dismissedBudget = true; updateBudgetHint(); $('open-settings').focus(); });
+  click('object-launch', () => { const site = pickedDestination(); if (site) go(site, true); });
+  click('object-close', () => { picked = undefined; updateObject(); skyCanvas.focus({ preventScroll: true }); });
   click('launch', () => go(selectedDestination(), true));
   click('start', () => go(selectedDestination(), false));
   $('destination').addEventListener('change', event => { destinationId = (event.target as HTMLSelectElement).value; });
@@ -538,7 +573,7 @@ function attach() {
     if (event.button !== 0 || pointer) return;
     pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, travel: 0 };
     skyCanvas.setPointerCapture(event.pointerId); skyCanvas.classList.add('drag');
-    if (panel) openPanel(undefined, false);
+    if (panel && panel !== 'shapes') openPanel(undefined, false);
   });
   skyCanvas.addEventListener('pointermove', event => {
     if (!pointer || pointer.id !== event.pointerId) return;
@@ -547,7 +582,7 @@ function attach() {
     if (pointer.travel > 3) turn(-dx * .0035 / view.zoom, dy * .0035 / view.zoom);
   });
   skyCanvas.addEventListener('pointerup', event => {
-    if (!pointer || pointer.id !== event.pointerId || pointer.travel > 5) return;
+    if (!pointer || pointer.id !== event.pointerId || pointer.travel > 5 || trip || tour?.passage) return;
     const box = skyCanvas.getBoundingClientRect();
     picked = sky?.pick(event.clientX - box.left, event.clientY - box.top); updateObject();
   });
@@ -560,8 +595,18 @@ function updateFullscreen() {
   $('fullscreen').setAttribute('aria-label', text); $('fullscreen').title = text;
 }
 
+const dockLayout = new ResizeObserver(() => {
+  const actions = root.querySelector('.actions');
+  if (!actions) return;
+  const bottom = root.getBoundingClientRect().bottom - actions.getBoundingClientRect().top + 10;
+  $('shapes').style.setProperty('--shape-bottom', `${bottom}px`);
+});
+
 function mount() {
+  dockLayout.disconnect();
   root.innerHTML = deck(t);
+  dockLayout.observe(root);
+  dockLayout.observe(root.querySelector('.actions')!);
   document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
   document.title = `${t.title} · Transit Tales`;
   attach(); invalidate();
@@ -583,15 +628,16 @@ window.addEventListener('resize', invalidate);
 window.addEventListener('blur', () => keys.clear());
 document.addEventListener('fullscreenchange', () => { updateFullscreen(); invalidate(); });
 document.addEventListener('visibilitychange', () => {
-  keys.clear(); lastFrame = 0;
+  keys.clear(); lastFrame = 0; budget.pause();
   if (document.hidden && frameRequest) { cancelAnimationFrame(frameRequest); frameRequest = 0; }
   else invalidate();
 });
 window.addEventListener('keydown', event => {
   if (event.key === 'Escape') {
-    if (panel) openPanel();
+    if (panel && $(panel).contains(document.activeElement)) openPanel();
     else if (picked) { picked = undefined; updateObject(); }
     else if (tour) finishTour();
+    else if (panel) openPanel();
     return;
   }
   if (event.ctrlKey || event.altKey || event.metaKey || (event.target as HTMLElement | null)?.closest('input, select, textarea, button, a')) return;

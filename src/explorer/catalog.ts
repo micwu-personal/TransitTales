@@ -1,6 +1,11 @@
 import { Body, GeoMoon, HelioVector, Illumination, MakeTime, Observer, ObserverVector,
   RotateVector, Rotation_HOR_EQJ, Vector } from 'astronomy-engine';
 import index from './catalog-index.json';
+import { chineseStarNames } from './star-names-zh';
+
+export function objectName(object: { name: string; zh?: string }, locale: 'en' | 'zh'): string {
+  return (locale === 'zh' && object.zh) || object.name;
+}
 
 export type Vec = readonly [number, number, number];
 export type SkyObject = {
@@ -67,7 +72,7 @@ const exoplanets = [
 
 const featured: Destination[] = index.featured.map(({ id, name, zh, position: [x, y, z] }) =>
   ({ id, name, zh, kind: 'star', position: [x, y, z] }));
-const starNames = new Map(featured.map(star => [star.id, star.zh]));
+const featuredStarNames = new Map(featured.map(star => [star.id, star.zh]));
 const destination = ({ id, name, zh, kind, position }: Destination): Destination => ({ id, name, zh, kind, position });
 export const destinations: Destination[] = [
   { id: 'earth', name: 'Earth', zh: '地球', kind: 'earth', position: ORIGIN },
@@ -87,7 +92,7 @@ export async function loadCatalog(): Promise<SkyObject[]> {
   if (!response.ok) throw new Error(`Explorer star catalog unavailable (HTTP ${response.status})`);
   const rows: StarRow[] = await response.json();
   const stars = rows.map(([id, name, x, y, z, mag, absolute, bv]): SkyObject =>
-    ({ id, name, zh: starNames.get(id), kind: 'star', position: [x, y, z], mag, absolute, bv }));
+    ({ id, name, zh: featuredStarNames.get(id) ?? chineseStarNames[id], kind: 'star', position: [x, y, z], mag, absolute, bv }));
   return [...stars, ...landmarks, ...exoplanets];
 }
 

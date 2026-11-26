@@ -15,17 +15,25 @@ const { chromium, webkit, devices } = require('playwright');
         const page = await browser.newPage({ ...profile, reducedMotion: reducedMotion ? 'reduce' : 'no-preference' });
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
-        await page.addInitScript(() => {
+        await page.addInitScript(simulateSlowDraws => {
           window.framesDrawn = 0;
           window.skyLabels = [];
+          let slowDraws = simulateSlowDraws ? 3 : 0;
           const ctx = CanvasRenderingContext2D.prototype;
           const transform = ctx.setTransform, fillText = ctx.fillText;
           ctx.setTransform = function (...args) {
-            if (this.canvas.id === 'sky') window.skyLabels = [];
+            if (this.canvas.id === 'sky') {
+              window.skyLabels = [];
+              if (slowDraws && document.querySelector('#notice')?.hidden) {
+                slowDraws--;
+                const until = performance.now() + 27;
+                while (performance.now() < until) { /* Simulate a slow draw. */ }
+              }
+            }
             return transform.apply(this, args);
           };
           ctx.fillText = function (text, x, y, ...args) {
-            if (this.canvas.id === 'sky') window.skyLabels.push({ text, x, y, w: this.measureText(text).width });
+            if (this.canvas.id === 'sky') window.skyLabels.push({ text, x, y, w: this.measureText(text).width, credit: this.font.startsWith('11px') });
             return fillText.call(this, text, x, y, ...args);
           };
           const raf = window.requestAnimationFrame;
@@ -36,7 +44,7 @@ const { chromium, webkit, devices } = require('playwright');
           };
           window.DeviceOrientationEvent = Sensor;
           window.DeviceMotionEvent = Sensor;
-        });
+        }, engine === chromium);
         await page.goto(`${url}index.html`);
         const entry = page.locator('#play-explorer');
         assert.match(await entry.getAttribute('href'), /explorer\.html/);
@@ -51,6 +59,13 @@ const { chromium, webkit, devices } = require('playwright');
         assert.equal(dimensions.width, dimensions.window);
         assert.ok(dimensions.canvas >= dimensions.width);
         if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.name || profile.viewport.width}-earth.png` });
+        if (engine === chromium) {
+          await page.locator('#frame-hint').waitFor({ state: 'visible' });
+          await click('open-settings');
+          assert.equal(await page.locator('#camera-motion').inputValue(), 'full', 'the hint must not change the setting');
+          await click('open-settings');
+          await click('dismiss-frame-hint');
+        }
         const frameCount = await page.evaluate(() => window.framesDrawn);
         await page.waitForTimeout(280);
         assert.ok((await page.evaluate(() => window.framesDrawn)) - frameCount < 4, 'idle sky must not animate continuously');
@@ -66,12 +81,33 @@ const { chromium, webkit, devices } = require('playwright');
         await page.mouse.down(); await page.mouse.move(canvas.width * .64, canvas.height * .34, { steps: 6 }); await page.mouse.up();
         await page.waitForFunction(initial => document.querySelector('#compass').textContent !== initial, beforeDrag);
         await click('open-settings');
+        assert.equal(await page.locator('#camera-motion').inputValue(), 'full');
+        if (reducedMotion) await page.locator('#camera-motion').selectOption('gentle');
         await click('city');
         assert.equal(await page.locator('#visibility').inputValue(), '2.75');
         await click('noon');
         assert.match(await page.locator('#readout').textContent(), /22:00 UTC/);
         await click('find-sun');
         await page.locator('#settings').waitFor({ state: 'hidden' });
+        await page.waitForFunction(() => {
+          const sky = document.querySelector('#sky');
+          const box = sky.getBoundingClientRect();
+          const sun = window.skyLabels.find(label => label.text === 'Sun');
+          return sun && Math.abs(sun.y - box.height / 2) < 2 && Math.abs(sun.x - 12 - box.width / 2) < 3;
+        });
+        const sunBox = await page.locator('#sky').boundingBox();
+        const x = sunBox.x + sunBox.width / 2, y = sunBox.y + sunBox.height / 2;
+        assert.equal(await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [x, y]), 'sky');
+        if (profile.isMobile) await page.touchscreen.tap(x, y);
+        else await page.mouse.click(x, y);
+        await page.locator('#object-launch').waitFor({ state: 'visible' });
+        assert.equal(await page.locator('#object-name').textContent(), 'Sun');
+        if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-object.png` });
+        await click('object-launch');
+        await mode('space');
+        assert.equal(await root.getAttribute('data-place'), 'sun');
+        await click('open-travel'); await page.locator('#destination').selectOption('earth'); await click('start');
+        await mode('earth');
         await click('open-settings'); await click('midnight'); await click('clear');
         await click('motion');
         await page.waitForFunction(() => document.querySelector('#motion-status').textContent.includes('Waiting'));
@@ -89,6 +125,7 @@ const { chromium, webkit, devices } = require('playwright');
         await page.waitForFunction(count => window.skyLabels.length > count, off.length);
         const dense = await labels();
         for (const [i, a] of dense.entries()) for (const b of dense.slice(i + 1)) {
+          if (a.credit && b.credit) continue;
           assert.ok(Math.abs(a.y - b.y) >= 18 || a.x + a.w + 7 <= b.x || b.x + b.w + 7 <= a.x, `${a.text} overlaps ${b.text}`);
         }
         if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-labels.png` });
@@ -133,7 +170,8 @@ const { chromium, webkit, devices } = require('playwright');
         } else await verifyDissolve();
         await passage('');
         if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-tour.png` });
-        assert.equal(await page.locator('#open-shapes').isVisible(), false);
+        assert.equal(await page.locator('#shapes').isVisible(), true);
+        assert.equal(await page.locator('#tour').isEnabled(), false);
         const tourZoom = await compass();
         await page.locator('#sky').focus();
         await page.keyboard.press('+');
@@ -144,13 +182,15 @@ const { chromium, webkit, devices } = require('playwright');
         } else await verifyDissolve();
         await mode('earth');
         await page.waitForFunction(bearing => document.querySelector('#compass').textContent === bearing, earthBearing);
+        assert.equal(await page.locator('#shapes').isVisible(), true);
         if (!profile.isMobile) {
-          await click('open-shapes'); await click('tour'); await passage('entering');
+          await click('tour'); await passage('entering');
           await page.waitForTimeout(450);
           await page.keyboard.press('Escape'); await passage('returning'); await mode('earth');
           assert.equal(await compass(), earthBearing);
         }
         await click('open-travel');
+        await page.locator('#destination').selectOption('hip-70890');
         await click('launch');
         if (!reducedMotion) {
           await mode('flight'); await verifyMovingSky('mode', 'flight');
@@ -159,6 +199,15 @@ const { chromium, webkit, devices } = require('playwright');
         } else await verifyDissolve();
         await mode('space');
         assert.notEqual(await root.getAttribute('data-place'), 'earth');
+        let survey = false;
+        for (const id of ['m1', 'm42', 'm45', 'm31']) {
+          await click('open-travel'); await page.locator('#destination').selectOption(id); await click('start');
+          await page.waitForFunction(id => document.querySelector('#sky').dataset.observedPlates?.split(' ').includes(id), id);
+          assert.equal(await root.getAttribute('data-place'), id);
+          survey ||= (await page.locator('#sky').getAttribute('data-observed-plates')).includes('milky-way');
+          if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-${id}.png` });
+        }
+        assert.ok(survey, 'the Galactic survey should be visible from at least one nearby arrival');
         await click('open-travel'); await page.locator('#destination').selectOption('earth'); await click('start'); await mode('earth');
         await click('language');
         assert.equal(await page.locator('#place').textContent(), '地球');
