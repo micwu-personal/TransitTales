@@ -45,6 +45,8 @@ Open `/explorer.html` from the concourse for a separate full-window astronomy ga
 
 On Earth, set the observation time and limiting magnitude, draw constellation figures, or explore the stars’ cataloged 3D positions. The Constellations panel stays open as you look around and travel into and out of a 3D tour. Pick a destination from the menu or tap an object in the sky and choose **Fly to this object**. Flights and tours use full camera motion by default. If startup draws or the first full animation are consistently slow, Night Atlas offers **Gentle dissolve** without changing your setting for you. You can also pick either style or follow your device’s reduced-motion setting under **Sky settings → Travel animation**.
 
+Choose **Spacecraft** in the destination menu to look back at Earth from Voyager 1, Voyager 2, or New Horizons. Voyager 1 also offers a historical **Pale Blue Dot** reconstruction. Selected arrivals show bilingual, source-linked facts. At the Crab Nebula, Sagittarius A*, and 3C 273, illustrated phenomena animate by default; reduced motion or **Sky settings → Animated sky phenomena** keeps them still. On Earth, choose a named site, enter coordinates, or use device location with permission. Site coordinates stay on the device. The licensed star snapshot is shipped with the game, not fetched from a live astronomy service.
+
 Use **Sky settings → Star names** to tune label density from Off to Dense. The figures use official IAU constellation names, but the stick lines are illustrative. Observation imagery may use enhanced color; it is not a live feed or a 3D reconstruction. Terrain and flight time are illustrative. See [the catalog and image credits](src/explorer/DATA.md) for sources and modeling limits.
 
 ## Universe Journey / 宇宙旅行

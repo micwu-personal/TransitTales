@@ -24,8 +24,8 @@ const { chromium, webkit, devices } = require('playwright');
           ctx.setTransform = function (...args) {
             if (this.canvas.id === 'sky') {
               window.skyLabels = [];
-              if (slowDraws && document.querySelector('#notice')?.hidden) {
-                slowDraws--;
+              if (window.slowEffects || (slowDraws && document.querySelector('#notice')?.hidden)) {
+                if (slowDraws) slowDraws--;
                 const until = performance.now() + 27;
                 while (performance.now() < until) { /* Simulate a slow draw. */ }
               }
@@ -86,7 +86,7 @@ const { chromium, webkit, devices } = require('playwright');
         await click('city');
         assert.equal(await page.locator('#visibility').inputValue(), '2.75');
         await click('noon');
-        assert.match(await page.locator('#readout').textContent(), /22:00 UTC/);
+        assert.match(await page.locator('#readout').textContent(), /22:21 UTC/);
         await click('find-sun');
         await page.locator('#settings').waitFor({ state: 'hidden' });
         await page.waitForFunction(() => {
@@ -208,11 +208,68 @@ const { chromium, webkit, devices } = require('playwright');
           if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-${id}.png` });
         }
         assert.ok(survey, 'the Galactic survey should be visible from at least one nearby arrival');
-        await click('open-travel'); await page.locator('#destination').selectOption('earth'); await click('start'); await mode('earth');
+        const arrive = async id => {
+          await click('open-travel'); await page.locator('#destination').selectOption(id); await click('start');
+          await page.waitForFunction(value => document.querySelector('#explorer').dataset.place === value, id);
+        };
+        await arrive('sgr-a');
+        assert.match(await page.locator('#fact-text').textContent(), /4 million solar masses/);
+        const effectsFrames = await page.evaluate(() => window.framesDrawn);
+        if (reducedMotion) {
+          await page.waitForTimeout(270);
+          const delta = await page.evaluate(before => window.framesDrawn - before, effectsFrames);
+          assert.ok(delta < 4, `unexpected animation frame count with reduced motion: ${delta}`);
+        } else {
+          await page.waitForFunction(before => window.framesDrawn - before >= 4, effectsFrames, { timeout: 5000 });
+        }
+        if (engine === chromium) {
+          await page.evaluate(() => { window.slowEffects = true; });
+          await page.locator('#use-still').waitFor({ state: 'visible' });
+          await page.evaluate(() => { window.slowEffects = false; });
+          await click('use-still');
+        }
+        await click('open-settings');
+        if (engine !== chromium) await click('effects-toggle');
+        assert.equal(await page.locator('#effects-toggle').getAttribute('aria-pressed'), 'false');
+        await click('open-settings');
+        await arrive('voyager-2');
+        assert.match(await page.locator('#fact-text').textContent(), /Uranus and Neptune/);
+        await click('look-earth');
+        await arrive('voyager-1');
+        await click('pale-blue-dot');
+        await page.waitForFunction(() => document.querySelector('#explorer').dataset.place === 'pale-blue-dot');
+        assert.match(await page.locator('#readout').textContent(), /1990-02-14 04:48 UTC/);
+        assert.match(await page.locator('#prompt').textContent(), /Not the original photograph/);
+        await page.waitForFunction(() => window.skyLabels.some(label => label.text === 'Earth'));
+        if (process.env.EXPLORER_SCREENSHOTS) await page.screenshot({ path: `${process.env.EXPLORER_SCREENSHOTS}/${profile.viewport.width}-pale-blue.png` });
+        await arrive('earth'); await mode('earth');
+        await click('open-settings');
+        await page.locator('#site-select').selectOption('beijing');
+        assert.match(await page.locator('#readout').textContent(), /Beijing/);
+        await page.locator('#site-select').selectOption('custom');
+        await page.locator('#site-lat').fill('-33.86'); await page.locator('#site-lon').fill('151.21');
+        await page.locator('#site-form button[type=submit]').click();
+        assert.match(await page.locator('#readout').textContent(), /-33.86°, 151.21°/);
+        if (engine === chromium) {
+          await page.evaluate(() => Object.defineProperty(navigator.geolocation, 'getCurrentPosition', {
+            configurable: true, value: (_ok, fail) => fail({ code: 1 }),
+          }));
+          await click('device-site');
+          assert.match(await page.locator('#site-status').textContent(), /unavailable/);
+          assert.match(await page.locator('#readout').textContent(), /-33.86°, 151.21°/);
+          await page.evaluate(() => Object.defineProperty(navigator.geolocation, 'getCurrentPosition', {
+            configurable: true, value: ok => ok({ coords: { latitude: 42, longitude: 72 } }),
+          }));
+          await click('device-site');
+          assert.match(await page.locator('#readout').textContent(), /42°, 72°/);
+          await page.route('**/explorer/stars.json', route => route.abort());
+        }
+        await click('open-settings');
         await click('language');
         assert.equal(await page.locator('#place').textContent(), '地球');
         assert.equal(await page.locator('html').getAttribute('lang'), 'zh-CN');
         await page.reload(); await mode('earth');
+        await page.locator('#notice').waitFor({ state: 'hidden' });
         await click('open-settings');
         assert.equal(await names.inputValue(), '3');
         assert.equal(await names.getAttribute('aria-valuetext'), '密集');

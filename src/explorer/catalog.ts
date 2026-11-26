@@ -88,9 +88,21 @@ export const constellations: Constellation[] = index.constellations.map(({ id, n
 export const catalogCreditsUrl = `${import.meta.env.BASE_URL}explorer/DATA.md`;
 
 export async function loadCatalog(): Promise<SkyObject[]> {
-  const response = await fetch(`${import.meta.env.BASE_URL}explorer/stars.json`);
-  if (!response.ok) throw new Error(`Explorer star catalog unavailable (HTTP ${response.status})`);
-  const rows: StarRow[] = await response.json();
+  const url = `${import.meta.env.BASE_URL}explorer/stars.json`;
+  let cache: Cache | undefined, stored: Response | undefined;
+  try {
+    cache = await globalThis.caches?.open('night-atlas.star-catalog.v1');
+    stored = await cache?.match(url);
+  } catch { /* The packaged catalog is still available without browser storage. */ }
+  let rows: StarRow[];
+  if (stored) rows = await stored.json();
+  else {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Explorer star catalog unavailable (HTTP ${response.status})`);
+    const copy = cache && response.clone();
+    rows = await response.json();
+    if (copy) await cache?.put(url, copy).catch(() => { /* Storage is optional. */ });
+  }
   const stars = rows.map(([id, name, x, y, z, mag, absolute, bv]): SkyObject =>
     ({ id, name, zh: featuredStarNames.get(id) ?? chineseStarNames[id], kind: 'star', position: [x, y, z], mag, absolute, bv }));
   return [...stars, ...landmarks, ...exoplanets];

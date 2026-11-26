@@ -1,6 +1,10 @@
 import { catalogCreditsUrl, constellations, destinations, loadCatalog, objectName, solarSystem, type SkyObject, type Vec } from './catalog';
 import { add, angles, apparentMagnitude, approachRange, blendPose, camera, cameraRoll, clamp, constellationPassage, constellationTour, DEG, direction, easeAngle, flightPassage, type Frame, length, LY, type Pose, scale, smooth, spaceFrame, sub, unit, wrap } from './camera';
 import { createDeviceMotionController, type DeviceMotionState } from '../universe/device-motion';
+import { arrivalFacts } from './arrival-facts';
+import { earthSites, solarHour } from './earth-site';
+import { spacecraftDestinations, spacecraftEpoch, spacecraftPosition, paleBlueDotDate, paleBlueDotPosition } from './spacecraft';
+import { phenomenonIds } from './phenomena';
 import { deck } from './deck';
 import { FrameBudget } from './frame-budget';
 import { destinationImageRadius } from './imagery';
@@ -8,8 +12,17 @@ import { en, zh } from './locale';
 import { Sky } from './sky';
 import './style.css';
 
-const LAT = 19.82, LON = -155.47;
-type Destination = (typeof destinations)[number] | SkyObject;
+type EarthSiteKey = keyof typeof earthSites | 'custom' | 'device';
+let earthSiteKey: EarthSiteKey = 'maunakea';
+let earthSite: { lat: number; lon: number } = earthSites.maunakea;
+let siteStatus: 'siteWaiting' | 'siteUnavailable' | undefined;
+let locationRequest = 0;
+let siteChosen = false;
+const allDestinations = [...destinations, ...spacecraftDestinations];
+const historical = {
+  id: 'pale-blue-dot', name: 'Voyager 1', zh: '旅行者 1 号', kind: 'spacecraft' as const, position: paleBlueDotPosition,
+};
+type Destination = (typeof allDestinations)[number] | typeof historical | SkyObject;
 type Shape = (typeof constellations)[number];
 type Trip = { destination: Destination; from: Pose; aim: Pose; approach: Vec; to: Pose; landing: Pose; frame: Frame; fromEarth: boolean; toEarth: boolean; fromRoll: number; toRoll: number; near: number; total: number; elapsed: number; duration: number };
 type TourPassage = { progress: number; returning: boolean; endpoint: Pose };
@@ -33,7 +46,13 @@ const budget = new FrameBudget();
 let dismissedBudget = false;
 const date = new Date();
 date.setUTCHours(8, 0, 0, 0); // 22:00 HST at the default observing site.
-let solar = solarSystem(date, LAT, LON);
+let solar = solarSystem(date, earthSite.lat, earthSite.lon);
+let probeScene: { epoch: Date; solar: typeof solar; earth: Vec } | undefined;
+const effectsKey = 'night-atlas.animated-phenomena';
+let effectsOn = true;
+try { effectsOn = localStorage.getItem(effectsKey) !== 'off'; } catch { /* Storage may be blocked. */ }
+let effectsSlow = 0, effectsLast = 0, effectsSuggested = false, effectsDismissed = false;
+let effectsTimer: ReturnType<typeof setTimeout> | undefined;
 let catalog: SkyObject[] = [], byId = new Map<string, SkyObject>();
 let place: Destination = destinations[0];
 let destinationId = destinations.find(d => d.id === 'hip-70890')?.id ?? destinations[1].id;
@@ -61,8 +80,9 @@ const ground = () => place.id === 'earth' && !trip && !tour;
 const frame = () => trip?.frame ?? (ground() || tour ? solar : spaceFrame);
 const label = (object: { name: string; zh?: string }) => objectName(object, locale);
 const selectedShape = () => constellations.find(c => c.id === shapeId);
-const selectedDestination = () => destinations.find(d => d.id === destinationId) ?? destinations[0];
+const selectedDestination = () => allDestinations.find(d => d.id === destinationId) ?? destinations[0];
 const group = (destination: Destination) => {
+  if (destination.kind === 'spacecraft') return 'spacecraft';
   const pc = length(destination.position);
   return pc < .01 ? 'local' : pc < 25 ? 'stars' : pc < 50_000 ? 'milky' : 'farther';
 };
@@ -109,15 +129,55 @@ function updateDate() {
 function setDate(value: Date) {
   if (!Number.isFinite(+value)) return;
   date.setTime(+value);
-  solar = solarSystem(date, LAT, LON);
+  solar = solarSystem(date, earthSite.lat, earthSite.lon);
   if (ground()) view.position = solar.observer;
   else if (!trip && !tour) {
     const target = solar.objects.find(object => object.id === place.id);
-    if (target) setPose(park(place));
+    if (target || place.kind === 'spacecraft') land(place, park(place));
   }
   $('under').hidden = true;
   $('body-below').hidden = true;
   updateDate(); refresh(); invalidate();
+}
+
+function siteLabel() {
+  if (earthSiteKey === 'custom' || earthSiteKey === 'device') return `${number(earthSite.lat, 2)}°, ${number(earthSite.lon, 2)}°`;
+  return earthSites[earthSiteKey][locale];
+}
+
+function updateSite() {
+  const select = $<HTMLSelectElement>('site-select');
+  const device = select.querySelector<HTMLOptionElement>('option[value=device]')!;
+  device.hidden = device.disabled = earthSiteKey !== 'device';
+  select.value = earthSiteKey;
+  $('site-form').hidden = select.value !== 'custom';
+  const status = $('site-status');
+  status.hidden = !siteStatus;
+  status.textContent = siteStatus ? t[siteStatus] : '';
+  $<HTMLButtonElement>('device-site').disabled = siteStatus === 'siteWaiting';
+}
+
+function applySite(key: EarthSiteKey, coordinates: typeof earthSite) {
+  earthSiteKey = key;
+  earthSite = coordinates;
+  siteStatus = undefined;
+  updateSite();
+  setDate(date);
+}
+
+function requestSite() {
+  const request = ++locationRequest;
+  siteStatus = 'siteWaiting'; updateSite();
+  const failed = () => {
+    if (request !== locationRequest) return;
+    siteStatus = 'siteUnavailable'; updateSite();
+  };
+  if (!navigator.geolocation) { failed(); return; }
+  navigator.geolocation.getCurrentPosition(({ coords }) => {
+    if (request !== locationRequest) return;
+    if (ground()) applySite('device', { lat: coords.latitude, lon: coords.longitude });
+    else { siteStatus = undefined; updateSite(); }
+  }, failed, { enableHighAccuracy: false, timeout: 8000, maximumAge: 300_000 });
 }
 
 function updateVisibility() {
@@ -137,10 +197,10 @@ function updateDensity() {
 function fillSelects() {
   const select = $<HTMLSelectElement>('destination');
   select.textContent = '';
-  for (const name of ['local', 'stars', 'milky', 'farther'] as const) {
+  for (const name of ['local', 'spacecraft', 'stars', 'milky', 'farther'] as const) {
     const bucket = document.createElement('optgroup');
     bucket.label = t[name];
-    for (const d of destinations.filter(item => group(item) === name)) bucket.append(new Option(label(d), d.id));
+    for (const d of allDestinations.filter(item => group(item) === name)) bucket.append(new Option(label(d), d.id));
     if (bucket.children.length) select.append(bucket);
   }
   select.value = destinationId;
@@ -176,7 +236,20 @@ function pickedDestination(): Destination | undefined {
 }
 
 function updateBudgetHint() {
-  $('frame-hint').hidden = !budget.suggested || dismissedBudget || gentle() || !!trip || !!tour?.passage;
+  const effects = effectsSuggested && effectsOn && !reduced.matches && !effectsDismissed && phenomenonIds.has(place.id) && !trip;
+  const flight = budget.suggested && !dismissedBudget && !gentle() && !trip && !tour?.passage;
+  $('frame-hint').hidden = !effects && !flight;
+  $('frame-hint-text').textContent = effects ? t.effectsHint : t.frameHint;
+  $('use-gentle').hidden = effects;
+  $('use-still').hidden = !effects;
+}
+
+function setEffects(enabled: boolean) {
+  effectsOn = enabled;
+  effectsLast = 0; effectsSlow = 0;
+  $('effects-toggle').setAttribute('aria-pressed', String(enabled));
+  try { localStorage.setItem(effectsKey, enabled ? 'on' : 'off'); } catch { /* Keep the current setting. */ }
+  updateBudgetHint(); invalidate();
 }
 
 function setCameraMotion(value: string) {
@@ -187,7 +260,7 @@ function setCameraMotion(value: string) {
 }
 
 function updateObject() {
-  const item = picked && (solar.objects.find(object => object.id === picked?.id) ?? picked);
+  const item = picked && (probeScene ? picked : solar.objects.find(object => object.id === picked?.id) ?? picked);
   $('object-reading').hidden = !item;
   if (!item) return;
   $('object-name').textContent = label(item);
@@ -200,8 +273,18 @@ function updateObject() {
 function refresh() {
   $('place').textContent = tour ? label(tour.shape) : label(trip?.destination ?? place);
   const passage = tour?.passage;
-  $('prompt').textContent = passage ? (passage.returning ? t.returningSky : t.leavingSky) : tour ? t.tourText : ground() ? t.earthPrompt : t.spacePrompt;
-  $('readout').textContent = tour ? `${t.depth} · ${distance(tour.depth)}` : trip ? `${t.flying} · ${distance(trip.total)}` : ground() ? `${t.site} / ${date.toISOString().slice(0, 16).replace('T', ' ')} UTC` : `${t.fromEarth} · ${distance(length(sub(view.position, solar.earth)))}`;
+  $('prompt').textContent = passage ? (passage.returning ? t.returningSky : t.leavingSky) : tour ? t.tourText : ground() ? t.earthPrompt : !trip && place.id === historical.id ? t.paleBlueNote : t.spacePrompt;
+  $('readout').textContent = tour ? `${t.depth} · ${distance(tour.depth)}` : trip ? `${t.flying} · ${distance(trip.total)}` : ground() ? `${siteLabel()} / ${date.toISOString().slice(0, 16).replace('T', ' ')} UTC` : probeScene ? `${t.probeNote} · ${probeScene.epoch.toISOString().slice(0, 16).replace('T', ' ')} UTC` : `${t.fromEarth} · ${distance(length(sub(view.position, solar.earth)))}`;
+  const facts = trip || tour || ground() ? undefined : arrivalFacts[place.id === historical.id ? 'voyager-1' : place.id];
+  $('arrival-fact').hidden = !facts;
+  if (facts) {
+    $('fact-text').textContent = facts[locale];
+    const source = $<HTMLAnchorElement>('fact-source');
+    source.href = facts.source; source.textContent = `${t.arrivalSource}: ${facts.agency} ↗`;
+  }
+  $('probe-actions').hidden = !!trip || place.kind !== 'spacecraft';
+  root.classList.toggle('probe-arrival', !!probeScene);
+  $('pale-blue-dot').hidden = place.id !== 'voyager-1';
   $('travel-progress').hidden = !trip;
   $('open-travel').hidden = !!tour || !!trip;
   $('open-shapes').hidden = !ground() && !tour;
@@ -215,9 +298,11 @@ function refresh() {
   $<HTMLButtonElement>('leave-tour').disabled = !!passage?.returning;
   $('atmosphere').hidden = !ground();
   $('find-bodies').hidden = !ground();
-  $('observing').hidden = !!tour || !!trip;
+  $('earth-site').hidden = !ground();
+  $('observing').hidden = !!tour || !!trip || place.id === historical.id;
+  $('noon').hidden = $('midnight').hidden = !ground();
   for (const id of ['advance', 'retreat']) $(id).hidden = ground() || !!trip;
-  $('disclaimer').textContent = group(trip?.destination ?? place) === 'farther' ? t.remote : t.observed;
+  $('disclaimer').textContent = !trip && phenomenonIds.has(place.id) ? t.effectsNote : group(trip?.destination ?? place) === 'farther' ? t.remote : t.observed;
   root.dataset.mode = tour ? 'tour' : trip ? 'flight' : ground() ? 'earth' : 'space';
   root.dataset.place = place.id;
   root.dataset.passage = passage ? (passage.returning ? 'returning' : 'entering') : '';
@@ -237,19 +322,43 @@ function openPanel(next?: Panel, focusPanel = true) {
   else skyCanvas.focus({ preventScroll: true });
 }
 
+function probeEpoch(site: Destination) {
+  return site.id === historical.id ? new Date(paleBlueDotDate) : spacecraftEpoch(site.id, date);
+}
+
+function probeEarth(epoch: Date, position: Vec, historicalView: boolean) {
+  const skyAtEpoch = +epoch === +date ? solar : solarSystem(epoch, earthSite.lat, earthSite.lon);
+  // Reconstruct the photograph’s sightline to Earth when its light was emitted.
+  const lightTimeMs = length(sub(skyAtEpoch.earth, position)) * LY * 365.25 * 86_400_000;
+  const earth = historicalView ? solarSystem(new Date(+epoch - lightTimeMs), earthSite.lat, earthSite.lon).earth : skyAtEpoch.earth;
+  return { epoch, solar: skyAtEpoch, earth };
+}
+
+function land(site: Destination, pose: Pose) {
+  place = site;
+  const epoch = probeEpoch(site);
+  probeScene = epoch ? probeEarth(epoch, pose.position, site.id === historical.id) : undefined;
+  setPose(pose);
+}
+
 function physicalPosition(site: Destination): Vec {
-  return solar.objects.find(object => object.id === site.id)?.position ?? site.position;
+  return spacecraftPosition(site.id, date) ?? solar.objects.find(object => object.id === site.id)?.position ?? site.position;
 }
 
 function park(site: Destination): Pose {
   if (site.id === 'earth') return { position: solar.observer, yaw: 102 * DEG, pitch: 22 * DEG, zoom: 1 };
   const center = physicalPosition(site);
+  const epoch = probeEpoch(site);
+  if (epoch) {
+    const { earth } = probeEarth(epoch, center, site.id === historical.id);
+    return { position: center, ...angles(spaceFrame, sub(earth, center)), zoom: site.id === historical.id ? 4.5 : 2.4 };
+  }
   const body = solar.objects.find(object => object.id === site.id);
   const size = (body?.radiusKm ?? 0) / 3.08567758149e13;
   const sunward = unit(sub(solar.objects.find(object => object.id === 'sun')?.position ?? [0, 0, 0], center));
   const side = unit(add(sunward, [.41, -.76, .37]));
   const photo = destinationImageRadius(site.id);
-  const orbit = size ? approachRange(size, 13 * DEG) : photo ? approachRange(photo, 22 * DEG) : site.kind === 'star' ? .000022 : site.kind === 'black-hole' ? .25 : Math.max(.01, length(center) * .001);
+  const orbit = size ? approachRange(size, 13 * DEG) : photo ? approachRange(photo, 22 * DEG) : site.kind === 'star' ? .000022 : site.kind === 'black-hole' ? .25 : site.id === '3c273' ? 250_000 : Math.max(.01, length(center) * .001);
   const position = add(center, scale(photo ? unit(sub(solar.earth, center)) : body && site.id !== 'sun' ? side : [.88, .43, .16], orbit));
   return { position, ...angles(spaceFrame, sub(center, position)), zoom: 1 };
 }
@@ -284,15 +393,17 @@ function go(site: Destination, fly: boolean) {
   const landing = park(site);
   const range = length(sub(landing.position, source.position));
   if (panel !== 'shapes' || !toEarth) openPanel(undefined, false);
-  tour = undefined; picked = undefined;
+  tour = undefined; picked = undefined; probeScene = undefined;
   if (fly && range > 1e-12 && !gentle()) {
-    const near = Math.max(length(sub(landing.position, center)), 1e-11);
+    const near = Math.max(length(sub(landing.position, center)), site.kind === 'spacecraft' ? .000018 : 1e-11);
     // Arrive on the incoming side of the object instead of passing through it.
-    if (!toEarth && length(sub(source.position, center)) > near) {
+    if (!toEarth && site.kind !== 'spacecraft' && length(sub(source.position, center)) > near) {
       landing.position = add(center, scale(unit(sub(source.position, center)), near));
       Object.assign(landing, angles(spaceFrame, sub(center, landing.position)));
     }
-    const approach = toEarth ? add(landing.position, scale(solar.up, near * 5)) : landing.position;
+    // For a probe, offset only the approach: the final leg reaches the actual probe position.
+    const approach = toEarth ? add(landing.position, scale(solar.up, near * 5)) : site.kind === 'spacecraft'
+      ? add(landing.position, scale(unit(sub(source.position, center)), Math.min(range * .15, .000018))) : landing.position;
     const start = cameraRoll(sourceFrame, source, basis);
     const end = cameraRoll(landingFrame, landing, basis);
     const from = { ...source, yaw: start.yaw, pitch: start.pitch };
@@ -303,7 +414,7 @@ function go(site: Destination, fly: boolean) {
     $<HTMLProgressElement>('travel-progress').value = 0;
   } else {
     if (fly && range > 1e-12) dissolveSky();
-    place = site; setPose(landing);
+    land(site, landing);
   }
   motion.recenter(); refresh(); skyCanvas.focus({ preventScroll: true }); invalidate();
 }
@@ -425,7 +536,7 @@ function render(time: number) {
     atmosphere = trip.fromEarth ? 1 - smooth(clamp(portion / .29, 0, 1)) : trip.toEarth ? settle : 0;
     $<HTMLProgressElement>('travel-progress').value = portion;
     if (portion >= 1) {
-      place = trip.destination; setPose(trip.landing); trip = undefined; picked = undefined; roll = 0;
+      land(trip.destination, trip.landing); trip = undefined; picked = undefined; roll = 0;
       atmosphere = ground() ? 1 : 0;
       refresh();
     }
@@ -472,13 +583,27 @@ function render(time: number) {
   }
   const turnDeg = Math.round((yaw / DEG % 360 + 360) % 360) % 360;
   $('compass').textContent = ground() ? `${String(turnDeg).padStart(3, '0')}°  /  ${Math.round(pitch / DEG)}°` : `${view.zoom.toFixed(1)}×`;
-  const sun = solar.objects.find(object => object.id === 'sun')?.position ?? [0, 0, 0];
+  const displaySolar = probeScene?.solar ?? solar;
+  const sun = displaySolar.objects.find(object => object.id === 'sun')?.position ?? [0, 0, 0];
   displayedPose = { position, yaw, pitch, zoom: view.zoom };
-  sky.draw({ position, frame: frame(), yaw, pitch, zoom: view.zoom, atmosphere, sun, faintLimit: 6.25 + (faint - 6.25) * atmosphere, locale, density, roll, earthOpacity: 1 - atmosphere,
-    objects: focus === 1 ? [] : solar.objects.filter(object => !(ground() || tour) || object.id !== 'earth'),
+  if (effectsTimer !== undefined) { clearTimeout(effectsTimer); effectsTimer = undefined; }
+  const phenomenon = !trip && !tour && phenomenonIds.has(place.id) ? place.id : undefined;
+  const animateEffects = !!phenomenon && effectsOn && !reduced.matches;
+  const inView = sky.draw({ position, frame: frame(), yaw, pitch, zoom: view.zoom, atmosphere, sun, faintLimit: 6.25 + (faint - 6.25) * atmosphere, locale, density, roll, earthOpacity: 1 - atmosphere,
+    objects: focus === 1 ? [] : displaySolar.objects.filter(object => !(ground() || tour) || object.id !== 'earth').map(object => object.id === 'earth' && probeScene ? { ...object, position: probeScene.earth } : object),
     skyObjects: focus === 1 && tour ? tour.stars : catalog, earthEdges: drawLines && (ground() || tour) && focus < 1 ? earthEdges : [],
     tourEdges: tour?.shape.lines ?? [], members: tour?.members, focus,
-    target: trip?.destination.id ?? (ground() || tour ? undefined : place.id) });
+    target: trip?.destination.id ?? (ground() || tour ? undefined : probeScene ? 'earth' : place.id),
+    phenomenon: phenomenon ? { id: phenomenon, position: physicalPosition(place) } : undefined, effectTime: animateEffects ? time / 1000 : 0, probeView: !!probeScene });
+  if (inView && animateEffects) {
+    const work = performance.now() - workStart;
+    const slow = work >= 20 || (effectsLast > 0 && time - effectsLast >= 54);
+    effectsLast = time;
+    effectsSlow = slow ? effectsSlow + 1 : Math.max(0, effectsSlow - 1);
+    if (effectsSlow >= 5 && !effectsSuggested) { effectsSuggested = true; updateBudgetHint(); }
+    // Cap isolated effect playback to 30fps; steering retains the normal frame rate.
+    effectsTimer = setTimeout(invalidate, Math.max(0, 33 - work - 8));
+  } else { effectsLast = 0; effectsSlow = 0; }
   const ready = notice !== 'loading';
   if (ready) {
     const suggested = budget.suggested;
@@ -521,7 +646,20 @@ function attach() {
   cameraStyle.value = cameraMotion;
   cameraStyle.addEventListener('change', () => setCameraMotion(cameraStyle.value));
   click('use-gentle', () => { setCameraMotion('gentle'); $('open-settings').focus(); });
-  click('dismiss-frame-hint', () => { dismissedBudget = true; updateBudgetHint(); $('open-settings').focus(); });
+  click('dismiss-frame-hint', () => {
+    if (!$('use-still').hidden) effectsDismissed = true;
+    else dismissedBudget = true;
+    updateBudgetHint(); $('open-settings').focus();
+  });
+  $('effects-toggle').setAttribute('aria-pressed', String(effectsOn));
+  click('effects-toggle', () => setEffects(!effectsOn));
+  click('use-still', () => { setEffects(false); $('open-settings').focus(); });
+  click('pale-blue-dot', () => go(historical, true));
+  click('look-earth', () => {
+    if (!probeScene || trip) return;
+    desired = { ...angles(spaceFrame, sub(probeScene.earth, view.position)), zoom: place.id === historical.id ? 4.5 : 2.4 };
+    motion.recenter(); invalidate();
+  });
   click('object-launch', () => { const site = pickedDestination(); if (site) go(site, true); });
   click('object-close', () => { picked = undefined; updateObject(); skyCanvas.focus({ preventScroll: true }); });
   click('launch', () => go(selectedDestination(), true));
@@ -545,8 +683,35 @@ function attach() {
     openPanel(); invalidate();
   });
   click('now', () => setDate(new Date()));
-  click('noon', () => { const d = new Date(+date); d.setUTCHours(22, 0, 0, 0); setDate(d); });
-  click('midnight', () => { const d = new Date(+date); d.setUTCHours(10, 0, 0, 0); setDate(d); });
+  click('noon', () => setDate(solarHour(date, earthSite.lon, 12)));
+  click('midnight', () => setDate(solarHour(date, earthSite.lon, 0)));
+  const sites = $<HTMLSelectElement>('site-select');
+  for (const [key, site] of Object.entries(earthSites)) sites.add(new Option(site[locale], key));
+  sites.add(new Option(t.manualSite, 'custom'));
+  // Show the device as a selectable site only while it is the active location.
+  const deviceOption = new Option(t.deviceSite, 'device'); deviceOption.hidden = true; deviceOption.disabled = true; sites.add(deviceOption);
+  $<HTMLInputElement>('site-lat').value = String(earthSite.lat);
+  $<HTMLInputElement>('site-lon').value = String(earthSite.lon);
+  updateSite();
+  sites.addEventListener('change', () => {
+    siteChosen = true; locationRequest++; siteStatus = undefined;
+    if (sites.value === 'custom') {
+      $('site-form').hidden = false;
+      $('site-status').hidden = true;
+      $<HTMLButtonElement>('device-site').disabled = false;
+      $('site-lat').focus();
+    } else {
+      const key = sites.value as keyof typeof earthSites;
+      applySite(key, earthSites[key]);
+    }
+  });
+  $('site-form').addEventListener('submit', event => {
+    event.preventDefault();
+    const lat = $<HTMLInputElement>('site-lat').valueAsNumber, lon = $<HTMLInputElement>('site-lon').valueAsNumber;
+    if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
+    siteChosen = true; locationRequest++; applySite('custom', { lat, lon });
+  });
+  click('device-site', () => { siteChosen = true; requestSite(); });
   $('date').addEventListener('change', () => {
     const input = $<HTMLInputElement>('date');
     if (input.validity.valid && input.value) setDate(new Date(`${input.value}T${date.toISOString().slice(11, 16)}:00Z`));
@@ -624,11 +789,18 @@ async function stars() {
 
 mount();
 if (sky) void stars();
+if (navigator.permissions?.query) {
+  void navigator.permissions.query({ name: 'geolocation' }).then(permission => {
+    if (permission.state === 'granted' && !siteChosen && ground()) requestSite();
+  }).catch(() => { /* Location remains available by explicit request. */ });
+}
+reduced.addEventListener?.('change', () => { updateBudgetHint(); invalidate(); });
 window.addEventListener('resize', invalidate);
 window.addEventListener('blur', () => keys.clear());
 document.addEventListener('fullscreenchange', () => { updateFullscreen(); invalidate(); });
 document.addEventListener('visibilitychange', () => {
-  keys.clear(); lastFrame = 0; budget.pause();
+  keys.clear(); lastFrame = 0; budget.pause(); effectsLast = 0; effectsSlow = 0;
+  if (effectsTimer !== undefined) { clearTimeout(effectsTimer); effectsTimer = undefined; }
   if (document.hidden && frameRequest) { cancelAnimationFrame(frameRequest); frameRequest = 0; }
   else invalidate();
 });

@@ -1,6 +1,7 @@
 import { objectName, type SkyObject, type Vec } from './catalog';
 import { add, apparentMagnitude, camera, clamp, DEG, dot, type Frame, length, scale, smooth, sub, unit } from './camera';
 import { imageryCredits, isImageDestination, type ImageDestination } from './imagery';
+import { drawPhenomenon } from './phenomena';
 import { ImageryLayer } from './imagery-layer';
 import { labelFits, stellarLabelBudget, type LabelBox } from './labels';
 
@@ -9,6 +10,7 @@ export type SkyView = {
   position: Vec; frame: Frame; yaw: number; pitch: number; zoom: number;
   atmosphere: number; sun: Vec; faintLimit: number; locale: 'en' | 'zh'; density: number;
   objects: SkyObject[]; skyObjects: SkyObject[]; earthEdges: readonly [string, string][]; tourEdges: readonly [string, string][];
+  phenomenon?: { id: string; position: Vec }; effectTime: number; probeView: boolean;
   members?: Set<string>; focus: number; target?: string; roll: number; earthOpacity: number;
 };
 const PC_KM = 3.08567758149e13;
@@ -56,7 +58,7 @@ export class Sky {
   draw(view: SkyView) {
     const { canvas, pen } = this;
     const w = canvas.clientWidth, h = canvas.clientHeight;
-    if (!w || !h) return;
+    if (!w || !h) return false;
     const dpr = Math.min(devicePixelRatio || 1, w * h > 1_100_000 ? 1.35 : 1.65);
     if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
@@ -163,9 +165,14 @@ export class Sky {
       const alpha = opacity * clamp(.28 + (skyLimit - mag) * .18, .25, 1);
       const radius = object.radiusKm ? Math.min(Math.max(w, h), eye.focal * object.radiusKm / PC_KM / point.distance) : 0;
       const disk = body && (radius > 1.7 || landmark);
-      if (disk) {
+      if (view.probeView && object.id === 'earth') {
+        // Preserve the actual angular location, but exaggerate the subpixel disk for legibility.
+        pen.globalAlpha = opacity;
+        pen.fillStyle = '#93cbec';
+        pen.beginPath(); pen.arc(point.x, point.y, Math.max(1.4, radius), 0, 2 * Math.PI); pen.fill();
+      } else if (disk) {
         disks.push({ point, object, radius: Math.max(radius, 2), vector, opacity });
-      } else if ((plateOpacity.get(object.id) ?? 0) < .98) {
+      } else if (view.phenomenon?.id !== object.id && (plateOpacity.get(object.id) ?? 0) < .98) {
         const color = colors[(object.bv ?? .55) < .16 ? 0 : (object.bv ?? .55) < .52 ? 1 : (object.bv ?? .55) < .99 ? 2 : 3];
         const size = clamp(1.12 - mag * .125, .42, 2.7);
         const diffuse = object.kind === 'nebula' || object.kind === 'galaxy' || object.kind === 'cluster';
@@ -207,6 +214,9 @@ export class Sky {
       pen.globalAlpha = air;
       this.land(w, h, horizon, eye.focal, view.yaw, day, dusk);
     }
+    pen.globalAlpha = 1;
+    const effectVisible = !!view.phenomenon && drawPhenomenon(pen, view.phenomenon.id,
+      sub(view.phenomenon.position, view.position), eye, w, h, view.effectTime);
     const occupied = this.plateCredits(credits, w, h);
     const score = (label: typeof labels[number]) => (label.object.id === view.target ? -200 : label.object.kind === 'star' ? 0 : -100)
       + clamp(label.mag, -30, 30) + (1 - label.opacity) * 6;
@@ -231,6 +241,7 @@ export class Sky {
       if (star) starCount++;
     }
     pen.globalAlpha = 1;
+    return effectVisible;
   }
 
   private plateCredits(credits: string[], w: number, h: number): LabelBox[] {
